@@ -34,7 +34,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
+import im.turms.server.common.domain.notification.rpc.dto.SendNotificationRequest;
 import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.UserStatusService;

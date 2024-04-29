@@ -27,11 +27,12 @@ import org.springframework.core.GenericTypeResolver;
 
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequestCodec;
 import im.turms.server.common.access.servicerequest.rpc.ServiceResponseCodec;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
-import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
-import im.turms.server.common.domain.session.rpc.QueryUserSessionsRequestCodec;
-import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
-import im.turms.server.common.domain.session.rpc.UserSessionsInfoCodec;
+import im.turms.server.common.domain.notification.rpc.dto.SendNotificationRequestCodec;
+import im.turms.server.common.domain.observation.rpc.dto.CountOnlineUsersRequestCodec;
+import im.turms.server.common.domain.session.rpc.dto.QueryUserSessionsRequestCodec;
+import im.turms.server.common.domain.session.rpc.dto.SetUserOfflineRequestCodec;
+import im.turms.server.common.domain.session.rpc.dto.UserSessionsInfoCodec;
+import im.turms.server.common.domain.user.rpc.dto.CreateUserRequestCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.BoolCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.ByteCodec;
 import im.turms.server.common.infra.cluster.service.codec.codec.impl.CharCodec;
@@ -93,6 +94,7 @@ public final class CodecPool {
         register(new QueryUserSessionsRequestCodec());
         register(new SendNotificationRequestCodec());
         register(new SetUserOfflineRequestCodec());
+        register(new CreateUserRequestCodec());
 
         // DTO
         register(new ServiceResponseCodec());

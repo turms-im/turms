@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.validation;
+package im.turms.server.common.infra.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface ValidUserRelationshipKey {
+public @interface ValidGroupMemberKey {
 }

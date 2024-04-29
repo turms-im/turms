@@ -84,6 +84,8 @@ public interface StreamInput {
 
     int readableBytes();
 
+    boolean isReadable();
+
     ByteBuf readSlice(int length);
 
     ByteBuf readRetainedSlice(int length);

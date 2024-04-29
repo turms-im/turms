@@ -38,7 +38,7 @@ import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
-import im.turms.server.common.domain.notification.service.INotificationService;
+import im.turms.server.common.domain.notification.rpc.service.RpcNotificationService;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
@@ -56,7 +56,7 @@ import im.turms.server.common.infra.validation.Validator;
  * @author James Chen
  */
 @Component
-public class NotificationService implements INotificationService {
+public class NotificationService implements RpcNotificationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
 

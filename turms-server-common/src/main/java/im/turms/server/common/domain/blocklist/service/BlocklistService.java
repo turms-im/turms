@@ -37,7 +37,7 @@ import im.turms.server.common.domain.blocklist.manager.AutoBlockManager;
 import im.turms.server.common.domain.blocklist.manager.BlocklistServiceManager;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
-import im.turms.server.common.domain.session.service.ISessionService;
+import im.turms.server.common.domain.session.rpc.service.RpcSessionService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.collection.ChunkedArrayList;
@@ -93,7 +93,7 @@ public class BlocklistService {
             TurmsRedisClient ipBlocklistRedisClient,
             TurmsRedisClient userIdBlocklistRedisClient,
             TurmsPropertiesManager propertiesManager,
-            @Autowired(required = false) ISessionService sessionService) {
+            @Autowired(required = false) RpcSessionService sessionService) {
         BlocklistProperties blocklistProperties = propertiesManager.getLocalProperties()
                 .getSecurity()
                 .getBlocklist();

@@ -68,6 +68,7 @@ import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.validation.ValidGroupMemberRole;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.service.domain.common.permission.ServicePermission;
@@ -76,7 +77,6 @@ import im.turms.service.domain.group.bo.GroupInvitationStrategy;
 import im.turms.service.domain.group.po.GroupMember;
 import im.turms.service.domain.group.repository.GroupMemberRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import im.turms.service.infra.validation.ValidGroupMemberRole;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 /**

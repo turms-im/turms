@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.notification.rpc;
+package im.turms.server.common.domain.notification.rpc.dto;
 
 import java.util.Collections;
 import java.util.Set;

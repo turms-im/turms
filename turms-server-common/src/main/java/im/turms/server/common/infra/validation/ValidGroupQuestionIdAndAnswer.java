@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.observation.service;
+package im.turms.server.common.infra.validation;
 
-import java.util.Map;
-
-import reactor.core.publisher.Mono;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public interface IStatisticsService {
-
-    default Mono<Map<String, Integer>> countOnlineUsersByNodes() {
-        return Mono.empty();
-    }
-
-    default int countLocalOnlineUsers() {
-        return 0;
-    }
-
+@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface ValidGroupQuestionIdAndAnswer {
 }

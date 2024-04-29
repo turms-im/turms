@@ -15,17 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.validation;
+package im.turms.server.common.domain.observation.rpc.service;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Map;
+
+import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface ValidProfileAccess {
+public interface RpcStatisticsService {
+
+    default Mono<Map<String, Integer>> countOnlineUsersByNodes() {
+        return Mono.empty();
+    }
+
+    default int countLocalOnlineUsers() {
+        return 0;
+    }
+
 }

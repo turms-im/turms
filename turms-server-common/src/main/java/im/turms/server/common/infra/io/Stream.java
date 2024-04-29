@@ -673,6 +673,11 @@ public class Stream implements StreamInput, StreamOutput {
     }
 
     @Override
+    public boolean isReadable() {
+        return buf.isReadable();
+    }
+
+    @Override
     public ByteBuf readSlice(int length) {
         return buf.readSlice(length);
     }

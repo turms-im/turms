@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.notification.rpc;
+package im.turms.server.common.domain.notification.rpc.dto;
 
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -28,7 +28,7 @@ import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.notification.service.INotificationService;
+import im.turms.server.common.domain.notification.rpc.service.RpcNotificationService;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
@@ -40,7 +40,7 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 public class SendNotificationRequest extends RpcRequest<Set<Long>> {
 
     private static final String NAME = "sendNotification";
-    private static INotificationService notificationService;
+    private static RpcNotificationService notificationService;
 
     private final ByteBuf notificationBuffer;
     private final Set<Long> recipientIds;
@@ -87,7 +87,7 @@ public class SendNotificationRequest extends RpcRequest<Set<Long>> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (notificationService == null) {
-            notificationService = getBean(INotificationService.class);
+            notificationService = getBean(RpcNotificationService.class);
         }
     }
 

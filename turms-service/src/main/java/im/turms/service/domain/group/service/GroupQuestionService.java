@@ -55,6 +55,7 @@ import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.validation.ValidGroupQuestionIdAndAnswer;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
@@ -65,7 +66,6 @@ import im.turms.service.domain.group.bo.NewGroupQuestion;
 import im.turms.service.domain.group.po.GroupJoinQuestion;
 import im.turms.service.domain.group.repository.GroupQuestionRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import im.turms.service.infra.validation.ValidGroupQuestionIdAndAnswer;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 /**

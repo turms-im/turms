@@ -15,30 +15,34 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.notification.service;
+package im.turms.server.common.domain.session.rpc.service;
 
+import java.util.List;
 import java.util.Set;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import io.netty.buffer.ByteBuf;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.session.bo.UserSessionId;
-import im.turms.server.common.infra.tracing.TracingContext;
+import im.turms.server.common.domain.session.bo.CloseReason;
+import im.turms.server.common.domain.session.bo.UserSessionsInfo;
+import im.turms.server.common.infra.validation.ValidDeviceType;
 
 /**
  * @author James Chen
  */
-public interface INotificationService {
+public interface RpcSessionService {
 
-    Mono<Set<Long>> sendNotificationToLocalClients(
-            @NotNull TracingContext context,
-            @NotNull ByteBuf notificationData,
-            @NotEmpty Set<Long> recipientIds,
-            @NotNull Set<UserSessionId> excludedUserSessionIds,
-            @Nullable DeviceType excludedDeviceType);
+    Mono<Integer> closeLocalSessions(@NotNull byte[] ip, @NotNull CloseReason closeReason);
+
+    Mono<Integer> closeLocalSession(
+            @NotNull Long userId,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
+            @NotNull CloseReason closeReason);
+
+    Mono<Integer> closeLocalSession(@NotNull Long userId, @NotNull CloseReason closeReason);
+
+    List<UserSessionsInfo> getSessions(@NotEmpty Set<Long> userIds);
 
 }

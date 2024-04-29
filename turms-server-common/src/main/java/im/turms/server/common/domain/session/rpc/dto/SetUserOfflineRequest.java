@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.session.rpc;
+package im.turms.server.common.domain.session.rpc.dto;
 
 import java.util.Set;
 import jakarta.annotation.Nullable;
@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
-import im.turms.server.common.domain.session.service.ISessionService;
+import im.turms.server.common.domain.session.rpc.service.RpcSessionService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 
@@ -39,7 +39,7 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 public class SetUserOfflineRequest extends RpcRequest<Boolean> {
 
     private static final String NAME = "setUserOffline";
-    private static ISessionService sessionService;
+    private static RpcSessionService sessionService;
 
     private final Long userId;
     private final Set<DeviceType> deviceTypes;
@@ -73,7 +73,7 @@ public class SetUserOfflineRequest extends RpcRequest<Boolean> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (sessionService == null) {
-            sessionService = getBean(ISessionService.class);
+            sessionService = getBean(RpcSessionService.class);
         }
     }
 

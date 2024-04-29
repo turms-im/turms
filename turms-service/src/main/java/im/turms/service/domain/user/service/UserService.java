@@ -44,6 +44,7 @@ import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.user.po.User;
+import im.turms.server.common.domain.user.rpc.service.RpcUserService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -61,6 +62,7 @@ import im.turms.server.common.infra.property.env.service.business.user.UserPrope
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.time.DateRange;
+import im.turms.server.common.infra.validation.ValidProfileAccess;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
@@ -73,7 +75,6 @@ import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.domain.user.repository.UserRepository;
 import im.turms.service.domain.user.service.onlineuser.SessionService;
 import im.turms.service.infra.metrics.MetricNameConst;
-import im.turms.service.infra.validation.ValidProfileAccess;
 import im.turms.service.storage.elasticsearch.ElasticsearchManager;
 import im.turms.service.storage.elasticsearch.model.Hit;
 import im.turms.service.storage.elasticsearch.model.doc.UserDoc;
@@ -87,7 +88,7 @@ import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RET
  */
 @Component
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class UserService {
+public class UserService implements RpcUserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -255,6 +256,28 @@ public class UserService {
                         ? ServicePermission.OK
                         : ServicePermission
                                 .get(ResponseStatusCode.NOT_FRIEND_TO_SEND_PRIVATE_MESSAGE));
+    }
+
+    @Override
+    public Mono<Long> createUser(
+            @Nullable Long id,
+            @Nullable String rawPassword,
+            @Nullable String name,
+            @Nullable String intro,
+            @Nullable String profilePicture,
+            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
+            @Nullable Long permissionGroupId,
+            @Nullable @PastOrPresent Date registrationDate,
+            @Nullable Boolean isActive) {
+        return addUser(id,
+                rawPassword,
+                name,
+                intro,
+                profilePicture,
+                profileAccessStrategy,
+                permissionGroupId,
+                registrationDate,
+                isActive).map(User::getId);
     }
 
     public Mono<User> addUser(

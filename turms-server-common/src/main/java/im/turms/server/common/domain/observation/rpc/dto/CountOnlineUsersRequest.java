@@ -15,16 +15,12 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.session.rpc;
-
-import java.util.List;
-import java.util.Set;
+package im.turms.server.common.domain.observation.rpc.dto;
 
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
-import im.turms.server.common.domain.session.bo.UserSessionsInfo;
-import im.turms.server.common.domain.session.service.ISessionService;
+import im.turms.server.common.domain.observation.rpc.service.RpcStatisticsService;
 import im.turms.server.common.infra.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
 
@@ -32,19 +28,14 @@ import im.turms.server.common.infra.cluster.service.rpc.dto.RpcRequest;
  * @author James Chen
  */
 @Data
-public class QueryUserSessionsRequest extends RpcRequest<List<UserSessionsInfo>> {
+public class CountOnlineUsersRequest extends RpcRequest<Integer> {
 
-    private static ISessionService sessionService;
-
-    private final Set<Long> userIds;
-
-    public QueryUserSessionsRequest(Set<Long> userIds) {
-        this.userIds = userIds;
-    }
+    private static final String NAME = "countOnlineUsers";
+    private static RpcStatisticsService statisticsService;
 
     @Override
     public String name() {
-        return "queryUserSessions";
+        return NAME;
     }
 
     @Override
@@ -58,21 +49,21 @@ public class QueryUserSessionsRequest extends RpcRequest<List<UserSessionsInfo>>
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        super.setApplicationContext(applicationContext);
-        if (sessionService == null) {
-            sessionService = getBean(ISessionService.class);
-        }
-    }
-
-    @Override
     public boolean isAsync() {
         return false;
     }
 
     @Override
-    public List<UserSessionsInfo> call() {
-        return sessionService.getSessions(userIds);
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        super.setApplicationContext(applicationContext);
+        if (statisticsService == null) {
+            statisticsService = getBean(RpcStatisticsService.class);
+        }
+    }
+
+    @Override
+    public Integer call() {
+        return statisticsService.countLocalOnlineUsers();
     }
 
 }

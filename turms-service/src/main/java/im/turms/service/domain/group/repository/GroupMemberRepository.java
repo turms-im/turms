@@ -33,13 +33,13 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.infra.time.DateRange;
+import im.turms.server.common.infra.validation.ValidGroupMemberRole;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 import im.turms.server.common.storage.mongo.operation.option.Update;
 import im.turms.service.domain.group.po.GroupMember;
-import im.turms.service.infra.validation.ValidGroupMemberRole;
 
 /**
  * @author James Chen

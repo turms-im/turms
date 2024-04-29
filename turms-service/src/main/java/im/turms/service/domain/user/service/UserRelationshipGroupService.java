@@ -49,6 +49,8 @@ import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.validation.ValidUserRelationshipGroupKey;
+import im.turms.server.common.infra.validation.ValidUserRelationshipKey;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
@@ -61,8 +63,6 @@ import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.repository.UserRelationshipGroupMemberRepository;
 import im.turms.service.domain.user.repository.UserRelationshipGroupRepository;
 import im.turms.service.infra.proto.ProtoModelConvertor;
-import im.turms.service.infra.validation.ValidUserRelationshipGroupKey;
-import im.turms.service.infra.validation.ValidUserRelationshipKey;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELATIONSHIP_GROUP_INDEX;

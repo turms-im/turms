@@ -59,8 +59,8 @@ import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
-import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
-import im.turms.server.common.domain.session.service.ISessionService;
+import im.turms.server.common.domain.session.rpc.dto.SetUserOfflineRequest;
+import im.turms.server.common.domain.session.rpc.service.RpcSessionService;
 import im.turms.server.common.domain.session.service.SessionLocationService;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
@@ -91,7 +91,7 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
  * @author James Chen
  */
 @Service
-public class SessionService implements ISessionService {
+public class SessionService implements RpcSessionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 

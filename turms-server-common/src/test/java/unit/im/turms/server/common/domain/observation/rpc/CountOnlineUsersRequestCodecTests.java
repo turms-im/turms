@@ -20,8 +20,8 @@ package unit.im.turms.server.common.domain.observation.rpc;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
-import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequest;
-import im.turms.server.common.domain.observation.rpc.CountOnlineUsersRequestCodec;
+import im.turms.server.common.domain.observation.rpc.dto.CountOnlineUsersRequest;
+import im.turms.server.common.domain.observation.rpc.dto.CountOnlineUsersRequestCodec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

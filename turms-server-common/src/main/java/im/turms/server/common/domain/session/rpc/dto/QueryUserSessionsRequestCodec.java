@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.domain.session.rpc;
+package im.turms.server.common.domain.session.rpc.dto;
 
 import im.turms.server.common.infra.cluster.service.codec.codec.CodecId;
 import im.turms.server.common.infra.cluster.service.codec.io.CodecStreamInput;

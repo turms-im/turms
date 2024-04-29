@@ -26,8 +26,8 @@ import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequest;
-import im.turms.server.common.domain.notification.rpc.SendNotificationRequestCodec;
+import im.turms.server.common.domain.notification.rpc.dto.SendNotificationRequest;
+import im.turms.server.common.domain.notification.rpc.dto.SendNotificationRequestCodec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -24,8 +24,8 @@ import unit.im.turms.server.common.infra.cluster.service.rpc.codec.BaseCodecTest
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
-import im.turms.server.common.domain.session.rpc.SetUserOfflineRequest;
-import im.turms.server.common.domain.session.rpc.SetUserOfflineRequestCodec;
+import im.turms.server.common.domain.session.rpc.dto.SetUserOfflineRequest;
+import im.turms.server.common.domain.session.rpc.dto.SetUserOfflineRequestCodec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
