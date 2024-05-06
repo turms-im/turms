@@ -144,4 +144,18 @@ public class FileUtil {
         }
     }
 
+    public static ByteBuffer read(FileChannel channel) {
+        long size;
+        try {
+            size = channel.size();
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to get the size of the file", e);
+        }
+        try {
+            return channel.map(FileChannel.MapMode.READ_ONLY, 0, size);
+        } catch (IOException e) {
+            throw new InputOutputException("Failed to map the file", e);
+        }
+    }
+
 }

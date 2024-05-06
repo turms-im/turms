@@ -187,10 +187,10 @@ public class DictionaryParser {
                 case 2 -> builder.setLevel(Integer.parseInt(string));
                 case 3 -> builder.setCategory(string);
                 case 4 -> builder.setSource(string);
-                case 5 -> builder.setCreateTime(dateFormat.parse(string));
-                case 6 -> builder.setDisableTime(dateFormat.parse(string));
-                case 7 -> builder.setEnableTime(dateFormat.parse(string));
-                case 8 -> builder.setUpdateTime(dateFormat.parse(string));
+                case 5 -> builder.setCreateDate(dateFormat.parse(string));
+                case 6 -> builder.setDisableDate(dateFormat.parse(string));
+                case 7 -> builder.setEnableDate(dateFormat.parse(string));
+                case 8 -> builder.setUpdateDate(dateFormat.parse(string));
                 case 9 -> builder.setComment(string);
                 default -> throw new IllegalArgumentException(
                         "Unexpected column index: "

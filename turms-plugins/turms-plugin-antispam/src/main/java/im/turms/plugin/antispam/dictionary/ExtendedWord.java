@@ -42,16 +42,16 @@ public class ExtendedWord extends Word {
     private final String source;
 
     @Nullable
-    private final Date createTime;
+    private final Date createDate;
 
     @Nullable
-    private final Date disableTime;
+    private final Date disableDate;
 
     @Nullable
-    private final Date enableTime;
+    private final Date enableDate;
 
     @Nullable
-    private final Date updateTime;
+    private final Date updateDate;
 
     @Nullable
     private final String comment;
@@ -66,20 +66,20 @@ public class ExtendedWord extends Word {
             @Nullable Integer level,
             @Nullable String category,
             @Nullable String source,
-            @Nullable Date createTime,
-            @Nullable Date disableTime,
-            @Nullable Date enableTime,
-            @Nullable Date updateTime,
+            @Nullable Date createDate,
+            @Nullable Date disableDate,
+            @Nullable Date enableDate,
+            @Nullable Date updateDate,
             @Nullable String comment) {
         super(word);
         this.id = id;
         this.level = level;
         this.category = category;
         this.source = source;
-        this.createTime = createTime;
-        this.disableTime = disableTime;
-        this.enableTime = enableTime;
-        this.updateTime = updateTime;
+        this.createDate = createDate;
+        this.disableDate = disableDate;
+        this.enableDate = enableDate;
+        this.updateDate = updateDate;
         this.comment = comment;
     }
 
@@ -91,10 +91,10 @@ public class ExtendedWord extends Word {
         private Integer level;
         private String category;
         private String source;
-        private Date createTime;
-        private Date disableTime;
-        private Date enableTime;
-        private Date updateTime;
+        private Date createDate;
+        private Date disableDate;
+        private Date enableDate;
+        private Date updateDate;
         private String comment;
 
         public void reset() {
@@ -103,10 +103,10 @@ public class ExtendedWord extends Word {
             level = null;
             category = null;
             source = null;
-            createTime = null;
-            disableTime = null;
-            enableTime = null;
-            updateTime = null;
+            createDate = null;
+            disableDate = null;
+            enableDate = null;
+            updateDate = null;
             comment = null;
         }
 
@@ -135,23 +135,23 @@ public class ExtendedWord extends Word {
             return this;
         }
 
-        public Builder setCreateTime(Date createTime) {
-            this.createTime = createTime;
+        public Builder setCreateDate(Date createDate) {
+            this.createDate = createDate;
             return this;
         }
 
-        public Builder setDisableTime(Date disableTime) {
-            this.disableTime = disableTime;
+        public Builder setDisableDate(Date disableDate) {
+            this.disableDate = disableDate;
             return this;
         }
 
-        public Builder setEnableTime(Date enableTime) {
-            this.enableTime = enableTime;
+        public Builder setEnableDate(Date enableDate) {
+            this.enableDate = enableDate;
             return this;
         }
 
-        public Builder setUpdateTime(Date updateTime) {
-            this.updateTime = updateTime;
+        public Builder setUpdateDate(Date updateDate) {
+            this.updateDate = updateDate;
             return this;
         }
 
@@ -167,10 +167,10 @@ public class ExtendedWord extends Word {
                     level,
                     category,
                     source,
-                    createTime,
-                    disableTime,
-                    enableTime,
-                    updateTime,
+                    createDate,
+                    disableDate,
+                    enableDate,
+                    updateDate,
                     comment);
         }
     }

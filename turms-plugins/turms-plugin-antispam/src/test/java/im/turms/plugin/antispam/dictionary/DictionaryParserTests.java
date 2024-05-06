@@ -63,9 +63,9 @@ class DictionaryParserTests {
                 .setLevel(1)
                 .setCategory("打招呼的敬语")
                 .setSource("网络采集")
-                .setCreateTime(epoch)
-                .setDisableTime(epoch)
-                .setEnableTime(epoch)
+                .setCreateDate(epoch)
+                .setDisableDate(epoch)
+                .setEnableDate(epoch)
                 .setComment("汉语中打招呼的敬语常用词语")
                 .build());
         assertThat((ExtendedWord) words.get(1)).isEqualTo(ExtendedWord.builder()
