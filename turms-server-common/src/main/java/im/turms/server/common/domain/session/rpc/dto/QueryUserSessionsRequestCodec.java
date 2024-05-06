@@ -35,7 +35,7 @@ public class QueryUserSessionsRequestCodec extends RpcRequestCodec<QueryUserSess
 
     @Override
     public void writeRequestData(CodecStreamOutput output, QueryUserSessionsRequest data) {
-        output.writeLongs(data.getUserIds());
+        output.writeSizeAndLongs(data.getUserIds());
     }
 
     @Override

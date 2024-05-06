@@ -49,7 +49,7 @@ public class SendNotificationRequestCodec extends RpcRequestCodec<SendNotificati
         if (recipientIds.isEmpty()) {
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
-        out.writeLongs(recipientIds);
+        out.writeSizeAndLongs(recipientIds);
         // write "excludedUserSessionIds"
         Set<UserSessionId> excludedUserSessionIds = data.getExcludedUserSessionIds();
         out.writeVarint32(excludedUserSessionIds.size());

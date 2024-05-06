@@ -56,7 +56,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
             output.writeByte(session.version());
             output.writeByte(session.deviceType()
                     .getNumber());
-            output.writeStringMap(session.deviceDetails());
+            output.writeSizeAndStringMap(session.deviceDetails());
             output.writeLong(session.loginDate()
                     .getTime());
             output.writeLong(session.lastHeartbeatRequestDate()
@@ -75,7 +75,7 @@ public class UserSessionsInfoCodec implements Codec<UserSessionsInfo> {
                 output.writeLong(timestamp == null
                         ? Long.MIN_VALUE
                         : timestamp.getTime());
-                output.writeStringMap(location.details());
+                output.writeSizeAndStringMap(location.details());
             }
         }
     }

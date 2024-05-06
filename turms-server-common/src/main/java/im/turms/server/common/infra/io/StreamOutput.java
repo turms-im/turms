@@ -34,15 +34,21 @@ public interface StreamOutput {
 
     Stream writeInt(int value);
 
-    Stream writeInts(Collection<Integer> integers);
+    Stream writeSizeAndInts(int[] values);
 
-    Stream writeNullableInts(@Nullable Collection<Integer> integers);
+    Stream writeSizeAndInts(Collection<Integer> values);
+
+    Stream writeSizeAndNullableInts(@Nullable Collection<Integer> values);
+
+    Stream writeSizeAndSparseInts(int[] values);
+
+    Stream writeSizeAndSparseInt2DArray(int[][] values);
 
     Stream writeLong(long value);
 
-    Stream writeLongs(Collection<Long> longs);
+    Stream writeSizeAndLongs(Collection<Long> values);
 
-    Stream writeNullableLongs(@Nullable Collection<Long> longs);
+    Stream writeSizeAndNullableLongs(@Nullable Collection<Long> values);
 
     Stream writeFloat(float value);
 
@@ -50,19 +56,21 @@ public interface StreamOutput {
 
     Stream writeChar(int value);
 
+    Stream writeSizeAndChars(char[] values);
+
     Stream writeBoolean(boolean value);
 
-    Stream writeString(String str);
+    Stream writeString(String value);
 
-    Stream writeNullableString(@Nullable String str);
+    Stream writeNullableString(@Nullable String value);
 
-    Stream writeStrings(Collection<String> strings);
+    Stream writeSizeAndStrings(Collection<String> values);
 
-    Stream writeNullableStrings(@Nullable Collection<String> strings);
+    Stream writeSizeAndNullableStrings(@Nullable Collection<String> values);
 
-    Stream writeStringMap(Map<String, String> map);
+    Stream writeSizeAndStringMap(Map<String, String> map);
 
-    Stream writeNullableStringMap(@Nullable Map<String, String> map);
+    Stream writeSizeAndNullableStringMap(@Nullable Map<String, String> map);
 
     Stream writeVarint32(int value);
 

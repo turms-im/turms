@@ -37,17 +37,21 @@ public interface StreamInput {
 
     int readInt();
 
-    List<Integer> readInts();
+    int[] readSparseInts();
+
+    int[] readInts();
+
+    List<Integer> readIntList();
 
     @Nullable
-    List<Integer> readNullableInts();
+    List<Integer> readNullableIntList();
+
+    int[][] readSparseInt2DArray();
 
     long readLong();
 
-    List<Long> readLongs();
-
     @Nullable
-    List<Long> readNullableLongs();
+    List<Long> readNullableLongList();
 
     Set<Long> readLongSet();
 
@@ -60,6 +64,8 @@ public interface StreamInput {
 
     char readChar();
 
+    char[] readChars();
+
     boolean readBoolean();
 
     String readString();
@@ -67,10 +73,10 @@ public interface StreamInput {
     @Nullable
     String readNullableString();
 
-    List<String> readStrings();
+    List<String> readStringList();
 
     @Nullable
-    List<String> readNullableStrings();
+    List<String> readNullableStringList();
 
     Map<String, String> readStringMap();
 
