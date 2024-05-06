@@ -30,6 +30,16 @@ import im.turms.server.common.infra.cluster.service.rpc.codec.RpcRequestCodec;
  */
 public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
 
+    private static final int TAG_ID = 0;
+    private static final int TAG_RAW_PASSWORD = 1;
+    private static final int TAG_NAME = 2;
+    private static final int TAG_INTRO = 3;
+    private static final int TAG_PROFILE_PICTURE = 4;
+    private static final int TAG_PROFILE_ACCESS_STRATEGY = 5;
+    private static final int TAG_PERMISSION_GROUP_ID = 6;
+    private static final int TAG_REGISTRATION_DATE = 7;
+    private static final int TAG_IS_ACTIVE = 8;
+
     @Override
     public CodecId getCodecId() {
         return CodecId.RPC_CREATE_USER;
@@ -52,39 +62,39 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
         Date registrationDate = data.getRegistrationDate();
         Boolean isActive = data.getIsActive();
         if (id != null) {
-            output.writeInt(0)
+            output.writeByte(TAG_ID)
                     .writeLong(id);
         }
         if (rawPassword != null) {
-            output.writeInt(1)
+            output.writeByte(TAG_RAW_PASSWORD)
                     .writeString(rawPassword);
         }
         if (name != null) {
-            output.writeInt(2)
+            output.writeByte(TAG_NAME)
                     .writeString(name);
         }
         if (intro != null) {
-            output.writeInt(3)
+            output.writeByte(TAG_INTRO)
                     .writeString(intro);
         }
         if (profilePicture != null) {
-            output.writeInt(4)
+            output.writeByte(TAG_PROFILE_PICTURE)
                     .writeString(profilePicture);
         }
         if (profileAccessStrategy != null) {
-            output.writeInt(5)
-                    .writeInt(profileAccessStrategy.ordinal());
+            output.writeByte(TAG_PROFILE_ACCESS_STRATEGY)
+                    .writeByte(profileAccessStrategy.getNumber());
         }
         if (permissionGroupId != null) {
-            output.writeInt(6)
+            output.writeByte(TAG_PERMISSION_GROUP_ID)
                     .writeLong(permissionGroupId);
         }
         if (registrationDate != null) {
-            output.writeInt(7)
+            output.writeByte(TAG_REGISTRATION_DATE)
                     .writeLong(registrationDate.getTime());
         }
         if (isActive != null) {
-            output.writeInt(8)
+            output.writeByte(TAG_IS_ACTIVE)
                     .writeBoolean(isActive);
         }
     }
@@ -100,19 +110,20 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
         Long permissionGroupId = null;
         Date registrationDate = null;
         Boolean isActive = null;
-        int tag;
+        byte tag;
         while (input.isReadable()) {
-            tag = input.readInt();
+            tag = input.readByte();
             switch (tag) {
-                case 0 -> id = input.readLong();
-                case 1 -> rawPassword = input.readString();
-                case 2 -> name = input.readString();
-                case 3 -> intro = input.readString();
-                case 4 -> profilePicture = input.readString();
-                case 5 -> profileAccessStrategy = ProfileAccessStrategy.values()[input.readInt()];
-                case 6 -> permissionGroupId = input.readLong();
-                case 7 -> registrationDate = new Date(input.readLong());
-                case 8 -> isActive = input.readBoolean();
+                case TAG_ID -> id = input.readLong();
+                case TAG_RAW_PASSWORD -> rawPassword = input.readString();
+                case TAG_NAME -> name = input.readString();
+                case TAG_INTRO -> intro = input.readString();
+                case TAG_PROFILE_PICTURE -> profilePicture = input.readString();
+                case TAG_PROFILE_ACCESS_STRATEGY ->
+                    profileAccessStrategy = ProfileAccessStrategy.forNumber(input.readByte());
+                case TAG_PERMISSION_GROUP_ID -> permissionGroupId = input.readLong();
+                case TAG_REGISTRATION_DATE -> registrationDate = new Date(input.readLong());
+                case TAG_IS_ACTIVE -> isActive = input.readBoolean();
                 default -> throw new IllegalArgumentException(
                         "Unknown tag: "
                                 + tag);
