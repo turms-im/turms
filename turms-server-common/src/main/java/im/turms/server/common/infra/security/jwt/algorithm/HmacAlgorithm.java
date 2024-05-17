@@ -28,7 +28,7 @@ public class HmacAlgorithm extends SymmetricAlgorithm {
 
     private final SecretKeySpec secretKeySpec;
 
-    public HmacAlgorithm(JwtAlgorithmDefinition definition, byte[] secretBytes) {
+    public HmacAlgorithm(JwtAlgorithmDefinition definition, byte[] secret) {
         super(definition);
         int minLength = switch (definition) {
             case HS256 -> 256 / 8;
@@ -38,13 +38,21 @@ public class HmacAlgorithm extends SymmetricAlgorithm {
                     "Unknown HMAC algorithm: "
                             + definition.getJwtAlgorithmName());
         };
-        if (secretBytes.length < minLength) {
+        if (secret.length < minLength) {
             throw new IllegalArgumentException(
-                    "The length of secret must be at least "
+                    "The length of the secret must be at least "
                             + minLength
                             + " bytes long");
         }
-        secretKeySpec = new SecretKeySpec(secretBytes, definition.getJavaAlgorithmName());
+        secretKeySpec = new SecretKeySpec(secret, definition.getJavaAlgorithmName());
+    }
+
+    @Override
+    public byte[] sign(byte[] encodedHeader, byte[] encodedPayload) {
+        return createSignature(getJavaAlgorithmName(),
+                secretKeySpec,
+                encodedHeader,
+                encodedPayload);
     }
 
     @Override

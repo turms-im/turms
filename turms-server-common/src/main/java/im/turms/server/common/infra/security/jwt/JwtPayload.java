@@ -27,8 +27,10 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import im.turms.server.common.infra.jackson.UnixTimestampDeserializer;
+import im.turms.server.common.infra.jackson.UnixTimestampSerializer;
 
 /**
  * @author James Chen
@@ -37,11 +39,11 @@ public record JwtPayload(
         @JsonProperty("iss") String issuer,
         @JsonProperty("sub") String subject,
         @JsonProperty("aud") List<String> audiences,
-        @JsonProperty("exp") @JsonDeserialize(
+        @JsonProperty("exp") @JsonSerialize(using = UnixTimestampSerializer.class) @JsonDeserialize(
                 using = UnixTimestampDeserializer.class) Date expiresAt,
-        @JsonProperty("nbf") @JsonDeserialize(
+        @JsonProperty("nbf") @JsonSerialize(using = UnixTimestampSerializer.class) @JsonDeserialize(
                 using = UnixTimestampDeserializer.class) Date notBefore,
-        @JsonProperty("iat") @JsonDeserialize(
+        @JsonProperty("iat") @JsonSerialize(using = UnixTimestampSerializer.class) @JsonDeserialize(
                 using = UnixTimestampDeserializer.class) Date issuedAt,
         @JsonProperty("jti") String jwtId,
         Map<String, Object> customClaims

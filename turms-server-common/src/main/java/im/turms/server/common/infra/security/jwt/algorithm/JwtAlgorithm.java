@@ -38,6 +38,8 @@ public abstract sealed class JwtAlgorithm permits AsymmetricAlgorithm, Symmetric
         javaAlgorithmName = definition.getJavaAlgorithmName();
     }
 
+    public abstract byte[] sign(byte[] encodedHeader, byte[] encodedPayload);
+
     public abstract boolean verify(Jwt jwt);
 
 }

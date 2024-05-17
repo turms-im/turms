@@ -17,13 +17,10 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
+import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
+import jakarta.annotation.Nullable;
 
-import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.security.jwt.Jwt;
 
 /**
@@ -32,36 +29,27 @@ import im.turms.server.common.infra.security.jwt.Jwt;
 public class EcdsaAlgorithm extends AsymmetricAlgorithm {
 
     private final int ecNumberSize;
+    @Nullable
     private final ECPublicKey publicKey;
-
-    static {
-        KeyPair keys;
-        try {
-            keys = KeyPairGenerator.getInstance("EC")
-                    .generateKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
-        }
-        try {
-            Signature signature = Signature.getInstance("SHA256WithECDSAInP1363Format");
-            signature.initVerify(keys.getPublic());
-            signature.update("CVE-2022-21449".getBytes());
-            if (signature.verify(new byte[64])) {
-                throw new IncompatibleJvmException(
-                        "The current JVM is vulnerable to CVE-2022-21449. Please upgrade to a patched Java version");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to validate the availability of EC algorithm", e);
-        }
-    }
+    @Nullable
+    private final ECPrivateKey privateKey;
 
     public EcdsaAlgorithm(
             JwtAlgorithmDefinition definition,
             int ecNumberSize,
-            ECPublicKey publicKey) {
+            @Nullable ECPublicKey publicKey,
+            @Nullable ECPrivateKey privateKey) {
         super(definition);
         this.ecNumberSize = ecNumberSize;
         this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    }
+
+    @Override
+    public byte[] sign(byte[] encodedHeader, byte[] encodedPayload) {
+        byte[] signature =
+                createSignature(getJavaAlgorithmName(), privateKey, encodedHeader, encodedPayload);
+        return der2Jose(signature);
     }
 
     @Override
@@ -72,6 +60,63 @@ public class EcdsaAlgorithm extends AsymmetricAlgorithm {
                 jwt.encodedHeaderBytes(),
                 jwt.encodedPayloadBytes(),
                 jose2Der(signatureBytes));
+    }
+
+    byte[] der2Jose(byte[] derSignature) {
+        // DER Structure: http://crypto.stackexchange.com/a/1797
+        boolean derEncoded = derSignature[0] == 0x30 && derSignature.length != ecNumberSize * 2;
+        if (!derEncoded) {
+            throw new IllegalArgumentException("Invalid DER signature format");
+        }
+
+        final byte[] joseSignature = new byte[ecNumberSize * 2];
+
+        // Skip 0x30
+        int offset = 1;
+        if (derSignature[1] == (byte) 0x81) {
+            // Skip sign
+            offset++;
+        }
+
+        // Convert to unsigned. Should match DER length - offset
+        int encodedLength = derSignature[offset++] & 0xff;
+        if (encodedLength != derSignature.length - offset) {
+            throw new IllegalArgumentException("Invalid DER signature format");
+        }
+
+        // Skip 0x02
+        offset++;
+
+        // Obtain R number length (Includes padding) and skip it
+        int rlength = derSignature[offset++];
+        if (rlength > ecNumberSize + 1) {
+            throw new IllegalArgumentException("Invalid DER signature format");
+        }
+        int rpadding = ecNumberSize - rlength;
+        // Retrieve R number
+        System.arraycopy(derSignature,
+                offset + Math.max(-rpadding, 0),
+                joseSignature,
+                Math.max(rpadding, 0),
+                rlength + Math.min(rpadding, 0));
+
+        // Skip R number and 0x02
+        offset += rlength + 1;
+
+        // Obtain S number length. (Includes padding)
+        int slength = derSignature[offset++];
+        if (slength > ecNumberSize + 1) {
+            throw new IllegalArgumentException("Invalid DER signature format");
+        }
+        int spadding = ecNumberSize - slength;
+        // Retrieve R number
+        System.arraycopy(derSignature,
+                offset + Math.max(-spadding, 0),
+                joseSignature,
+                ecNumberSize + Math.max(spadding, 0),
+                slength + Math.min(spadding, 0));
+
+        return joseSignature;
     }
 
     private byte[] jose2Der(byte[] joseSignature) {

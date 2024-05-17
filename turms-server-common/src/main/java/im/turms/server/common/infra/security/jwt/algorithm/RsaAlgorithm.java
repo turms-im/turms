@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.security.jwt.algorithm;
 
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 import im.turms.server.common.infra.security.jwt.Jwt;
@@ -27,10 +28,20 @@ import im.turms.server.common.infra.security.jwt.Jwt;
 public class RsaAlgorithm extends AsymmetricAlgorithm {
 
     private final RSAPublicKey publicKey;
+    private final RSAPrivateKey privateKey;
 
-    public RsaAlgorithm(JwtAlgorithmDefinition definition, RSAPublicKey publicKey) {
+    public RsaAlgorithm(
+            JwtAlgorithmDefinition definition,
+            RSAPublicKey publicKey,
+            RSAPrivateKey privateKey) {
         super(definition);
         this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    }
+
+    @Override
+    public byte[] sign(byte[] encodedHeader, byte[] encodedPayload) {
+        return createSignature(getJavaAlgorithmName(), privateKey, encodedHeader, encodedPayload);
     }
 
     @Override

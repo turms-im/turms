@@ -28,18 +28,13 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import jakarta.annotation.Nullable;
 
-import com.fasterxml.jackson.databind.ObjectReader;
-
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.json.JsonCodecPool;
-import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtIdentityAccessManagementVerificationProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.jwt.JwtKeyAlgorithmProperties;
@@ -60,17 +55,8 @@ import im.turms.server.common.infra.security.jwt.exception.JwtSignatureVerificat
  */
 public class JwtManager {
 
-    private static final Base64.Decoder URL_DECODER = Base64.getUrlDecoder();
-    private static final ObjectReader PAYLOAD_READER;
-    private static final ObjectReader HEADER_READER;
-
     private final Map<String, JwtAlgorithm> nameToAlgorithm;
     private final List<Predicate<JwtPayload>> verifications = new ArrayList<>(3);
-
-    static {
-        PAYLOAD_READER = JsonCodecPool.MAPPER.readerFor(JwtPayload.class);
-        HEADER_READER = JsonCodecPool.MAPPER.readerFor(JwtHeader.class);
-    }
 
     public JwtManager(
             JwtIdentityAccessManagementVerificationProperties verificationProperties,
@@ -109,17 +95,17 @@ public class JwtManager {
         if ((publicKey = getRsaPublicKey(rsa256)) != null) {
             definition = JwtAlgorithmDefinition.RS256;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey, null)));
         }
         if ((publicKey = getRsaPublicKey(rsa384)) != null) {
             definition = JwtAlgorithmDefinition.RS384;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey, null)));
         }
         if ((publicKey = getRsaPublicKey(rsa512)) != null) {
             definition = JwtAlgorithmDefinition.RS512;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey)));
+                    new RsaAlgorithm(definition, (RSAPublicKey) publicKey, null)));
         }
         if ((publicKey = getRsaPublicKey(ps256)) != null) {
             definition = JwtAlgorithmDefinition.PS256;
@@ -127,6 +113,7 @@ public class JwtManager {
                     new RsaPssAlgorithm(
                             definition,
                             (RSAPublicKey) publicKey,
+                            null,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA256.getDigestAlgorithm(),
                                     "MGF1",
@@ -140,6 +127,7 @@ public class JwtManager {
                     new RsaPssAlgorithm(
                             definition,
                             (RSAPublicKey) publicKey,
+                            null,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA384.getDigestAlgorithm(),
                                     "MGF1",
@@ -153,6 +141,7 @@ public class JwtManager {
                     new RsaPssAlgorithm(
                             definition,
                             (RSAPublicKey) publicKey,
+                            null,
                             new PSSParameterSpec(
                                     MGF1ParameterSpec.SHA512.getDigestAlgorithm(),
                                     "MGF1",
@@ -163,17 +152,17 @@ public class JwtManager {
         if ((publicKey = getEcPublicKey(ecdsa256)) != null) {
             definition = JwtAlgorithmDefinition.ES256;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new EcdsaAlgorithm(definition, 32, (ECPublicKey) publicKey)));
+                    new EcdsaAlgorithm(definition, 32, (ECPublicKey) publicKey, null)));
         }
         if ((publicKey = getEcPublicKey(ecdsa384)) != null) {
             definition = JwtAlgorithmDefinition.ES384;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new EcdsaAlgorithm(definition, 48, (ECPublicKey) publicKey)));
+                    new EcdsaAlgorithm(definition, 48, (ECPublicKey) publicKey, null)));
         }
         if ((publicKey = getEcPublicKey(ecdsa512)) != null) {
             definition = JwtAlgorithmDefinition.ES512;
             algorithms.add(Map.entry(definition.getJwtAlgorithmName(),
-                    new EcdsaAlgorithm(definition, 66, (ECPublicKey) publicKey)));
+                    new EcdsaAlgorithm(definition, 66, (ECPublicKey) publicKey, null)));
         }
         definition = JwtAlgorithmDefinition.HS256;
         if ((secretKey = getSecretKey(definition.getJwtAlgorithmName(), hmac256)) != null) {
@@ -251,69 +240,7 @@ public class JwtManager {
 
     public Jwt decode(String jwt) throws InvalidJwtException, NoSuchAlgorithmException,
             JwtSignatureVerificationException {
-        List<String> parts = StringUtil.splitMultipleLatin1(jwt, AsciiCode.PERIOD);
-        if (parts == null || parts.size() != 3) {
-            throw new InvalidJwtException("The input JWT must have three parts");
-        }
-        byte[] encodedHeaderBytes = StringUtil.getBytes(parts.get(0));
-        byte[] encodedPayloadBytes = StringUtil.getBytes(parts.get(1));
-        JwtHeader header = decodeHeader(encodedHeaderBytes);
-        JwtPayload payload = decodePayload(encodedPayloadBytes);
-        String algorithmName = header.algorithm();
-        JwtAlgorithm algorithm = nameToAlgorithm.get(algorithmName);
-        if (algorithm == null) {
-            throw new NoSuchAlgorithmException(
-                    "Unknown algorithm: \""
-                            + algorithmName
-                            + "\"");
-        }
-        for (Predicate<JwtPayload> verification : verifications) {
-            if (!verification.test(payload)) {
-                throw new JwtSignatureVerificationException("The input JWT signature is invalid");
-            }
-        }
-        Jwt jwtEntity = new Jwt(
-                header,
-                payload,
-                encodedHeaderBytes,
-                encodedPayloadBytes,
-                URL_DECODER.decode(StringUtil.getBytes(parts.get(2))));
-        if (algorithm.verify(jwtEntity)) {
-            return jwtEntity;
-        }
-        throw new JwtSignatureVerificationException("The input JWT signature is invalid");
-    }
-
-    private JwtHeader decodeHeader(byte[] encodedHeaderBytes) {
-        byte[] decodedHeaderBytes;
-        try {
-            decodedHeaderBytes = URL_DECODER.decode(encodedHeaderBytes);
-        } catch (Exception e) {
-            throw new InvalidJwtException(
-                    "The input JWT header is not a valid Base64-encoded string",
-                    e);
-        }
-        try {
-            return HEADER_READER.readValue(decodedHeaderBytes);
-        } catch (Exception e) {
-            throw new InvalidJwtException("Illegal JWT header format", e);
-        }
-    }
-
-    private JwtPayload decodePayload(byte[] encodedPayloadBytes) {
-        byte[] decodedPayloadBytes;
-        try {
-            decodedPayloadBytes = URL_DECODER.decode(encodedPayloadBytes);
-        } catch (Exception e) {
-            throw new InvalidJwtException(
-                    "The input JWT payload is not a valid Base64-encoded string",
-                    e);
-        }
-        try {
-            return PAYLOAD_READER.readValue(decodedPayloadBytes);
-        } catch (Exception e) {
-            throw new InvalidJwtException("Illegal JWT payload format", e);
-        }
+        return JwtUtil.decode(nameToAlgorithm, verifications, jwt);
     }
 
 }

@@ -34,11 +34,11 @@ public abstract non-sealed class SymmetricAlgorithm extends JwtAlgorithm {
         MacPool.ensureAvailability(definition.getJavaAlgorithmName());
     }
 
-    private byte[] createSignature(
+    public byte[] createSignature(
             String algorithm,
             SecretKeySpec secretKeySpec,
-            byte[] headerBytes,
-            byte[] payloadBytes) {
+            byte[] encodedHeader,
+            byte[] encodedPayload) {
         Mac mac = MacPool.get(algorithm);
         try {
             mac.init(secretKeySpec);
@@ -48,19 +48,19 @@ public abstract non-sealed class SymmetricAlgorithm extends JwtAlgorithm {
                             + secretKeySpec,
                     e);
         }
-        mac.update(headerBytes);
+        mac.update(encodedHeader);
         mac.update(JWT_PART_SEPARATOR);
-        return mac.doFinal(payloadBytes);
+        return mac.doFinal(encodedPayload);
     }
 
     public boolean verifySignature(
             String algorithm,
             SecretKeySpec secretKeySpec,
-            byte[] headerBytes,
-            byte[] payloadBytes,
-            byte[] signatureBytes) {
-        return MessageDigest.isEqual(signatureBytes,
-                createSignature(algorithm, secretKeySpec, headerBytes, payloadBytes));
+            byte[] encodedHeader,
+            byte[] encodedPayload,
+            byte[] signature) {
+        return MessageDigest.isEqual(signature,
+                createSignature(algorithm, secretKeySpec, encodedHeader, encodedPayload));
     }
 
 }

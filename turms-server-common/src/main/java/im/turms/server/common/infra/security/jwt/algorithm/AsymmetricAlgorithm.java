@@ -19,6 +19,7 @@ package im.turms.server.common.infra.security.jwt.algorithm;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
@@ -36,52 +37,50 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
         SignaturePool.ensureAvailability(definition.getJavaAlgorithmName());
     }
 
-    public boolean verifySignature(
+    public byte[] createSignature(
             String algorithm,
-            PublicKey publicKey,
-            byte[] headerBytes,
-            byte[] payloadBytes,
-            byte[] signatureBytes) {
+            PrivateKey privateKey,
+            byte[] encodedHeader,
+            byte[] encodedPayload) {
         Signature signature = SignaturePool.get(algorithm);
         try {
-            signature.initVerify(publicKey);
+            signature.initSign(privateKey);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException(
-                    "Invalid public key: "
-                            + publicKey,
+                    "Invalid private key: "
+                            + privateKey,
                     e);
         }
         try {
-            signature.update(headerBytes);
+            signature.update(encodedHeader);
         } catch (SignatureException e) {
-            throw new IllegalStateException("Failed to update the header bytes to be verified", e);
+            throw new IllegalStateException("Failed to update the header bytes to be signed", e);
         }
         try {
             signature.update(JWT_PART_SEPARATOR);
         } catch (SignatureException e) {
             throw new IllegalStateException(
-                    "Failed to update the JWT part separator to be verified",
+                    "Failed to update the JWT part separator to be signed",
                     e);
         }
         try {
-            signature.update(payloadBytes);
+            signature.update(encodedPayload);
         } catch (SignatureException e) {
-            throw new IllegalStateException("Failed to update the payload bytes to be verified", e);
+            throw new IllegalStateException("Failed to update the payload bytes to be signed", e);
         }
         try {
-            return signature.verify(signatureBytes);
+            return signature.sign();
         } catch (SignatureException e) {
-            throw new IllegalStateException("Failed to verify", e);
+            throw new IllegalStateException("Failed to sign", e);
         }
     }
 
-    public boolean verifySignature(
+    public byte[] createSignature(
             String algorithm,
             AlgorithmParameterSpec parameterSpec,
-            PublicKey publicKey,
-            byte[] headerBytes,
-            byte[] payloadBytes,
-            byte[] signatureBytes) {
+            PrivateKey privateKey,
+            byte[] encodedHeader,
+            byte[] encodedPayload) {
         Signature signature = SignaturePool.get(algorithm);
         try {
             signature.setParameter(parameterSpec);
@@ -92,7 +91,46 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
                     e);
         }
         try {
-            signature.initVerify(publicKey);
+            signature.initSign(privateKey);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException(
+                    "Invalid private key: "
+                            + privateKey,
+                    e);
+        }
+        try {
+            signature.update(encodedHeader);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the header bytes to be signed", e);
+        }
+        try {
+            signature.update(JWT_PART_SEPARATOR);
+        } catch (SignatureException e) {
+            throw new IllegalStateException(
+                    "Failed to update the JWT part separator to be signed",
+                    e);
+        }
+        try {
+            signature.update(encodedPayload);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the payload bytes to be signed", e);
+        }
+        try {
+            return signature.sign();
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to sign", e);
+        }
+    }
+
+    public boolean verifySignature(
+            String algorithm,
+            PublicKey publicKey,
+            byte[] encodedHeader,
+            byte[] encodedPayload,
+            byte[] signature) {
+        Signature s = SignaturePool.get(algorithm);
+        try {
+            s.initVerify(publicKey);
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException(
                     "Invalid public key: "
@@ -100,24 +138,72 @@ public abstract non-sealed class AsymmetricAlgorithm extends JwtAlgorithm {
                     e);
         }
         try {
-            signature.update(headerBytes);
+            s.update(encodedHeader);
         } catch (SignatureException e) {
             throw new IllegalStateException("Failed to update the header bytes to be verified", e);
         }
         try {
-            signature.update(JWT_PART_SEPARATOR);
+            s.update(JWT_PART_SEPARATOR);
         } catch (SignatureException e) {
             throw new IllegalStateException(
                     "Failed to update the JWT part separator to be verified",
                     e);
         }
         try {
-            signature.update(payloadBytes);
+            s.update(encodedPayload);
         } catch (SignatureException e) {
             throw new IllegalStateException("Failed to update the payload bytes to be verified", e);
         }
         try {
-            return signature.verify(signatureBytes);
+            return s.verify(signature);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to verify", e);
+        }
+    }
+
+    public boolean verifySignature(
+            String algorithm,
+            AlgorithmParameterSpec parameterSpec,
+            PublicKey publicKey,
+            byte[] encodedHeader,
+            byte[] encodedPayload,
+            byte[] signature) {
+        Signature s = SignaturePool.get(algorithm);
+        try {
+            s.setParameter(parameterSpec);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new IllegalArgumentException(
+                    "Invalid algorithm parameter: "
+                            + parameterSpec,
+                    e);
+        }
+        try {
+            s.initVerify(publicKey);
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException(
+                    "Invalid public key: "
+                            + publicKey,
+                    e);
+        }
+        try {
+            s.update(encodedHeader);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the header bytes to be verified", e);
+        }
+        try {
+            s.update(JWT_PART_SEPARATOR);
+        } catch (SignatureException e) {
+            throw new IllegalStateException(
+                    "Failed to update the JWT part separator to be verified",
+                    e);
+        }
+        try {
+            s.update(encodedPayload);
+        } catch (SignatureException e) {
+            throw new IllegalStateException("Failed to update the payload bytes to be verified", e);
+        }
+        try {
+            return s.verify(signature);
         } catch (SignatureException e) {
             throw new IllegalStateException("Failed to verify", e);
         }
