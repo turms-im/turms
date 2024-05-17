@@ -195,4 +195,19 @@ public final class ClassUtil {
                 .getTypeName() + '#' + signature;
     }
 
+    /**
+     * @see Method#toShortSignature()
+     */
+    public static String getMethodSignature(Method method) {
+        StringJoiner signature = new StringJoiner(
+                ",",
+                method.getName()
+                        + "(",
+                ")");
+        for (Class<?> parameterType : method.getParameterTypes()) {
+            signature.add(parameterType.getTypeName());
+        }
+        return signature.toString();
+    }
+
 }

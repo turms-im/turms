@@ -724,7 +724,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
 
     private Exception translateException(Throwable t, Method method, TurmsExtension extension) {
         String message = "Failed to invoke the method \""
-                + method.getName()
+                + ClassUtil.getMethodSignature(method)
                 + "\" of the extension ("
                 + extension.getClass()
                         .getName()
