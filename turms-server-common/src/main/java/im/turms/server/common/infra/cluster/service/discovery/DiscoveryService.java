@@ -63,10 +63,12 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.lang.MathUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.cluster.DiscoveryProperties;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.time.DurationConst;
@@ -131,6 +133,8 @@ public class DiscoveryService implements ClusterService {
 
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
 
+    private final long heartbeatTimeoutMillis;
+
     public DiscoveryService(
             String clusterId,
             String nodeId,
@@ -173,8 +177,9 @@ public class DiscoveryService implements ClusterService {
                 this,
                 sharedConfigService,
                 localMember,
-                discoveryProperties.getHeartbeatTimeoutSeconds(),
                 discoveryProperties.getHeartbeatIntervalSeconds());
+        heartbeatTimeoutMillis = MathUtil
+                .multiply(discoveryProperties.getHeartbeatTimeoutSeconds(), 1000L, Long.MAX_VALUE);
         serviceAddressManager.addOnNodeAddressInfoChangedListener(info -> {
             String nodeHost = info.memberHost();
             String adminApiAddress = info.adminApiAddress();
@@ -231,6 +236,14 @@ public class DiscoveryService implements ClusterService {
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
+                if (!isAvailableMember(member, System.currentTimeMillis())) {
+                    String nodeId = member.getNodeId();
+                    boolean isConflictedNodeRemoved =
+                            removeMemberIfInavailable(nodeId).block(CRUD_TIMEOUT_DURATION);
+                    if (isConflictedNodeRemoved) {
+                        continue;
+                    }
+                }
                 String message =
                         "Failed to bootstrap the local node because the local node has been registered. "
                                 + "Local Node: "
@@ -308,6 +321,15 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.find(Member.class, filter);
     }
 
+    private Mono<Member> queryMember(String nodeId) {
+        String clusterId = localNodeStatusManager.getLocalMember()
+                .getClusterId();
+        Filter filter = Filter.newBuilder(2)
+                .eq(Member.ID_CLUSTER_ID, clusterId)
+                .eq(Member.ID_NODE_ID, nodeId);
+        return sharedConfigService.findOne(Member.class, filter);
+    }
+
     public Mono<Boolean> checkIfMemberExists(String nodeId) {
         String clusterId = localNodeStatusManager.getLocalMember()
                 .getClusterId();
@@ -315,6 +337,28 @@ public class DiscoveryService implements ClusterService {
                 .eq(Member.ID_CLUSTER_ID, clusterId)
                 .eq(Member.ID_NODE_ID, nodeId);
         return sharedConfigService.exists(Member.class, filter);
+    }
+
+    public Mono<Boolean> removeMemberIfInavailable(String nodeId) {
+        String clusterId = localNodeStatusManager.getLocalMember()
+                .getClusterId();
+        Filter filter = Filter.newBuilder(3)
+                .eq(Member.ID_CLUSTER_ID, clusterId)
+                .eq(Member.ID_NODE_ID, nodeId)
+                .lt(Member.STATUS_LAST_HEARTBEAT_DATE,
+                        new Date(System.currentTimeMillis() - heartbeatTimeoutMillis));
+        return sharedConfigService.removeOne(Member.class, filter)
+                .flatMap(deleteResult -> {
+                    if (deleteResult.getDeletedCount() > 0) {
+                        return PublisherPool.TRUE;
+                    }
+                    // If not deleted, it means the member is available,
+                    // or has been removed, so we need to check again here.
+                    return queryMember(nodeId)
+                            .flatMap(member -> isAvailableMember(member, System.currentTimeMillis())
+                                    ? PublisherPool.FALSE
+                                    : removeMemberIfInavailable(nodeId));
+                });
     }
 
     private void listenLeaderChangeEvent() {
@@ -350,7 +394,7 @@ public class DiscoveryService implements ClusterService {
                                     "The leader has been deleted. Tyring to be the first leader after {} seconds",
                                     delay);
                             Mono.delay(Duration.ofSeconds(delay))
-                                    .subscribe(ignored -> {
+                                    .subscribe(null, null, () -> {
                                         if (leader == null) {
                                             localNodeStatusManager.tryBecomeFirstLeader()
                                                     .subscribe(isLeader -> {
@@ -728,6 +772,13 @@ public class DiscoveryService implements ClusterService {
 
     public boolean isKnownMember(String nodeId) {
         return allKnownMembers.containsKey(nodeId);
+    }
+
+    public boolean isAvailableMember(Member knownMember, long now) {
+        Date memberHeartbeat = knownMember.getStatus()
+                .getLastHeartbeatDate();
+        return memberHeartbeat != null
+                && (now - memberHeartbeat.getTime()) < heartbeatTimeoutMillis;
     }
 
     // Leader
