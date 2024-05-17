@@ -220,6 +220,36 @@ public final class Validator {
         }
     }
 
+    public static void inOptionalLengthRange(@Nullable String str, String name, int min, int max) {
+        if (str == null) {
+            return;
+        }
+        int length = str.length();
+        if (min > 0) {
+            if (length < min) {
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        ("\""
+                                + name
+                                + "\" must be greater than or equal to "
+                                + min));
+            } else if (max > 0 && length > max) {
+                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        ("\""
+                                + name
+                                + "\" must be greater than or equal to "
+                                + min
+                                + ", and less than or equal to "
+                                + max).intern());
+            }
+        } else if (max > 0 && length > max) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    ("\""
+                            + name
+                            + "\" must be less than or equal to "
+                            + max).intern());
+        }
+    }
+
     public static void inSizeRange(@Nullable Collection<?> items, String name, int min, int max) {
         if (items == null) {
             return;

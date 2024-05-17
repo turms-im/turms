@@ -66,6 +66,7 @@ import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.Zone;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.model.Tag;
+import im.turms.service.domain.conference.po.Meeting;
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.group.po.Group;
@@ -325,6 +326,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                         mongoProperties.getMessage()
                                 .getOptionalIndex()
                                 .getMessage());
+            } else if (entityClass == Meeting.class) {
+                return isCustomIndexEnabled.test(fieldName,
+                        mongoProperties.getConference()
+                                .getOptionalIndex()
+                                .getMeeting());
             } else if (entityClass == UserFriendRequest.class) {
                 return isCustomIndexEnabled.test(fieldName,
                         mongoProperties.getUser()

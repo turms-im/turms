@@ -47,4 +47,7 @@ public class MongoProperties {
     @NestedConfigurationProperty
     private MessageMongoProperties message = new MessageMongoProperties();
 
+    @NestedConfigurationProperty
+    private ConferenceMongoProperties conference = new ConferenceMongoProperties();
+
 }

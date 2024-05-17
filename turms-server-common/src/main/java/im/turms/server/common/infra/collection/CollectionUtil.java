@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.RandomAccess;
+import java.util.SequencedSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -143,6 +145,12 @@ public final class CollectionUtil {
 
     public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
         return UnifiedSet.newSet(expectedSize);
+    }
+
+    public static <T> SequencedSet<T> newSequencedSet(Collection<T> values) {
+        LinkedHashSet<T> set = LinkedHashSet.newLinkedHashSet(values.size());
+        set.addAll(values);
+        return set;
     }
 
     public static <T> Set<T> newConcurrentSetWithExpectedSize(int expectedSize) {

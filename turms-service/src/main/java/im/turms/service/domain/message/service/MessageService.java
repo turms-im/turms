@@ -64,6 +64,7 @@ import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.net.InetAddressUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -791,7 +792,6 @@ public class MessageService {
         }
         return messageRepository.findByIds(messageIds)
                 .map(message -> {
-                    byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
                     byte[] messageId = LongUtil.toBytes(message.getId());
                     return authAndSaveAndSendMessage(true,
                             null,
@@ -802,7 +802,7 @@ public class MessageService {
                             message.getIsGroupMessage(),
                             true,
                             null,
-                            List.of(messageType, messageId),
+                            List.of(BuiltinSystemMessageType.RECALL_MESSAGE_BYTES, messageId),
                             message.getTargetId(),
                             null,
                             null,
@@ -1084,7 +1084,9 @@ public class MessageService {
 
     /**
      * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage}
-     *         is false and no recipient. {@link MessageAndRecipientIds#message} is null if
+     *         is false and no recipient.
+     *         <p>
+     *         {@link MessageAndRecipientIds#message} is null if
      *         {@link MessageProperties#persistMessage} is false.
      */
     public Mono<MessageAndRecipientIds> authAndSaveMessage(
@@ -1116,26 +1118,9 @@ public class MessageService {
                     if (code != OK) {
                         return Mono.error(ResponseException.get(code, permission.reason()));
                     }
-                    if (queryRecipientIds) {
-                        return isGroupMessage
-                                ? groupMemberService.queryGroupMemberIds(targetId, true)
-                                        .map(memberIds -> CollectionUtil.remove(memberIds,
-                                                senderId))
-                                : Mono.just(Set.of(targetId));
-                    } else {
-                        return (Mono<Set<Long>>) PublisherPool.EMPTY_SET;
-                    }
-                })
-                .flatMap(recipientIds -> {
-                    boolean save = persist == null
-                            ? persistMessage
-                            : persist;
-                    if (!save) {
-                        return recipientIds.isEmpty()
-                                ? Mono.empty()
-                                : Mono.just(new MessageAndRecipientIds(null, recipientIds));
-                    }
-                    return saveMessage(messageId,
+                    return saveMessage0(queryRecipientIds,
+                            persist,
+                            messageId,
                             senderId,
                             senderIp,
                             targetId,
@@ -1145,15 +1130,115 @@ public class MessageService {
                             records,
                             burnAfter,
                             deliveryDate,
-                            null,
                             referenceId,
-                            preMessageId).map(message -> {
-                                if (message.getId() != null && sentMessageCache != null) {
-                                    cacheSentMessage(message);
-                                }
-                                return new MessageAndRecipientIds(message, recipientIds);
-                            });
+                            preMessageId);
                 });
+    }
+
+    /**
+     * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage}
+     *         is false and no recipient.
+     *         <p>
+     *         {@link MessageAndRecipientIds#message} is null if
+     *         {@link MessageProperties#persistMessage} is false.
+     */
+    public Mono<MessageAndRecipientIds> saveMessage(
+            boolean queryRecipientIds,
+            @Nullable Boolean persist,
+            @Nullable Long messageId,
+            @NotNull Long senderId,
+            @Nullable byte[] senderIp,
+            @NotNull Long targetId,
+            @NotNull Boolean isGroupMessage,
+            @NotNull Boolean isSystemMessage,
+            @Nullable String text,
+            @Nullable List<byte[]> records,
+            @Nullable @Min(0) Integer burnAfter,
+            @Nullable @PastOrPresent Date deliveryDate,
+            @Nullable Long referenceId,
+            @Nullable Long preMessageId) {
+        try {
+            Validator.maxLength(text, "text", maxTextLimit);
+            validRecordsLength(records);
+            Validator.pastOrPresent(deliveryDate, "deliveryDate");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        return saveMessage0(queryRecipientIds,
+                persist,
+                messageId,
+                senderId,
+                senderIp,
+                targetId,
+                isGroupMessage,
+                isSystemMessage,
+                text,
+                records,
+                burnAfter,
+                deliveryDate,
+                referenceId,
+                preMessageId);
+    }
+
+    /**
+     * @return {@link reactor.core.publisher.MonoEmpty} if {@link MessageProperties#persistMessage}
+     *         is false and no recipient.
+     *         <p>
+     *         {@link MessageAndRecipientIds#message} is null if
+     *         {@link MessageProperties#persistMessage} is false.
+     */
+    private Mono<MessageAndRecipientIds> saveMessage0(
+            boolean queryRecipientIds,
+            @Nullable Boolean persist,
+            @Nullable Long messageId,
+            @NotNull Long senderId,
+            @Nullable byte[] senderIp,
+            @NotNull Long targetId,
+            @NotNull Boolean isGroupMessage,
+            @NotNull Boolean isSystemMessage,
+            @Nullable String text,
+            @Nullable List<byte[]> records,
+            @Nullable @Min(0) Integer burnAfter,
+            @Nullable @PastOrPresent Date deliveryDate,
+            @Nullable Long referenceId,
+            @Nullable Long preMessageId) {
+        Mono<Set<Long>> queryRecipients;
+        if (queryRecipientIds) {
+            queryRecipients = isGroupMessage
+                    ? groupMemberService.queryGroupMemberIds(targetId, true)
+                            .map(memberIds -> CollectionUtil.remove(memberIds, senderId))
+                    : Mono.just(Set.of(targetId));
+        } else {
+            queryRecipients = PublisherPool.EMPTY_SET;
+        }
+        return queryRecipients.flatMap(recipientIds -> {
+            boolean save = persist == null
+                    ? persistMessage
+                    : persist;
+            if (!save) {
+                return recipientIds.isEmpty()
+                        ? Mono.empty()
+                        : Mono.just(new MessageAndRecipientIds(null, recipientIds));
+            }
+            return saveMessage(messageId,
+                    senderId,
+                    senderIp,
+                    targetId,
+                    isGroupMessage,
+                    isSystemMessage,
+                    text,
+                    records,
+                    burnAfter,
+                    deliveryDate,
+                    null,
+                    referenceId,
+                    preMessageId).map(message -> {
+                        if (message.getId() != null && sentMessageCache != null) {
+                            cacheSentMessage(message);
+                        }
+                        return new MessageAndRecipientIds(message, recipientIds);
+                    });
+        });
     }
 
     public Mono<MessageAndRecipientIds> authAndCloneAndSaveMessage(
@@ -1265,6 +1350,73 @@ public class MessageService {
                                 t));
             }
         })
+                .then();
+    }
+
+    public Mono<Void> saveAndSendMessage(
+            @Nullable Boolean persist,
+            @Nullable Long senderId,
+            @Nullable DeviceType senderDeviceType,
+            @Nullable byte[] senderIp,
+            @Nullable Long messageId,
+            @NotNull Boolean isGroupMessage,
+            @NotNull Boolean isSystemMessage,
+            @Nullable String text,
+            @Nullable List<byte[]> records,
+            @NotNull Long targetId,
+            @Nullable @Min(0) Integer burnAfter,
+            @Nullable Long preMessageId) {
+        try {
+            Validator.notNull(isGroupMessage, "isGroupMessage");
+            Validator.notNull(isSystemMessage, "isSystemMessage");
+            Validator.notNull(targetId, "targetId");
+            Validator.min(burnAfter, "burnAfter", 0);
+            Validator.throwIfAllFalsy("text and records cannot be both null", text, records);
+            Validator.maxLength(text, "text", maxTextLimit);
+            validRecordsLength(records);
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        if (senderId == null) {
+            if (isSystemMessage) {
+                senderId = ADMIN_REQUESTER_ID;
+            } else {
+                return Mono.error(ResponseException.get(ILLEGAL_ARGUMENT,
+                        "senderId must not be null for user messages"));
+            }
+        }
+        Date deliveryDate = new Date();
+        return saveMessage(true,
+                persist,
+                messageId,
+                senderId,
+                senderIp,
+                targetId,
+                isGroupMessage,
+                isSystemMessage,
+                text,
+                records,
+                burnAfter,
+                deliveryDate,
+                null,
+                preMessageId).doOnNext(pair -> {
+                    Message message = pair.message();
+                    sentMessageCounter.increment();
+                    Long msgId = message == null
+                            ? null
+                            : message.getId();
+                    if (msgId != null && sentMessageCache != null) {
+                        cacheSentMessage(message);
+                    }
+                    // No need to let the client wait to send notifications to recipients
+                    Set<Long> recipientIds = pair.recipientIds();
+                    sendMessage(message, recipientIds, senderDeviceType).subscribe(null,
+                            t -> LOGGER.error(
+                                    "Failed to send the message ({}) to the recipients: {}",
+                                    msgId,
+                                    recipientIds,
+                                    t));
+                })
                 .then();
     }
 

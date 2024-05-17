@@ -106,6 +106,22 @@ public final class QueryOptions extends BaseBson {
         return this;
     }
 
+    public QueryOptions skipIfNotNull(@Nullable Integer skip) {
+        if (skip == null) {
+            return this;
+        }
+        document.put("skip", new BsonInt32(skip));
+        return this;
+    }
+
+    public QueryOptions limitIfNotNull(@Nullable Integer limit) {
+        if (limit == null) {
+            return this;
+        }
+        document.put("limit", new BsonInt32(limit));
+        return this;
+    }
+
     /**
      * @implNote filter count: 1
      */

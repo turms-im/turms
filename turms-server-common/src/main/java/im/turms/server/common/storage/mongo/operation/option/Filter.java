@@ -53,18 +53,23 @@ public class Filter extends BaseBson {
      * [start, end)
      */
     public Filter addBetweenIfNotNull(@NotNull String key, @Nullable DateRange dateRange) {
-        if (dateRange != null) {
-            Date start = dateRange.start();
-            Date end = dateRange.end();
-            if (start != null && end == null) {
-                document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
-            } else if (start == null && end != null) {
-                document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
-            } else if (start != null) {
-                document.append(key,
-                        new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
-                                .append("$lt", new BsonDateTime(end.getTime())));
-            }
+        return dateRange == null
+                ? this
+                : addBetweenIfNotNull(key, dateRange.start(), dateRange.end());
+    }
+
+    public Filter addBetweenIfNotNull(
+            @NotNull String key,
+            @Nullable Date start,
+            @Nullable Date end) {
+        if (start != null && end == null) {
+            document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
+        } else if (start == null && end != null) {
+            document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
+        } else if (start != null) {
+            document.append(key,
+                    new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
+                            .append("$lt", new BsonDateTime(end.getTime())));
         }
         return this;
     }

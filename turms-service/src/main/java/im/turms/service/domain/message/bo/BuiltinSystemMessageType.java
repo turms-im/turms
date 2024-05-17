@@ -31,4 +31,8 @@ public class BuiltinSystemMessageType {
      */
     public static final int NORMAL = 0;
     public static final int RECALL_MESSAGE = 1;
+    public static final int MEETING_INVITATION = 2;
+
+    public static final byte[] RECALL_MESSAGE_BYTES = {RECALL_MESSAGE};
+    public static final byte[] MEETING_INVITATION_BYTES = {MEETING_INVITATION};
 }

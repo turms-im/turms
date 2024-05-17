@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.service.infra.plugin.extension.ConferenceServiceProvider;
 import im.turms.service.infra.plugin.extension.StorageServiceProvider;
 
 /**
@@ -33,7 +34,7 @@ public class PluginConfiguration {
 
     @Bean
     public Set<Class<? extends ExtensionPoint>> singletonExtensionPoints() {
-        return Set.of(StorageServiceProvider.class);
+        return Set.of(ConferenceServiceProvider.class, StorageServiceProvider.class);
     }
 
 }

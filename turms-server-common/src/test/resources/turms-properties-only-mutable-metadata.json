@@ -737,6 +737,134 @@
     "clientApi": {
       "logging": {}
     },
+    "conference": {
+      "meeting": {
+        "id": {
+          "type": {
+            "deprecated": false,
+            "description": "The ID type",
+            "global": true,
+            "mutable": true,
+            "options": [
+              "DIGIT_9",
+              "DIGIT_10"
+            ],
+            "sensitive": false,
+            "type": "enum"
+          }
+        },
+        "intro": {
+          "maxLength": {
+            "deprecated": false,
+            "description": "The maximum length of the intro. 0 means no maximum length",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          },
+          "minLength": {
+            "deprecated": false,
+            "description": "The minimum length of the intro. 0 means no minimum length",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          }
+        },
+        "name": {
+          "maxLength": {
+            "deprecated": false,
+            "description": "The maximum length of the name. 0 means no maximum length",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          },
+          "minLength": {
+            "deprecated": false,
+            "description": "The minimum length of the name. 0 means no minimum length",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          }
+        },
+        "password": {
+          "maxLength": {
+            "deprecated": false,
+            "description": "The maximum length of the password",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          },
+          "minLength": {
+            "deprecated": false,
+            "description": "The minimum length of the password",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          },
+          "policy": {
+            "deprecated": false,
+            "description": "The password policy",
+            "global": true,
+            "mutable": true,
+            "options": [
+              "USER_INPUT_REQUIRED",
+              "USER_INPUT_OPTIONAL",
+              "USER_INPUT_OR_SYSTEM_GENERATED",
+              "SYSTEM_GENERATED",
+              "PROHIBITED"
+            ],
+            "sensitive": false,
+            "type": "enum"
+          },
+          "type": {
+            "deprecated": false,
+            "description": "The password type",
+            "global": true,
+            "mutable": true,
+            "options": [
+              "NUMERIC",
+              "ALPHABETIC",
+              "ALPHANUMERIC"
+            ],
+            "sensitive": false,
+            "type": "enum"
+          }
+        },
+        "quota": {
+          "maxActiveMeetingCountPerUser": {
+            "deprecated": false,
+            "description": "The maximum number of active meetings per user",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          }
+        },
+        "scheduling": {
+          "allowCancel": {
+            "deprecated": false,
+            "description": "Whether to allow users to cancel the meeting",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "boolean"
+          },
+          "maxAllowedStartDateOffsetSeconds": {
+            "deprecated": false,
+            "description": "The maximum allowed meeting start date offset in seconds. 0 means no offset allowed",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "int"
+          }
+        }
+      }
+    },
     "conversation": {
       "readReceipt": {
         "allowMoveReadDateForward": {
@@ -1122,6 +1250,11 @@
       "admin": {
         "optionalIndex": {
           "admin": {}
+        }
+      },
+      "conference": {
+        "optionalIndex": {
+          "meeting": {}
         }
       },
       "conversation": {},
@@ -1599,6 +1732,60 @@
         "notifyRequesterOtherOnlineSessions": {
           "deprecated": false,
           "description": "Whether to notify the requester's other online sessions when they have updated a group",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "meetingCanceled": {
+        "notifyMeetingParticipants": {
+          "deprecated": false,
+          "description": "Whether to notify the meeting participants when the creator has canceled a meeting",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have canceled a meeting",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "meetingInvitationUpdated": {
+        "notifyMeetingParticipants": {
+          "deprecated": false,
+          "description": "Whether to notify the meeting participants when the requester has updated a meeting invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a meeting invitation",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "meetingUpdated": {
+        "notifyMeetingParticipants": {
+          "deprecated": false,
+          "description": "Whether to notify the meeting participants when the creator has updated a meeting",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated a meeting",
           "global": true,
           "mutable": true,
           "sensitive": false,

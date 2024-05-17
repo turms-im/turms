@@ -344,6 +344,7 @@ services:
         -Dturms.service.mongo.group.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.service.mongo.conversation.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.service.mongo.message.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
+        -Dturms.service.mongo.conference.uri=mongodb://mongodb-router:27017/turms-standalone?authSource=admin
 
         -Dturms.service.redis.sequence-id.uri-list[0]=redis://redis:6379
         -Dturms.service.redis.session.uri-list[0]=redis://redis:6379

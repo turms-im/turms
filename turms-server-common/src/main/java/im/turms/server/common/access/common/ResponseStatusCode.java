@@ -398,7 +398,24 @@ public enum ResponseStatusCode {
 
     // Search
     SEARCHING_USER_IS_DISABLED(7100, "Searching users is disabled", 510),
-    SEARCHING_GROUP_IS_DISABLED(7200, "Searching groups is disabled", 510);
+    SEARCHING_GROUP_IS_DISABLED(7200, "Searching groups is disabled", 510),
+
+    // Conference
+    CONFERENCE_NOT_IMPLEMENTED(8000, "The conference feature is enabled but not implemented yet",
+            501),
+
+    // Conference - Meeting
+    CANCELING_MEETING_IS_DISABLED(8100, "Cancelling meetings is disabled", 510),
+    CREATE_MEETING_EXCEEDING_MAX_ACTIVE_MEETING_COUNT(8101,
+            "The user cannot create a new meeting because the user has created too many active meetings",
+            403),
+    NOT_CREATOR_TO_CANCEL_MEETING(8102, "Only the meeting creator can cancel the meeting", 403),
+    WRONG_PASSWORD_TO_UPDATE_MEETING_INVITATION(8103,
+            "Wrong password to update the meeting invitation", 403),
+    JOIN_PENDING_MEETING(8104, "Cannot join the pending meeting", 403),
+    JOIN_ENDED_MEETING(8105, "Cannot join the ended meeting", 403),
+    JOIN_EXPIRED_MEETING(8106, "Cannot join the expired meeting", 403),
+    JOIN_CANCELED_MEETING(8107, "Cannot join the canceled meeting", 403);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();

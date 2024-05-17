@@ -51,6 +51,7 @@ import im.turms.server.common.access.client.dto.request.message.CreateMessageReq
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.service.domain.conference.po.Meeting;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
 
@@ -75,6 +76,56 @@ public final class ProtoModelConvertor {
             list.add(entry.getValue());
         }
         return list;
+    }
+
+    public static im.turms.server.common.access.client.dto.model.conference.Meeting.Builder meeting2proto(
+            Meeting meeting,
+            @Nullable String accessToken) {
+        var builder = ClientMessagePool.getMeetingBuilder();
+        Long id = meeting.getId();
+        Long userId = meeting.getUserId();
+        Long groupId = meeting.getGroupId();
+        Long creatorId = meeting.getCreatorId();
+        String name = meeting.getName();
+        String intro = meeting.getIntro();
+        String password = meeting.getPassword();
+        Date startDate = meeting.getStartDate();
+        Date endDate = meeting.getEndDate();
+        Date cancelDate = meeting.getCancelDate();
+        if (id != null) {
+            builder.setId(id);
+        }
+        if (userId != null) {
+            builder.setUserId(userId);
+        }
+        if (groupId != null) {
+            builder.setGroupId(groupId);
+        }
+        if (creatorId != null) {
+            builder.setCreatorId(creatorId);
+        }
+        if (name != null) {
+            builder.setName(name);
+        }
+        if (intro != null) {
+            builder.setIntro(intro);
+        }
+        if (password != null) {
+            builder.setPassword(password);
+        }
+        if (startDate != null) {
+            builder.setStartDate(startDate.getTime());
+        }
+        if (endDate != null) {
+            builder.setEndDate(endDate.getTime());
+        }
+        if (cancelDate != null) {
+            builder.setCancelDate(cancelDate.getTime());
+        }
+        if (accessToken != null) {
+            builder.setAccessToken(accessToken);
+        }
+        return builder;
     }
 
     public static im.turms.server.common.access.client.dto.model.message.Message.Builder message2proto(

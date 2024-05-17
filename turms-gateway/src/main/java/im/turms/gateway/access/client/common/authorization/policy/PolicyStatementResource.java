@@ -36,6 +36,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MEETING_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
@@ -45,6 +46,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_MEETING_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
@@ -59,6 +61,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MEETINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
@@ -76,6 +79,8 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_MEMBER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MEETING_INVITATION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MEETING_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
@@ -146,6 +151,11 @@ public enum PolicyStatementResource {
     // region typing status
     TYPING_STATUS(Collections.emptySet(), Collections.emptySet(),
             Set.of(UPDATE_TYPING_STATUS_REQUEST), Collections.emptySet()),
+    // endregion
+    // region conference
+    MEETING(Set.of(CREATE_MEETING_REQUEST), Set.of(DELETE_MEETING_REQUEST),
+            Set.of(UPDATE_MEETING_REQUEST, UPDATE_MEETING_INVITATION_REQUEST),
+            Set.of(QUERY_MEETINGS_REQUEST)),
     // endregion
     // region storage
     RESOURCE(Collections.emptySet(), Set.of(DELETE_RESOURCE_REQUEST),

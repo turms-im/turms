@@ -21,6 +21,8 @@ import io.netty.util.concurrent.FastThreadLocal;
 
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.common.StringsWithVersion;
+import im.turms.server.common.access.client.dto.model.conference.Meeting;
+import im.turms.server.common.access.client.dto.model.conference.Meetings;
 import im.turms.server.common.access.client.dto.model.conversation.Conversations;
 import im.turms.server.common.access.client.dto.model.conversation.GroupConversation;
 import im.turms.server.common.access.client.dto.model.conversation.PrivateConversation;
@@ -56,6 +58,8 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest;
+import im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest;
 import im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
@@ -209,6 +213,20 @@ public class ClientMessagePool {
                 }
             };
 
+    private static final FastThreadLocal<Meeting.Builder> MEETING = new FastThreadLocal<>() {
+        @Override
+        protected Meeting.Builder initialValue() {
+            return Meeting.newBuilder();
+        }
+    };
+
+    private static final FastThreadLocal<Meetings.Builder> MEETINGS = new FastThreadLocal<>() {
+        @Override
+        protected Meetings.Builder initialValue() {
+            return Meetings.newBuilder();
+        }
+    };
+
     private static final FastThreadLocal<Message.Builder> MESSAGE = new FastThreadLocal<>() {
         @Override
         protected Message.Builder initialValue() {
@@ -307,6 +325,22 @@ public class ClientMessagePool {
                 @Override
                 protected TurmsRequest.Builder initialValue() {
                     return TurmsRequest.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<UpdateMeetingRequest.Builder> UPDATE_MEETING_REQUEST =
+            new FastThreadLocal<>() {
+                @Override
+                protected UpdateMeetingRequest.Builder initialValue() {
+                    return UpdateMeetingRequest.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<UpdateMeetingInvitationRequest.Builder> UPDATE_MEETING_INVITATION_REQUEST =
+            new FastThreadLocal<>() {
+                @Override
+                protected UpdateMeetingInvitationRequest.Builder initialValue() {
+                    return UpdateMeetingInvitationRequest.newBuilder();
                 }
             };
 
@@ -490,6 +524,16 @@ public class ClientMessagePool {
                 .clear();
     }
 
+    public static Meeting.Builder getMeetingBuilder() {
+        return MEETING.get()
+                .clear();
+    }
+
+    public static Meetings.Builder getMeetingsBuilder() {
+        return MEETINGS.get()
+                .clear();
+    }
+
     public static Message.Builder getMessageBuilder() {
         return MESSAGE.get()
                 .clear();
@@ -552,6 +596,16 @@ public class ClientMessagePool {
 
     public static TurmsRequest.Builder getTurmsRequestBuilder() {
         return TURMS_REQUEST.get()
+                .clear();
+    }
+
+    public static UpdateMeetingRequest.Builder getUpdateMeetingRequestBuilder() {
+        return UPDATE_MEETING_REQUEST.get()
+                .clear();
+    }
+
+    public static UpdateMeetingInvitationRequest.Builder getUpdateMeetingInvitationRequestBuilder() {
+        return UPDATE_MEETING_INVITATION_REQUEST.get()
                 .clear();
     }
 

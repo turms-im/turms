@@ -30,6 +30,7 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.database.AdminMongoProperties;
+import im.turms.server.common.infra.property.env.service.env.database.ConferenceMongoProperties;
 import im.turms.server.common.infra.property.env.service.env.database.ConversationMongoProperties;
 import im.turms.server.common.infra.property.env.service.env.database.GroupMongoProperties;
 import im.turms.server.common.infra.property.env.service.env.database.MessageMongoProperties;
@@ -37,6 +38,7 @@ import im.turms.server.common.infra.property.env.service.env.database.UserMongoP
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.MongoCollectionOptions;
+import im.turms.service.domain.conference.po.Meeting;
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.group.po.Group;
@@ -161,6 +163,22 @@ public class MongoConfig extends BaseMongoConfig {
                 Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
         mongoClient.registerEntitiesByOptions(
                 MongoCollectionOptions.of(Message.class, writeConcern.getMessage()));
+        return mongoClient;
+    }
+
+    @Bean
+    public TurmsMongoClient conferenceMongoClient(TurmsPropertiesManager propertiesManager) {
+        ConferenceMongoProperties properties = propertiesManager.getLocalProperties()
+                .getService()
+                .getMongo()
+                .getConference();
+        ConferenceMongoProperties.WriteConcernProperties writeConcern =
+                properties.getWriteConcern();
+        TurmsMongoClient mongoClient = getMongoClient(properties,
+                "conference",
+                Set.of(ClusterType.SHARDED, ClusterType.LOAD_BALANCED));
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(Meeting.class, writeConcern.getMeeting()));
         return mongoClient;
     }
 

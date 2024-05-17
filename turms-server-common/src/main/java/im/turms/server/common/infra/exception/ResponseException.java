@@ -60,6 +60,15 @@ public final class ResponseException extends StacklessException {
         reason = null;
     }
 
+    private ResponseException(
+            @NotNull ResponseStatusCode code,
+            @Nullable String reason,
+            @Nullable Throwable cause) {
+        super(formatMessage(code, reason), cause);
+        this.code = code;
+        this.reason = reason;
+    }
+
     public static ResponseException get(@NotNull ResponseStatusCode code) {
         return POOL.get(code);
     }
@@ -88,6 +97,15 @@ public final class ResponseException extends StacklessException {
         return reason == null || reason.isEmpty()
                 ? get(code)
                 : new ResponseException(code, reason);
+    }
+
+    public static ResponseException get(
+            @NotNull ResponseStatusCode code,
+            @Nullable String reason,
+            @Nullable Throwable cause) {
+        return (reason == null || reason.isEmpty()) && cause == null
+                ? get(code)
+                : new ResponseException(code, reason, cause);
     }
 
     public static ResponseException get(

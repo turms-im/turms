@@ -36,6 +36,7 @@ public record DateRange(
         }
     }
 
+    @Nullable
     public static DateRange of(Date start, Date end) {
         return start == null && end == null
                 ? null

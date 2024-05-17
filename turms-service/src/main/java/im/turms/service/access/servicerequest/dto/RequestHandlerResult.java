@@ -163,6 +163,37 @@ public record RequestHandlerResult(
 
     public static RequestHandlerResult of(
             TurmsNotification.Data response,
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest notificationForRecipients,
+            @NotNull TurmsRequest notificationForRequesterOtherOnlineSessions) {
+        return new RequestHandlerResult(
+                ResponseStatusCode.OK,
+                null,
+                response,
+                List.of(new Notification(false, recipientIds, notificationForRecipients),
+                        new Notification(
+                                true,
+                                Collections.emptySet(),
+                                notificationForRequesterOtherOnlineSessions)));
+    }
+
+    public static RequestHandlerResult of(
+            @NotEmpty Set<Long> recipientIds,
+            @NotNull TurmsRequest notificationForRecipients,
+            @NotNull TurmsRequest notificationForRequesterOtherOnlineSessions) {
+        return new RequestHandlerResult(
+                ResponseStatusCode.OK,
+                null,
+                null,
+                List.of(new Notification(false, recipientIds, notificationForRecipients),
+                        new Notification(
+                                true,
+                                Collections.emptySet(),
+                                notificationForRequesterOtherOnlineSessions)));
+    }
+
+    public static RequestHandlerResult of(
+            TurmsNotification.Data response,
             boolean forwardNotificationToRequesterOtherOnlineSessions,
             @NotEmpty Set<Long> recipientIds,
             @NotNull TurmsRequest notification) {

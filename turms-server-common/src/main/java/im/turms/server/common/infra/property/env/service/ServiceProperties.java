@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.env.service.business.conference.ConferenceProperties;
 import im.turms.server.common.infra.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.infra.property.env.service.business.group.GroupProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
@@ -74,6 +75,9 @@ public class ServiceProperties {
     private StatisticsProperties statistics = new StatisticsProperties();
 
     // Business
+
+    @NestedConfigurationProperty
+    private ConferenceProperties conference = new ConferenceProperties();
 
     @NestedConfigurationProperty
     private ConversationProperties conversation = new ConversationProperties();

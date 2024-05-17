@@ -87,6 +87,8 @@ public class TestEnvironmentConfig {
                 .setUri(mongoUri);
         mongoProperties.getMessage()
                 .setUri(mongoUri);
+        mongoProperties.getConference()
+                .setUri(mongoUri);
 
         // Redis
         TurmsRedisProperties redisProperties = serviceProperties.getRedis();

@@ -40,6 +40,9 @@ import im.turms.server.common.infra.property.env.service.business.notification.g
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupMemberOnlineStatusUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupMemberRemovedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.meeting.NotificationMeetingCanceledProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.meeting.NotificationMeetingInvitationUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.meeting.NotificationMeetingUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageCreatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.message.NotificationMessageUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationFriendRequestCreatedProperties;
@@ -190,6 +193,22 @@ public class NotificationProperties {
     @NestedConfigurationProperty
     private NotificationMessageUpdatedProperties messageUpdated =
             new NotificationMessageUpdatedProperties();
+
+    // endregion
+
+    // region Meeting
+
+    @NestedConfigurationProperty
+    private NotificationMeetingCanceledProperties meetingCanceled =
+            new NotificationMeetingCanceledProperties();
+
+    @NestedConfigurationProperty
+    private NotificationMeetingUpdatedProperties meetingUpdated =
+            new NotificationMeetingUpdatedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationMeetingInvitationUpdatedProperties meetingInvitationUpdated =
+            new NotificationMeetingInvitationUpdatedProperties();
 
     // endregion
 }
