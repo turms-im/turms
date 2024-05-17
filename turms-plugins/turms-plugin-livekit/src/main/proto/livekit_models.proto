@@ -1,0 +1,465 @@
+// Copyright 2023 LiveKit, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package livekit;
+option go_package = "github.com/livekit/protocol/livekit";
+option csharp_namespace = "LiveKit.Proto";
+option ruby_package = "LiveKit::Proto";
+
+option java_package = "im.turms.plugin.livekit.core.proto.models";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+message Room {
+    string sid = 1;
+    string name = 2;
+    uint32 empty_timeout = 3;
+    uint32 departure_timeout = 14;
+    uint32 max_participants = 4;
+    int64 creation_time = 5;
+    string turn_password = 6;
+    repeated Codec enabled_codecs = 7;
+    string metadata = 8;
+    uint32 num_participants = 9;
+    uint32 num_publishers = 11;
+    bool active_recording = 10;
+    TimedVersion version = 13;
+
+    // NEXT-ID: 15
+}
+
+message Codec {
+    string mime = 1;
+    string fmtp_line = 2;
+}
+
+enum AudioCodec {
+    DEFAULT_AC = 0;
+    OPUS = 1;
+    AAC = 2;
+}
+
+enum VideoCodec {
+    DEFAULT_VC = 0;
+    H264_BASELINE = 1;
+    H264_MAIN = 2;
+    H264_HIGH = 3;
+    VP8 = 4;
+}
+
+enum ImageCodec {
+    IC_DEFAULT = 0;
+    IC_JPEG = 1;
+}
+
+message PlayoutDelay {
+    bool enabled = 1;
+    uint32 min = 2;
+    uint32 max = 3;
+}
+
+message ParticipantPermission {
+    // allow participant to subscribe to other tracks in the room
+    bool can_subscribe = 1;
+    // allow participant to publish new tracks to room
+    bool can_publish = 2;
+    // allow participant to publish data
+    bool can_publish_data = 3;
+    // sources that are allowed to be published
+    repeated TrackSource can_publish_sources = 9;
+    // indicates that it's hidden to others
+    bool hidden = 7;
+    // indicates it's a recorder instance
+    bool recorder = 8;
+    // indicates that participant can update own metadata
+    bool can_update_metadata = 10;
+    // indicates that participant is an agent
+    bool agent = 11;
+
+    // NEXT_ID: 12
+}
+
+message ParticipantInfo {
+    enum State {
+        // websocket' connected, but not offered yet
+        JOINING = 0;
+        // server received client offer
+        JOINED = 1;
+        // ICE connectivity established
+        ACTIVE = 2;
+        // WS disconnected
+        DISCONNECTED = 3;
+    }
+    enum Kind {
+        // standard participants, e.g. web clients
+        STANDARD = 0;
+        // only ingests streams
+        INGRESS = 1;
+        // only consumes streams
+        EGRESS = 2;
+        // SIP participants
+        SIP = 3;
+        // LiveKit agents
+        AGENT = 4;
+    }
+    string sid = 1;
+    string identity = 2;
+    State state = 3;
+    repeated TrackInfo tracks = 4;
+    string metadata = 5;
+    // timestamp when participant joined room, in seconds
+    int64 joined_at = 6;
+    string name = 9;
+    uint32 version = 10;
+    ParticipantPermission permission = 11;
+    string region = 12;
+    // indicates the participant has an active publisher connection
+    // and can publish to the server
+    bool is_publisher = 13;
+    Kind kind = 14;
+}
+
+enum TrackType {
+    AUDIO = 0;
+    VIDEO = 1;
+    DATA = 2;
+}
+
+enum TrackSource {
+    UNKNOWN = 0;
+    CAMERA = 1;
+    MICROPHONE = 2;
+    SCREEN_SHARE = 3;
+    SCREEN_SHARE_AUDIO = 4;
+}
+
+message Encryption {
+    enum Type {
+        NONE = 0;
+        GCM = 1;
+        CUSTOM = 2;
+    }
+}
+
+message SimulcastCodecInfo {
+    string mime_type = 1;
+    string mid = 2;
+    string cid = 3;
+    repeated VideoLayer layers = 4;
+}
+
+message TrackInfo {
+    string sid = 1;
+    TrackType type = 2;
+    string name = 3;
+    bool muted = 4;
+    // original width of video (unset for audio)
+    // clients may receive a lower resolution version with simulcast
+    uint32 width = 5;
+    // original height of video (unset for audio)
+    uint32 height = 6;
+    // true if track is simulcasted
+    bool simulcast = 7;
+    // true if DTX (Discontinuous Transmission) is disabled for audio
+    bool disable_dtx = 8;
+    // source of media
+    TrackSource source = 9;
+    repeated VideoLayer layers = 10;
+    // mime type of codec
+    string mime_type = 11;
+    string mid = 12;
+    repeated SimulcastCodecInfo codecs = 13;
+    bool stereo = 14;
+    // true if RED (Redundant Encoding) is disabled for audio
+    bool disable_red = 15;
+    Encryption.Type encryption = 16;
+    string stream = 17;
+    TimedVersion version = 18;
+}
+
+enum VideoQuality {
+    LOW = 0;
+    MEDIUM = 1;
+    HIGH = 2;
+    OFF = 3;
+}
+
+// provide information about available spatial layers
+message VideoLayer {
+    // for tracks with a single layer, this should be HIGH
+    VideoQuality quality = 1;
+    uint32 width = 2;
+    uint32 height = 3;
+    // target bitrate in bit per second (bps), server will measure actual
+    uint32 bitrate = 4;
+    uint32 ssrc = 5;
+}
+
+// new DataPacket API
+message DataPacket {
+    enum Kind {
+        RELIABLE = 0;
+        LOSSY = 1;
+    }
+    Kind kind = 1 [deprecated = true];
+    // participant identity of user that sent the message
+    string participant_identity = 4;
+    // identities of participants who will receive the message (sent to all by default)
+    repeated string destination_identities = 5;
+    oneof value {
+        UserPacket user = 2;
+        ActiveSpeakerUpdate speaker = 3 [deprecated = true];
+        SipDTMF sip_dtmf = 6;
+    }
+}
+
+message ActiveSpeakerUpdate {
+    repeated SpeakerInfo speakers = 1;
+}
+
+message SpeakerInfo {
+    string sid = 1;
+    // audio level, 0-1.0, 1 is loudest
+    float level = 2;
+    // true if speaker is currently active
+    bool active = 3;
+}
+
+message UserPacket {
+    // participant ID of user that sent the message
+    string participant_sid = 1 [deprecated = true];
+    string participant_identity = 5 [deprecated = true];
+    // user defined payload
+    bytes payload = 2;
+    // the ID of the participants who will receive the message (sent to all by default)
+    repeated string destination_sids = 3 [deprecated = true];
+    // identities of participants who will receive the message (sent to all by default)
+    repeated string destination_identities = 6 [deprecated = true];
+    // topic under which the message was published
+    optional string topic = 4;
+
+    // NEXT_ID: 7
+}
+
+message SipDTMF {
+    uint32 code = 3;
+    string digit = 4;
+}
+
+enum ConnectionQuality {
+    POOR = 0;
+    GOOD = 1;
+    EXCELLENT = 2;
+    LOST = 3;
+}
+
+message ParticipantTracks {
+    // participant ID of participant to whom the tracks belong
+    string participant_sid = 1;
+    repeated string track_sids = 2;
+}
+
+// details about the server
+message ServerInfo {
+    enum Edition {
+        Standard = 0;
+        Cloud = 1;
+    }
+    Edition edition = 1;
+    string version = 2;
+    int32 protocol = 3;
+    string region = 4;
+    string node_id = 5;
+    // additional debugging information. sent only if server is in development mode
+    string debug_info = 6;
+}
+
+// details about the client
+message ClientInfo {
+    enum SDK {
+        UNKNOWN = 0;
+        JS = 1;
+        SWIFT = 2;
+        ANDROID = 3;
+        FLUTTER = 4;
+        GO = 5;
+        UNITY = 6;
+        REACT_NATIVE = 7;
+        RUST = 8;
+        PYTHON = 9;
+        CPP = 10;
+    }
+
+    SDK sdk = 1;
+    string version = 2;
+    int32 protocol = 3;
+    string os = 4;
+    string os_version = 5;
+    string device_model = 6;
+    string browser = 7;
+    string browser_version = 8;
+    string address = 9;
+    // wifi, wired, cellular, vpn, empty if not known
+    string network = 10;
+}
+
+// server provided client configuration
+message ClientConfiguration {
+    VideoConfiguration video = 1;
+    VideoConfiguration screen = 2;
+
+    ClientConfigSetting resume_connection = 3;
+    DisabledCodecs disabled_codecs = 4;
+    ClientConfigSetting force_relay = 5;
+}
+
+enum ClientConfigSetting {
+    UNSET = 0;
+    DISABLED = 1;
+    ENABLED = 2;
+}
+
+message VideoConfiguration {
+    ClientConfigSetting hardware_encoder = 1;
+}
+
+message DisabledCodecs {
+    // disabled for both publish and subscribe
+    repeated Codec codecs = 1;
+    // only disable for publish
+    repeated Codec publish = 2;
+}
+
+enum DisconnectReason {
+    UNKNOWN_REASON = 0;
+    CLIENT_INITIATED = 1;
+    DUPLICATE_IDENTITY = 2;
+    SERVER_SHUTDOWN = 3;
+    PARTICIPANT_REMOVED = 4;
+    ROOM_DELETED = 5;
+    STATE_MISMATCH = 6;
+    JOIN_FAILURE = 7;
+    MIGRATION = 8;
+    SIGNAL_CLOSE = 9;
+}
+
+message RTPDrift {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time = 2;
+    double duration = 3;
+
+    uint64 start_timestamp = 4;
+    uint64 end_timestamp = 5;
+    uint64 rtp_clock_ticks = 6;
+    int64 drift_samples = 7;
+    double drift_ms = 8;
+    double clock_rate = 9;
+}
+
+message RTPStats {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time = 2;
+    double duration = 3;
+
+    uint32 packets = 4;
+    double packet_rate = 5;
+
+    uint64 bytes = 6;
+    uint64 header_bytes = 39;
+    double bitrate = 7;
+
+    uint32 packets_lost = 8;
+    double packet_loss_rate = 9;
+    float packet_loss_percentage = 10;
+
+    uint32 packets_duplicate = 11;
+    double packet_duplicate_rate = 12;
+
+    uint64 bytes_duplicate = 13;
+    uint64 header_bytes_duplicate = 40;
+    double bitrate_duplicate = 14;
+
+    uint32 packets_padding = 15;
+    double packet_padding_rate = 16;
+
+    uint64 bytes_padding = 17;
+    uint64 header_bytes_padding = 41;
+    double bitrate_padding = 18;
+
+    uint32 packets_out_of_order = 19;
+
+    uint32 frames = 20;
+    double frame_rate = 21;
+
+    double jitter_current = 22;
+    double jitter_max = 23;
+
+    map<int32, uint32> gap_histogram = 24;
+
+    uint32 nacks = 25;
+    uint32 nack_acks = 37;
+    uint32 nack_misses = 26;
+    uint32 nack_repeated = 38;
+
+    uint32 plis = 27;
+    google.protobuf.Timestamp last_pli = 28;
+
+    uint32 firs = 29;
+    google.protobuf.Timestamp last_fir = 30;
+
+    uint32 rtt_current = 31;
+    uint32 rtt_max = 32;
+
+    uint32 key_frames = 33;
+    google.protobuf.Timestamp last_key_frame = 34;
+
+    uint32 layer_lock_plis = 35;
+    google.protobuf.Timestamp last_layer_lock_pli = 36;
+
+    RTPDrift packet_drift = 44;
+    RTPDrift report_drift = 45;
+    RTPDrift rebased_report_drift = 46;
+    // NEXT_ID: 47
+}
+
+message TimedVersion {
+    int64 unix_micro = 1;
+    int32 ticks = 2;
+}
+
+enum ReconnectReason {
+    RR_UNKNOWN = 0;
+    RR_SIGNAL_DISCONNECTED = 1;
+    RR_PUBLISHER_FAILED = 2;
+    RR_SUBSCRIBER_FAILED = 3;
+    RR_SWITCH_CANDIDATE = 4;
+}
+
+enum SubscriptionError {
+    SE_UNKNOWN = 0;
+    SE_CODEC_UNSUPPORTED = 1;
+    SE_TRACK_NOTFOUND = 2;
+}
+
+enum AudioTrackFeature {
+    TF_STEREO = 0;
+    TF_NO_DTX = 1;
+    TF_AUTO_GAIN_CONTROL = 2;
+    TF_ECHO_CANCELLATION = 3;
+    TF_NOISE_SUPPRESSION = 4;
+    TF_ENHANCED_NOISE_CANCELLATION = 5;
+}

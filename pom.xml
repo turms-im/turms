@@ -87,6 +87,7 @@
         <module>turms-service</module>
 
         <module>turms-plugins/turms-plugin-antispam</module>
+        <module>turms-plugins/turms-plugin-livekit</module>
         <module>turms-plugins/turms-plugin-minio</module>
         <module>turms-plugins/turms-plugin-push</module>
         <module>turms-plugins/turms-plugin-rasa</module>
