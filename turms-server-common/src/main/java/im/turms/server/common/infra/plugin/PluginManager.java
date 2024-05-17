@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipFile;
 import jakarta.annotation.Nullable;
 
@@ -39,6 +41,7 @@ import io.netty.handler.codec.http.HttpStatusClass;
 import lombok.Getter;
 import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.SandboxPolicy;
+import org.jctools.maps.NonBlockingIdentityHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -108,6 +111,9 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     @Nullable
     private final Object engine;
     private final Object sandboxPolicy;
+
+    private final Map<Class<? extends ExtensionPoint>, List<ExtensionPointEventListener>> extensionPointClassToEventListener =
+            new NonBlockingIdentityHashMap<>();
 
     public PluginManager(
             NodeType nodeType,
@@ -202,6 +208,11 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                     }
                     return Mono.empty();
                 });
+    }
+
+    private void initAndRegisterPlugin(Plugin plugin) {
+        plugin.onExtensionStarted(this::notifyExtensionPointEventListeners);
+        pluginRepository.register(plugin);
     }
 
     private void loadNetworkPlugins(NetworkProperties properties) {
@@ -415,7 +426,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                                 + ") because it is not a Java plugin JAR file");
             }
             Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
-            pluginRepository.register(plugin);
+            initAndRegisterPlugin(plugin);
         }
     }
 
@@ -423,7 +434,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
         for (JavaPluginDescriptor descriptor : descriptors) {
             Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
-            pluginRepository.register(plugin);
+            initAndRegisterPlugin(plugin);
         }
     }
 
@@ -433,7 +444,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             return false;
         }
         Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
-        pluginRepository.register(plugin);
+        initAndRegisterPlugin(plugin);
         return true;
     }
 
@@ -485,7 +496,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                 isJsDebugEnabled,
                 jsInspectHost,
                 jsInspectPort);
-        pluginRepository.register(jsPlugin);
+        initAndRegisterPlugin(jsPlugin);
         return jsPlugin;
     }
 
@@ -720,6 +731,29 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             return Mono.empty();
         }
         return Mono.whenDelayError(list);
+    }
+
+    public <T extends ExtensionPoint> void addExtensionPointEventListener(
+            Class<T> extensionPointClass,
+            ExtensionPointEventListener<T> listener) {
+        extensionPointClassToEventListener
+                .computeIfAbsent(extensionPointClass, k -> new CopyOnWriteArrayList<>())
+                .add(listener);
+    }
+
+    public void notifyExtensionPointEventListeners(TurmsExtension extension) {
+        List<Class<? extends ExtensionPoint>> extensionPointClasses =
+                extension.getExtensionPointClasses();
+        for (Class<? extends ExtensionPoint> extensionPointClass : extensionPointClasses) {
+            List<ExtensionPointEventListener> listeners =
+                    extensionPointClassToEventListener.get(extensionPointClass);
+            if (listeners == null) {
+                return;
+            }
+            for (ExtensionPointEventListener eventListener : listeners) {
+                eventListener.onExtensionStarted((ExtensionPoint) extension);
+            }
+        }
     }
 
     private Exception translateException(Throwable t, Method method, TurmsExtension extension) {

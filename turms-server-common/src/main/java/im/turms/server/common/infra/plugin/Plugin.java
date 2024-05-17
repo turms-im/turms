@@ -19,8 +19,11 @@ package im.turms.server.common.infra.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import reactor.core.publisher.Mono;
 
@@ -48,20 +51,33 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
     private final PluginDescriptor descriptor;
     private final List<TurmsExtension> extensions;
 
+    @Setter(AccessLevel.PACKAGE)
+    private Consumer<TurmsExtension> onExtensionStarted;
+
     Mono<Void> start() {
         List<Mono<Void>> startMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
             startMonos.add(extension.startExtension()
-                    .onErrorResume(t -> Mono.error(new RuntimeException(
+                    .onErrorMap(t -> new RuntimeException(
                             "Caught an error while starting the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            t))));
+                            t))
+                    .doOnSuccess(unused -> {
+                        try {
+                            onExtensionStarted.accept(extension);
+                        } catch (Exception e) {
+                            LOGGER.error(
+                                    "Caught an error while notifying the onExtensionStarted listener: "
+                                            + onExtensionStarted,
+                                    e);
+                        }
+                    }));
         }
         return Mono.whenDelayError(startMonos)
-                .onErrorResume(t -> Mono.error(new RuntimeException(
+                .onErrorMap(t -> new RuntimeException(
                         "Caught errors while starting the extensions of the plugin: "
-                                + descriptor.getId())))
+                                + descriptor.getId()))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been started",
                                 descriptor.getId()));
@@ -71,11 +87,11 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
         List<Mono<Void>> stopMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
             stopMonos.add(extension.stopExtension()
-                    .onErrorResume(t -> Mono.error(new RuntimeException(
+                    .onErrorMap(t -> new RuntimeException(
                             "Caught an error while stopping the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            t))));
+                            t)));
         }
         return Mono.whenDelayError(stopMonos)
                 .materialize()
@@ -109,16 +125,16 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
         List<Mono<Void>> resumeMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
             resumeMonos.add(extension.resumeExtension()
-                    .onErrorResume(t -> Mono.error(new RuntimeException(
+                    .onErrorMap(t -> new RuntimeException(
                             "Caught an error while resuming the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            t))));
+                            t)));
         }
         return Mono.whenDelayError(resumeMonos)
-                .onErrorResume(t -> Mono.error(new RuntimeException(
+                .onErrorMap(t -> new RuntimeException(
                         "Caught errors while resuming the extensions of the plugin: "
-                                + descriptor.getId())))
+                                + descriptor.getId()))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been resumed",
                                 descriptor.getId()));
@@ -128,16 +144,16 @@ public abstract sealed class Plugin permits JavaPlugin, JsPlugin {
         List<Mono<Void>> pauseMonos = new ArrayList<>(extensions.size());
         for (TurmsExtension extension : extensions) {
             pauseMonos.add(extension.pauseExtension()
-                    .onErrorResume(t -> Mono.error(new RuntimeException(
+                    .onErrorMap(t -> new RuntimeException(
                             "Caught an error while pausing the extension: "
                                     + extension.getClass()
                                             .getName(),
-                            t))));
+                            t)));
         }
         return Mono.whenDelayError(pauseMonos)
-                .onErrorResume(t -> Mono.error(new RuntimeException(
+                .onErrorMap(t -> new RuntimeException(
                         "Caught errors while pausing the extensions of the plugin: "
-                                + descriptor.getId())))
+                                + descriptor.getId()))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been paused",
                                 descriptor.getId()));
