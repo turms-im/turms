@@ -37,6 +37,7 @@ import im.turms.server.common.access.client.dto.request.message.CreateMessageReq
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -73,6 +74,7 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         return manager.close();
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<RequestHandlerResult> afterNotify(
             @NotNull RequestHandlerResult result,

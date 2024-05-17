@@ -82,13 +82,7 @@ public class ValueDecoder {
         } else if (value.isException()) {
             return translateException(value);
         } else if (value.isIterator() || value.hasArrayElements()) {
-            Value iterator = value.getIterator();
-            List<Object> list = new ArrayList<>((int) value.getArraySize());
-            while (iterator.hasIteratorNextElement()) {
-                Value element = iterator.getIteratorNextElement();
-                list.add(decode(element));
-            }
-            return list;
+            return decodeArray(value);
         } else if (value.hasHashEntries()) {
             Value iterator = value.getHashKeysIterator();
             Map<Object, Object> map =
@@ -113,6 +107,16 @@ public class ValueDecoder {
         throw new IllegalArgumentException(
                 "Unknown value: "
                         + value);
+    }
+
+    public static List<Object> decodeArray(Value value) {
+        Value iterator = value.getIterator();
+        List<Object> list = new ArrayList<>((int) value.getArraySize());
+        while (iterator.hasIteratorNextElement()) {
+            Value element = iterator.getIteratorNextElement();
+            list.add(decode(element));
+        }
+        return list;
     }
 
     @Nullable

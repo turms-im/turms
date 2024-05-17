@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.plugin.script.CorruptedScriptException;
 import im.turms.server.common.infra.plugin.script.JsContext;
+import im.turms.server.common.infra.plugin.script.ValueDecoder;
 import im.turms.server.common.infra.plugin.script.ValueInspector;
 
 /**
@@ -86,7 +87,7 @@ public class JsPluginFactory {
                 .allowHostAccess(HostAccess.ALL)
                 .allowHostClassLookup(className -> true)
                 .sandbox(sandboxPolicy)
-                .option("js.ecmascript-version", "2022")
+                .option("js.ecmascript-version", "staging")
                 .option("js.esm-eval-returns-exports", "true");
         if (isDebugEnabled) {
             builder.option("inspect",
@@ -221,15 +222,45 @@ public class JsPluginFactory {
             }
             Value extensionPointStrings = getExtensionPoints.execute();
             ExtensionClassInfo info = parseExtensionClassInfo(extension, extensionPointStrings);
+
+            Value extensionPointMethodsMember = extension.getMember("extensionPointMethods");
+            Map<Class<? extends ExtensionPoint>, Map<String, Value>> classToNameToFunction =
+                    info.classToNameToFunction;
+            if (extensionPointMethodsMember != null
+                    && extensionPointMethodsMember.hasArrayElements()) {
+                List<Object> extensionPointMethods =
+                        ValueDecoder.decodeArray(extensionPointMethodsMember);
+                for (Object extensionPointMethod : extensionPointMethods) {
+                    if (extensionPointMethod == null) {
+                        continue;
+                    }
+                    boolean found = false;
+                    for (Map<String, Value> nameToFunction : classToNameToFunction.values()) {
+                        if (nameToFunction.containsKey(extensionPointMethod.toString())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        throw new CorruptedScriptException(
+                                "The extension point method ("
+                                        + extensionPointMethod
+                                        + ") does not exist in any extension point interface. If this is an official Turms plugin, "
+                                        + "it is recommended that you can upgrade both the plugin and the Turms server to the latest");
+                    }
+                }
+            }
+            List<Class<? extends ExtensionPoint>> extensionPointClasses =
+                    info.extensionPointClasses;
             ExtensionPoint extensionPointProxy =
                     (ExtensionPoint) Proxy.newProxyInstance(JsPluginFactory.class.getClassLoader(),
-                            info.extensionPointClasses.toArray(new Class[0]),
+                            extensionPointClasses.toArray(new Class[0]),
                             new JsExtensionPointInvocationHandler(
                                     extensionClass.getMetaQualifiedName(),
-                                    info.functions));
+                                    classToNameToFunction));
             JsTurmsExtensionAdaptor adaptor = new JsTurmsExtensionAdaptor(
                     extensionPointProxy,
-                    info.extensionPointClasses,
+                    extensionPointClasses,
                     extension);
             adaptor.setContext(applicationContext);
             return adaptor;
@@ -296,7 +327,7 @@ public class JsPluginFactory {
 
     private record ExtensionClassInfo(
             List<Class<? extends ExtensionPoint>> extensionPointClasses,
-            Map<Class<? extends ExtensionPoint>, Map<String, Value>> functions
+            Map<Class<? extends ExtensionPoint>, Map<String, Value>> classToNameToFunction
     ) {
     }
 

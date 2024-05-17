@@ -45,6 +45,7 @@ import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -113,6 +114,7 @@ public class RasaResponser extends TurmsExtension implements RequestHandlerResul
         return Mono.empty();
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<RequestHandlerResult> beforeNotify(
             @NotNull RequestHandlerResult result,

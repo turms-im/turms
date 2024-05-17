@@ -28,6 +28,9 @@ public class JsContext {
 
     // language=JS
     private static final String PLUGIN_CONTEXT_PATCH_STR = """
+            const __TURMS_INTERNAL__ = Object.freeze({
+                isExtensionPointMethodSymbol: Symbol('isExtensionPointMethod')
+            });
             class TurmsPlugin {
                 static get isTurmsPlugin() {
                     return true;
@@ -37,6 +40,17 @@ public class JsContext {
                 static get isTurmsExtension() {
                     return true;
                 }
+                get extensionPointMethods() {
+                    return Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+                        .filter(key => this[key][__TURMS_INTERNAL__.isExtensionPointMethodSymbol]);
+                }
+            }
+            function extensionPointMethod(value, { kind }) {
+                if (kind !== 'method') {
+                    throw new Error('@extensionPointMethod can only be used on methods');
+                }
+                value[__TURMS_INTERNAL__.isExtensionPointMethodSymbol] = true;
+                return value;
             }
             globalThis.TurmsPlugin = TurmsPlugin;
             globalThis.TurmsExtension = TurmsExtension;

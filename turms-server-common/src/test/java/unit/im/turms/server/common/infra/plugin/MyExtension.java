@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
 
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 
 /**
@@ -32,6 +33,7 @@ public class MyExtension extends TurmsExtension implements MyExtensionPoint {
     public Class<RpcService> rpcServiceClass = RpcService.class;
     public SpringApplication application = new SpringApplication();
 
+    @ExtensionPointMethod
     @Override
     public boolean testBool() {
         return true;

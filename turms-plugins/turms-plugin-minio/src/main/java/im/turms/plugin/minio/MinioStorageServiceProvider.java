@@ -78,6 +78,7 @@ import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.storage.StorageItemProperties;
@@ -520,6 +521,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     }
     // endregion
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> deleteUserProfilePicture(
             Long requesterId,
@@ -542,6 +544,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         t));
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryUserProfilePictureUploadInfo(
             Long requesterId,
@@ -562,6 +565,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return Mono.just(uploadInfo);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
             Long requesterId,
@@ -578,6 +582,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return Mono.just(Map.of(RESOURCE_URL, url));
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> deleteGroupProfilePicture(
             Long requesterId,
@@ -608,6 +613,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 });
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryGroupProfilePictureUploadInfo(
             Long requesterId,
@@ -637,6 +643,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 });
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
             Long requesterId,
@@ -653,6 +660,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return Mono.just(Map.of(RESOURCE_URL, url));
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> deleteMessageAttachment(
             Long requesterId,
@@ -665,6 +673,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 extra);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> shareMessageAttachmentWithUser(
             Long requesterId,
@@ -687,6 +696,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 });
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> shareMessageAttachmentWithGroup(
             Long requesterId,
@@ -709,6 +719,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 });
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> unshareMessageAttachmentWithUser(
             Long requesterId,
@@ -721,6 +732,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 userId);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Void> unshareMessageAttachmentWithGroup(
             Long requesterId,
@@ -733,6 +745,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 groupId);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryMessageAttachmentUploadInfo(
             Long requesterId,
@@ -745,6 +758,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 extra);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryMessageAttachmentUploadInfoInPrivateConversation(
             Long requesterId,
@@ -759,6 +773,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                 resourceMediaType);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryMessageAttachmentUploadInfoInGroupConversation(
             Long requesterId,
@@ -839,6 +854,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         }));
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<Map<String, String>> queryMessageAttachmentDownloadInfo(
             Long requesterId,
@@ -888,6 +904,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                         ERROR_NOT_UPLOADER_OR_SHARED_WITH_USER_TO_DOWNLOAD_MESSAGE_ATTACHMENT);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosUploadedByRequester(
             Long requesterId,
@@ -897,6 +914,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return simpleAttachmentFlux2infos(attachmentFlux);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInPrivateConversations(
             Long requesterId,
@@ -931,6 +949,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
         return simpleAttachmentFlux2infos(attachmentFlux);
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<List<StorageResourceInfo>> queryMessageAttachmentInfosInGroupConversations(
             Long requesterId,

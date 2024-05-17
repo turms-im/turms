@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
@@ -35,6 +36,7 @@ public class MyTurmsRequestHandler extends TurmsExtension implements ClientReque
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyTurmsRequestHandler.class);
 
+    @ExtensionPointMethod
     @Override
     public Mono<ClientRequest> transform(@NotNull ClientRequest clientRequest) {
         TurmsRequest.Builder builder = clientRequest.turmsRequestBuilder();

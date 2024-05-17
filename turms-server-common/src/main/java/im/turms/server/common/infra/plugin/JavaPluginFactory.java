@@ -18,11 +18,13 @@
 package im.turms.server.common.infra.plugin;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.springframework.context.ApplicationContext;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
@@ -116,17 +118,55 @@ public class JavaPluginFactory {
             Set<Class<? extends TurmsExtension>> extensionClasses,
             ApplicationContext context) {
         List<TurmsExtension> extensions = new ArrayList<>(extensionClasses.size());
+        List<Method> extensionPointMethods = new ArrayList<>(32);
+        Set<Class<?>> extensionPointInterfaces = UnifiedSet.newSet(4);
         for (Class<? extends TurmsExtension> extensionClass : extensionClasses) {
-            Class<?> qualifiedInterface = ClassUtil.getFirstInterface(extensionClass,
-                    extensionInterface -> ClassUtil.isSuperClass(extensionInterface,
-                            ExtensionPoint.class));
-            if (qualifiedInterface == null) {
+            if (extensionClass == null) {
+                continue;
+            }
+            // 1. Validate.
+            Class<?> currentClass = extensionClass;
+            do {
+                for (Method method : currentClass.getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(ExtensionPointMethod.class)) {
+                        extensionPointMethods.add(method);
+                    }
+                }
+                Class<?>[] interfaces = currentClass.getInterfaces();
+                for (Class<?> interfaceClass : interfaces) {
+                    if (ClassUtil.isSuperClass(interfaceClass, ExtensionPoint.class)) {
+                        extensionPointInterfaces.add(interfaceClass);
+                    }
+                }
+                currentClass = currentClass.getSuperclass();
+            } while (currentClass != null);
+            if (extensionPointInterfaces.isEmpty()) {
                 throw new InvalidPluginException(
                         "The extension ("
                                 + extensionClass.getName()
                                 + ") must implement at least one subclass of: "
                                 + ExtensionPoint.class.getName());
             }
+            for (Method extensionPointMethod : extensionPointMethods) {
+                boolean found = false;
+                for (Class<?> extensionPointInterface : extensionPointInterfaces) {
+                    try {
+                        extensionPointInterface.getMethod(extensionPointMethod.getName(),
+                                extensionPointMethod.getParameterTypes());
+                        found = true;
+                        break;
+                    } catch (NoSuchMethodException ignored) {
+                    }
+                }
+                if (!found) {
+                    throw new InvalidPluginException(
+                            "The extension point method ("
+                                    + ClassUtil.getMethodSignature(extensionPointMethod)
+                                    + ") does not exist in any extension point interface. If this is an official Turms plugin, "
+                                    + "it is recommended that you can upgrade both the plugin and the Turms server to the latest");
+                }
+            }
+            // 2. Create the extension.
             TurmsExtension extension = createExtension(extensionClass, context);
             extensions.add(extension);
         }

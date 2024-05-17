@@ -40,6 +40,7 @@ import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
@@ -122,6 +123,7 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         return map;
     }
 
+    @ExtensionPointMethod
     @Override
     public Mono<ClientRequest> transform(ClientRequest clientRequest) {
         if (!enabled) {
