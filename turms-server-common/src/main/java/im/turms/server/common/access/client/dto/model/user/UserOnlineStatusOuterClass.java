@@ -45,7 +45,7 @@ public final class UserOnlineStatusOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n#model/user/user_online_status.proto\022\016i"
                 + "m.turms.proto\032\032constant/user_status.prot"

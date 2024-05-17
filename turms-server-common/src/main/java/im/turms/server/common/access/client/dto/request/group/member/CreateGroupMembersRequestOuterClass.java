@@ -45,7 +45,7 @@ public final class CreateGroupMembersRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n7request/group/member/create_group_memb"
                 + "ers_request.proto\022\016im.turms.proto\032 const"

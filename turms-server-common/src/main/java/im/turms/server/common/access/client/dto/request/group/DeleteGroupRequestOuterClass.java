@@ -45,7 +45,7 @@ public final class DeleteGroupRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n(request/group/delete_group_request.pro"
                 + "to\022\016im.turms.proto\"&\n\022DeleteGroupRequest"

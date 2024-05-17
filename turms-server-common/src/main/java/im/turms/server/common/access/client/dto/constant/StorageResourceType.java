@@ -93,7 +93,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<StorageResourceType> internalValueMap =
-            number -> StorageResourceType.forNumber(number);
+            StorageResourceType::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

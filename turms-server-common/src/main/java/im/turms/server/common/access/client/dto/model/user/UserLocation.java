@@ -42,7 +42,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessage imp
     private UserLocation() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
     }
 
@@ -223,7 +223,7 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessage imp
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -311,10 +311,8 @@ public final class UserLocation extends com.google.protobuf.GeneratedMessage imp
                 return false;
             }
         }
-        if (!internalGetDetails().equals(other.internalGetDetails())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return internalGetDetails().equals(other.internalGetDetails())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override

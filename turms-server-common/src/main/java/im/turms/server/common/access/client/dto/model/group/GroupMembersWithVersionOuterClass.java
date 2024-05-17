@@ -45,7 +45,7 @@ public final class GroupMembersWithVersionOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n,model/group/group_members_with_version"
                 + ".proto\022\016im.turms.proto\032\036model/group/grou"

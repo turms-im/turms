@@ -43,7 +43,7 @@ public final class UserOnlineStatuses extends com.google.protobuf.GeneratedMessa
         statuses_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOuterClass.internal_static_im_turms_proto_UserOnlineStatuses_descriptor;
     }
 
@@ -104,7 +104,7 @@ public final class UserOnlineStatuses extends com.google.protobuf.GeneratedMessa
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -150,10 +150,8 @@ public final class UserOnlineStatuses extends com.google.protobuf.GeneratedMessa
             return super.equals(obj);
         }
 
-        if (!getStatusesList().equals(other.getStatusesList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getStatusesList().equals(other.getStatusesList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -282,7 +280,7 @@ public final class UserOnlineStatuses extends com.google.protobuf.GeneratedMessa
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UserOnlineStatuses)
             im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.user.UserOnlineStatusesOuterClass.internal_static_im_turms_proto_UserOnlineStatuses_descriptor;
         }
 
@@ -421,7 +419,7 @@ public final class UserOnlineStatuses extends com.google.protobuf.GeneratedMessa
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

@@ -42,7 +42,7 @@ public final class StorageResourceTypeOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n$constant/storage_resource_type.proto\022\016"
                 + "im.turms.proto*b\n\023StorageResourceType\022\030\n"

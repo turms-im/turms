@@ -120,7 +120,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<DeviceType> internalValueMap =
-            number -> DeviceType.forNumber(number);
+            DeviceType::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

@@ -45,7 +45,7 @@ public final class QueryGroupJoinRequestsRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n@request/group/enrollment/query_group_j"
                 + "oin_requests_request.proto\022\016im.turms.pro"

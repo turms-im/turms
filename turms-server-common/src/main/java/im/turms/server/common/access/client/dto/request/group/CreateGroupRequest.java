@@ -45,7 +45,7 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
         announcement_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
     }
 
@@ -270,7 +270,7 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -536,7 +536,7 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupRequest)
             im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
         }
 
@@ -683,7 +683,7 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

@@ -47,7 +47,7 @@ public final class StringsWithVersionOuterClass {
 
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
-        java.lang.String[] descriptorData = {"\n'model/common/strings_with_version.prot"
+        java.lang.String[] descriptorData = {"\n\'model/common/strings_with_version.prot"
                 + "o\022\016im.turms.proto\"[\n\022StringsWithVersion\022"
                 + "\017\n\007strings\030\001 \003(\t\022\036\n\021last_updated_date\030\002 "
                 + "\001(\003H\000\210\001\001B\024\n\022_last_updated_dateB<\n5im.tur"

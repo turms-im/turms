@@ -46,7 +46,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
         profileAccessStrategy_ = 0;
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.internal_static_im_turms_proto_UserInfo_descriptor;
     }
 
@@ -342,7 +342,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -652,7 +652,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UserInfo)
             im.turms.server.common.access.client.dto.model.user.UserInfoOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.internal_static_im_turms_proto_UserInfo_descriptor;
         }
 
@@ -812,7 +812,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

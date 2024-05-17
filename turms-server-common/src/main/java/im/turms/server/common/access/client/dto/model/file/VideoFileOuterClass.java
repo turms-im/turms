@@ -47,7 +47,7 @@ public final class VideoFileOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\033model/file/video_file.proto\022\016im.turms."
                 + "proto\"\364\001\n\tVideoFile\022?\n\013description\030\001 \001(\013"

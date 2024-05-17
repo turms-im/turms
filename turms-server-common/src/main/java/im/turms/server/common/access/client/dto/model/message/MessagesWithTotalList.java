@@ -43,7 +43,7 @@ public final class MessagesWithTotalList extends com.google.protobuf.GeneratedMe
         messagesWithTotalList_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
     }
 
@@ -104,7 +104,7 @@ public final class MessagesWithTotalList extends com.google.protobuf.GeneratedMe
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -150,10 +150,8 @@ public final class MessagesWithTotalList extends com.google.protobuf.GeneratedMe
             return super.equals(obj);
         }
 
-        if (!getMessagesWithTotalListList().equals(other.getMessagesWithTotalListList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getMessagesWithTotalListList().equals(other.getMessagesWithTotalListList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -282,7 +280,7 @@ public final class MessagesWithTotalList extends com.google.protobuf.GeneratedMe
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.MessagesWithTotalList)
             im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
         }
 
@@ -422,7 +420,7 @@ public final class MessagesWithTotalList extends com.google.protobuf.GeneratedMe
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

@@ -45,7 +45,7 @@ public final class NearbyUserOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\034model/user/nearby_user.proto\022\016im.turms"
                 + ".proto\032\032constant/device_type.proto\032\036mode"

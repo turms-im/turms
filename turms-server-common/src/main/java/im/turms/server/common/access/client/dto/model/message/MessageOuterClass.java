@@ -45,7 +45,7 @@ public final class MessageOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\033model/message/message.proto\022\016im.turms."
                 + "proto\"\270\003\n\007Message\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\032\n\rde"

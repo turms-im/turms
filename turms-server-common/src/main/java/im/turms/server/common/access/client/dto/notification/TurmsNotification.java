@@ -43,7 +43,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         reason_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_descriptor;
     }
 
@@ -494,6 +494,37 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
         /**
          * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return Whether the meetings field is set.
+         */
+        boolean hasMeetings();
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return The meetings.
+         */
+        im.turms.server.common.access.client.dto.model.conference.Meetings getMeetings();
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        im.turms.server.common.access.client.dto.model.conference.MeetingsOrBuilder getMeetingsOrBuilder();
+
+        /**
+         * <pre>
          * Storage
          * </pre>
          *
@@ -551,7 +582,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         private Data() {
         }
 
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
         }
 
@@ -589,6 +620,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             GROUP_JOIN_QUESTIONS_WITH_VERSION(18),
             GROUP_MEMBERS_WITH_VERSION(19),
             GROUPS_WITH_VERSION(20),
+            MEETINGS(40),
             STORAGE_RESOURCE_INFOS(50),
             KIND_NOT_SET(0);
 
@@ -630,6 +662,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     case 18 -> GROUP_JOIN_QUESTIONS_WITH_VERSION;
                     case 19 -> GROUP_MEMBERS_WITH_VERSION;
                     case 20 -> GROUPS_WITH_VERSION;
+                    case 40 -> MEETINGS;
                     case 50 -> STORAGE_RESOURCE_INFOS;
                     case 0 -> KIND_NOT_SET;
                     default -> null;
@@ -1465,6 +1498,56 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     .getDefaultInstance();
         }
 
+        public static final int MEETINGS_FIELD_NUMBER = 40;
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return Whether the meetings field is set.
+         */
+        @java.lang.Override
+        public boolean hasMeetings() {
+            return kindCase_ == 40;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return The meetings.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.conference.Meetings getMeetings() {
+            if (kindCase_ == 40) {
+                return (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.conference.Meetings
+                    .getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.conference.MeetingsOrBuilder getMeetingsOrBuilder() {
+            if (kindCase_ == 40) {
+                return (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.conference.Meetings
+                    .getDefaultInstance();
+        }
+
         public static final int STORAGE_RESOURCE_INFOS_FIELD_NUMBER = 50;
 
         /**
@@ -1518,7 +1601,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             byte isInitialized = memoizedIsInitialized;
             if (isInitialized == 1) {
                 return true;
@@ -1612,6 +1695,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 output.writeMessage(20,
                         (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
             }
+            if (kindCase_ == 40) {
+                output.writeMessage(40,
+                        (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_);
+            }
             if (kindCase_ == 50) {
                 output.writeMessage(50,
                         (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
@@ -1704,6 +1791,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             if (kindCase_ == 20) {
                 size += com.google.protobuf.CodedOutputStream.computeMessageSize(20,
                         (im.turms.server.common.access.client.dto.model.group.GroupsWithVersion) kind_);
+            }
+            if (kindCase_ == 40) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(40,
+                        (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_);
             }
             if (kindCase_ == 50) {
                 size += com.google.protobuf.CodedOutputStream.computeMessageSize(50,
@@ -1834,6 +1925,11 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                         return false;
                     }
                 }
+                case 40 -> {
+                    if (!getMeetings().equals(other.getMeetings())) {
+                        return false;
+                    }
+                }
                 case 50 -> {
                     if (!getStorageResourceInfos().equals(other.getStorageResourceInfos())) {
                         return false;
@@ -1932,6 +2028,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 case 20 -> {
                     hash = (37 * hash) + GROUPS_WITH_VERSION_FIELD_NUMBER;
                     hash = (53 * hash) + getGroupsWithVersion().hashCode();
+                }
+                case 40 -> {
+                    hash = (37 * hash) + MEETINGS_FIELD_NUMBER;
+                    hash = (53 * hash) + getMeetings().hashCode();
                 }
                 case 50 -> {
                     hash = (37 * hash) + STORAGE_RESOURCE_INFOS_FIELD_NUMBER;
@@ -2058,7 +2158,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:im.turms.proto.TurmsNotification.Data)
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.DataOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
                 return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_Data_descriptor;
             }
 
@@ -2138,6 +2238,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 }
                 if (groupsWithVersionBuilder_ != null) {
                     groupsWithVersionBuilder_.clear();
+                }
+                if (meetingsBuilder_ != null) {
+                    meetingsBuilder_.clear();
                 }
                 if (storageResourceInfosBuilder_ != null) {
                     storageResourceInfosBuilder_.clear();
@@ -2244,6 +2347,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 if (kindCase_ == 20 && groupsWithVersionBuilder_ != null) {
                     result.kind_ = groupsWithVersionBuilder_.build();
                 }
+                if (kindCase_ == 40 && meetingsBuilder_ != null) {
+                    result.kind_ = meetingsBuilder_.build();
+                }
                 if (kindCase_ == 50 && storageResourceInfosBuilder_ != null) {
                     result.kind_ = storageResourceInfosBuilder_.build();
                 }
@@ -2267,75 +2373,47 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     return this;
                 }
                 switch (other.getKindCase()) {
-                    case LONG -> {
-                        setLong(other.getLong());
-                    }
+                    case LONG -> setLong(other.getLong());
                     case STRING -> {
                         kindCase_ = 2;
                         kind_ = other.kind_;
                         onChanged();
                     }
-                    case LONGS_WITH_VERSION -> {
-                        mergeLongsWithVersion(other.getLongsWithVersion());
-                    }
-                    case STRINGS_WITH_VERSION -> {
+                    case LONGS_WITH_VERSION -> mergeLongsWithVersion(other.getLongsWithVersion());
+                    case STRINGS_WITH_VERSION ->
                         mergeStringsWithVersion(other.getStringsWithVersion());
-                    }
-                    case CONVERSATIONS -> {
-                        mergeConversations(other.getConversations());
-                    }
-                    case MESSAGES -> {
-                        mergeMessages(other.getMessages());
-                    }
-                    case MESSAGES_WITH_TOTAL_LIST -> {
+                    case CONVERSATIONS -> mergeConversations(other.getConversations());
+                    case MESSAGES -> mergeMessages(other.getMessages());
+                    case MESSAGES_WITH_TOTAL_LIST ->
                         mergeMessagesWithTotalList(other.getMessagesWithTotalList());
-                    }
-                    case USER_SESSION -> {
-                        mergeUserSession(other.getUserSession());
-                    }
-                    case USER_INFOS_WITH_VERSION -> {
+                    case USER_SESSION -> mergeUserSession(other.getUserSession());
+                    case USER_INFOS_WITH_VERSION ->
                         mergeUserInfosWithVersion(other.getUserInfosWithVersion());
-                    }
-                    case USER_ONLINE_STATUSES -> {
+                    case USER_ONLINE_STATUSES ->
                         mergeUserOnlineStatuses(other.getUserOnlineStatuses());
-                    }
-                    case USER_FRIEND_REQUESTS_WITH_VERSION -> {
-                        mergeUserFriendRequestsWithVersion(
-                                other.getUserFriendRequestsWithVersion());
-                    }
-                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION -> {
+                    case USER_FRIEND_REQUESTS_WITH_VERSION -> mergeUserFriendRequestsWithVersion(
+                            other.getUserFriendRequestsWithVersion());
+                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION ->
                         mergeUserRelationshipGroupsWithVersion(
                                 other.getUserRelationshipGroupsWithVersion());
-                    }
-                    case USER_RELATIONSHIPS_WITH_VERSION -> {
+                    case USER_RELATIONSHIPS_WITH_VERSION ->
                         mergeUserRelationshipsWithVersion(other.getUserRelationshipsWithVersion());
-                    }
-                    case NEARBY_USERS -> {
-                        mergeNearbyUsers(other.getNearbyUsers());
-                    }
-                    case GROUP_INVITATIONS_WITH_VERSION -> {
+                    case NEARBY_USERS -> mergeNearbyUsers(other.getNearbyUsers());
+                    case GROUP_INVITATIONS_WITH_VERSION ->
                         mergeGroupInvitationsWithVersion(other.getGroupInvitationsWithVersion());
-                    }
-                    case GROUP_JOIN_QUESTION_ANSWER_RESULT -> {
-                        mergeGroupJoinQuestionAnswerResult(
-                                other.getGroupJoinQuestionAnswerResult());
-                    }
-                    case GROUP_JOIN_REQUESTS_WITH_VERSION -> {
+                    case GROUP_JOIN_QUESTION_ANSWER_RESULT -> mergeGroupJoinQuestionAnswerResult(
+                            other.getGroupJoinQuestionAnswerResult());
+                    case GROUP_JOIN_REQUESTS_WITH_VERSION ->
                         mergeGroupJoinRequestsWithVersion(other.getGroupJoinRequestsWithVersion());
-                    }
-                    case GROUP_JOIN_QUESTIONS_WITH_VERSION -> {
-                        mergeGroupJoinQuestionsWithVersion(
-                                other.getGroupJoinQuestionsWithVersion());
-                    }
-                    case GROUP_MEMBERS_WITH_VERSION -> {
+                    case GROUP_JOIN_QUESTIONS_WITH_VERSION -> mergeGroupJoinQuestionsWithVersion(
+                            other.getGroupJoinQuestionsWithVersion());
+                    case GROUP_MEMBERS_WITH_VERSION ->
                         mergeGroupMembersWithVersion(other.getGroupMembersWithVersion());
-                    }
-                    case GROUPS_WITH_VERSION -> {
+                    case GROUPS_WITH_VERSION ->
                         mergeGroupsWithVersion(other.getGroupsWithVersion());
-                    }
-                    case STORAGE_RESOURCE_INFOS -> {
+                    case MEETINGS -> mergeMeetings(other.getMeetings());
+                    case STORAGE_RESOURCE_INFOS ->
                         mergeStorageResourceInfos(other.getStorageResourceInfos());
-                    }
                     case KIND_NOT_SET -> {
                     }
                 }
@@ -2345,7 +2423,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             }
 
             @java.lang.Override
-            public final boolean isInitialized() {
+            public boolean isInitialized() {
                 return true;
             }
 
@@ -2473,6 +2551,11 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                                         extensionRegistry);
                                 kindCase_ = 20;
                             } // case 162
+                            case 322 -> {
+                                input.readMessage(getMeetingsFieldBuilder().getBuilder(),
+                                        extensionRegistry);
+                                kindCase_ = 40;
+                            } // case 322
                             case 402 -> {
                                 input.readMessage(
                                         getStorageResourceInfosFieldBuilder().getBuilder(),
@@ -5691,6 +5774,201 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return groupsWithVersionBuilder_;
             }
 
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conference.Meetings, im.turms.server.common.access.client.dto.model.conference.Meetings.Builder, im.turms.server.common.access.client.dto.model.conference.MeetingsOrBuilder> meetingsBuilder_;
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             *
+             * @return Whether the meetings field is set.
+             */
+            @java.lang.Override
+            public boolean hasMeetings() {
+                return kindCase_ == 40;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             *
+             * @return The meetings.
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.conference.Meetings getMeetings() {
+                if (meetingsBuilder_ == null) {
+                    if (kindCase_ == 40) {
+                        return (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.conference.Meetings
+                            .getDefaultInstance();
+                } else {
+                    if (kindCase_ == 40) {
+                        return meetingsBuilder_.getMessage();
+                    }
+                    return im.turms.server.common.access.client.dto.model.conference.Meetings
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder setMeetings(
+                    im.turms.server.common.access.client.dto.model.conference.Meetings value) {
+                if (meetingsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    kind_ = value;
+                    onChanged();
+                } else {
+                    meetingsBuilder_.setMessage(value);
+                }
+                kindCase_ = 40;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder setMeetings(
+                    im.turms.server.common.access.client.dto.model.conference.Meetings.Builder builderForValue) {
+                if (meetingsBuilder_ == null) {
+                    kind_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    meetingsBuilder_.setMessage(builderForValue.build());
+                }
+                kindCase_ = 40;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder mergeMeetings(
+                    im.turms.server.common.access.client.dto.model.conference.Meetings value) {
+                if (meetingsBuilder_ == null) {
+                    if (kindCase_ == 40
+                            && kind_ != im.turms.server.common.access.client.dto.model.conference.Meetings
+                                    .getDefaultInstance()) {
+                        kind_ = im.turms.server.common.access.client.dto.model.conference.Meetings
+                                .newBuilder(
+                                        (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_)
+                                .mergeFrom(value)
+                                .buildPartial();
+                    } else {
+                        kind_ = value;
+                    }
+                    onChanged();
+                } else {
+                    if (kindCase_ == 40) {
+                        meetingsBuilder_.mergeFrom(value);
+                    } else {
+                        meetingsBuilder_.setMessage(value);
+                    }
+                }
+                kindCase_ = 40;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder clearMeetings() {
+                if (meetingsBuilder_ == null) {
+                    if (kindCase_ == 40) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                        onChanged();
+                    }
+                } else {
+                    if (kindCase_ == 40) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                    }
+                    meetingsBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public im.turms.server.common.access.client.dto.model.conference.Meetings.Builder getMeetingsBuilder() {
+                return getMeetingsFieldBuilder().getBuilder();
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.conference.MeetingsOrBuilder getMeetingsOrBuilder() {
+                if ((kindCase_ == 40) && (meetingsBuilder_ != null)) {
+                    return meetingsBuilder_.getMessageOrBuilder();
+                } else {
+                    if (kindCase_ == 40) {
+                        return (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.conference.Meetings
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conference.Meetings, im.turms.server.common.access.client.dto.model.conference.Meetings.Builder, im.turms.server.common.access.client.dto.model.conference.MeetingsOrBuilder> getMeetingsFieldBuilder() {
+                if (meetingsBuilder_ == null) {
+                    if (!(kindCase_ == 40)) {
+                        kind_ = im.turms.server.common.access.client.dto.model.conference.Meetings
+                                .getDefaultInstance();
+                    }
+                    meetingsBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                            (im.turms.server.common.access.client.dto.model.conference.Meetings) kind_,
+                            getParentForChildren(),
+                            isClean());
+                    kind_ = null;
+                }
+                kindCase_ = 40;
+                onChanged();
+                return meetingsBuilder_;
+            }
+
             private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos.Builder, im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder> storageResourceInfosBuilder_;
 
             /**
@@ -6200,7 +6478,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -6503,7 +6781,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.TurmsNotification)
             im.turms.server.common.access.client.dto.notification.TurmsNotificationOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.notification.TurmsNotificationOuterClass.internal_static_im_turms_proto_TurmsNotification_descriptor;
         }
 
@@ -6680,7 +6958,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

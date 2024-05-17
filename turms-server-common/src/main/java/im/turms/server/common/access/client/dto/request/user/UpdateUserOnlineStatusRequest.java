@@ -45,7 +45,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         userStatus_ = 0;
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
     }
 
@@ -182,7 +182,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -253,10 +253,8 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         if (!deviceTypes_.equals(other.deviceTypes_)) {
             return false;
         }
-        if (userStatus_ != other.userStatus_) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return userStatus_ == other.userStatus_
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -387,7 +385,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateUserOnlineStatusRequest)
             im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
         }
 
@@ -507,7 +505,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

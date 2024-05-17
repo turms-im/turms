@@ -43,7 +43,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         data_ = com.google.protobuf.ByteString.EMPTY;
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
     }
 
@@ -142,7 +142,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
             url_ = "";
         }
 
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
         }
 
@@ -267,7 +267,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             byte isInitialized = memoizedIsInitialized;
             if (isInitialized == 1) {
                 return true;
@@ -501,7 +501,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
                 extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:im.turms.proto.ImageFile.Description)
                 im.turms.server.common.access.client.dto.model.file.ImageFile.DescriptionOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
                 return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
             }
 
@@ -628,7 +628,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
             }
 
             @java.lang.Override
-            public final boolean isInitialized() {
+            public boolean isInitialized() {
                 return true;
             }
 
@@ -1021,7 +1021,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -1222,7 +1222,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.ImageFile)
             im.turms.server.common.access.client.dto.model.file.ImageFileOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
         }
 
@@ -1341,7 +1341,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

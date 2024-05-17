@@ -44,7 +44,7 @@ public final class DeleteRelationshipGroupRequest extends com.google.protobuf.Ge
     private DeleteRelationshipGroupRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupRequest_descriptor;
     }
 
@@ -96,7 +96,7 @@ public final class DeleteRelationshipGroupRequest extends com.google.protobuf.Ge
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -290,7 +290,7 @@ public final class DeleteRelationshipGroupRequest extends com.google.protobuf.Ge
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteRelationshipGroupRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.DeleteRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipGroupRequest_descriptor;
         }
 
@@ -398,7 +398,7 @@ public final class DeleteRelationshipGroupRequest extends com.google.protobuf.Ge
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

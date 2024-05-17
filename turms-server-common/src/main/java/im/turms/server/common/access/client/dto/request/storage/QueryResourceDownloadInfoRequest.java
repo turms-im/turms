@@ -46,7 +46,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
         idStr_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_descriptor;
     }
 
@@ -262,7 +262,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -355,10 +355,8 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
                 return false;
             }
         }
-        if (!internalGetExtra().equals(other.internalGetExtra())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return internalGetExtra().equals(other.internalGetExtra())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -498,7 +496,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryResourceDownloadInfoRequest)
             im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequestOuterClass.internal_static_im_turms_proto_QueryResourceDownloadInfoRequest_descriptor;
         }
 
@@ -645,7 +643,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

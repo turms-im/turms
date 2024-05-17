@@ -43,7 +43,7 @@ public final class Messages extends com.google.protobuf.GeneratedMessage impleme
         messages_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.message.MessagesOuterClass.internal_static_im_turms_proto_Messages_descriptor;
     }
 
@@ -103,7 +103,7 @@ public final class Messages extends com.google.protobuf.GeneratedMessage impleme
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -149,10 +149,8 @@ public final class Messages extends com.google.protobuf.GeneratedMessage impleme
             return super.equals(obj);
         }
 
-        if (!getMessagesList().equals(other.getMessagesList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getMessagesList().equals(other.getMessagesList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -281,7 +279,7 @@ public final class Messages extends com.google.protobuf.GeneratedMessage impleme
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.Messages)
             im.turms.server.common.access.client.dto.model.message.MessagesOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.message.MessagesOuterClass.internal_static_im_turms_proto_Messages_descriptor;
         }
 
@@ -418,7 +416,7 @@ public final class Messages extends com.google.protobuf.GeneratedMessage impleme
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

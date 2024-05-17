@@ -43,7 +43,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
         memberIds_ = emptyLongList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOuterClass.internal_static_im_turms_proto_DeleteGroupMembersRequest_descriptor;
     }
 
@@ -153,7 +153,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -393,7 +393,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupMembersRequest)
             im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.member.DeleteGroupMembersRequestOuterClass.internal_static_im_turms_proto_DeleteGroupMembersRequest_descriptor;
         }
 
@@ -525,7 +525,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

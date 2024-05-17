@@ -42,7 +42,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
     private GroupConversation() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
     }
 
@@ -162,7 +162,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -226,10 +226,8 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         if (getGroupId() != other.getGroupId()) {
             return false;
         }
-        if (!internalGetMemberIdToReadDate().equals(other.internalGetMemberIdToReadDate())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return internalGetMemberIdToReadDate().equals(other.internalGetMemberIdToReadDate())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -361,7 +359,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupConversation)
             im.turms.server.common.access.client.dto.model.conversation.GroupConversationOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
         }
 
@@ -488,7 +486,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

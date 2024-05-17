@@ -45,7 +45,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         questionIds_ = emptyLongList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
     }
 
@@ -121,7 +121,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -200,10 +200,8 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         if (!getQuestionIdsList().equals(other.getQuestionIdsList())) {
             return false;
         }
-        if (getJoined() != other.getJoined()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getJoined() == other.getJoined()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -336,7 +334,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupJoinQuestionsAnswerResult)
             im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
         }
 
@@ -457,7 +455,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

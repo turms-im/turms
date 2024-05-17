@@ -44,7 +44,7 @@ public final class GroupJoinQuestionsWithVersion extends com.google.protobuf.Gen
         groupJoinQuestions_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_descriptor;
     }
 
@@ -129,7 +129,7 @@ public final class GroupJoinQuestionsWithVersion extends com.google.protobuf.Gen
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -325,7 +325,7 @@ public final class GroupJoinQuestionsWithVersion extends com.google.protobuf.Gen
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupJoinQuestionsWithVersion)
             im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersionOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_descriptor;
         }
 
@@ -475,7 +475,7 @@ public final class GroupJoinQuestionsWithVersion extends com.google.protobuf.Gen
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

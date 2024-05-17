@@ -43,7 +43,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         name_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
     }
 
@@ -203,7 +203,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -451,7 +451,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateRelationshipRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
         }
 
@@ -585,7 +585,7 @@ public final class UpdateRelationshipRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

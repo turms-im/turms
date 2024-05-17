@@ -45,9 +45,9 @@ public final class MessagesWithTotalOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
-        java.lang.String[] descriptorData = {"\n'model/message/messages_with_total.prot"
+        java.lang.String[] descriptorData = {"\n\'model/message/messages_with_total.prot"
                 + "o\022\016im.turms.proto\032\033model/message/message"
                 + ".proto\"x\n\021MessagesWithTotal\022\r\n\005total\030\001 \001"
                 + "(\005\022\030\n\020is_group_message\030\002 \001(\010\022\017\n\007from_id\030"

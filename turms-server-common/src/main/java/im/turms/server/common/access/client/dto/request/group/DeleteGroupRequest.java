@@ -42,7 +42,7 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
     private DeleteGroupRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
     }
 
@@ -70,7 +70,7 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -116,10 +116,8 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
             return super.equals(obj);
         }
 
-        if (getGroupId() != other.getGroupId()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getGroupId() == other.getGroupId()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -246,7 +244,7 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupRequest)
             im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
         }
 
@@ -344,7 +342,7 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

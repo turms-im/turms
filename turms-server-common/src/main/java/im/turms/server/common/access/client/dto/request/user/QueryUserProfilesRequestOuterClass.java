@@ -45,7 +45,7 @@ public final class QueryUserProfilesRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n.request/user/query_user_profiles_reque"
                 + "st.proto\022\016im.turms.proto\"\325\001\n\030QueryUserPr"

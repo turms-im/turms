@@ -45,7 +45,7 @@ public final class PrivateConversationOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n-model/conversation/private_conversatio"
                 + "n.proto\022\016im.turms.proto\"M\n\023PrivateConver"

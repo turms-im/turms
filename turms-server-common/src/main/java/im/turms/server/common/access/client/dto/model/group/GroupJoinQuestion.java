@@ -44,7 +44,7 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
         answers_ = com.google.protobuf.LazyStringArrayList.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOuterClass.internal_static_im_turms_proto_GroupJoinQuestion_descriptor;
     }
 
@@ -222,7 +222,7 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -477,7 +477,7 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupJoinQuestion)
             im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOuterClass.internal_static_im_turms_proto_GroupJoinQuestion_descriptor;
         }
 
@@ -619,7 +619,7 @@ public final class GroupJoinQuestion extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

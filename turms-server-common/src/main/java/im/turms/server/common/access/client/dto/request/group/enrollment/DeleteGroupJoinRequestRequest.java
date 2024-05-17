@@ -43,7 +43,7 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
     private DeleteGroupJoinRequestRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinRequestRequest_descriptor;
     }
 
@@ -71,7 +71,7 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -117,10 +117,8 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
             return super.equals(obj);
         }
 
-        if (getRequestId() != other.getRequestId()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getRequestId() == other.getRequestId()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -247,7 +245,7 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupJoinRequestRequest)
             im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinRequestRequest_descriptor;
         }
 
@@ -345,7 +343,7 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

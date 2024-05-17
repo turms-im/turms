@@ -44,7 +44,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
         groupInvitations_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor;
     }
 
@@ -129,7 +129,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -325,7 +325,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupInvitationsWithVersion)
             im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.group.GroupInvitationsWithVersionOuterClass.internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor;
         }
 
@@ -474,7 +474,7 @@ public final class GroupInvitationsWithVersion extends com.google.protobuf.Gener
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

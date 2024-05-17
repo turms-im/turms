@@ -42,7 +42,7 @@ public final class ResponseActionOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\036constant/response_action.proto\022\016im.tur"
                 + "ms.proto*5\n\016ResponseAction\022\n\n\006ACCEPT\020\000\022\013"

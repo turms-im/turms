@@ -42,7 +42,7 @@ public final class RequestStatusOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\035constant/request_status.proto\022\016im.turm"
                 + "s.proto*~\n\rRequestStatus\022\013\n\007PENDING\020\000\022\014\n"

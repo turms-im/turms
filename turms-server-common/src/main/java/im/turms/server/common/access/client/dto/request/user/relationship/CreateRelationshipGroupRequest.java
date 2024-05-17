@@ -45,7 +45,7 @@ public final class CreateRelationshipGroupRequest extends com.google.protobuf.Ge
         name_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
     }
 
@@ -100,7 +100,7 @@ public final class CreateRelationshipGroupRequest extends com.google.protobuf.Ge
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -146,10 +146,8 @@ public final class CreateRelationshipGroupRequest extends com.google.protobuf.Ge
             return super.equals(obj);
         }
 
-        if (!getName().equals(other.getName())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getName().equals(other.getName())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -276,7 +274,7 @@ public final class CreateRelationshipGroupRequest extends com.google.protobuf.Ge
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateRelationshipGroupRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
         }
 
@@ -377,7 +375,7 @@ public final class CreateRelationshipGroupRequest extends com.google.protobuf.Ge
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

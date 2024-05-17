@@ -45,7 +45,7 @@ public final class GroupJoinRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n$model/group/group_join_request.proto\022\016"
                 + "im.turms.proto\032\035constant/request_status."

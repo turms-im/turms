@@ -45,7 +45,7 @@ public final class DeleteGroupBlockedUserRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n?request/group/blocklist/delete_group_b"
                 + "locked_user_request.proto\022\016im.turms.prot"

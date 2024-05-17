@@ -43,7 +43,7 @@ public final class GroupsWithVersion extends com.google.protobuf.GeneratedMessag
         groups_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOuterClass.internal_static_im_turms_proto_GroupsWithVersion_descriptor;
     }
 
@@ -127,7 +127,7 @@ public final class GroupsWithVersion extends com.google.protobuf.GeneratedMessag
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -323,7 +323,7 @@ public final class GroupsWithVersion extends com.google.protobuf.GeneratedMessag
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupsWithVersion)
             im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.group.GroupsWithVersionOuterClass.internal_static_im_turms_proto_GroupsWithVersion_descriptor;
         }
 
@@ -471,7 +471,7 @@ public final class GroupsWithVersion extends com.google.protobuf.GeneratedMessag
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

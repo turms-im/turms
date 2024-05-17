@@ -45,7 +45,7 @@ public final class QueryMessageAttachmentInfosRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n<request/storage/query_message_attachme"
                 + "nt_infos_request.proto\022\016im.turms.proto\"\257"

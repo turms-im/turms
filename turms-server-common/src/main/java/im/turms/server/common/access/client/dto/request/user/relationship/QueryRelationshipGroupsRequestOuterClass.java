@@ -45,7 +45,7 @@ public final class QueryRelationshipGroupsRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\nArequest/user/relationship/query_relati"
                 + "onship_groups_request.proto\022\016im.turms.pr"

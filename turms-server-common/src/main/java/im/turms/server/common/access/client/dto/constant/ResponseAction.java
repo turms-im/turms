@@ -93,7 +93,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ResponseAction> internalValueMap =
-            number -> ResponseAction.forNumber(number);
+            ResponseAction::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

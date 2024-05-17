@@ -45,7 +45,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
         attachmentIdStr_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOuterClass.internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_descriptor;
     }
 
@@ -242,7 +242,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -516,7 +516,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateMessageAttachmentInfoRequest)
             im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOuterClass.internal_static_im_turms_proto_UpdateMessageAttachmentInfoRequest_descriptor;
         }
 
@@ -659,7 +659,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

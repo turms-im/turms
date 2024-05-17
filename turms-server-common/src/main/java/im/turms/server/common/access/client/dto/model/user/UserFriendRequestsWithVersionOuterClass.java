@@ -45,7 +45,7 @@ public final class UserFriendRequestsWithVersionOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n2model/user/user_friend_requests_with_v"
                 + "ersion.proto\022\016im.turms.proto\032$model/user"

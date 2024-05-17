@@ -47,7 +47,7 @@ public final class ImageFileOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\033model/file/image_file.proto\022\016im.turms."
                 + "proto\"\207\002\n\tImageFile\022?\n\013description\030\001 \001(\013"

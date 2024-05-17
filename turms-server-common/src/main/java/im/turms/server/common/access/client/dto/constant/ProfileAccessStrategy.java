@@ -93,7 +93,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy> internalValueMap =
-            number -> ProfileAccessStrategy.forNumber(number);
+            ProfileAccessStrategy::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

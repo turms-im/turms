@@ -119,6 +119,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         UPDATE_GROUP_INVITATION_REQUEST(510),
         UPDATE_GROUP_JOIN_QUESTION_REQUEST(511),
         UPDATE_GROUP_JOIN_REQUEST_REQUEST(512),
+        CREATE_MEETING_REQUEST(900),
+        DELETE_MEETING_REQUEST(901),
+        QUERY_MEETINGS_REQUEST(902),
+        UPDATE_MEETING_REQUEST(903),
+        UPDATE_MEETING_INVITATION_REQUEST(904),
         DELETE_RESOURCE_REQUEST(1000),
         QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST(1001),
         QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
@@ -198,6 +203,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case 510 -> UPDATE_GROUP_INVITATION_REQUEST;
                 case 511 -> UPDATE_GROUP_JOIN_QUESTION_REQUEST;
                 case 512 -> UPDATE_GROUP_JOIN_REQUEST_REQUEST;
+                case 900 -> CREATE_MEETING_REQUEST;
+                case 901 -> DELETE_MEETING_REQUEST;
+                case 902 -> QUERY_MEETINGS_REQUEST;
+                case 903 -> UPDATE_MEETING_REQUEST;
+                case 904 -> UPDATE_MEETING_INVITATION_REQUEST;
                 case 1000 -> DELETE_RESOURCE_REQUEST;
                 case 1001 -> QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST;
                 case 1002 -> QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
@@ -2410,6 +2420,208 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 .getDefaultInstance();
     }
 
+    public static final int CREATE_MEETING_REQUEST_FIELD_NUMBER = 900;
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return Whether the createMeetingRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasCreateMeetingRequest() {
+        return kindCase_ == 900;
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return The createMeetingRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest getCreateMeetingRequest() {
+        if (kindCase_ == 900) {
+            return (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequestOrBuilder getCreateMeetingRequestOrBuilder() {
+        if (kindCase_ == 900) {
+            return (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    public static final int DELETE_MEETING_REQUEST_FIELD_NUMBER = 901;
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return Whether the deleteMeetingRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeleteMeetingRequest() {
+        return kindCase_ == 901;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return The deleteMeetingRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest() {
+        if (kindCase_ == 901) {
+            return (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequestOrBuilder getDeleteMeetingRequestOrBuilder() {
+        if (kindCase_ == 901) {
+            return (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                .getDefaultInstance();
+    }
+
+    public static final int QUERY_MEETINGS_REQUEST_FIELD_NUMBER = 902;
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return Whether the queryMeetingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasQueryMeetingsRequest() {
+        return kindCase_ == 902;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return The queryMeetingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest() {
+        if (kindCase_ == 902) {
+            return (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequestOrBuilder getQueryMeetingsRequestOrBuilder() {
+        if (kindCase_ == 902) {
+            return (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_MEETING_REQUEST_FIELD_NUMBER = 903;
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return Whether the updateMeetingRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateMeetingRequest() {
+        return kindCase_ == 903;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return The updateMeetingRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest() {
+        if (kindCase_ == 903) {
+            return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequestOrBuilder getUpdateMeetingRequestOrBuilder() {
+        if (kindCase_ == 903) {
+            return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_MEETING_INVITATION_REQUEST_FIELD_NUMBER = 904;
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return Whether the updateMeetingInvitationRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateMeetingInvitationRequest() {
+        return kindCase_ == 904;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return The updateMeetingInvitationRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest() {
+        if (kindCase_ == 904) {
+            return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequestOrBuilder getUpdateMeetingInvitationRequestOrBuilder() {
+        if (kindCase_ == 904) {
+            return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                .getDefaultInstance();
+    }
+
     public static final int DELETE_RESOURCE_REQUEST_FIELD_NUMBER = 1000;
 
     /**
@@ -2849,6 +3061,26 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             output.writeMessage(512,
                     (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_);
         }
+        if (kindCase_ == 900) {
+            output.writeMessage(900,
+                    (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_);
+        }
+        if (kindCase_ == 901) {
+            output.writeMessage(901,
+                    (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_);
+        }
+        if (kindCase_ == 902) {
+            output.writeMessage(902,
+                    (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_);
+        }
+        if (kindCase_ == 903) {
+            output.writeMessage(903,
+                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_);
+        }
+        if (kindCase_ == 904) {
+            output.writeMessage(904,
+                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_);
+        }
         if (kindCase_ == 1000) {
             output.writeMessage(1000,
                     (im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest) kind_);
@@ -3098,6 +3330,26 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         if (kindCase_ == 512) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(512,
                     (im.turms.server.common.access.client.dto.request.group.enrollment.UpdateGroupJoinRequestRequest) kind_);
+        }
+        if (kindCase_ == 900) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(900,
+                    (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_);
+        }
+        if (kindCase_ == 901) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(901,
+                    (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_);
+        }
+        if (kindCase_ == 902) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(902,
+                    (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_);
+        }
+        if (kindCase_ == 903) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(903,
+                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_);
+        }
+        if (kindCase_ == 904) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(904,
+                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_);
         }
         if (kindCase_ == 1000) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(1000,
@@ -3445,6 +3697,32 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                     return false;
                 }
             }
+            case 900 -> {
+                if (!getCreateMeetingRequest().equals(other.getCreateMeetingRequest())) {
+                    return false;
+                }
+            }
+            case 901 -> {
+                if (!getDeleteMeetingRequest().equals(other.getDeleteMeetingRequest())) {
+                    return false;
+                }
+            }
+            case 902 -> {
+                if (!getQueryMeetingsRequest().equals(other.getQueryMeetingsRequest())) {
+                    return false;
+                }
+            }
+            case 903 -> {
+                if (!getUpdateMeetingRequest().equals(other.getUpdateMeetingRequest())) {
+                    return false;
+                }
+            }
+            case 904 -> {
+                if (!getUpdateMeetingInvitationRequest()
+                        .equals(other.getUpdateMeetingInvitationRequest())) {
+                    return false;
+                }
+            }
             case 1000 -> {
                 if (!getDeleteResourceRequest().equals(other.getDeleteResourceRequest())) {
                     return false;
@@ -3708,6 +3986,26 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 hash = (37 * hash) + UPDATE_GROUP_JOIN_REQUEST_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateGroupJoinRequestRequest().hashCode();
             }
+            case 900 -> {
+                hash = (37 * hash) + CREATE_MEETING_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getCreateMeetingRequest().hashCode();
+            }
+            case 901 -> {
+                hash = (37 * hash) + DELETE_MEETING_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getDeleteMeetingRequest().hashCode();
+            }
+            case 902 -> {
+                hash = (37 * hash) + QUERY_MEETINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getQueryMeetingsRequest().hashCode();
+            }
+            case 903 -> {
+                hash = (37 * hash) + UPDATE_MEETING_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateMeetingRequest().hashCode();
+            }
+            case 904 -> {
+                hash = (37 * hash) + UPDATE_MEETING_INVITATION_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateMeetingInvitationRequest().hashCode();
+            }
             case 1000 -> {
                 hash = (37 * hash) + DELETE_RESOURCE_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getDeleteResourceRequest().hashCode();
@@ -3878,6 +4176,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             super.clear();
             bitField0_ = 0;
             bitField1_ = 0;
+            bitField2_ = 0;
             requestId_ = 0L;
             if (createSessionRequestBuilder_ != null) {
                 createSessionRequestBuilder_.clear();
@@ -4041,6 +4340,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (updateGroupJoinRequestRequestBuilder_ != null) {
                 updateGroupJoinRequestRequestBuilder_.clear();
             }
+            if (createMeetingRequestBuilder_ != null) {
+                createMeetingRequestBuilder_.clear();
+            }
+            if (deleteMeetingRequestBuilder_ != null) {
+                deleteMeetingRequestBuilder_.clear();
+            }
+            if (queryMeetingsRequestBuilder_ != null) {
+                queryMeetingsRequestBuilder_.clear();
+            }
+            if (updateMeetingRequestBuilder_ != null) {
+                updateMeetingRequestBuilder_.clear();
+            }
+            if (updateMeetingInvitationRequestBuilder_ != null) {
+                updateMeetingInvitationRequestBuilder_.clear();
+            }
             if (deleteResourceRequestBuilder_ != null) {
                 deleteResourceRequestBuilder_.clear();
             }
@@ -4091,6 +4405,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (bitField1_ != 0) {
                 buildPartial1(result);
             }
+            if (bitField2_ != 0) {
+                buildPartial2(result);
+            }
             buildPartialOneofs(result);
             onBuilt();
             return result;
@@ -4110,6 +4427,11 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         private void buildPartial1(
                 im.turms.server.common.access.client.dto.request.TurmsRequest result) {
             int from_bitField1_ = bitField1_;
+        }
+
+        private void buildPartial2(
+                im.turms.server.common.access.client.dto.request.TurmsRequest result) {
+            int from_bitField2_ = bitField2_;
         }
 
         private void buildPartialOneofs(
@@ -4278,6 +4600,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (kindCase_ == 512 && updateGroupJoinRequestRequestBuilder_ != null) {
                 result.kind_ = updateGroupJoinRequestRequestBuilder_.build();
             }
+            if (kindCase_ == 900 && createMeetingRequestBuilder_ != null) {
+                result.kind_ = createMeetingRequestBuilder_.build();
+            }
+            if (kindCase_ == 901 && deleteMeetingRequestBuilder_ != null) {
+                result.kind_ = deleteMeetingRequestBuilder_.build();
+            }
+            if (kindCase_ == 902 && queryMeetingsRequestBuilder_ != null) {
+                result.kind_ = queryMeetingsRequestBuilder_.build();
+            }
+            if (kindCase_ == 903 && updateMeetingRequestBuilder_ != null) {
+                result.kind_ = updateMeetingRequestBuilder_.build();
+            }
+            if (kindCase_ == 904 && updateMeetingInvitationRequestBuilder_ != null) {
+                result.kind_ = updateMeetingInvitationRequestBuilder_.build();
+            }
             if (kindCase_ == 1000 && deleteResourceRequestBuilder_ != null) {
                 result.kind_ = deleteResourceRequestBuilder_.build();
             }
@@ -4316,191 +4653,133 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 setRequestId(other.getRequestId());
             }
             switch (other.getKindCase()) {
-                case CREATE_SESSION_REQUEST -> {
+                case CREATE_SESSION_REQUEST ->
                     mergeCreateSessionRequest(other.getCreateSessionRequest());
-                }
-                case DELETE_SESSION_REQUEST -> {
+                case DELETE_SESSION_REQUEST ->
                     mergeDeleteSessionRequest(other.getDeleteSessionRequest());
-                }
-                case QUERY_CONVERSATIONS_REQUEST -> {
+                case QUERY_CONVERSATIONS_REQUEST ->
                     mergeQueryConversationsRequest(other.getQueryConversationsRequest());
-                }
-                case UPDATE_CONVERSATION_REQUEST -> {
+                case UPDATE_CONVERSATION_REQUEST ->
                     mergeUpdateConversationRequest(other.getUpdateConversationRequest());
-                }
-                case UPDATE_TYPING_STATUS_REQUEST -> {
+                case UPDATE_TYPING_STATUS_REQUEST ->
                     mergeUpdateTypingStatusRequest(other.getUpdateTypingStatusRequest());
-                }
-                case CREATE_MESSAGE_REQUEST -> {
+                case CREATE_MESSAGE_REQUEST ->
                     mergeCreateMessageRequest(other.getCreateMessageRequest());
-                }
-                case QUERY_MESSAGES_REQUEST -> {
+                case QUERY_MESSAGES_REQUEST ->
                     mergeQueryMessagesRequest(other.getQueryMessagesRequest());
-                }
-                case UPDATE_MESSAGE_REQUEST -> {
+                case UPDATE_MESSAGE_REQUEST ->
                     mergeUpdateMessageRequest(other.getUpdateMessageRequest());
-                }
-                case CREATE_GROUP_MEMBERS_REQUEST -> {
+                case CREATE_GROUP_MEMBERS_REQUEST ->
                     mergeCreateGroupMembersRequest(other.getCreateGroupMembersRequest());
-                }
-                case DELETE_GROUP_MEMBERS_REQUEST -> {
+                case DELETE_GROUP_MEMBERS_REQUEST ->
                     mergeDeleteGroupMembersRequest(other.getDeleteGroupMembersRequest());
-                }
-                case QUERY_GROUP_MEMBERS_REQUEST -> {
+                case QUERY_GROUP_MEMBERS_REQUEST ->
                     mergeQueryGroupMembersRequest(other.getQueryGroupMembersRequest());
-                }
-                case UPDATE_GROUP_MEMBER_REQUEST -> {
+                case UPDATE_GROUP_MEMBER_REQUEST ->
                     mergeUpdateGroupMemberRequest(other.getUpdateGroupMemberRequest());
-                }
-                case QUERY_USER_PROFILES_REQUEST -> {
+                case QUERY_USER_PROFILES_REQUEST ->
                     mergeQueryUserProfilesRequest(other.getQueryUserProfilesRequest());
-                }
-                case QUERY_NEARBY_USERS_REQUEST -> {
+                case QUERY_NEARBY_USERS_REQUEST ->
                     mergeQueryNearbyUsersRequest(other.getQueryNearbyUsersRequest());
-                }
-                case QUERY_USER_ONLINE_STATUSES_REQUEST -> {
+                case QUERY_USER_ONLINE_STATUSES_REQUEST ->
                     mergeQueryUserOnlineStatusesRequest(other.getQueryUserOnlineStatusesRequest());
-                }
-                case UPDATE_USER_LOCATION_REQUEST -> {
+                case UPDATE_USER_LOCATION_REQUEST ->
                     mergeUpdateUserLocationRequest(other.getUpdateUserLocationRequest());
-                }
-                case UPDATE_USER_ONLINE_STATUS_REQUEST -> {
+                case UPDATE_USER_ONLINE_STATUS_REQUEST ->
                     mergeUpdateUserOnlineStatusRequest(other.getUpdateUserOnlineStatusRequest());
-                }
-                case UPDATE_USER_REQUEST -> {
-                    mergeUpdateUserRequest(other.getUpdateUserRequest());
-                }
-                case CREATE_FRIEND_REQUEST_REQUEST -> {
+                case UPDATE_USER_REQUEST -> mergeUpdateUserRequest(other.getUpdateUserRequest());
+                case CREATE_FRIEND_REQUEST_REQUEST ->
                     mergeCreateFriendRequestRequest(other.getCreateFriendRequestRequest());
-                }
-                case CREATE_RELATIONSHIP_GROUP_REQUEST -> {
+                case CREATE_RELATIONSHIP_GROUP_REQUEST ->
                     mergeCreateRelationshipGroupRequest(other.getCreateRelationshipGroupRequest());
-                }
-                case CREATE_RELATIONSHIP_REQUEST -> {
+                case CREATE_RELATIONSHIP_REQUEST ->
                     mergeCreateRelationshipRequest(other.getCreateRelationshipRequest());
-                }
-                case DELETE_FRIEND_REQUEST_REQUEST -> {
+                case DELETE_FRIEND_REQUEST_REQUEST ->
                     mergeDeleteFriendRequestRequest(other.getDeleteFriendRequestRequest());
-                }
-                case DELETE_RELATIONSHIP_GROUP_REQUEST -> {
+                case DELETE_RELATIONSHIP_GROUP_REQUEST ->
                     mergeDeleteRelationshipGroupRequest(other.getDeleteRelationshipGroupRequest());
-                }
-                case DELETE_RELATIONSHIP_REQUEST -> {
+                case DELETE_RELATIONSHIP_REQUEST ->
                     mergeDeleteRelationshipRequest(other.getDeleteRelationshipRequest());
-                }
-                case QUERY_FRIEND_REQUESTS_REQUEST -> {
+                case QUERY_FRIEND_REQUESTS_REQUEST ->
                     mergeQueryFriendRequestsRequest(other.getQueryFriendRequestsRequest());
-                }
-                case QUERY_RELATED_USER_IDS_REQUEST -> {
+                case QUERY_RELATED_USER_IDS_REQUEST ->
                     mergeQueryRelatedUserIdsRequest(other.getQueryRelatedUserIdsRequest());
-                }
-                case QUERY_RELATIONSHIP_GROUPS_REQUEST -> {
+                case QUERY_RELATIONSHIP_GROUPS_REQUEST ->
                     mergeQueryRelationshipGroupsRequest(other.getQueryRelationshipGroupsRequest());
-                }
-                case QUERY_RELATIONSHIPS_REQUEST -> {
+                case QUERY_RELATIONSHIPS_REQUEST ->
                     mergeQueryRelationshipsRequest(other.getQueryRelationshipsRequest());
-                }
-                case UPDATE_FRIEND_REQUEST_REQUEST -> {
+                case UPDATE_FRIEND_REQUEST_REQUEST ->
                     mergeUpdateFriendRequestRequest(other.getUpdateFriendRequestRequest());
-                }
-                case UPDATE_RELATIONSHIP_GROUP_REQUEST -> {
+                case UPDATE_RELATIONSHIP_GROUP_REQUEST ->
                     mergeUpdateRelationshipGroupRequest(other.getUpdateRelationshipGroupRequest());
-                }
-                case UPDATE_RELATIONSHIP_REQUEST -> {
+                case UPDATE_RELATIONSHIP_REQUEST ->
                     mergeUpdateRelationshipRequest(other.getUpdateRelationshipRequest());
-                }
-                case CREATE_GROUP_REQUEST -> {
-                    mergeCreateGroupRequest(other.getCreateGroupRequest());
-                }
-                case DELETE_GROUP_REQUEST -> {
-                    mergeDeleteGroupRequest(other.getDeleteGroupRequest());
-                }
-                case QUERY_GROUPS_REQUEST -> {
-                    mergeQueryGroupsRequest(other.getQueryGroupsRequest());
-                }
-                case QUERY_JOINED_GROUP_IDS_REQUEST -> {
+                case CREATE_GROUP_REQUEST -> mergeCreateGroupRequest(other.getCreateGroupRequest());
+                case DELETE_GROUP_REQUEST -> mergeDeleteGroupRequest(other.getDeleteGroupRequest());
+                case QUERY_GROUPS_REQUEST -> mergeQueryGroupsRequest(other.getQueryGroupsRequest());
+                case QUERY_JOINED_GROUP_IDS_REQUEST ->
                     mergeQueryJoinedGroupIdsRequest(other.getQueryJoinedGroupIdsRequest());
-                }
-                case QUERY_JOINED_GROUP_INFOS_REQUEST -> {
+                case QUERY_JOINED_GROUP_INFOS_REQUEST ->
                     mergeQueryJoinedGroupInfosRequest(other.getQueryJoinedGroupInfosRequest());
-                }
-                case UPDATE_GROUP_REQUEST -> {
-                    mergeUpdateGroupRequest(other.getUpdateGroupRequest());
-                }
-                case CREATE_GROUP_BLOCKED_USER_REQUEST -> {
+                case UPDATE_GROUP_REQUEST -> mergeUpdateGroupRequest(other.getUpdateGroupRequest());
+                case CREATE_GROUP_BLOCKED_USER_REQUEST ->
                     mergeCreateGroupBlockedUserRequest(other.getCreateGroupBlockedUserRequest());
-                }
-                case DELETE_GROUP_BLOCKED_USER_REQUEST -> {
+                case DELETE_GROUP_BLOCKED_USER_REQUEST ->
                     mergeDeleteGroupBlockedUserRequest(other.getDeleteGroupBlockedUserRequest());
-                }
-                case QUERY_GROUP_BLOCKED_USER_IDS_REQUEST -> {
-                    mergeQueryGroupBlockedUserIdsRequest(
-                            other.getQueryGroupBlockedUserIdsRequest());
-                }
-                case QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST -> {
+                case QUERY_GROUP_BLOCKED_USER_IDS_REQUEST -> mergeQueryGroupBlockedUserIdsRequest(
+                        other.getQueryGroupBlockedUserIdsRequest());
+                case QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST ->
                     mergeQueryGroupBlockedUserInfosRequest(
                             other.getQueryGroupBlockedUserInfosRequest());
-                }
-                case CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST -> {
+                case CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST ->
                     mergeCheckGroupJoinQuestionsAnswersRequest(
                             other.getCheckGroupJoinQuestionsAnswersRequest());
-                }
-                case CREATE_GROUP_INVITATION_REQUEST -> {
+                case CREATE_GROUP_INVITATION_REQUEST ->
                     mergeCreateGroupInvitationRequest(other.getCreateGroupInvitationRequest());
-                }
-                case CREATE_GROUP_JOIN_REQUEST_REQUEST -> {
+                case CREATE_GROUP_JOIN_REQUEST_REQUEST ->
                     mergeCreateGroupJoinRequestRequest(other.getCreateGroupJoinRequestRequest());
-                }
-                case CREATE_GROUP_JOIN_QUESTIONS_REQUEST -> {
-                    mergeCreateGroupJoinQuestionsRequest(
-                            other.getCreateGroupJoinQuestionsRequest());
-                }
-                case DELETE_GROUP_INVITATION_REQUEST -> {
+                case CREATE_GROUP_JOIN_QUESTIONS_REQUEST -> mergeCreateGroupJoinQuestionsRequest(
+                        other.getCreateGroupJoinQuestionsRequest());
+                case DELETE_GROUP_INVITATION_REQUEST ->
                     mergeDeleteGroupInvitationRequest(other.getDeleteGroupInvitationRequest());
-                }
-                case DELETE_GROUP_JOIN_REQUEST_REQUEST -> {
+                case DELETE_GROUP_JOIN_REQUEST_REQUEST ->
                     mergeDeleteGroupJoinRequestRequest(other.getDeleteGroupJoinRequestRequest());
-                }
-                case DELETE_GROUP_JOIN_QUESTIONS_REQUEST -> {
-                    mergeDeleteGroupJoinQuestionsRequest(
-                            other.getDeleteGroupJoinQuestionsRequest());
-                }
-                case QUERY_GROUP_INVITATIONS_REQUEST -> {
+                case DELETE_GROUP_JOIN_QUESTIONS_REQUEST -> mergeDeleteGroupJoinQuestionsRequest(
+                        other.getDeleteGroupJoinQuestionsRequest());
+                case QUERY_GROUP_INVITATIONS_REQUEST ->
                     mergeQueryGroupInvitationsRequest(other.getQueryGroupInvitationsRequest());
-                }
-                case QUERY_GROUP_JOIN_REQUESTS_REQUEST -> {
+                case QUERY_GROUP_JOIN_REQUESTS_REQUEST ->
                     mergeQueryGroupJoinRequestsRequest(other.getQueryGroupJoinRequestsRequest());
-                }
-                case QUERY_GROUP_JOIN_QUESTIONS_REQUEST -> {
+                case QUERY_GROUP_JOIN_QUESTIONS_REQUEST ->
                     mergeQueryGroupJoinQuestionsRequest(other.getQueryGroupJoinQuestionsRequest());
-                }
-                case UPDATE_GROUP_INVITATION_REQUEST -> {
+                case UPDATE_GROUP_INVITATION_REQUEST ->
                     mergeUpdateGroupInvitationRequest(other.getUpdateGroupInvitationRequest());
-                }
-                case UPDATE_GROUP_JOIN_QUESTION_REQUEST -> {
+                case UPDATE_GROUP_JOIN_QUESTION_REQUEST ->
                     mergeUpdateGroupJoinQuestionRequest(other.getUpdateGroupJoinQuestionRequest());
-                }
-                case UPDATE_GROUP_JOIN_REQUEST_REQUEST -> {
+                case UPDATE_GROUP_JOIN_REQUEST_REQUEST ->
                     mergeUpdateGroupJoinRequestRequest(other.getUpdateGroupJoinRequestRequest());
-                }
-                case DELETE_RESOURCE_REQUEST -> {
+                case CREATE_MEETING_REQUEST ->
+                    mergeCreateMeetingRequest(other.getCreateMeetingRequest());
+                case DELETE_MEETING_REQUEST ->
+                    mergeDeleteMeetingRequest(other.getDeleteMeetingRequest());
+                case QUERY_MEETINGS_REQUEST ->
+                    mergeQueryMeetingsRequest(other.getQueryMeetingsRequest());
+                case UPDATE_MEETING_REQUEST ->
+                    mergeUpdateMeetingRequest(other.getUpdateMeetingRequest());
+                case UPDATE_MEETING_INVITATION_REQUEST ->
+                    mergeUpdateMeetingInvitationRequest(other.getUpdateMeetingInvitationRequest());
+                case DELETE_RESOURCE_REQUEST ->
                     mergeDeleteResourceRequest(other.getDeleteResourceRequest());
-                }
-                case QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST -> {
-                    mergeQueryResourceDownloadInfoRequest(
-                            other.getQueryResourceDownloadInfoRequest());
-                }
-                case QUERY_RESOURCE_UPLOAD_INFO_REQUEST -> {
+                case QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST -> mergeQueryResourceDownloadInfoRequest(
+                        other.getQueryResourceDownloadInfoRequest());
+                case QUERY_RESOURCE_UPLOAD_INFO_REQUEST ->
                     mergeQueryResourceUploadInfoRequest(other.getQueryResourceUploadInfoRequest());
-                }
-                case QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST -> {
+                case QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST ->
                     mergeQueryMessageAttachmentInfosRequest(
                             other.getQueryMessageAttachmentInfosRequest());
-                }
-                case UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST -> {
+                case UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST ->
                     mergeUpdateMessageAttachmentInfoRequest(
                             other.getUpdateMessageAttachmentInfoRequest());
-                }
                 case KIND_NOT_SET -> {
                 }
             }
@@ -4846,6 +5125,32 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                                     extensionRegistry);
                             kindCase_ = 512;
                         } // case 4098
+                        case 7202 -> {
+                            input.readMessage(getCreateMeetingRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 900;
+                        } // case 7202
+                        case 7210 -> {
+                            input.readMessage(getDeleteMeetingRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 901;
+                        } // case 7210
+                        case 7218 -> {
+                            input.readMessage(getQueryMeetingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 902;
+                        } // case 7218
+                        case 7226 -> {
+                            input.readMessage(getUpdateMeetingRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 903;
+                        } // case 7226
+                        case 7234 -> {
+                            input.readMessage(
+                                    getUpdateMeetingInvitationRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 904;
+                        } // case 7234
                         case 8002 -> {
                             input.readMessage(getDeleteResourceRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
@@ -4908,6 +5213,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
 
         private int bitField0_;
         private int bitField1_;
+        private int bitField2_;
 
         private long requestId_;
 
@@ -13904,6 +14210,838 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             kindCase_ = 512;
             onChanged();
             return updateGroupJoinRequestRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest, im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequestOrBuilder> createMeetingRequestBuilder_;
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         *
+         * @return Whether the createMeetingRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasCreateMeetingRequest() {
+            return kindCase_ == 900;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         *
+         * @return The createMeetingRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest getCreateMeetingRequest() {
+            if (createMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 900) {
+                    return (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 900) {
+                    return createMeetingRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder setCreateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest value) {
+            if (createMeetingRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                createMeetingRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 900;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder setCreateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest.Builder builderForValue) {
+            if (createMeetingRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                createMeetingRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 900;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder mergeCreateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest value) {
+            if (createMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 900
+                        && kind_ != im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 900) {
+                    createMeetingRequestBuilder_.mergeFrom(value);
+                } else {
+                    createMeetingRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 900;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder clearCreateMeetingRequest() {
+            if (createMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 900) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 900) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                createMeetingRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest.Builder getCreateMeetingRequestBuilder() {
+            return getCreateMeetingRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequestOrBuilder getCreateMeetingRequestOrBuilder() {
+            if ((kindCase_ == 900) && (createMeetingRequestBuilder_ != null)) {
+                return createMeetingRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 900) {
+                    return (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest, im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequestOrBuilder> getCreateMeetingRequestFieldBuilder() {
+            if (createMeetingRequestBuilder_ == null) {
+                if (!(kindCase_ == 900)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest
+                            .getDefaultInstance();
+                }
+                createMeetingRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 900;
+            onChanged();
+            return createMeetingRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest, im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequestOrBuilder> deleteMeetingRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         *
+         * @return Whether the deleteMeetingRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasDeleteMeetingRequest() {
+            return kindCase_ == 901;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         *
+         * @return The deleteMeetingRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest() {
+            if (deleteMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 901) {
+                    return (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 901) {
+                    return deleteMeetingRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder setDeleteMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest value) {
+            if (deleteMeetingRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                deleteMeetingRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 901;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder setDeleteMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest.Builder builderForValue) {
+            if (deleteMeetingRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                deleteMeetingRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 901;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder mergeDeleteMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest value) {
+            if (deleteMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 901
+                        && kind_ != im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 901) {
+                    deleteMeetingRequestBuilder_.mergeFrom(value);
+                } else {
+                    deleteMeetingRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 901;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder clearDeleteMeetingRequest() {
+            if (deleteMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 901) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 901) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                deleteMeetingRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest.Builder getDeleteMeetingRequestBuilder() {
+            return getDeleteMeetingRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequestOrBuilder getDeleteMeetingRequestOrBuilder() {
+            if ((kindCase_ == 901) && (deleteMeetingRequestBuilder_ != null)) {
+                return deleteMeetingRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 901) {
+                    return (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest, im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequestOrBuilder> getDeleteMeetingRequestFieldBuilder() {
+            if (deleteMeetingRequestBuilder_ == null) {
+                if (!(kindCase_ == 901)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest
+                            .getDefaultInstance();
+                }
+                deleteMeetingRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 901;
+            onChanged();
+            return deleteMeetingRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest, im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest.Builder, im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequestOrBuilder> queryMeetingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         *
+         * @return Whether the queryMeetingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasQueryMeetingsRequest() {
+            return kindCase_ == 902;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         *
+         * @return The queryMeetingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest() {
+            if (queryMeetingsRequestBuilder_ == null) {
+                if (kindCase_ == 902) {
+                    return (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 902) {
+                    return queryMeetingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder setQueryMeetingsRequest(
+                im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest value) {
+            if (queryMeetingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                queryMeetingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 902;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder setQueryMeetingsRequest(
+                im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest.Builder builderForValue) {
+            if (queryMeetingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                queryMeetingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 902;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder mergeQueryMeetingsRequest(
+                im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest value) {
+            if (queryMeetingsRequestBuilder_ == null) {
+                if (kindCase_ == 902
+                        && kind_ != im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 902) {
+                    queryMeetingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    queryMeetingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 902;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder clearQueryMeetingsRequest() {
+            if (queryMeetingsRequestBuilder_ == null) {
+                if (kindCase_ == 902) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 902) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                queryMeetingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest.Builder getQueryMeetingsRequestBuilder() {
+            return getQueryMeetingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequestOrBuilder getQueryMeetingsRequestOrBuilder() {
+            if ((kindCase_ == 902) && (queryMeetingsRequestBuilder_ != null)) {
+                return queryMeetingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 902) {
+                    return (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest, im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest.Builder, im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequestOrBuilder> getQueryMeetingsRequestFieldBuilder() {
+            if (queryMeetingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 902)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest
+                            .getDefaultInstance();
+                }
+                queryMeetingsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 902;
+            onChanged();
+            return queryMeetingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequestOrBuilder> updateMeetingRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         *
+         * @return Whether the updateMeetingRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateMeetingRequest() {
+            return kindCase_ == 903;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         *
+         * @return The updateMeetingRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest() {
+            if (updateMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 903) {
+                    return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 903) {
+                    return updateMeetingRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder setUpdateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest value) {
+            if (updateMeetingRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateMeetingRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 903;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder setUpdateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest.Builder builderForValue) {
+            if (updateMeetingRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateMeetingRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 903;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder mergeUpdateMeetingRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest value) {
+            if (updateMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 903
+                        && kind_ != im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 903) {
+                    updateMeetingRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateMeetingRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 903;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder clearUpdateMeetingRequest() {
+            if (updateMeetingRequestBuilder_ == null) {
+                if (kindCase_ == 903) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 903) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateMeetingRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest.Builder getUpdateMeetingRequestBuilder() {
+            return getUpdateMeetingRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequestOrBuilder getUpdateMeetingRequestOrBuilder() {
+            if ((kindCase_ == 903) && (updateMeetingRequestBuilder_ != null)) {
+                return updateMeetingRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 903) {
+                    return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest.Builder, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequestOrBuilder> getUpdateMeetingRequestFieldBuilder() {
+            if (updateMeetingRequestBuilder_ == null) {
+                if (!(kindCase_ == 903)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest
+                            .getDefaultInstance();
+                }
+                updateMeetingRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 903;
+            onChanged();
+            return updateMeetingRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequestOrBuilder> updateMeetingInvitationRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         *
+         * @return Whether the updateMeetingInvitationRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateMeetingInvitationRequest() {
+            return kindCase_ == 904;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         *
+         * @return The updateMeetingInvitationRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest() {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 904) {
+                    return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 904) {
+                    return updateMeetingInvitationRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder setUpdateMeetingInvitationRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest value) {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateMeetingInvitationRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 904;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder setUpdateMeetingInvitationRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest.Builder builderForValue) {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateMeetingInvitationRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 904;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder mergeUpdateMeetingInvitationRequest(
+                im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest value) {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 904
+                        && kind_ != im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 904) {
+                    updateMeetingInvitationRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateMeetingInvitationRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 904;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder clearUpdateMeetingInvitationRequest() {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                if (kindCase_ == 904) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 904) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateMeetingInvitationRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest.Builder getUpdateMeetingInvitationRequestBuilder() {
+            return getUpdateMeetingInvitationRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequestOrBuilder getUpdateMeetingInvitationRequestOrBuilder() {
+            if ((kindCase_ == 904) && (updateMeetingInvitationRequestBuilder_ != null)) {
+                return updateMeetingInvitationRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 904) {
+                    return (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest.Builder, im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequestOrBuilder> getUpdateMeetingInvitationRequestFieldBuilder() {
+            if (updateMeetingInvitationRequestBuilder_ == null) {
+                if (!(kindCase_ == 904)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest
+                            .getDefaultInstance();
+                }
+                updateMeetingInvitationRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 904;
+            onChanged();
+            return updateMeetingInvitationRequestBuilder_;
         }
 
         private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest.Builder, im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOrBuilder> deleteResourceRequestBuilder_;

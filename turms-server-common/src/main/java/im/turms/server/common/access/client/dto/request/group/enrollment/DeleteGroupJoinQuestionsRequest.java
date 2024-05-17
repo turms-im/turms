@@ -45,7 +45,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         questionIds_ = emptyLongList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinQuestionsRequest_descriptor;
     }
 
@@ -108,7 +108,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -178,10 +178,8 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         if (getGroupId() != other.getGroupId()) {
             return false;
         }
-        if (!getQuestionIdsList().equals(other.getQuestionIdsList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getQuestionIdsList().equals(other.getQuestionIdsList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -312,7 +310,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupJoinQuestionsRequest)
             im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupJoinQuestionsRequestOuterClass.internal_static_im_turms_proto_DeleteGroupJoinQuestionsRequest_descriptor;
         }
 
@@ -426,7 +424,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

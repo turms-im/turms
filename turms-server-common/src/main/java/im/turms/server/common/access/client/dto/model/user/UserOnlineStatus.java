@@ -44,7 +44,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         usingDeviceTypes_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOuterClass.internal_static_im_turms_proto_UserOnlineStatus_descriptor;
     }
 
@@ -169,7 +169,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -249,10 +249,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         if (userStatus_ != other.userStatus_) {
             return false;
         }
-        if (!usingDeviceTypes_.equals(other.usingDeviceTypes_)) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return usingDeviceTypes_.equals(other.usingDeviceTypes_)
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -385,7 +383,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UserOnlineStatus)
             im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.user.UserOnlineStatusOuterClass.internal_static_im_turms_proto_UserOnlineStatus_descriptor;
         }
 
@@ -511,7 +509,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

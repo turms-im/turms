@@ -43,7 +43,7 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
     private DeleteGroupInvitationRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
     }
 
@@ -71,7 +71,7 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -117,10 +117,8 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
             return super.equals(obj);
         }
 
-        if (getInvitationId() != other.getInvitationId()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getInvitationId() == other.getInvitationId()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -247,7 +245,7 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupInvitationRequest)
             im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
         }
 
@@ -345,7 +343,7 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

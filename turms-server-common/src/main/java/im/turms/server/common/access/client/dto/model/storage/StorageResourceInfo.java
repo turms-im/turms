@@ -45,7 +45,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
         mediaType_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOuterClass.internal_static_im_turms_proto_StorageResourceInfo_descriptor;
     }
 
@@ -260,7 +260,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -371,10 +371,8 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
         if (getUploaderId() != other.getUploaderId()) {
             return false;
         }
-        if (getCreationDate() != other.getCreationDate()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getCreationDate() == other.getCreationDate()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -519,7 +517,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.StorageResourceInfo)
             im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.storage.StorageResourceInfoOuterClass.internal_static_im_turms_proto_StorageResourceInfo_descriptor;
         }
 
@@ -664,7 +662,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

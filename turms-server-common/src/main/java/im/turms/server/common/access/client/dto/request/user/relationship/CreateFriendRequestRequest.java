@@ -44,7 +44,7 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
         content_ = "";
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
     }
 
@@ -112,7 +112,7 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -167,10 +167,8 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
         if (getRecipientId() != other.getRecipientId()) {
             return false;
         }
-        if (!getContent().equals(other.getContent())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getContent().equals(other.getContent())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -299,7 +297,7 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateFriendRequestRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOuterClass.internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor;
         }
 
@@ -407,7 +405,7 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

@@ -45,7 +45,7 @@ public final class UpdateGroupMemberRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n6request/group/member/update_group_memb"
                 + "er_request.proto\022\016im.turms.proto\032 consta"

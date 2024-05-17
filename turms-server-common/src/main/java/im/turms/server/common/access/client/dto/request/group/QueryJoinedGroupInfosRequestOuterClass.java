@@ -45,7 +45,7 @@ public final class QueryJoinedGroupInfosRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n4request/group/query_joined_group_infos"
                 + "_request.proto\022\016im.turms.proto\"T\n\034QueryJ"

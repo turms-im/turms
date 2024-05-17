@@ -1181,6 +1181,113 @@ public interface TurmsRequestOrBuilder extends
 
     /**
      * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return Whether the createMeetingRequest field is set.
+     */
+    boolean hasCreateMeetingRequest();
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return The createMeetingRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest getCreateMeetingRequest();
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequestOrBuilder getCreateMeetingRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return Whether the deleteMeetingRequest field is set.
+     */
+    boolean hasDeleteMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return The deleteMeetingRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequestOrBuilder getDeleteMeetingRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return Whether the queryMeetingsRequest field is set.
+     */
+    boolean hasQueryMeetingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return The queryMeetingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequestOrBuilder getQueryMeetingsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return Whether the updateMeetingRequest field is set.
+     */
+    boolean hasUpdateMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return The updateMeetingRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conference.UpdateMeetingRequestOrBuilder getUpdateMeetingRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return Whether the updateMeetingInvitationRequest field is set.
+     */
+    boolean hasUpdateMeetingInvitationRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return The updateMeetingInvitationRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequestOrBuilder getUpdateMeetingInvitationRequestOrBuilder();
+
+    /**
+     * <pre>
      * Storage
      * </pre>
      *

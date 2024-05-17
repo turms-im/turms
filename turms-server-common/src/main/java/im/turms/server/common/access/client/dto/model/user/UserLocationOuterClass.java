@@ -47,7 +47,7 @@ public final class UserLocationOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\036model/user/user_location.proto\022\016im.tur"
                 + "ms.proto\"\305\001\n\014UserLocation\022\020\n\010latitude\030\001 "

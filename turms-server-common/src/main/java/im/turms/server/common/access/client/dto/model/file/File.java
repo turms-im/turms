@@ -43,7 +43,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
         data_ = com.google.protobuf.ByteString.EMPTY;
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_descriptor;
     }
 
@@ -136,7 +136,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
             format_ = "";
         }
 
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_Description_descriptor;
         }
 
@@ -265,7 +265,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             byte isInitialized = memoizedIsInitialized;
             if (isInitialized == 1) {
                 return true;
@@ -481,7 +481,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
                 extends com.google.protobuf.GeneratedMessage.Builder<Builder> implements
                 // @@protoc_insertion_point(builder_implements:im.turms.proto.File.Description)
                 im.turms.server.common.access.client.dto.model.file.File.DescriptionOrBuilder {
-            public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+            public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
                 return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_Description_descriptor;
             }
 
@@ -602,7 +602,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
             }
 
             @java.lang.Override
-            public final boolean isInitialized() {
+            public boolean isInitialized() {
                 return true;
             }
 
@@ -985,7 +985,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -1186,7 +1186,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.File)
             im.turms.server.common.access.client.dto.model.file.FileOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.file.FileOuterClass.internal_static_im_turms_proto_File_descriptor;
         }
 
@@ -1301,7 +1301,7 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

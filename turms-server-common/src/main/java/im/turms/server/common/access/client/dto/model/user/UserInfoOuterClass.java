@@ -45,7 +45,7 @@ public final class UserInfoOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\032model/user/user_info.proto\022\016im.turms.p"
                 + "roto\032&constant/profile_access_strategy.p"

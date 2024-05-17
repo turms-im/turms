@@ -44,7 +44,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         groupIndexes_ = emptyIntList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor;
     }
 
@@ -141,7 +141,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -370,7 +370,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryRelatedUserIdsRequest)
             im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequestOuterClass.internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor;
         }
 
@@ -495,7 +495,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

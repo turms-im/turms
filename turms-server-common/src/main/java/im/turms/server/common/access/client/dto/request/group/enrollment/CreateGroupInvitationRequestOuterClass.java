@@ -45,7 +45,7 @@ public final class CreateGroupInvitationRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n>request/group/enrollment/create_group_"
                 + "invitation_request.proto\022\016im.turms.proto"

@@ -111,7 +111,7 @@ public enum GroupMemberRole implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<GroupMemberRole> internalValueMap =
-            number -> GroupMemberRole.forNumber(number);
+            GroupMemberRole::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

@@ -43,7 +43,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessage impl
         nearbyUsers_ = java.util.Collections.emptyList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_descriptor;
     }
 
@@ -104,7 +104,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessage impl
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -150,10 +150,8 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessage impl
             return super.equals(obj);
         }
 
-        if (!getNearbyUsersList().equals(other.getNearbyUsersList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getNearbyUsersList().equals(other.getNearbyUsersList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -282,7 +280,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessage impl
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.NearbyUsers)
             im.turms.server.common.access.client.dto.model.user.NearbyUsersOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.model.user.NearbyUsersOuterClass.internal_static_im_turms_proto_NearbyUsers_descriptor;
         }
 
@@ -419,7 +417,7 @@ public final class NearbyUsers extends com.google.protobuf.GeneratedMessage impl
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

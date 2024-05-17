@@ -43,7 +43,7 @@ public final class QueryJoinedGroupInfosRequest extends com.google.protobuf.Gene
     private QueryJoinedGroupInfosRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor;
     }
 
@@ -82,7 +82,7 @@ public final class QueryJoinedGroupInfosRequest extends com.google.protobuf.Gene
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -265,7 +265,7 @@ public final class QueryJoinedGroupInfosRequest extends com.google.protobuf.Gene
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryJoinedGroupInfosRequest)
             im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor;
         }
 
@@ -366,7 +366,7 @@ public final class QueryJoinedGroupInfosRequest extends com.google.protobuf.Gene
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

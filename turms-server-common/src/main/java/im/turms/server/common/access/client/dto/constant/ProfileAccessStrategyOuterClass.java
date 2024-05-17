@@ -42,7 +42,7 @@ public final class ProfileAccessStrategyOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n&constant/profile_access_strategy.proto"
                 + "\022\016im.turms.proto*K\n\025ProfileAccessStrateg"

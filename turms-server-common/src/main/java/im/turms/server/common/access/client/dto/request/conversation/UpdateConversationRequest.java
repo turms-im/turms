@@ -42,7 +42,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
     private UpdateConversationRequest() {
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOuterClass.internal_static_im_turms_proto_UpdateConversationRequest_descriptor;
     }
 
@@ -129,7 +129,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -203,10 +203,8 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
                 return false;
             }
         }
-        if (getReadDate() != other.getReadDate()) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getReadDate() == other.getReadDate()
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -341,7 +339,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateConversationRequest)
             im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationRequestOuterClass.internal_static_im_turms_proto_UpdateConversationRequest_descriptor;
         }
 
@@ -457,7 +455,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

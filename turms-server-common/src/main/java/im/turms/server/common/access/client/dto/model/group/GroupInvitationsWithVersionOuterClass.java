@@ -45,7 +45,7 @@ public final class GroupInvitationsWithVersionOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n0model/group/group_invitations_with_ver"
                 + "sion.proto\022\016im.turms.proto\032\"model/group/"

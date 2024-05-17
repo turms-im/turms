@@ -45,7 +45,7 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
         return descriptor;
     }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+    private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\nBrequest/group/blocklist/query_group_bl"
                 + "ocked_user_ids_request.proto\022\016im.turms.p"

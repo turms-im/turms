@@ -45,7 +45,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
         fieldsToHighlight_ = emptyIntList();
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOuterClass.internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
     }
 
@@ -250,7 +250,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -390,10 +390,8 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
                 return false;
             }
         }
-        if (!getFieldsToHighlightList().equals(other.getFieldsToHighlightList())) {
-            return false;
-        }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getFieldsToHighlightList().equals(other.getFieldsToHighlightList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -542,7 +540,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryGroupsRequest)
             im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.group.QueryGroupsRequestOuterClass.internal_static_im_turms_proto_QueryGroupsRequest_descriptor;
         }
 
@@ -701,7 +699,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 

@@ -44,7 +44,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
         records_ = emptyList(com.google.protobuf.ByteString.class);
     }
 
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
     }
 
@@ -196,7 +196,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
-    public final boolean isInitialized() {
+    public boolean isInitialized() {
         byte isInitialized = memoizedIsInitialized;
         if (isInitialized == 1) {
             return true;
@@ -426,7 +426,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
             implements
             // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateMessageRequest)
             im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
             return im.turms.server.common.access.client.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
         }
 
@@ -560,7 +560,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
         }
 
         @java.lang.Override
-        public final boolean isInitialized() {
+        public boolean isInitialized() {
             return true;
         }
 
