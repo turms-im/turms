@@ -10,9 +10,9 @@
     "upgrade": "npx npm-check-updates -u"
   },
   "devDependencies": {
-    "mermaid": "^10.8.0",
-    "sass": "^1.70.0",
-    "vitepress": "^1.0.0-rc.42"
+    "mermaid": "^10.9.1",
+    "sass": "^1.77.2",
+    "vitepress": "^1.2.0"
   },
   "repository": {
     "type": "git",
