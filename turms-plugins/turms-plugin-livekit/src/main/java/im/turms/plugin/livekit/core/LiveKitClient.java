@@ -48,6 +48,8 @@ import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
+import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
+import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
 
 /**
  * @author James Chen
@@ -56,6 +58,7 @@ public class LiveKitClient {
 
     private final String apiKey;
     private final byte[] secretKey;
+    private final HmacAlgorithm jwtAlgorithm;
     private final int accessTokenTtlMillis;
 
     private static final FastThreadLocal<Map<String, Message.Builder>> NAME_TO_BUILDER =
@@ -88,6 +91,7 @@ public class LiveKitClient {
         }
         this.apiKey = apiKey;
         this.secretKey = secretKey.getBytes(StandardCharsets.UTF_8);
+        jwtAlgorithm = new HmacAlgorithm(JwtAlgorithmDefinition.HS256, this.secretKey);
         int ttlSeconds = properties.getAccessToken()
                 .getTtlSeconds();
         accessTokenTtlMillis = ttlSeconds * 1000;
@@ -112,8 +116,8 @@ public class LiveKitClient {
                 true,
                 VideoGrant.CanSubscribe.KEY,
                 true);
-        return AccessTokenFactory.createJwt(apiKey,
-                secretKey,
+        return AccessTokenFactory.createJwt(jwtAlgorithm,
+                apiKey,
                 videoGrants,
                 System.currentTimeMillis() + accessTokenTtlMillis);
     }
@@ -190,8 +194,10 @@ public class LiveKitClient {
         for (VideoGrant videoGrant : videoGrants) {
             map.put(videoGrant.getKey(), videoGrant.getValue());
         }
-        String jwt = AccessTokenFactory
-                .createJwt(apiKey, secretKey, map, System.currentTimeMillis() + 6 * 60 * 60 * 1000);
+        String jwt = AccessTokenFactory.createJwt(jwtAlgorithm,
+                apiKey,
+                map,
+                System.currentTimeMillis() + 6 * 60 * 60 * 1000);
         return "Bearer "
                 + jwt;
     }

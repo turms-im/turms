@@ -24,46 +24,25 @@ import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.security.jwt.JwtHeader;
 import im.turms.server.common.infra.security.jwt.JwtPayload;
 import im.turms.server.common.infra.security.jwt.JwtUtil;
-import im.turms.server.common.infra.security.jwt.algorithm.HmacAlgorithm;
-import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithmDefinition;
+import im.turms.server.common.infra.security.jwt.algorithm.JwtAlgorithm;
 
 /**
  * @author James Chen
  */
 public final class AccessTokenFactory {
 
+    public static final JwtHeader HEADER = new JwtHeader("HS256", "JWT", null, null);
+
     private AccessTokenFactory() {
     }
 
     public static String createJwt(
+            JwtAlgorithm algorithm,
             String apiKey,
-            byte[] secret,
-            String userIdentity,
-            String name,
-            String metadata,
             Map<String, Object> videoGrants,
             long expiresAtMillis) {
-        byte[] bytes = JwtUtil.encode(new HmacAlgorithm(JwtAlgorithmDefinition.HS256, secret),
-                new JwtHeader("HS256", "JWT", null, null),
-                new JwtPayload(
-                        apiKey,
-                        userIdentity,
-                        null,
-                        new Date(expiresAtMillis),
-                        null,
-                        null,
-                        userIdentity,
-                        Map.of("name", name, "metadata", metadata, "video", videoGrants)));
-        return StringUtil.newLatin1String(bytes);
-    }
-
-    public static String createJwt(
-            String apiKey,
-            byte[] secretKey,
-            Map<String, Object> videoGrants,
-            long expiresAtMillis) {
-        byte[] bytes = JwtUtil.encode(new HmacAlgorithm(JwtAlgorithmDefinition.HS256, secretKey),
-                new JwtHeader("HS256", "JWT", null, null),
+        byte[] bytes = JwtUtil.encode(algorithm,
+                HEADER,
                 new JwtPayload(
                         apiKey,
                         null,
