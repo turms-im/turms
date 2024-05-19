@@ -57,6 +57,7 @@ public class FcmSender extends PushNotificationSender {
 
     @Getter
     private final String deviceTokenFieldName;
+    private final FirebaseApp firebaseApp;
     private final FirebaseMessaging firebaseMessagingClient;
 
     public FcmSender(Map<String, TemplateProperties> templates, FcmProperties fcmProperties) {
@@ -82,7 +83,7 @@ public class FcmSender extends PushNotificationSender {
             throw exception;
         }
         try {
-            FirebaseApp.initializeApp(FirebaseOptions.builder()
+            firebaseApp = FirebaseApp.initializeApp(FirebaseOptions.builder()
                     .setCredentials(credentials)
                     .build());
         } catch (Exception e) {
@@ -105,7 +106,7 @@ public class FcmSender extends PushNotificationSender {
                     "Caught an error while closing the credentials input stream",
                     e);
         }
-        firebaseMessagingClient = FirebaseMessaging.getInstance();
+        firebaseMessagingClient = FirebaseMessaging.getInstance(firebaseApp);
     }
 
     @Override
@@ -175,7 +176,7 @@ public class FcmSender extends PushNotificationSender {
 
     @Override
     public Mono<Void> close() {
-        return Mono.empty();
+        return Mono.fromRunnable(firebaseApp::delete);
     }
 
 }
