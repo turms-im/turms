@@ -25,7 +25,7 @@ import im.turms.server.common.infra.plugin.TurmsPlugin;
 /**
  * @author James Chen
  */
-public class PushNotificationPlugin extends TurmsPlugin {
+public class PushNotificationServicePlugin extends TurmsPlugin {
 
     @Override
     public Set<Class<? extends TurmsExtension>> getExtensions() {
