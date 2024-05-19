@@ -1,5 +1,5 @@
-id: im.turms.plugin.livekit.LiveKitConferencePlugin
-class: im.turms.plugin.livekit.LiveKitConferencePlugin
+id: im.turms.plugin.livekit.LiveKitConferenceServicePlugin
+class: im.turms.plugin.livekit.LiveKitConferenceServicePlugin
 compatible-servers:
   - type: turms-service
 version: 0.10.0
