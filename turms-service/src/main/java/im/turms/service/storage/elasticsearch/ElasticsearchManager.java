@@ -482,7 +482,7 @@ public class ElasticsearchManager {
                                         Update.newBuilder(2)
                                                 .setEnumString(SyncLog.Fields.status,
                                                         SyncStatus.FAILED)
-                                                .set(SyncLog.Fields.lastUpdateDate, new Date()))
+                                                .set(SyncLog.Fields.lastUpdatedDate, new Date()))
                                 .materialize()
                                 .flatMap(signal -> {
                                     Throwable updateSyncLogThrowable = signal.getThrowable();
@@ -503,7 +503,7 @@ public class ElasticsearchManager {
                                         Update.newBuilder(2)
                                                 .setEnumString(SyncLog.Fields.status,
                                                         SyncStatus.COMPLETED)
-                                                .set(SyncLog.Fields.lastUpdateDate, new Date()))
+                                                .set(SyncLog.Fields.lastUpdatedDate, new Date()))
                                 .onErrorMap(t -> new RuntimeException(
                                         "Failed to update the sync log: "
                                                 + logId,

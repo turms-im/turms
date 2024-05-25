@@ -51,7 +51,7 @@ public class SyncLog extends BaseEntity {
     @Indexed
     private final Date creationDate;
 
-    private final Date lastUpdateDate;
+    private final Date lastUpdatedDate;
 
     /**
      * Our sync logic may change over time. This field records the version of the logic, so that we
