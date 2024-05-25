@@ -234,12 +234,20 @@ public class DiscoveryService implements ClusterService {
             throw new RuntimeException("Failed to find members", e);
         }
         Member localMember = localNodeStatusManager.getLocalMember();
+        boolean isSameId;
+        boolean isSameAddress;
         for (Member member : memberList) {
-            if (localMember.isSameNode(member)) {
+            isSameId = localMember.isSameId(member);
+            isSameAddress = localMember.isSameAddress(member);
+            if (isSameId || isSameAddress) {
                 if (!isAvailableMember(member, System.currentTimeMillis())) {
-                    String nodeId = member.getNodeId();
+                    Mono<Boolean> removedMemberIfInavailable = isSameId
+                            ? removeMemberIfInavailable(member.getNodeId(), null, null)
+                            : removeMemberIfInavailable(member.getNodeId(),
+                                    member.getMemberHost(),
+                                    member.getMemberPort());
                     boolean isConflictedNodeRemoved =
-                            removeMemberIfInavailable(nodeId).block(CRUD_TIMEOUT_DURATION);
+                            removedMemberIfInavailable.block(CRUD_TIMEOUT_DURATION);
                     if (isConflictedNodeRemoved) {
                         continue;
                     }
@@ -339,14 +347,22 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.exists(Member.class, filter);
     }
 
-    public Mono<Boolean> removeMemberIfInavailable(String nodeId) {
+    private Mono<Boolean> removeMemberIfInavailable(
+            String nodeId,
+            @Nullable String memberHost,
+            @Nullable Integer memberPort) {
         String clusterId = localNodeStatusManager.getLocalMember()
                 .getClusterId();
         Filter filter = Filter.newBuilder(3)
-                .eq(Member.ID_CLUSTER_ID, clusterId)
-                .eq(Member.ID_NODE_ID, nodeId)
                 .lt(Member.STATUS_LAST_HEARTBEAT_DATE,
                         new Date(System.currentTimeMillis() - heartbeatTimeoutMillis));
+        if (memberHost == null) {
+            filter = filter.eq(Member.ID_CLUSTER_ID, clusterId)
+                    .eq(Member.ID_NODE_ID, nodeId);
+        } else {
+            filter = filter.eq(Member.Fields.memberHost, memberHost)
+                    .eq(Member.Fields.memberPort, memberPort);
+        }
         return sharedConfigService.removeOne(Member.class, filter)
                 .flatMap(deleteResult -> {
                     if (deleteResult.getDeletedCount() > 0) {
@@ -357,7 +373,7 @@ public class DiscoveryService implements ClusterService {
                     return queryMember(nodeId)
                             .flatMap(member -> isAvailableMember(member, System.currentTimeMillis())
                                     ? PublisherPool.FALSE
-                                    : removeMemberIfInavailable(nodeId));
+                                    : removeMemberIfInavailable(nodeId, memberHost, memberPort));
                 });
     }
 
