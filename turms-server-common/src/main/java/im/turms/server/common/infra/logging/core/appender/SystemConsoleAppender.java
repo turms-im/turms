@@ -17,19 +17,31 @@
 
 package im.turms.server.common.infra.logging.core.appender;
 
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
-
 import im.turms.server.common.infra.logging.core.model.LogLevel;
+import im.turms.server.common.infra.logging.core.model.LogRecord;
+import im.turms.server.common.infra.netty.ByteBufUtil;
 
-/**
- * @author James Chen
- */
-public class ConsoleAppender extends Appender {
+public class SystemConsoleAppender extends Appender {
 
-    public ConsoleAppender(LogLevel level) {
+    public SystemConsoleAppender(LogLevel level) {
         super(level);
-        channel = new FileOutputStream(FileDescriptor.out).getChannel();
+    }
+
+    @Override
+    public int append(LogRecord record) {
+        if (!record.level()
+                .isLoggable(level)) {
+            return 0;
+        }
+        String s = ByteBufUtil.getString(record.data());
+        if (record.level()
+                .isErrorOrFatal()) {
+            System.err.println(s);
+        } else {
+            System.out.println(s);
+        }
+        return record.data()
+                .readableBytes();
     }
 
 }

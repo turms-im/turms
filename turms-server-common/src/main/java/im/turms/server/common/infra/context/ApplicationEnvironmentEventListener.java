@@ -54,7 +54,7 @@ public class ApplicationEnvironmentEventListener
 
     /**
      * @implNote We don't use {@link ApplicationContextInitializedEvent} because it's still too late
-     *           for logging
+     *           for logging.
      */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
@@ -145,7 +145,7 @@ public class ApplicationEnvironmentEventListener
                 .file(fileLoggingProperties)
                 .build();
 
-        LoggerFactory.init(nodeType, Node.getNodeId(), loggingProperties);
+        LoggerFactory.init(false, nodeType, Node.getNodeId(), loggingProperties);
     }
 
 }

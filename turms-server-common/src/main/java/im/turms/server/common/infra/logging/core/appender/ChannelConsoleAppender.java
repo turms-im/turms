@@ -15,32 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.logging.core.model;
+package im.turms.server.common.infra.logging.core.appender;
+
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+
+import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
  * @author James Chen
  */
-public enum LogLevel {
-    TRACE,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR,
-    FATAL;
+public class ChannelConsoleAppender extends ChannelAppender {
 
-    public static final int TRACE_VALUE = 0;
-    public static final int DEBUG_VALUE = 1;
-    public static final int INFO_VALUE = 2;
-    public static final int WARN_VALUE = 3;
-    public static final int ERROR_VALUE = 4;
-    public static final int FATAL_VALUE = 5;
-
-    public boolean isLoggable(LogLevel enabledLevel) {
-        return enabledLevel.ordinal() <= ordinal();
-    }
-
-    public boolean isErrorOrFatal() {
-        return this == ERROR || this == FATAL;
+    public ChannelConsoleAppender(LogLevel level) {
+        super(level);
+        channel = new FileOutputStream(FileDescriptor.out).getChannel();
     }
 
 }

@@ -37,7 +37,7 @@ import lombok.Getter;
 
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.logging.core.appender.Appender;
+import im.turms.server.common.infra.logging.core.appender.ChannelAppender;
 import im.turms.server.common.infra.logging.core.compression.FastGzipOutputStream;
 import im.turms.server.common.infra.logging.core.logger.InternalLogger;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
@@ -51,7 +51,7 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 /**
  * @author James Chen
  */
-public class RollingFileAppender extends Appender {
+public class RollingFileAppender extends ChannelAppender {
 
     public static final char FIELD_DELIMITER = '_';
     private static final String FILE_MIDDLE = "yyyyMMdd";

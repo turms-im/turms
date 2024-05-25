@@ -34,7 +34,8 @@ import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.appender.Appender;
-import im.turms.server.common.infra.logging.core.appender.ConsoleAppender;
+import im.turms.server.common.infra.logging.core.appender.ChannelConsoleAppender;
+import im.turms.server.common.infra.logging.core.appender.SystemConsoleAppender;
 import im.turms.server.common.infra.logging.core.appender.file.RollingFileAppender;
 import im.turms.server.common.infra.logging.core.layout.TurmsTemplateLayout;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
@@ -70,7 +71,7 @@ public class LoggerFactory {
     private static String homeDir;
     private static String serverTypeName;
     private static FileLoggingProperties fileLoggingProperties;
-    private static ConsoleAppender defaultConsoleAppender;
+    private static Appender defaultConsoleAppender;
 
     private static LogProcessor processor;
 
@@ -78,6 +79,7 @@ public class LoggerFactory {
     }
 
     public static synchronized void init(
+            boolean runWithTests,
             @Nullable NodeType nodeType,
             String nodeId,
             LoggingProperties properties) {
@@ -100,8 +102,13 @@ public class LoggerFactory {
         ConsoleLoggingProperties consoleLoggingProperties = properties.getConsole();
         FileLoggingProperties fileLoggingProperties = properties.getFile();
         if (consoleLoggingProperties.isEnabled()) {
-            ConsoleAppender consoleAppender =
-                    new ConsoleAppender(consoleLoggingProperties.getLevel());
+            Appender consoleAppender = runWithTests
+                    // Surefire will replace the default System.out and System.err
+                    // with org.apache.maven.surefire.api.report.ConsoleOutputCapture,
+                    // so we use SystemConsoleAppender instead of ChannelConsoleAppender
+                    // for tests.
+                    ? new SystemConsoleAppender(consoleLoggingProperties.getLevel())
+                    : new ChannelConsoleAppender(consoleLoggingProperties.getLevel());
             defaultConsoleAppender = consoleAppender;
             DEFAULT_APPENDERS.add(consoleAppender);
         }
@@ -154,7 +161,8 @@ public class LoggerFactory {
         // while our logger will require Netty to init so that we can log, so there is a circular
         // dependency.
         // Use "INFO" can just avoid Netty trying to log when initializing
-        init(nodeType,
+        init(true,
+                nodeType,
                 "test",
                 LoggingProperties.builder()
                         .console(new ConsoleLoggingProperties().toBuilder()

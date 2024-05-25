@@ -27,7 +27,6 @@ import io.netty.buffer.Unpooled;
 
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.test.VisibleForTesting;
 
 /**
  * @author James Chen
@@ -149,7 +148,6 @@ public final class ByteBufUtil {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    @VisibleForTesting
     public static String getString(ByteBuf buffer) {
         buffer.markReaderIndex();
         byte[] bytes = new byte[buffer.readableBytes()];

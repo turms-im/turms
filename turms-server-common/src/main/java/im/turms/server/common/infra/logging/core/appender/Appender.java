@@ -17,14 +17,8 @@
 
 package im.turms.server.common.infra.logging.core.appender;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
-import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
-import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 
@@ -34,58 +28,15 @@ import im.turms.server.common.infra.logging.core.model.LogRecord;
 @Data
 public abstract class Appender implements AutoCloseable {
 
-    private final LogLevel level;
-
-    protected FileChannel channel;
+    protected final LogLevel level;
 
     protected Appender(LogLevel level) {
         this.level = level;
     }
 
     @Override
-    public void close() {
-        try {
-            channel.force(true);
-        } catch (IOException e) {
-            throw new InputOutputException(
-                    "Caught an error while forcing updates to the channel's file to be written",
-                    e);
-        }
-        try {
-            channel.close();
-        } catch (IOException e) {
-            throw new InputOutputException("Caught an error while closing the channel", e);
-        }
+    public void close() throws Exception {
     }
 
-    public int append(LogRecord record) {
-        if (!record.level()
-                .isLoggable(level)) {
-            return 0;
-        }
-        ByteBuf buffer = record.data();
-        if (buffer.nioBufferCount() == 1) {
-            try {
-                return channel.write(buffer.nioBuffer());
-            } catch (IOException e) {
-                throw new InputOutputException(
-                        "Failed to write the buffer: "
-                                + buffer,
-                        e);
-            }
-        }
-        int written = 0;
-        for (ByteBuffer buf : buffer.nioBuffers()) {
-            try {
-                written += channel.write(buf);
-            } catch (IOException e) {
-                throw new InputOutputException(
-                        "Failed to write the buffer: "
-                                + buffer,
-                        e);
-            }
-        }
-        return written;
-    }
-
+    public abstract int append(LogRecord record);
 }
