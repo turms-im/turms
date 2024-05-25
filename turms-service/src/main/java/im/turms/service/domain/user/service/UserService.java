@@ -565,7 +565,7 @@ public class UserService implements RpcUserService {
         return userRepository.checkIfUserExists(userId, queryDeletedRecords);
     }
 
-    public Mono<Void> updateUser(
+    public Mono<Boolean> updateUser(
             @NotNull Long userId,
             @Nullable String rawPassword,
             @Nullable String name,
@@ -588,11 +588,7 @@ public class UserService implements RpcUserService {
                 profileAccessStrategy,
                 permissionGroupId,
                 registrationDate,
-                isActive).flatMap(
-                        result -> result.getMatchedCount() > 0
-                                ? Mono.empty()
-                                : Mono.error(ResponseException
-                                        .get(ResponseStatusCode.UPDATE_INFO_OF_NONEXISTENT_USER)));
+                isActive).map(result -> result.getModifiedCount() > 0);
     }
 
     public Flux<User> queryUsers(
@@ -662,7 +658,9 @@ public class UserService implements RpcUserService {
         if (Validator.areAllFalsy(rawPassword,
                 name,
                 intro,
+                profilePicture,
                 profileAccessStrategy,
+                permissionGroupId,
                 registrationDate,
                 isActive)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
@@ -737,7 +735,7 @@ public class UserService implements RpcUserService {
             @Nullable Long permissionGroupId,
             @Nullable Date registrationDate,
             @Nullable Boolean isActive,
-            byte[] password,
+            @Nullable byte[] password,
             @Nullable ClientSession session) {
         return userRepository
                 .updateUsers(userIds,

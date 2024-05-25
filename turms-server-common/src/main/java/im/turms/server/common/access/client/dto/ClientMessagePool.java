@@ -63,6 +63,7 @@ import im.turms.server.common.access.client.dto.request.conference.UpdateMeeting
 import im.turms.server.common.access.client.dto.request.group.member.CreateGroupMembersRequest;
 import im.turms.server.common.access.client.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
+import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.access.client.dto.request.user.relationship.CreateRelationshipRequest;
 
 /**
@@ -352,6 +353,14 @@ public class ClientMessagePool {
                 }
             };
 
+    private static final FastThreadLocal<UpdateUserRequest.Builder> UPDATE_USER_REQUEST =
+            new FastThreadLocal<>() {
+                @Override
+                protected UpdateUserRequest.Builder initialValue() {
+                    return UpdateUserRequest.newBuilder();
+                }
+            };
+
     private static final FastThreadLocal<UserFriendRequest.Builder> USER_FRIEND_REQUEST =
             new FastThreadLocal<>() {
                 @Override
@@ -611,6 +620,11 @@ public class ClientMessagePool {
 
     public static UpdateUserOnlineStatusRequest.Builder getUpdateUserOnlineStatusRequestBuilder() {
         return UPDATE_USER_ONLINE_STATUS_REQUEST.get()
+                .clear();
+    }
+
+    public static UpdateUserRequest.Builder getUpdateUserRequestBuilder() {
+        return UPDATE_USER_REQUEST.get()
                 .clear();
     }
 

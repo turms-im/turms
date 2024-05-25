@@ -371,26 +371,58 @@ public class UserServiceController extends BaseServiceController {
                             null,
                             null,
                             null)
-                    .then(Mono.defer(() -> {
-                        if (notifyNonBlockedRelatedUsersOfUserInfoUpdated) {
-                            Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
-                            return userRelationshipService
-                                    .queryRelatedUserIds(Set.of(clientRequest.userId()), false)
-                                    .collect(Collectors.toCollection(recyclableList::getValue))
-                                    .map(relatedUserIds -> relatedUserIds.isEmpty()
-                                            ? RequestHandlerResult.of(
-                                                    notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
-                                                    clientRequest.turmsRequest())
-                                            : RequestHandlerResult.of(
-                                                    notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
-                                                    CollectionUtil.newSet(relatedUserIds),
-                                                    clientRequest.turmsRequest()))
-                                    .doFinally(signalType -> recyclableList.recycle());
+                    .flatMap(changed -> {
+                        if (!changed) {
+                            return Mono.just(RequestHandlerResult.OK);
                         }
-                        return Mono.just(RequestHandlerResult.of(
-                                notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
-                                clientRequest.turmsRequest()));
-                    }));
+                        if (!notifyNonBlockedRelatedUsersOfUserInfoUpdated) {
+                            return Mono.just(RequestHandlerResult.of(
+                                    notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
+                                    clientRequest.turmsRequest()));
+                        }
+                        // TODO: make configurable.
+                        boolean shouldNotifyNonBlockedRelatedUsers =
+                                name != null || intro != null || profilePicture != null;
+                        if (!shouldNotifyNonBlockedRelatedUsers) {
+                            return Mono.just(RequestHandlerResult.of(
+                                    notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
+                                    clientRequest.turmsRequest()));
+                        }
+                        Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
+                        return userRelationshipService
+                                .queryRelatedUserIds(Set.of(clientRequest.userId()), false)
+                                .collect(Collectors.toCollection(recyclableList::getValue))
+                                .map(relatedUserIds -> {
+                                    if (relatedUserIds.isEmpty()) {
+                                        return RequestHandlerResult.of(
+                                                notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
+                                                clientRequest.turmsRequest());
+                                    }
+                                    if (password == null) {
+                                        return RequestHandlerResult.of(
+                                                notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
+                                                CollectionUtil.newSet(relatedUserIds),
+                                                clientRequest.turmsRequest());
+                                    }
+                                    RequestHandlerResult.Notification notificationForRelatedUsers =
+                                            RequestHandlerResult.Notification.of(false,
+                                                    CollectionUtil.newSet(relatedUserIds),
+                                                    ClientMessagePool.getTurmsRequestBuilder()
+                                                            .setUpdateUserRequest(ClientMessagePool
+                                                                    .getUpdateUserRequestBuilder()
+                                                                    .mergeFrom(request)
+                                                                    .clearPassword())
+                                                            .build());
+                                    if (notifyRequesterOtherOnlineSessionsOfUserInfoUpdated) {
+                                        return RequestHandlerResult.of(List.of(
+                                                RequestHandlerResult.Notification.of(true,
+                                                        clientRequest.turmsRequest()),
+                                                notificationForRelatedUsers));
+                                    }
+                                    return RequestHandlerResult.of(notificationForRelatedUsers);
+                                })
+                                .doFinally(signalType -> recyclableList.recycle());
+                    });
         };
     }
 
