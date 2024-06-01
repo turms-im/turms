@@ -150,7 +150,7 @@ public class TurmsPropertiesValidator {
         }
         switch (stringPattern) {
             case NUMERIC -> {
-                if (StringUtil.allCharsInSet(str, NUMERIC_CHAR_SET)) {
+                if (!StringUtil.allCharsInSet(str, NUMERIC_CHAR_SET)) {
                     String message = "The property \""
                             + field.getName()
                             + "\" has an invalid string pattern \""
@@ -160,7 +160,7 @@ public class TurmsPropertiesValidator {
                 }
             }
             case ALPHABETIC -> {
-                if (StringUtil.allCharsInSet(str, ALPHABETIC_CHAR_SET)) {
+                if (!StringUtil.allCharsInSet(str, ALPHABETIC_CHAR_SET)) {
                     String message = "The property \""
                             + field.getName()
                             + "\" has an invalid string pattern \""
@@ -170,7 +170,7 @@ public class TurmsPropertiesValidator {
                 }
             }
             case ALPHANUMERIC -> {
-                if (StringUtil.allCharsInSet(str, ALPHANUMERIC_CHAR_SET)) {
+                if (!StringUtil.allCharsInSet(str, ALPHANUMERIC_CHAR_SET)) {
                     String message = "The property \""
                             + field.getName()
                             + "\" has an invalid string pattern \""
