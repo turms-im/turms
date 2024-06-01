@@ -15,15 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.conference.meeting;
+package im.turms.server.common.infra.property.env.service.business.common.setting;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import im.turms.server.common.infra.lang.StringPattern;
-import im.turms.server.common.infra.property.constant.PasswordPolicy;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -35,29 +33,16 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PasswordProperties {
+public class CustomSettingDoubleValueProperties {
 
-    @Description("The password policy")
+    @Description("The minimum allowed value")
     @GlobalProperty
     @MutableProperty
-    private PasswordPolicy policy = PasswordPolicy.PROHIBITED;
+    private double min = Double.MIN_VALUE;
 
-    @Description("The password type")
+    @Description("The maximum allowed value")
     @GlobalProperty
     @MutableProperty
-    private StringPattern type = StringPattern.NUMERIC;
-
-    /**
-     * @implNote Use 6 by default because it is easy for mobile users to input.
-     */
-    @Description("The minimum length of the password")
-    @GlobalProperty
-    @MutableProperty
-    private int minLength = 6;
-
-    @Description("The maximum length of the password")
-    @GlobalProperty
-    @MutableProperty
-    private int maxLength = 6;
+    private double max = Double.MAX_VALUE;
 
 }

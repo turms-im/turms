@@ -43,6 +43,7 @@ import im.turms.server.common.infra.exception.IncompatibleInternalChangeExceptio
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
+import im.turms.server.common.infra.lang.StringPattern;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.plugin.ExtensionPointEventListener;
@@ -51,7 +52,6 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.MeetingIdType;
 import im.turms.server.common.infra.property.constant.PasswordPolicy;
-import im.turms.server.common.infra.property.constant.PasswordType;
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.IdProperties;
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.IntroProperties;
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.MeetingProperties;
@@ -137,7 +137,7 @@ public class ConferenceService {
     private boolean isMaxActiveMeetingCountPerUserEnabled;
     private int maxActiveMeetingCountPerUser;
     private PasswordPolicy passwordPolicy;
-    private PasswordType passwordType;
+    private StringPattern passwordPattern;
     private int passwordMinLength;
     private int passwordMaxLength;
 
@@ -218,7 +218,7 @@ public class ConferenceService {
         introMinLength = introProperties.getMinLength();
         introMaxLength = introProperties.getMaxLength();
         passwordPolicy = passwordProperties.getPolicy();
-        passwordType = passwordProperties.getType();
+        passwordPattern = passwordProperties.getType();
         passwordMinLength = passwordProperties.getMinLength();
         passwordMaxLength = passwordProperties.getMaxLength();
         maxAllowedStartDateOffsetMillis =
@@ -886,7 +886,7 @@ public class ConferenceService {
     }
 
     private String generatePassword() {
-        return switch (passwordType) {
+        return switch (passwordPattern) {
             case ALPHANUMERIC ->
                 RandomUtil.nextAlphanumericString(passwordMinLength, passwordMaxLength);
             case NUMERIC -> RandomUtil.nextNumericString(passwordMinLength, passwordMaxLength);

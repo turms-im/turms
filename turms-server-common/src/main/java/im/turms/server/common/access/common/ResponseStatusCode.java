@@ -327,6 +327,12 @@ public enum ResponseStatusCode {
             403),
     NOT_FRIEND_TO_SEND_TYPING_STATUS(4102, "Only friends can send their typing status", 403),
 
+    // Conversation - Setting
+    NOT_RELATED_USER_TO_UPDATE_PRIVATE_CONVERSATION_SETTING(4200,
+            "Only the related user can update the private conversation setting", 403),
+    NOT_GROUP_MEMBER_TO_UPDATE_GROUP_CONVERSATION_SETTING(4201,
+            "Only the group member can update the group conversation setting", 403),
+
     // Message
 
     // Message - Send

@@ -57,7 +57,7 @@ class ConversationServiceControllerST
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateConversationRequest(UpdateConversationRequest.newBuilder()
                         .setReadDate(System.currentTimeMillis())
-                        .setTargetId(RELATED_USER_ID))
+                        .setUserId(RELATED_USER_ID))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -118,7 +118,7 @@ class ConversationServiceControllerST
     void handleQueryConversationsRequest_queryPrivateConversations_shouldReturnNotEmptyConversations() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
-                        .addTargetIds(RELATED_USER_ID))
+                        .addUserIds(RELATED_USER_ID))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -131,7 +131,7 @@ class ConversationServiceControllerST
 
         request = TurmsRequest.newBuilder()
                 .setQueryConversationsRequest(QueryConversationsRequest.newBuilder()
-                        .addTargetIds(USER_ID))
+                        .addUserIds(USER_ID))
                 .build();
         clientRequest =
                 new ClientRequest(RELATED_USER_ID, USER_DEVICE, USER_IP, REQUEST_ID, request);

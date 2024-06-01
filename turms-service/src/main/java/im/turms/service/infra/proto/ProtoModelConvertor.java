@@ -34,6 +34,7 @@ import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.model.conversation.GroupConversation;
 import im.turms.server.common.access.client.dto.model.conversation.PrivateConversation;
 import im.turms.server.common.access.client.dto.model.group.Group;
@@ -52,8 +53,10 @@ import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.service.domain.conference.po.Meeting;
+import im.turms.service.domain.conversation.po.ConversationSettings;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
+import im.turms.service.domain.user.po.UserSettings;
 
 /**
  * @author James Chen
@@ -228,6 +231,24 @@ public final class ProtoModelConvertor {
         } else {
             builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline))
                     .addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+        }
+        return builder;
+    }
+
+    public static im.turms.server.common.access.client.dto.model.user.UserSettings.Builder userSettings2proto(
+            UserSettings userSettings) {
+        var builder = ClientMessagePool.getUserSettingsBuilder();
+        Map<String, Object> settings = userSettings.getSettings();
+        Date lastUpdatedDate = userSettings.getLastUpdatedDate();
+        if (settings != null && !settings.isEmpty()) {
+            Value.Builder valueBuilder = ClientMessagePool.getValueBuilder();
+            for (Map.Entry<String, Object> entry : settings.entrySet()) {
+                builder.putSettings(entry.getKey(), value2proto(valueBuilder, entry.getValue()));
+                valueBuilder.clear();
+            }
+        }
+        if (lastUpdatedDate != null) {
+            builder.setLastUpdatedDate(lastUpdatedDate.getTime());
         }
         return builder;
     }
@@ -581,6 +602,33 @@ public final class ProtoModelConvertor {
         return builder;
     }
 
+    public static im.turms.server.common.access.client.dto.model.conversation.ConversationSettings.Builder conversationSettings2proto(
+            ConversationSettings conversationSettings) {
+        var builder = ClientMessagePool.getConversationSettingsBuilder();
+        ConversationSettings.Key key = conversationSettings.getKey();
+        Long targetId = key.getTargetId();
+        Map<String, Object> settings = conversationSettings.getSettings();
+        Date lastUpdatedDate = conversationSettings.getLastUpdatedDate();
+        if (targetId != null) {
+            if (targetId < 0) {
+                builder.setGroupId(-targetId);
+            } else {
+                builder.setUserId(targetId);
+            }
+        }
+        if (settings != null && !settings.isEmpty()) {
+            Value.Builder valueBuilder = ClientMessagePool.getValueBuilder();
+            for (Map.Entry<String, Object> entry : settings.entrySet()) {
+                builder.putSettings(entry.getKey(), value2proto(valueBuilder, entry.getValue()));
+                valueBuilder.clear();
+            }
+        }
+        if (lastUpdatedDate != null) {
+            builder.setLastUpdatedDate(lastUpdatedDate.getTime());
+        }
+        return builder;
+    }
+
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
         CreateMessageRequest.Builder builder = ClientMessagePool.getCreateMessageRequestBuilder();
         Long messageId = message.getId();
@@ -673,6 +721,24 @@ public final class ProtoModelConvertor {
                 .setCreationDate(info.creationDate()
                         .getTime())
                 .build();
+    }
+
+    public static Value value2proto(Value.Builder builder, Object value) {
+        switch (value) {
+            case Integer val -> builder.setInt32Value(val);
+            case Long val -> builder.setInt64Value(val);
+            case Float val -> builder.setFloatValue(val);
+            case Double val -> builder.setDoubleValue(val);
+            case Boolean val -> builder.setBoolValue(val);
+            case byte[] val -> builder.setBytesValue(ByteStringUtil.wrap(val));
+            case String val -> builder.setStringValue(val);
+            case null -> {
+            }
+            default -> throw new IllegalArgumentException(
+                    "Unsupported type: "
+                            + value.getClass());
+        }
+        return builder.build();
     }
 
 }

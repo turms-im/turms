@@ -64,6 +64,12 @@ public interface MongoOperationsSupport {
 
     <T> Flux<T> findIds(Class<T> clazz, Filter filter);
 
+    Flux<String> findObjectFields(
+            Class<?> clazz,
+            Filter filter,
+            String parentFieldName,
+            Collection<String> includedFields);
+
     <T> Mono<Boolean> exists(Class<T> clazz, Filter filter);
 
     <T> Mono<Long> count(Class<T> clazz, Filter filter);
@@ -74,7 +80,7 @@ public interface MongoOperationsSupport {
 
     <T> Mono<UpdateResult> upsert(ClientSession session, T o);
 
-    <T> Mono<Void> upsert(Class<T> clazz, Filter filter, Update update);
+    <T> Mono<UpdateResult> upsert(Class<T> clazz, Filter filter, Update update);
 
     <T> Mono<Void> insert(T value);
 

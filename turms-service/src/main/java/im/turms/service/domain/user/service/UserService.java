@@ -69,6 +69,7 @@ import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
 import im.turms.service.domain.common.permission.ServicePermission;
 import im.turms.service.domain.common.validation.DataValidator;
 import im.turms.service.domain.conversation.service.ConversationService;
+import im.turms.service.domain.conversation.service.ConversationSettingsService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.domain.observation.service.MetricsService;
@@ -98,6 +99,7 @@ public class UserService implements RpcUserService {
     private final UserVersionService userVersionService;
     private final SessionService sessionService;
     private final ConversationService conversationService;
+    private final ConversationSettingsService conversationSettingsService;
     private final MessageService messageService;
 
     private final Node node;
@@ -107,6 +109,7 @@ public class UserService implements RpcUserService {
 
     private final Counter registeredUsersCounter;
     private final Counter deletedUsersCounter;
+    private final UserSettingsService userSettingsService;
 
     private boolean activateUserWhenAdded;
     private boolean deleteUserLogically;
@@ -134,8 +137,10 @@ public class UserService implements RpcUserService {
             GroupMemberService groupMemberService,
             UserVersionService userVersionService,
             UserRelationshipGroupService userRelationshipGroupService,
+            UserSettingsService userSettingsService,
             SessionService sessionService,
             ConversationService conversationService,
+            ConversationSettingsService conversationSettingsService,
             @Lazy MessageService messageService,
             MetricsService metricsService) {
         this.node = node;
@@ -147,8 +152,10 @@ public class UserService implements RpcUserService {
         this.groupMemberService = groupMemberService;
         this.userVersionService = userVersionService;
         this.userRelationshipGroupService = userRelationshipGroupService;
+        this.userSettingsService = userSettingsService;
         this.sessionService = sessionService;
         this.conversationService = conversationService;
+        this.conversationSettingsService = conversationSettingsService;
         this.messageService = messageService;
 
         registeredUsersCounter = metricsService.getRegistry()
@@ -511,10 +518,13 @@ public class UserService implements RpcUserService {
                                                 .deleteAllRelationshipGroups(userIds,
                                                         session,
                                                         false))
+                                        .then(userSettingsService.deleteSettings(userIds, session))
                                         .then(conversationService
                                                 .deletePrivateConversations(userIds, session))
                                         .then(conversationService
                                                 .deleteGroupMemberConversations(userIds, session))
+                                        .then(conversationSettingsService.deleteSettings(userIds,
+                                                session))
                                         .then(userVersionService.delete(userIds, session)
                                                 .onErrorResume(t -> {
                                                     LOGGER.error(

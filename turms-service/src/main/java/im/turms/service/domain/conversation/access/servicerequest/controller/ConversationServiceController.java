@@ -98,7 +98,7 @@ public class ConversationServiceController extends BaseServiceController {
         return clientRequest -> {
             QueryConversationsRequest request = clientRequest.turmsRequest()
                     .getQueryConversationsRequest();
-            List<Long> targetIds = request.getTargetIdsList();
+            List<Long> targetIds = request.getUserIdsList();
             Mono<TurmsNotification.Data> dataFlux;
             if (targetIds.isEmpty()) {
                 List<Long> groupIds = request.getGroupIdsList();
@@ -148,18 +148,20 @@ public class ConversationServiceController extends BaseServiceController {
         return clientRequest -> {
             UpdateConversationRequest request = clientRequest.turmsRequest()
                     .getUpdateConversationRequest();
-            if (!request.hasTargetId() && !request.hasGroupId()) {
+            boolean hasUserId = request.hasUserId();
+            if (!hasUserId && !request.hasGroupId()) {
                 return Mono.just(RequestHandlerResult.of(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "The targetId and groupId must not both be null"));
+                        "The userId and groupId must not both be null"));
             }
             Long requesterId = clientRequest.userId();
+
             // todo: limit read date range
+
             Date readDate = new Date(request.getReadDate());
-            boolean isUpdatePrivateConversationRequest = request.hasTargetId();
             long targetId;
             Mono<Void> mono;
-            if (isUpdatePrivateConversationRequest) {
-                targetId = request.getTargetId();
+            if (hasUserId) {
+                targetId = request.getUserId();
                 mono = conversationService
                         .authAndUpsertPrivateConversationReadDate(requesterId, targetId, readDate);
             } else {
@@ -168,7 +170,7 @@ public class ConversationServiceController extends BaseServiceController {
                         .authAndUpsertGroupConversationReadDate(targetId, requesterId, readDate);
             }
             return mono.then(Mono.defer(() -> {
-                if (isUpdatePrivateConversationRequest) {
+                if (hasUserId) {
                     if (notifyContactOfPrivateConversationReadDateUpdated) {
                         return Mono.just(RequestHandlerResult.of(
                                 notifyRequesterOtherOnlineSessionsOfPrivateConversationReadDateUpdated,
@@ -191,5 +193,4 @@ public class ConversationServiceController extends BaseServiceController {
             }));
         };
     }
-
 }

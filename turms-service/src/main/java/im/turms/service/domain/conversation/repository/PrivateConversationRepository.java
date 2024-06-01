@@ -23,6 +23,7 @@ import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -48,7 +49,7 @@ public class PrivateConversationRepository
         super(mongoClient, PrivateConversation.class);
     }
 
-    public Mono<Void> upsert(
+    public Mono<UpdateResult> upsert(
             Set<PrivateConversation.Key> keys,
             Date readDate,
             boolean allowMoveReadDateForward) {

@@ -40,6 +40,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_CONVERSATION_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_INVITATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
@@ -50,7 +51,9 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_USER_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATION_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUPS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
@@ -72,7 +75,9 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILES_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_USER_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_INVITATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
@@ -89,6 +94,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_ONLINE_STATUS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_USER_SETTINGS_REQUEST;
 
 /**
  * @author James Chen
@@ -104,6 +110,8 @@ public enum PolicyStatementResource {
             Set.of(UPDATE_USER_ONLINE_STATUS_REQUEST), Set.of(QUERY_USER_ONLINE_STATUSES_REQUEST)),
     USER_PROFILE(Collections.emptySet(), Collections.emptySet(), Collections.emptySet(),
             Set.of(QUERY_USER_PROFILES_REQUEST)),
+    USER_SETTING(Collections.emptySet(), Set.of(DELETE_USER_SETTINGS_REQUEST),
+            Set.of(UPDATE_USER_SETTINGS_REQUEST), Set.of(QUERY_USER_SETTINGS_REQUEST)),
     NEARBY_USER(Collections.emptySet(), Collections.emptySet(), Collections.emptySet(),
             Set.of(QUERY_NEARBY_USERS_REQUEST)),
     // endregion
@@ -147,6 +155,9 @@ public enum PolicyStatementResource {
     // region conversation
     CONVERSATION(Collections.emptySet(), Collections.emptySet(),
             Set.of(UPDATE_CONVERSATION_REQUEST), Set.of(QUERY_CONVERSATIONS_REQUEST)),
+    CONVERSATION_SETTING(Collections.emptySet(), Set.of(DELETE_CONVERSATION_SETTINGS_REQUEST),
+            Set.of(UPDATE_CONVERSATION_SETTINGS_REQUEST),
+            Set.of(QUERY_CONVERSATION_SETTINGS_REQUEST)),
     // endregion
     // region typing status
     TYPING_STATUS(Collections.emptySet(), Collections.emptySet(),

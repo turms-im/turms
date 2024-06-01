@@ -18,17 +18,25 @@
 package im.turms.server.common.infra.property;
 
 import java.lang.reflect.Field;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.scheduling.support.CronExpression;
 
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.ClassUtil;
+import im.turms.server.common.infra.lang.StringPattern;
+import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.validation.MatchesStringPattern;
 import im.turms.server.common.infra.validation.ValidCron;
+import im.turms.server.common.infra.validation.ValidRegex;
 
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfo;
 import static im.turms.server.common.infra.property.TurmsPropertiesInspector.getFieldInfos;
@@ -37,6 +45,13 @@ import static im.turms.server.common.infra.property.TurmsPropertiesInspector.get
  * @author James Chen
  */
 public class TurmsPropertiesValidator {
+
+    private static final BitSet NUMERIC_CHAR_SET =
+            CollectionUtil.newBitSet(StringUtil.NUMERIC_TABLE);
+    private static final BitSet ALPHABETIC_CHAR_SET =
+            CollectionUtil.newBitSet(StringUtil.ALPHABETIC_TABLE);
+    private static final BitSet ALPHANUMERIC_CHAR_SET =
+            CollectionUtil.newBitSet(StringUtil.ALPHANUMERIC_TABLE);
 
     private TurmsPropertiesValidator() {
     }
@@ -85,12 +100,16 @@ public class TurmsPropertiesValidator {
         long max = constraints.max();
         String lessThanOrEqualTo = constraints.lessThanOrEqualTo();
         Size size = constraints.size();
-        ValidCron cron = constraints.validCron();
+        ValidCron validCron = constraints.validCron();
+        ValidRegex validRegex = constraints.validRegex();
+        MatchesStringPattern matchesStringPattern = constraints.matchesStringPattern();
         if (min == Long.MIN_VALUE
                 && max == Long.MAX_VALUE
                 && lessThanOrEqualTo == null
                 && size == null
-                && cron == null) {
+                && validCron == null
+                && validRegex == null
+                && matchesStringPattern == null) {
             return;
         }
         Object value = fieldInfo.get(properties);
@@ -104,8 +123,62 @@ public class TurmsPropertiesValidator {
         if (size != null) {
             validateSizeProperty(size, value, field, errorMessages);
         }
-        if (cron != null) {
+        if (validCron != null) {
             validateCronProperty(value, field, errorMessages);
+        }
+        if (validRegex != null) {
+            validateRegexProperty(value, field, errorMessages);
+        }
+        if (matchesStringPattern != null) {
+            validateStringPatternProperty(matchesStringPattern.value(),
+                    value,
+                    field,
+                    errorMessages);
+        }
+    }
+
+    private static void validateStringPatternProperty(
+            StringPattern stringPattern,
+            Object value,
+            Field field,
+            List<String> errorMessages) {
+        if (!(value instanceof String str)) {
+            throw new IllegalArgumentException(
+                    "The value of the field ("
+                            + ClassUtil.getReference(field)
+                            + ") must be a string for string pattern validation");
+        }
+        switch (stringPattern) {
+            case NUMERIC -> {
+                if (StringUtil.allCharsInSet(str, NUMERIC_CHAR_SET)) {
+                    String message = "The property \""
+                            + field.getName()
+                            + "\" has an invalid string pattern \""
+                            + str
+                            + "\". Expected a numeric string";
+                    errorMessages.add(message);
+                }
+            }
+            case ALPHABETIC -> {
+                if (StringUtil.allCharsInSet(str, ALPHABETIC_CHAR_SET)) {
+                    String message = "The property \""
+                            + field.getName()
+                            + "\" has an invalid string pattern \""
+                            + str
+                            + "\". Expected an alphabetic string";
+                    errorMessages.add(message);
+                }
+            }
+            case ALPHANUMERIC -> {
+                if (StringUtil.allCharsInSet(str, ALPHANUMERIC_CHAR_SET)) {
+                    String message = "The property \""
+                            + field.getName()
+                            + "\" has an invalid string pattern \""
+                            + str
+                            + "\". Expected an alphanumeric string";
+                    errorMessages.add(message);
+                }
+            }
         }
     }
 
@@ -237,6 +310,34 @@ public class TurmsPropertiesValidator {
             String message = "The property \""
                     + field.getName()
                     + "\" has an invalid cron \""
+                    + str
+                    + "\"";
+            errorMessages.add(message);
+        }
+    }
+
+    private static void validateRegexProperty(
+            Object value,
+            Field field,
+            List<String> errorMessages) {
+        if (!(value instanceof String str)) {
+            if (!(value instanceof Collection<?> collection)) {
+                throw new IllegalArgumentException(
+                        "The value of the field ("
+                                + ClassUtil.getReference(field)
+                                + ") must be a string or string list for regex validation");
+            }
+            for (Object val : collection) {
+                validateRegexProperty(val, field, errorMessages);
+            }
+            return;
+        }
+        try {
+            Pattern.compile(str);
+        } catch (PatternSyntaxException exception) {
+            String message = "The property \""
+                    + field.getName()
+                    + "\" has an invalid regex \""
                     + str
                     + "\"";
             errorMessages.add(message);

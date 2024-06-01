@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.constant;
+package im.turms.server.common.infra.lang;
 
 /**
  * @author James Chen
  */
-public enum PasswordType {
+public enum StringPattern {
     NUMERIC,
     ALPHABETIC,
     ALPHANUMERIC

@@ -33,8 +33,6 @@ import static im.turms.server.common.storage.mongo.entity.IndexType.HASH;
 import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReason.EXTENDED_FEATURE;
 
 /**
- * No need to shard because there should be only a few user permission groups.
- *
  * @author James Chen
  */
 @Data

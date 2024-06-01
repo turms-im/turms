@@ -24,7 +24,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationGroupConversationReadDateUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationGroupConversationSettingDeletedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationGroupConversationSettingUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationPrivateConversationReadDateUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationPrivateConversationSettingDeletedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.conversation.NotificationPrivateConversationSettingUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupBlockedUserAddedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupBlockedUserRemovedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.group.NotificationGroupCreatedProperties;
@@ -55,6 +59,8 @@ import im.turms.server.common.infra.property.env.service.business.notification.u
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationOneSidedRelationshipUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationUserInfoUpdatedProperties;
 import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationUserOnlineStatusUpdatedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationUserSettingDeletedProperties;
+import im.turms.server.common.infra.property.env.service.business.notification.user.NotificationUserSettingUpdatedProperties;
 
 /**
  * @author James Chen
@@ -74,6 +80,14 @@ public class NotificationProperties {
     @NestedConfigurationProperty
     private NotificationUserOnlineStatusUpdatedProperties userOnlineStatusUpdated =
             new NotificationUserOnlineStatusUpdatedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationUserSettingDeletedProperties userSettingDeleted =
+            new NotificationUserSettingDeletedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationUserSettingUpdatedProperties userSettingUpdated =
+            new NotificationUserSettingUpdatedProperties();
 
     @NestedConfigurationProperty
     private NotificationFriendRequestCreatedProperties friendRequestCreated =
@@ -179,8 +193,24 @@ public class NotificationProperties {
             new NotificationPrivateConversationReadDateUpdatedProperties();
 
     @NestedConfigurationProperty
+    private NotificationPrivateConversationSettingDeletedProperties privateConversationSettingDeleted =
+            new NotificationPrivateConversationSettingDeletedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationPrivateConversationSettingUpdatedProperties privateConversationSettingUpdated =
+            new NotificationPrivateConversationSettingUpdatedProperties();
+
+    @NestedConfigurationProperty
     private NotificationGroupConversationReadDateUpdatedProperties groupConversationReadDateUpdated =
             new NotificationGroupConversationReadDateUpdatedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationGroupConversationSettingDeletedProperties groupConversationSettingDeleted =
+            new NotificationGroupConversationSettingDeletedProperties();
+
+    @NestedConfigurationProperty
+    private NotificationGroupConversationSettingUpdatedProperties groupConversationSettingUpdated =
+            new NotificationGroupConversationSettingUpdatedProperties();
 
     // endregion
 

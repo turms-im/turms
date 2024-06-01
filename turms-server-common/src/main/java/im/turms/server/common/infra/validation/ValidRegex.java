@@ -15,26 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.elasticsearch;
+package im.turms.server.common.infra.validation;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import im.turms.server.common.infra.property.metadata.Description;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class ElasticsearchSyncProperties {
-
-    @Description("Whether to sync existing data from MongoDB to Elasticsearch. "
-            + "If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet")
-    private boolean performFullSyncAtStartup = true;
-
+@Target({ElementType.PARAMETER, ElementType.TYPE_USE, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ValidRegex {
 }

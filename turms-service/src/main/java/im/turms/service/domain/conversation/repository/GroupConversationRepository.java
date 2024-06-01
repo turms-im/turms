@@ -44,7 +44,7 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
         super(mongoClient, GroupConversation.class);
     }
 
-    public Mono<Void> upsert(
+    public Mono<UpdateResult> upsert(
             Long groupId,
             Long memberId,
             Date readDate,
@@ -65,7 +65,7 @@ public class GroupConversationRepository extends BaseRepository<GroupConversatio
         return mongoClient.upsert(entityClass, filter, update);
     }
 
-    public Mono<Void> upsert(Long groupId, Collection<Long> memberIds, Date readDate) {
+    public Mono<UpdateResult> upsert(Long groupId, Collection<Long> memberIds, Date readDate) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, groupId);
         Update update = Update.newBuilder(memberIds.size());

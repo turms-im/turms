@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -750,4 +751,23 @@ public final class StringUtil {
         return 1.0F - distance / (float) maxLength;
     }
 
+    public static boolean allCharsInSet(String string, BitSet set) {
+        byte coder = getCoder(string);
+        if (LATIN1 == coder) {
+            byte[] bytes = getBytes(string);
+            for (byte b : bytes) {
+                if (!set.get(b)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        int length = string.length();
+        for (int i = 0; i < length; i++) {
+            if (!set.get(string.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

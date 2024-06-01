@@ -57,6 +57,7 @@ import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
 import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
@@ -65,6 +66,7 @@ import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 import org.reactivestreams.Publisher;
@@ -131,6 +133,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
     private static final UpdateOptions DEFAULT_UPDATE_OPTIONS = new UpdateOptions();
     private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
+    public static final BsonDocument FIND_OBJECT_KEYS_GET_FIELD_OPERATOR =
+            new BsonDocument().append("$getField",
+                    new BsonDocument().append("field", new BsonString("k"))
+                            .append("input", new BsonString("$$field")));
 
     private final MongoContext context;
     private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap =
@@ -202,6 +208,43 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 QueryOptions.newBuilder(1)
                         .projection(ID_ONLY));
         return Flux.from(publisher);
+    }
+
+    @Override
+    public Flux<String> findObjectFields(
+            Class<?> clazz,
+            Filter filter,
+            String parentField,
+            Collection<String> includedFields) {
+        MongoCollection<?> collection = context.getCollection(clazz);
+        BsonArray includedFieldsArray = new BsonArray(includedFields.size());
+        for (String includedField : includedFields) {
+            includedFieldsArray.add(new BsonString(includedField));
+        }
+        List<Bson> pipeline = List.of(Aggregates.match(filter), Aggregates.project(new Bson() {
+            @Override
+            public <T> BsonDocument toBsonDocument(
+                    Class<T> tDocumentClass,
+                    CodecRegistry codecRegistry) {
+                return new BsonDocument().append("_id",
+                        new BsonDocument().append("$map",
+                                new BsonDocument()
+                                        .append("input",
+                                                new BsonDocument().append("$objectToArray",
+                                                        new BsonString(
+                                                                "$"
+                                                                        + parentField)))
+                                        .append("as", new BsonString("field"))
+                                        .append("in", FIND_OBJECT_KEYS_GET_FIELD_OPERATOR)));
+            }
+        }),
+                Aggregates.unwind("$_id"),
+                Aggregates.match(new BsonDocument().append("_id",
+                        new BsonDocument().append("$in", includedFieldsArray))));
+        AggregatePublisher<Document> names = collection.aggregate(pipeline, Document.class);
+        return Flux.from(names)
+                .map(document -> document.get("_id")
+                        .toString());
     }
 
     @Override
@@ -306,13 +349,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     }
 
     @Override
-    public <T> Mono<Void> upsert(Class<T> clazz, Filter filter, Update update) {
+    public <T> Mono<UpdateResult> upsert(Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source =
                 collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(source)
-                .onErrorMap(MongoExceptionUtil::translate)
-                .then();
+                .onErrorMap(MongoExceptionUtil::translate);
     }
 
     // Insert
@@ -495,7 +537,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                         + groupByFieldName, Accumulators.sum("count", 1)));
         AggregatePublisher<Document> count = collection.aggregate(pipeline, Document.class);
         return Mono.from(count)
-                .map(document -> Long.valueOf((Integer) document.get("count")))
+                .map(document -> ((Number) document.get("count")).longValue())
                 .defaultIfEmpty(0L);
     }
 

@@ -23,7 +23,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import im.turms.server.common.infra.validation.LessThanOrEqualTo;
+import im.turms.server.common.infra.validation.MatchesStringPattern;
 import im.turms.server.common.infra.validation.ValidCron;
+import im.turms.server.common.infra.validation.ValidRegex;
 
 /**
  * @author James Chen
@@ -33,23 +35,29 @@ public record PropertyConstraints(
         long max,
         @Nullable String lessThanOrEqualTo,
         @Nullable Size size,
-        @Nullable ValidCron validCron
+        @Nullable ValidCron validCron,
+        @Nullable ValidRegex validRegex,
+        @Nullable MatchesStringPattern matchesStringPattern
 ) {
 
     public static final PropertyConstraints NULL =
-            new PropertyConstraints(Long.MIN_VALUE, Long.MAX_VALUE, null, null, null);
+            new PropertyConstraints(Long.MIN_VALUE, Long.MAX_VALUE, null, null, null, null, null);
 
     public static PropertyConstraints of(
             @Nullable Min min,
             @Nullable Max max,
             @Nullable LessThanOrEqualTo lessThanOrEqualTo,
             @Nullable Size size,
-            @Nullable ValidCron validCron) {
+            @Nullable ValidCron validCron,
+            @Nullable ValidRegex validRegex,
+            @Nullable MatchesStringPattern matchesStringPattern) {
         if (min == null
                 && max == null
                 && lessThanOrEqualTo == null
                 && size == null
-                && validCron == null) {
+                && validCron == null
+                && validRegex == null
+                && matchesStringPattern == null) {
             return NULL;
         }
         return new PropertyConstraints(
@@ -63,7 +71,9 @@ public record PropertyConstraints(
                         ? null
                         : lessThanOrEqualTo.value(),
                 size,
-                validCron);
+                validCron,
+                validRegex,
+                matchesStringPattern);
     }
 
 }

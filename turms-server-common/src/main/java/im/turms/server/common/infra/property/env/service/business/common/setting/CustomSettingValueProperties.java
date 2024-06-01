@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.conference.meeting;
+package im.turms.server.common.infra.property.env.service.business.common.setting;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.lang.StringPattern;
-import im.turms.server.common.infra.property.constant.PasswordPolicy;
+import im.turms.server.common.infra.property.constant.CustomSettingType;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -35,29 +35,25 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PasswordProperties {
+public class CustomSettingValueProperties {
 
-    @Description("The password policy")
+    @Description("The setting value type")
     @GlobalProperty
     @MutableProperty
-    private PasswordPolicy policy = PasswordPolicy.PROHIBITED;
+    private CustomSettingType type = CustomSettingType.STRING;
 
-    @Description("The password type")
-    @GlobalProperty
-    @MutableProperty
-    private StringPattern type = StringPattern.NUMERIC;
+    @NestedConfigurationProperty
+    private CustomSettingIntValueProperties intValue = new CustomSettingIntValueProperties();
 
-    /**
-     * @implNote Use 6 by default because it is easy for mobile users to input.
-     */
-    @Description("The minimum length of the password")
-    @GlobalProperty
-    @MutableProperty
-    private int minLength = 6;
+    @NestedConfigurationProperty
+    private CustomSettingLongValueProperties longValue = new CustomSettingLongValueProperties();
 
-    @Description("The maximum length of the password")
-    @GlobalProperty
-    @MutableProperty
-    private int maxLength = 6;
+    @NestedConfigurationProperty
+    private CustomSettingDoubleValueProperties doubleValue =
+            new CustomSettingDoubleValueProperties();
+
+    @NestedConfigurationProperty
+    private CustomSettingStringValueProperties stringValue =
+            new CustomSettingStringValueProperties();
 
 }

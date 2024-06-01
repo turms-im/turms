@@ -15,26 +15,31 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.elasticsearch;
+package im.turms.service.infra.locale;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import im.turms.server.common.infra.property.metadata.Description;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-public class ElasticsearchSyncProperties {
+public final class LocaleUtils {
 
-    @Description("Whether to sync existing data from MongoDB to Elasticsearch. "
-            + "If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet")
-    private boolean performFullSyncAtStartup = true;
+    private static final Map<String, Locale> ID_TO_LOCALE;
+
+    static {
+        ID_TO_LOCALE = new HashMap<>(2048);
+        // Use "availableLocales()" to avoid unnecessary copy.
+        Locale.availableLocales()
+                .forEach(locale -> ID_TO_LOCALE.put(locale.toLanguageTag(), locale));
+    }
+
+    private LocaleUtils() {
+    }
+
+    public static boolean isAvailableLanguage(String languageId) {
+        return ID_TO_LOCALE.containsKey(languageId);
+    }
 
 }

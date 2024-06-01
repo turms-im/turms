@@ -39,7 +39,7 @@
         <icu4j.version>74.2</icu4j.version>
         <jctools-core.version>4.0.3</jctools-core.version>
         <log4j.version>2.23.1</log4j.version>
-        <protobuf.version>4.26.1</protobuf.version>
+        <protobuf.version>4.27.0</protobuf.version>
         <swagger.version>2.2.20</swagger.version>
         <swagger-ui.version>5.11.10</swagger-ui.version>
 

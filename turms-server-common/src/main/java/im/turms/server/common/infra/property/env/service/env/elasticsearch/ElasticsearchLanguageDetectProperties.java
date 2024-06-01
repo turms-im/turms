@@ -38,7 +38,7 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class ElasticsearchLanguageDetectProperties {
 
     @Description("Whether to enable language detection. "
-            + "If true, a pipeline for language detection will be created at startup, "
+            + "If true, a pipeline for language detection will be created on startup, "
             + "and will be used as the default pipeline of new indexes")
     private boolean enabled;
 

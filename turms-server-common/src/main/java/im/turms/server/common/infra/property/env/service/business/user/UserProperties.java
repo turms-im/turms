@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
+import java.util.Collections;
+import java.util.List;
 import jakarta.validation.constraints.Min;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -94,5 +97,10 @@ public class UserProperties {
     @MutableProperty
     @Min(0)
     private int maxProfilePictureLength = 100;
+
+    @Description("The list of allowed user settings")
+    @GlobalProperty
+    @MutableProperty
+    private List<CustomSettingProperties> allowedSettings = Collections.emptyList();
 
 }

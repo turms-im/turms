@@ -46,7 +46,7 @@ public class NetworkPluginProperties {
             + "or \".js\" for JavaScript plugins")
     private PluginType type = PluginType.AUTO;
 
-    @Description("Whether to use the local cache. If false, turms will download the plugin every time at startup "
+    @Description("Whether to use the local cache. If false, turms will download the plugin every time on startup "
             + "even if the plugin has been downloaded on the local machine")
     private boolean useLocalCache;
 

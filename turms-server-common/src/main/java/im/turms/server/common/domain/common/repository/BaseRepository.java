@@ -150,6 +150,15 @@ public abstract class BaseRepository<T, K> {
         return mongoClient.findMany(entityClass, filter);
     }
 
+    public Flux<String> findObjectFieldsById(
+            K id,
+            String parentField,
+            Collection<String> includedFields) {
+        Filter filter = Filter.newBuilder(1)
+                .eq(DomainFieldName.ID, id);
+        return mongoClient.findObjectFields(entityClass, filter, parentField, includedFields);
+    }
+
     public Flux<ChangeStreamDocument<T>> watch(FullDocument fullDocument) {
         return mongoClient.watch(entityClass, fullDocument);
     }

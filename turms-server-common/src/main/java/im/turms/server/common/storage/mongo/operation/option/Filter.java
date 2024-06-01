@@ -121,6 +121,14 @@ public class Filter extends BaseBson {
         return this;
     }
 
+    public Filter gteIfNotNull(String key, @Nullable Object value) {
+        if (value != null) {
+            document.append(key,
+                    new BsonDocument("$gte", BsonValueEncoder.encodeSingleValue(value)));
+        }
+        return this;
+    }
+
     public Filter gteOrNull(String key, Object value) {
         or(Filter.newBuilder(1)
                 .eq(key, null),

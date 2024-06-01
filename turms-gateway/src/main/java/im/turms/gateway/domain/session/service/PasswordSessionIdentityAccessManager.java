@@ -70,7 +70,7 @@ public class PasswordSessionIdentityAccessManager
                     "Refused an illegal operation that tried to enable the previously disabled password-based identity and access management, "
                             + "because "
                             + "\"turms.gateway.session.identity-access-management.enabled\" is false, or "
-                            + "\"turms.gateway.session.identity-access-management.type\" is not \"password\" at startup. "
+                            + "\"turms.gateway.session.identity-access-management.type\" is not \"password\" on startup. "
                             + "To enable it, you need to update the \"turms.gateway.session.identity-access-management.enabled\" setting to true and restart the server");
             return false;
         } else {

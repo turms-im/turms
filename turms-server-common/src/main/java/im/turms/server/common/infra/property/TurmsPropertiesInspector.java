@@ -51,7 +51,9 @@ import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.infra.security.SensitiveProperty;
 import im.turms.server.common.infra.serialization.SerializationException;
 import im.turms.server.common.infra.validation.LessThanOrEqualTo;
+import im.turms.server.common.infra.validation.MatchesStringPattern;
 import im.turms.server.common.infra.validation.ValidCron;
+import im.turms.server.common.infra.validation.ValidRegex;
 
 import static im.turms.server.common.infra.json.JsonCodecPool.MAPPER;
 
@@ -163,7 +165,9 @@ public class TurmsPropertiesInspector {
                             field.getDeclaredAnnotation(Max.class),
                             field.getDeclaredAnnotation(LessThanOrEqualTo.class),
                             field.getDeclaredAnnotation(Size.class),
-                            field.getDeclaredAnnotation(ValidCron.class));
+                            field.getDeclaredAnnotation(ValidCron.class),
+                            field.getDeclaredAnnotation(ValidRegex.class),
+                            field.getDeclaredAnnotation(MatchesStringPattern.class));
             propertyFieldInfos.add(new PropertyFieldInfo(
                     field,
                     VarAccessorFactory.get(field),

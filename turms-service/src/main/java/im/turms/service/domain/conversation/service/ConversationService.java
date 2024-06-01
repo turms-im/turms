@@ -189,7 +189,8 @@ public class ConversationService {
                         e -> readDate == null
                                 ? Mono.empty()
                                 : Mono.error(ResponseException.get(
-                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
+                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)))
+                .then();
     }
 
     public Mono<Void> upsertGroupConversationsReadDate(
@@ -218,7 +219,8 @@ public class ConversationService {
         for (Map.Entry<Long, List<Long>> entry : entries) {
             Long groupId = entry.getKey();
             List<Long> memberIds = entry.getValue();
-            upsertMonos.add(groupConversationRepository.upsert(groupId, memberIds, readDate));
+            upsertMonos.add(groupConversationRepository.upsert(groupId, memberIds, readDate)
+                    .then());
         }
         return Mono.whenDelayError(upsertMonos);
     }
@@ -262,7 +264,8 @@ public class ConversationService {
                         e -> readDate == null
                                 ? Mono.empty()
                                 : Mono.error(ResponseException.get(
-                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
+                                        ResponseStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)))
+                .then();
     }
 
     public Flux<GroupConversation> queryGroupConversations(@NotNull Collection<Long> groupIds) {

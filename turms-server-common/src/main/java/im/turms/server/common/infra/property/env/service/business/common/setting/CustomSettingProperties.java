@@ -15,18 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.conference.meeting;
+package im.turms.server.common.infra.property.env.service.business.common.setting;
+
+import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.lang.StringPattern;
-import im.turms.server.common.infra.property.constant.PasswordPolicy;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.validation.MatchesStringPattern;
 
 /**
  * @author James Chen
@@ -35,29 +38,32 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class PasswordProperties {
+public class CustomSettingProperties {
 
-    @Description("The password policy")
+    @Description("The source name of the setting")
     @GlobalProperty
     @MutableProperty
-    private PasswordPolicy policy = PasswordPolicy.PROHIBITED;
+    @Size(min = 1)
+    @MatchesStringPattern(StringPattern.ALPHANUMERIC)
+    private String sourceName = "";
 
-    @Description("The password type")
+    @Description("The stored name of the setting. If empty, the source name will be used")
     @GlobalProperty
     @MutableProperty
-    private StringPattern type = StringPattern.NUMERIC;
+    @MatchesStringPattern(StringPattern.ALPHANUMERIC)
+    private String storedName = "";
 
-    /**
-     * @implNote Use 6 by default because it is easy for mobile users to input.
-     */
-    @Description("The minimum length of the password")
+    @Description("Whether the setting is immutable")
     @GlobalProperty
     @MutableProperty
-    private int minLength = 6;
+    private boolean immutable;
 
-    @Description("The maximum length of the password")
+    @Description("Whether the setting is deletable")
     @GlobalProperty
     @MutableProperty
-    private int maxLength = 6;
+    private boolean deletable = true;
+
+    @NestedConfigurationProperty
+    private CustomSettingValueProperties value = new CustomSettingValueProperties();
 
 }

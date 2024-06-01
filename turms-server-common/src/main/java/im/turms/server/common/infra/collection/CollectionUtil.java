@@ -18,6 +18,7 @@
 package im.turms.server.common.infra.collection;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -658,6 +659,14 @@ public final class CollectionUtil {
         Set<T> set = newSetWithExpectedSize(count);
         for (Collection<? extends T> collection : collections) {
             set.addAll(collection);
+        }
+        return set;
+    }
+
+    public static BitSet newBitSet(byte[] bytes) {
+        BitSet set = new BitSet(bytes.length);
+        for (byte b : bytes) {
+            set.set(b);
         }
         return set;
     }

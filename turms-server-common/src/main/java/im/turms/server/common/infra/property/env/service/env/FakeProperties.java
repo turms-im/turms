@@ -42,7 +42,7 @@ public class FakeProperties {
     @Min(0)
     private int userCount = 1000;
 
-    @Description("Whether to clear all collections before faking at startup")
+    @Description("Whether to clear all collections before faking on startup")
     private boolean clearAllCollectionsBeforeFaking;
 
     @Description("Whether to fake data even if the collection has already existed")

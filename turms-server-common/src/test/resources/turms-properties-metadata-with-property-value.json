@@ -577,6 +577,9 @@
             "UPDATE_USER_LOCATION_REQUEST",
             "UPDATE_USER_ONLINE_STATUS_REQUEST",
             "UPDATE_USER_REQUEST",
+            "UPDATE_USER_SETTINGS_REQUEST",
+            "DELETE_USER_SETTINGS_REQUEST",
+            "QUERY_USER_SETTINGS_REQUEST",
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
@@ -623,6 +626,9 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
             "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
+            "DELETE_CONVERSATION_SETTINGS_REQUEST",
+            "QUERY_CONVERSATION_SETTINGS_REQUEST",
+            "UPDATE_CONVERSATION_SETTINGS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -681,6 +687,9 @@
             "UPDATE_USER_LOCATION_REQUEST",
             "UPDATE_USER_ONLINE_STATUS_REQUEST",
             "UPDATE_USER_REQUEST",
+            "UPDATE_USER_SETTINGS_REQUEST",
+            "DELETE_USER_SETTINGS_REQUEST",
+            "QUERY_USER_SETTINGS_REQUEST",
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
@@ -727,6 +736,9 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
             "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
+            "DELETE_CONVERSATION_SETTINGS_REQUEST",
+            "QUERY_CONVERSATION_SETTINGS_REQUEST",
+            "UPDATE_CONVERSATION_SETTINGS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -2951,6 +2963,9 @@
           "UPDATE_USER_LOCATION_REQUEST",
           "UPDATE_USER_ONLINE_STATUS_REQUEST",
           "UPDATE_USER_REQUEST",
+          "UPDATE_USER_SETTINGS_REQUEST",
+          "DELETE_USER_SETTINGS_REQUEST",
+          "QUERY_USER_SETTINGS_REQUEST",
           "CREATE_FRIEND_REQUEST_REQUEST",
           "CREATE_RELATIONSHIP_GROUP_REQUEST",
           "CREATE_RELATIONSHIP_REQUEST",
@@ -2997,6 +3012,9 @@
           "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
           "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
           "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
+          "DELETE_CONVERSATION_SETTINGS_REQUEST",
+          "QUERY_CONVERSATION_SETTINGS_REQUEST",
+          "UPDATE_CONVERSATION_SETTINGS_REQUEST",
           "KIND_NOT_SET"
         ],
         "sensitive": false,
@@ -3056,6 +3074,9 @@
             "UPDATE_USER_LOCATION_REQUEST",
             "UPDATE_USER_ONLINE_STATUS_REQUEST",
             "UPDATE_USER_REQUEST",
+            "UPDATE_USER_SETTINGS_REQUEST",
+            "DELETE_USER_SETTINGS_REQUEST",
+            "QUERY_USER_SETTINGS_REQUEST",
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
@@ -3102,6 +3123,9 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
             "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
+            "DELETE_CONVERSATION_SETTINGS_REQUEST",
+            "QUERY_CONVERSATION_SETTINGS_REQUEST",
+            "UPDATE_CONVERSATION_SETTINGS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3160,6 +3184,9 @@
             "UPDATE_USER_LOCATION_REQUEST",
             "UPDATE_USER_ONLINE_STATUS_REQUEST",
             "UPDATE_USER_REQUEST",
+            "UPDATE_USER_SETTINGS_REQUEST",
+            "DELETE_USER_SETTINGS_REQUEST",
+            "QUERY_USER_SETTINGS_REQUEST",
             "CREATE_FRIEND_REQUEST_REQUEST",
             "CREATE_RELATIONSHIP_GROUP_REQUEST",
             "CREATE_RELATIONSHIP_REQUEST",
@@ -3206,6 +3233,9 @@
             "QUERY_RESOURCE_UPLOAD_INFO_REQUEST",
             "QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST",
             "UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST",
+            "DELETE_CONVERSATION_SETTINGS_REQUEST",
+            "QUERY_CONVERSATION_SETTINGS_REQUEST",
+            "UPDATE_CONVERSATION_SETTINGS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3400,6 +3430,16 @@
       }
     },
     "conversation": {
+      "allowedSettings": {
+        "deprecated": false,
+        "description": "The list of allowed conversation settings",
+        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "java.util.List",
+        "value": []
+      },
       "readReceipt": {
         "allowMoveReadDateForward": {
           "deprecated": false,
@@ -3559,7 +3599,7 @@
           "sync": {
             "performFullSyncAtStartup": {
               "deprecated": false,
-              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -3657,7 +3697,7 @@
           "sync": {
             "performFullSyncAtStartup": {
               "deprecated": false,
-              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync at startup if the data has not been synced yet",
+              "description": "Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -3671,7 +3711,7 @@
     "fake": {
       "clearAllCollectionsBeforeFaking": {
         "deprecated": false,
-        "description": "Whether to clear all collections before faking at startup",
+        "description": "Whether to clear all collections before faking on startup",
         "global": false,
         "mutable": false,
         "sensitive": false,
@@ -4644,6 +4684,28 @@
           "value": true
         }
       },
+      "groupConversationSettingDeleted": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have deleted their group conversation settings",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "groupConversationSettingUpdated": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their group conversation settings",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
       "groupCreated": {
         "notifyRequesterOtherOnlineSessions": {
           "deprecated": false,
@@ -5223,6 +5285,28 @@
           "value": true
         }
       },
+      "privateConversationSettingDeleted": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have deleted their private conversation settings",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "privateConversationSettingUpdated": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their private conversation settings",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
       "userInfoUpdated": {
         "notifyNonBlockedRelatedUsers": {
           "deprecated": false,
@@ -5256,6 +5340,28 @@
         "notifyRequesterOtherOnlineSessions": {
           "deprecated": false,
           "description": "Whether to notify the requester's other online sessions when they have updated their online status",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "userSettingDeleted": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have deleted their settings",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": true
+        }
+      },
+      "userSettingUpdated": {
+        "notifyRequesterOtherOnlineSessions": {
+          "deprecated": false,
+          "description": "Whether to notify the requester's other online sessions when they have updated their settings",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -5566,6 +5672,16 @@
         "sensitive": false,
         "type": "boolean",
         "value": true
+      },
+      "allowedSettings": {
+        "deprecated": false,
+        "description": "The list of allowed user settings",
+        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+        "global": true,
+        "mutable": true,
+        "sensitive": false,
+        "type": "java.util.List",
+        "value": []
       },
       "deleteTwoSidedRelationships": {
         "deprecated": false,
