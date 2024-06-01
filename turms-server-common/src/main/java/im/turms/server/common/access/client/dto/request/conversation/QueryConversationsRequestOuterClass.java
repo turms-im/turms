@@ -25,8 +25,8 @@ public final class QueryConversationsRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 QueryConversationsRequestOuterClass.class.getName());
     }
@@ -48,11 +48,11 @@ public final class QueryConversationsRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n6request/conversation/query_conversatio"
-                + "ns_request.proto\022\016im.turms.proto\"B\n\031Quer"
-                + "yConversationsRequest\022\022\n\ntarget_ids\030\001 \003("
-                + "\003\022\021\n\tgroup_ids\030\002 \003(\003BD\n=im.turms.server."
-                + "common.access.client.dto.request.convers"
-                + "ationP\001\272\002\000b\006proto3"};
+                + "ns_request.proto\022\016im.turms.proto\"@\n\031Quer"
+                + "yConversationsRequest\022\020\n\010user_ids\030\001 \003(\003\022"
+                + "\021\n\tgroup_ids\030\002 \003(\003BD\n=im.turms.server.co"
+                + "mmon.access.client.dto.request.conversat"
+                + "ionP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -62,7 +62,7 @@ public final class QueryConversationsRequestOuterClass {
         internal_static_im_turms_proto_QueryConversationsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryConversationsRequest_descriptor,
-                        new java.lang.String[]{"TargetIds", "GroupIds",});
+                        new java.lang.String[]{"UserIds", "GroupIds",});
         descriptor.resolveAllFeaturesImmutable();
     }
 

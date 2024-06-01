@@ -28,8 +28,8 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 UpdateConversationRequest.class.getName());
     }
@@ -55,20 +55,20 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
     }
 
     private int bitField0_;
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_ = 0L;
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private long userId_ = 0L;
 
     /**
      * <pre>
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return Whether the targetId field is set.
+     * @return Whether the userId field is set.
      */
     @java.lang.Override
-    public boolean hasTargetId() {
+    public boolean hasUserId() {
         return ((bitField0_ & 0x00000001) != 0);
     }
 
@@ -77,13 +77,13 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return The targetId.
+     * @return The userId.
      */
     @java.lang.Override
-    public long getTargetId() {
-        return targetId_;
+    public long getUserId() {
+        return userId_;
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 2;
@@ -145,7 +145,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
-            output.writeInt64(1, targetId_);
+            output.writeInt64(1, userId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt64(2, groupId_);
@@ -165,7 +165,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
 
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
-            size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, targetId_);
+            size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, userId_);
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, groupId_);
@@ -187,11 +187,11 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
             return super.equals(obj);
         }
 
-        if (hasTargetId() != other.hasTargetId()) {
+        if (hasUserId() != other.hasUserId()) {
             return false;
         }
-        if (hasTargetId()) {
-            if (getTargetId() != other.getTargetId()) {
+        if (hasUserId()) {
+            if (getUserId() != other.getUserId()) {
                 return false;
             }
         }
@@ -214,9 +214,9 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
-        if (hasTargetId()) {
-            hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
-            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getTargetId());
+        if (hasUserId()) {
+            hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+            hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getUserId());
         }
         if (hasGroupId()) {
             hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
@@ -366,7 +366,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
         public Builder clear() {
             super.clear();
             bitField0_ = 0;
-            targetId_ = 0L;
+            userId_ = 0L;
             groupId_ = 0L;
             readDate_ = 0L;
             return this;
@@ -410,7 +410,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
             int from_bitField0_ = bitField0_;
             int to_bitField0_ = 0;
             if (((from_bitField0_ & 0x00000001) != 0)) {
-                result.targetId_ = targetId_;
+                result.userId_ = userId_;
                 to_bitField0_ |= 0x00000001;
             }
             if (((from_bitField0_ & 0x00000002) != 0)) {
@@ -440,8 +440,8 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
                     .getDefaultInstance()) {
                 return this;
             }
-            if (other.hasTargetId()) {
-                setTargetId(other.getTargetId());
+            if (other.hasUserId()) {
+                setUserId(other.getUserId());
             }
             if (other.hasGroupId()) {
                 setGroupId(other.getGroupId());
@@ -474,7 +474,7 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
                     switch (tag) {
                         case 0 -> done = true;
                         case 8 -> {
-                            targetId_ = input.readInt64();
+                            userId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
                         } // case 8
                         case 16 -> {
@@ -502,19 +502,19 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
 
         private int bitField0_;
 
-        private long targetId_;
+        private long userId_;
 
         /**
          * <pre>
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @return Whether the targetId field is set.
+         * @return Whether the userId field is set.
          */
         @java.lang.Override
-        public boolean hasTargetId() {
+        public boolean hasUserId() {
             return ((bitField0_ & 0x00000001) != 0);
         }
 
@@ -523,13 +523,13 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @return The targetId.
+         * @return The userId.
          */
         @java.lang.Override
-        public long getTargetId() {
-            return targetId_;
+        public long getUserId() {
+            return userId_;
         }
 
         /**
@@ -537,14 +537,14 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @param value The targetId to set.
+         * @param value The userId to set.
          * @return This builder for chaining.
          */
-        public Builder setTargetId(long value) {
+        public Builder setUserId(long value) {
 
-            targetId_ = value;
+            userId_ = value;
             bitField0_ |= 0x00000001;
             onChanged();
             return this;
@@ -555,13 +555,13 @@ public final class UpdateConversationRequest extends com.google.protobuf.Generat
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearTargetId() {
+        public Builder clearUserId() {
             bitField0_ &= ~0x00000001;
-            targetId_ = 0L;
+            userId_ = 0L;
             onChanged();
             return this;
         }

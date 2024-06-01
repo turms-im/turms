@@ -25,8 +25,8 @@ public final class UpdateConversationRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 UpdateConversationRequestOuterClass.class.getName());
     }
@@ -48,12 +48,12 @@ public final class UpdateConversationRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n6request/conversation/update_conversati"
-                + "on_request.proto\022\016im.turms.proto\"x\n\031Upda"
-                + "teConversationRequest\022\026\n\ttarget_id\030\001 \001(\003"
-                + "H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022\021\n\tread_dat"
-                + "e\030\003 \001(\003B\014\n\n_target_idB\013\n\t_group_idBD\n=im"
-                + ".turms.server.common.access.client.dto.r"
-                + "equest.conversationP\001\272\002\000b\006proto3"};
+                + "on_request.proto\022\016im.turms.proto\"t\n\031Upda"
+                + "teConversationRequest\022\024\n\007user_id\030\001 \001(\003H\000"
+                + "\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022\021\n\tread_date\030"
+                + "\003 \001(\003B\n\n\010_user_idB\013\n\t_group_idBD\n=im.tur"
+                + "ms.server.common.access.client.dto.reque"
+                + "st.conversationP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -63,7 +63,7 @@ public final class UpdateConversationRequestOuterClass {
         internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateConversationRequest_descriptor,
-                        new java.lang.String[]{"TargetId", "GroupId", "ReadDate",});
+                        new java.lang.String[]{"UserId", "GroupId", "ReadDate",});
         descriptor.resolveAllFeaturesImmutable();
     }
 

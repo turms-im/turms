@@ -26,34 +26,34 @@ public interface QueryConversationsRequestOrBuilder extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @return A list containing the targetIds.
+     * @return A list containing the userIds.
      */
-    java.util.List<java.lang.Long> getTargetIdsList();
+    java.util.List<java.lang.Long> getUserIdsList();
 
     /**
      * <pre>
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @return The count of targetIds.
+     * @return The count of userIds.
      */
-    int getTargetIdsCount();
+    int getUserIdsCount();
 
     /**
      * <pre>
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
      * @param index The index of the element to return.
-     * @return The targetIds at the given index.
+     * @return The userIds at the given index.
      */
-    long getTargetIds(int index);
+    long getUserIds(int index);
 
     /**
      * <pre>

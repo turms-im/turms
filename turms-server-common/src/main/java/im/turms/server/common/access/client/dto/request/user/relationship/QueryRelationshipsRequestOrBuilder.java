@@ -92,25 +92,4 @@ public interface QueryRelationshipsRequestOrBuilder extends
      * @return The lastUpdatedDate.
      */
     long getLastUpdatedDate();
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return Whether the name field is set.
-     */
-    boolean hasName();
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return The name.
-     */
-    java.lang.String getName();
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return The bytes for name.
-     */
-    com.google.protobuf.ByteString getNameBytes();
 }

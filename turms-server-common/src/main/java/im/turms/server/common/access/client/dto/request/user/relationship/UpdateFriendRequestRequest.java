@@ -29,8 +29,8 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 UpdateFriendRequestRequest.class.getName());
     }

@@ -34,6 +34,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_CONVERSATION_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_BLOCKED_USER_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_INVITATION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTIONS_REQUEST;
@@ -44,6 +45,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATION_SETTINGS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUPS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
@@ -96,9 +98,11 @@ public final class TurmsRequestTypePool {
             QUERY_RESOURCE_UPLOAD_INFO_REQUEST);
 
     public static final Set<TurmsRequest.KindCase> CONVERSATION =
-            Set.of(QUERY_CONVERSATIONS_REQUEST,
+            Set.of(DELETE_CONVERSATION_SETTINGS_REQUEST,
                     UPDATE_CONVERSATION_REQUEST,
-                    UPDATE_TYPING_STATUS_REQUEST);
+                    UPDATE_TYPING_STATUS_REQUEST,
+                    QUERY_CONVERSATIONS_REQUEST,
+                    QUERY_CONVERSATION_SETTINGS_REQUEST);
 
     public static final Set<TurmsRequest.KindCase> MESSAGE =
             Set.of(CREATE_MESSAGE_REQUEST, QUERY_MESSAGES_REQUEST, UPDATE_MESSAGE_REQUEST);

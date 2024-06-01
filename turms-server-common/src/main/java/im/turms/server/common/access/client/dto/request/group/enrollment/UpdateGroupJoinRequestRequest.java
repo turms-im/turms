@@ -29,8 +29,8 @@ public final class UpdateGroupJoinRequestRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 UpdateGroupJoinRequestRequest.class.getName());
     }

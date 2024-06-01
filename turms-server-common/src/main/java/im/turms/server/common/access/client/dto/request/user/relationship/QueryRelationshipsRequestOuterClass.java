@@ -25,8 +25,8 @@ public final class QueryRelationshipsRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 QueryRelationshipsRequestOuterClass.class.getName());
     }
@@ -48,14 +48,13 @@ public final class QueryRelationshipsRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n;request/user/relationship/query_relati"
-                + "onships_request.proto\022\016im.turms.proto\"\270\001"
+                + "onships_request.proto\022\016im.turms.proto\"\234\001"
                 + "\n\031QueryRelationshipsRequest\022\020\n\010user_ids\030"
                 + "\001 \003(\003\022\024\n\007blocked\030\002 \001(\010H\000\210\001\001\022\025\n\rgroup_ind"
                 + "exes\030\003 \003(\005\022\036\n\021last_updated_date\030\004 \001(\003H\001\210"
-                + "\001\001\022\021\n\004name\030\005 \001(\tH\002\210\001\001B\n\n\010_blockedB\024\n\022_la"
-                + "st_updated_dateB\007\n\005_nameBI\nBim.turms.ser"
-                + "ver.common.access.client.dto.request.use"
-                + "r.relationshipP\001\272\002\000b\006proto3"};
+                + "\001\001B\n\n\010_blockedB\024\n\022_last_updated_dateBI\nB"
+                + "im.turms.server.common.access.client.dto"
+                + ".request.user.relationshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -68,8 +67,7 @@ public final class QueryRelationshipsRequestOuterClass {
                         new java.lang.String[]{"UserIds",
                                 "Blocked",
                                 "GroupIndexes",
-                                "LastUpdatedDate",
-                                "Name",});
+                                "LastUpdatedDate",});
         descriptor.resolveAllFeaturesImmutable();
     }
 

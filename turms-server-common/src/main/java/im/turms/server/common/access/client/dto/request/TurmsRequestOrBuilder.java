@@ -448,6 +448,63 @@ public interface TurmsRequestOrBuilder extends
     im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
 
     /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return Whether the updateUserSettingsRequest field is set.
+     */
+    boolean hasUpdateUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return The updateUserSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOrBuilder getUpdateUserSettingsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return Whether the deleteUserSettingsRequest field is set.
+     */
+    boolean hasDeleteUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return The deleteUserSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequestOrBuilder getDeleteUserSettingsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return Whether the queryUserSettingsRequest field is set.
+     */
+    boolean hasQueryUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return The queryUserSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequestOrBuilder getQueryUserSettingsRequestOrBuilder();
+
+    /**
      * <pre>
      * User Relationship
      * </pre>
@@ -1392,6 +1449,75 @@ public interface TurmsRequestOrBuilder extends
      * <code>.im.turms.proto.UpdateMessageAttachmentInfoRequest update_message_attachment_info_request = 1004;</code>
      */
     im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequestOrBuilder getUpdateMessageAttachmentInfoRequestOrBuilder();
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return Whether the deleteConversationSettingsRequest field is set.
+     */
+    boolean hasDeleteConversationSettingsRequest();
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return The deleteConversationSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest();
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequestOrBuilder getDeleteConversationSettingsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return Whether the queryConversationSettingsRequest field is set.
+     */
+    boolean hasQueryConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return The queryConversationSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequestOrBuilder getQueryConversationSettingsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return Whether the updateConversationSettingsRequest field is set.
+     */
+    boolean hasUpdateConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return The updateConversationSettingsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder getUpdateConversationSettingsRequestOrBuilder();
 
     im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase getKindCase();
 }

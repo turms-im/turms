@@ -32,8 +32,8 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 TurmsRequest.class.getName());
     }
@@ -83,6 +83,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         UPDATE_USER_LOCATION_REQUEST(103),
         UPDATE_USER_ONLINE_STATUS_REQUEST(104),
         UPDATE_USER_REQUEST(105),
+        UPDATE_USER_SETTINGS_REQUEST(106),
+        DELETE_USER_SETTINGS_REQUEST(107),
+        QUERY_USER_SETTINGS_REQUEST(108),
         CREATE_FRIEND_REQUEST_REQUEST(200),
         CREATE_RELATIONSHIP_GROUP_REQUEST(201),
         CREATE_RELATIONSHIP_REQUEST(202),
@@ -129,6 +132,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
         QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST(1003),
         UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST(1004),
+        DELETE_CONVERSATION_SETTINGS_REQUEST(1100),
+        QUERY_CONVERSATION_SETTINGS_REQUEST(1101),
+        UPDATE_CONVERSATION_SETTINGS_REQUEST(1102),
         KIND_NOT_SET(0);
 
         private final int value;
@@ -167,6 +173,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case 103 -> UPDATE_USER_LOCATION_REQUEST;
                 case 104 -> UPDATE_USER_ONLINE_STATUS_REQUEST;
                 case 105 -> UPDATE_USER_REQUEST;
+                case 106 -> UPDATE_USER_SETTINGS_REQUEST;
+                case 107 -> DELETE_USER_SETTINGS_REQUEST;
+                case 108 -> QUERY_USER_SETTINGS_REQUEST;
                 case 200 -> CREATE_FRIEND_REQUEST_REQUEST;
                 case 201 -> CREATE_RELATIONSHIP_GROUP_REQUEST;
                 case 202 -> CREATE_RELATIONSHIP_REQUEST;
@@ -213,6 +222,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case 1002 -> QUERY_RESOURCE_UPLOAD_INFO_REQUEST;
                 case 1003 -> QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST;
                 case 1004 -> UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST;
+                case 1100 -> DELETE_CONVERSATION_SETTINGS_REQUEST;
+                case 1101 -> QUERY_CONVERSATION_SETTINGS_REQUEST;
+                case 1102 -> UPDATE_CONVERSATION_SETTINGS_REQUEST;
                 case 0 -> KIND_NOT_SET;
                 default -> null;
             };
@@ -1001,6 +1013,120 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             return (im.turms.server.common.access.client.dto.request.user.UpdateUserRequest) kind_;
         }
         return im.turms.server.common.access.client.dto.request.user.UpdateUserRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_USER_SETTINGS_REQUEST_FIELD_NUMBER = 106;
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return Whether the updateUserSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateUserSettingsRequest() {
+        return kindCase_ == 106;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return The updateUserSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest() {
+        if (kindCase_ == 106) {
+            return (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOrBuilder getUpdateUserSettingsRequestOrBuilder() {
+        if (kindCase_ == 106) {
+            return (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int DELETE_USER_SETTINGS_REQUEST_FIELD_NUMBER = 107;
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return Whether the deleteUserSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeleteUserSettingsRequest() {
+        return kindCase_ == 107;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return The deleteUserSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest() {
+        if (kindCase_ == 107) {
+            return (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequestOrBuilder getDeleteUserSettingsRequestOrBuilder() {
+        if (kindCase_ == 107) {
+            return (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int QUERY_USER_SETTINGS_REQUEST_FIELD_NUMBER = 108;
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return Whether the queryUserSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasQueryUserSettingsRequest() {
+        return kindCase_ == 108;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return The queryUserSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest() {
+        if (kindCase_ == 108) {
+            return (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequestOrBuilder getQueryUserSettingsRequestOrBuilder() {
+        if (kindCase_ == 108) {
+            return (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
                 .getDefaultInstance();
     }
 
@@ -2824,6 +2950,132 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 .getDefaultInstance();
     }
 
+    public static final int DELETE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1100;
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return Whether the deleteConversationSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeleteConversationSettingsRequest() {
+        return kindCase_ == 1100;
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return The deleteConversationSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest() {
+        if (kindCase_ == 1100) {
+            return (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequestOrBuilder getDeleteConversationSettingsRequestOrBuilder() {
+        if (kindCase_ == 1100) {
+            return (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int QUERY_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1101;
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return Whether the queryConversationSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasQueryConversationSettingsRequest() {
+        return kindCase_ == 1101;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return The queryConversationSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest() {
+        if (kindCase_ == 1101) {
+            return (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequestOrBuilder getQueryConversationSettingsRequestOrBuilder() {
+        if (kindCase_ == 1101) {
+            return (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int UPDATE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1102;
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return Whether the updateConversationSettingsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasUpdateConversationSettingsRequest() {
+        return kindCase_ == 1102;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return The updateConversationSettingsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest() {
+        if (kindCase_ == 1102) {
+            return (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder getUpdateConversationSettingsRequestOrBuilder() {
+        if (kindCase_ == 1102) {
+            return (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -2916,6 +3168,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         if (kindCase_ == 105) {
             output.writeMessage(105,
                     (im.turms.server.common.access.client.dto.request.user.UpdateUserRequest) kind_);
+        }
+        if (kindCase_ == 106) {
+            output.writeMessage(106,
+                    (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_);
+        }
+        if (kindCase_ == 107) {
+            output.writeMessage(107,
+                    (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_);
+        }
+        if (kindCase_ == 108) {
+            output.writeMessage(108,
+                    (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_);
         }
         if (kindCase_ == 200) {
             output.writeMessage(200,
@@ -3101,6 +3365,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             output.writeMessage(1004,
                     (im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest) kind_);
         }
+        if (kindCase_ == 1100) {
+            output.writeMessage(1100,
+                    (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_);
+        }
+        if (kindCase_ == 1101) {
+            output.writeMessage(1101,
+                    (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_);
+        }
+        if (kindCase_ == 1102) {
+            output.writeMessage(1102,
+                    (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -3186,6 +3462,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         if (kindCase_ == 105) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(105,
                     (im.turms.server.common.access.client.dto.request.user.UpdateUserRequest) kind_);
+        }
+        if (kindCase_ == 106) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(106,
+                    (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_);
+        }
+        if (kindCase_ == 107) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(107,
+                    (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_);
+        }
+        if (kindCase_ == 108) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(108,
+                    (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_);
         }
         if (kindCase_ == 200) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(200,
@@ -3371,6 +3659,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(1004,
                     (im.turms.server.common.access.client.dto.request.storage.UpdateMessageAttachmentInfoRequest) kind_);
         }
+        if (kindCase_ == 1100) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(1100,
+                    (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_);
+        }
+        if (kindCase_ == 1101) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(1101,
+                    (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_);
+        }
+        if (kindCase_ == 1102) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(1102,
+                    (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_);
+        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -3486,6 +3786,21 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             }
             case 105 -> {
                 if (!getUpdateUserRequest().equals(other.getUpdateUserRequest())) {
+                    return false;
+                }
+            }
+            case 106 -> {
+                if (!getUpdateUserSettingsRequest().equals(other.getUpdateUserSettingsRequest())) {
+                    return false;
+                }
+            }
+            case 107 -> {
+                if (!getDeleteUserSettingsRequest().equals(other.getDeleteUserSettingsRequest())) {
+                    return false;
+                }
+            }
+            case 108 -> {
+                if (!getQueryUserSettingsRequest().equals(other.getQueryUserSettingsRequest())) {
                     return false;
                 }
             }
@@ -3752,6 +4067,24 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                     return false;
                 }
             }
+            case 1100 -> {
+                if (!getDeleteConversationSettingsRequest()
+                        .equals(other.getDeleteConversationSettingsRequest())) {
+                    return false;
+                }
+            }
+            case 1101 -> {
+                if (!getQueryConversationSettingsRequest()
+                        .equals(other.getQueryConversationSettingsRequest())) {
+                    return false;
+                }
+            }
+            case 1102 -> {
+                if (!getUpdateConversationSettingsRequest()
+                        .equals(other.getUpdateConversationSettingsRequest())) {
+                    return false;
+                }
+            }
             default -> {
             }
         }
@@ -3841,6 +4174,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             case 105 -> {
                 hash = (37 * hash) + UPDATE_USER_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateUserRequest().hashCode();
+            }
+            case 106 -> {
+                hash = (37 * hash) + UPDATE_USER_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateUserSettingsRequest().hashCode();
+            }
+            case 107 -> {
+                hash = (37 * hash) + DELETE_USER_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getDeleteUserSettingsRequest().hashCode();
+            }
+            case 108 -> {
+                hash = (37 * hash) + QUERY_USER_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getQueryUserSettingsRequest().hashCode();
             }
             case 200 -> {
                 hash = (37 * hash) + CREATE_FRIEND_REQUEST_REQUEST_FIELD_NUMBER;
@@ -4025,6 +4370,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             case 1004 -> {
                 hash = (37 * hash) + UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateMessageAttachmentInfoRequest().hashCode();
+            }
+            case 1100 -> {
+                hash = (37 * hash) + DELETE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getDeleteConversationSettingsRequest().hashCode();
+            }
+            case 1101 -> {
+                hash = (37 * hash) + QUERY_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getQueryConversationSettingsRequest().hashCode();
+            }
+            case 1102 -> {
+                hash = (37 * hash) + UPDATE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getUpdateConversationSettingsRequest().hashCode();
             }
             default -> {
             }
@@ -4232,6 +4589,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (updateUserRequestBuilder_ != null) {
                 updateUserRequestBuilder_.clear();
             }
+            if (updateUserSettingsRequestBuilder_ != null) {
+                updateUserSettingsRequestBuilder_.clear();
+            }
+            if (deleteUserSettingsRequestBuilder_ != null) {
+                deleteUserSettingsRequestBuilder_.clear();
+            }
+            if (queryUserSettingsRequestBuilder_ != null) {
+                queryUserSettingsRequestBuilder_.clear();
+            }
             if (createFriendRequestRequestBuilder_ != null) {
                 createFriendRequestRequestBuilder_.clear();
             }
@@ -4370,6 +4736,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (updateMessageAttachmentInfoRequestBuilder_ != null) {
                 updateMessageAttachmentInfoRequestBuilder_.clear();
             }
+            if (deleteConversationSettingsRequestBuilder_ != null) {
+                deleteConversationSettingsRequestBuilder_.clear();
+            }
+            if (queryConversationSettingsRequestBuilder_ != null) {
+                queryConversationSettingsRequestBuilder_.clear();
+            }
+            if (updateConversationSettingsRequestBuilder_ != null) {
+                updateConversationSettingsRequestBuilder_.clear();
+            }
             kindCase_ = 0;
             kind_ = null;
             return this;
@@ -4491,6 +4866,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             }
             if (kindCase_ == 105 && updateUserRequestBuilder_ != null) {
                 result.kind_ = updateUserRequestBuilder_.build();
+            }
+            if (kindCase_ == 106 && updateUserSettingsRequestBuilder_ != null) {
+                result.kind_ = updateUserSettingsRequestBuilder_.build();
+            }
+            if (kindCase_ == 107 && deleteUserSettingsRequestBuilder_ != null) {
+                result.kind_ = deleteUserSettingsRequestBuilder_.build();
+            }
+            if (kindCase_ == 108 && queryUserSettingsRequestBuilder_ != null) {
+                result.kind_ = queryUserSettingsRequestBuilder_.build();
             }
             if (kindCase_ == 200 && createFriendRequestRequestBuilder_ != null) {
                 result.kind_ = createFriendRequestRequestBuilder_.build();
@@ -4630,6 +5014,15 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (kindCase_ == 1004 && updateMessageAttachmentInfoRequestBuilder_ != null) {
                 result.kind_ = updateMessageAttachmentInfoRequestBuilder_.build();
             }
+            if (kindCase_ == 1100 && deleteConversationSettingsRequestBuilder_ != null) {
+                result.kind_ = deleteConversationSettingsRequestBuilder_.build();
+            }
+            if (kindCase_ == 1101 && queryConversationSettingsRequestBuilder_ != null) {
+                result.kind_ = queryConversationSettingsRequestBuilder_.build();
+            }
+            if (kindCase_ == 1102 && updateConversationSettingsRequestBuilder_ != null) {
+                result.kind_ = updateConversationSettingsRequestBuilder_.build();
+            }
         }
 
         @java.lang.Override
@@ -4688,6 +5081,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case UPDATE_USER_ONLINE_STATUS_REQUEST ->
                     mergeUpdateUserOnlineStatusRequest(other.getUpdateUserOnlineStatusRequest());
                 case UPDATE_USER_REQUEST -> mergeUpdateUserRequest(other.getUpdateUserRequest());
+                case UPDATE_USER_SETTINGS_REQUEST ->
+                    mergeUpdateUserSettingsRequest(other.getUpdateUserSettingsRequest());
+                case DELETE_USER_SETTINGS_REQUEST ->
+                    mergeDeleteUserSettingsRequest(other.getDeleteUserSettingsRequest());
+                case QUERY_USER_SETTINGS_REQUEST ->
+                    mergeQueryUserSettingsRequest(other.getQueryUserSettingsRequest());
                 case CREATE_FRIEND_REQUEST_REQUEST ->
                     mergeCreateFriendRequestRequest(other.getCreateFriendRequestRequest());
                 case CREATE_RELATIONSHIP_GROUP_REQUEST ->
@@ -4780,6 +5179,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST ->
                     mergeUpdateMessageAttachmentInfoRequest(
                             other.getUpdateMessageAttachmentInfoRequest());
+                case DELETE_CONVERSATION_SETTINGS_REQUEST -> mergeDeleteConversationSettingsRequest(
+                        other.getDeleteConversationSettingsRequest());
+                case QUERY_CONVERSATION_SETTINGS_REQUEST -> mergeQueryConversationSettingsRequest(
+                        other.getQueryConversationSettingsRequest());
+                case UPDATE_CONVERSATION_SETTINGS_REQUEST -> mergeUpdateConversationSettingsRequest(
+                        other.getUpdateConversationSettingsRequest());
                 case KIND_NOT_SET -> {
                 }
             }
@@ -4912,6 +5317,24 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                                     extensionRegistry);
                             kindCase_ = 105;
                         } // case 842
+                        case 850 -> {
+                            input.readMessage(
+                                    getUpdateUserSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 106;
+                        } // case 850
+                        case 858 -> {
+                            input.readMessage(
+                                    getDeleteUserSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 107;
+                        } // case 858
+                        case 866 -> {
+                            input.readMessage(
+                                    getQueryUserSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 108;
+                        } // case 866
                         case 1602 -> {
                             input.readMessage(
                                     getCreateFriendRequestRequestFieldBuilder().getBuilder(),
@@ -5182,6 +5605,24 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                                     extensionRegistry);
                             kindCase_ = 1004;
                         } // case 8034
+                        case 8802 -> {
+                            input.readMessage(
+                                    getDeleteConversationSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 1100;
+                        } // case 8802
+                        case 8810 -> {
+                            input.readMessage(
+                                    getQueryConversationSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 1101;
+                        } // case 8810
+                        case 8818 -> {
+                            input.readMessage(
+                                    getUpdateConversationSettingsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 1102;
+                        } // case 8818
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -8325,6 +8766,483 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             kindCase_ = 105;
             onChanged();
             return updateUserRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOrBuilder> updateUserSettingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         *
+         * @return Whether the updateUserSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateUserSettingsRequest() {
+            return kindCase_ == 106;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         *
+         * @return The updateUserSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest() {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 106) {
+                    return (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 106) {
+                    return updateUserSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder setUpdateUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest value) {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateUserSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 106;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder setUpdateUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest.Builder builderForValue) {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateUserSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 106;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder mergeUpdateUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest value) {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 106
+                        && kind_ != im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 106) {
+                    updateUserSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateUserSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 106;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder clearUpdateUserSettingsRequest() {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 106) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 106) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateUserSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest.Builder getUpdateUserSettingsRequestBuilder() {
+            return getUpdateUserSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOrBuilder getUpdateUserSettingsRequestOrBuilder() {
+            if ((kindCase_ == 106) && (updateUserSettingsRequestBuilder_ != null)) {
+                return updateUserSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 106) {
+                    return (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOrBuilder> getUpdateUserSettingsRequestFieldBuilder() {
+            if (updateUserSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 106)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest
+                            .getDefaultInstance();
+                }
+                updateUserSettingsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 106;
+            onChanged();
+            return updateUserSettingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequestOrBuilder> deleteUserSettingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         *
+         * @return Whether the deleteUserSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasDeleteUserSettingsRequest() {
+            return kindCase_ == 107;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         *
+         * @return The deleteUserSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest() {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 107) {
+                    return (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 107) {
+                    return deleteUserSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder setDeleteUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest value) {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                deleteUserSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 107;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder setDeleteUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest.Builder builderForValue) {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                deleteUserSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 107;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder mergeDeleteUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest value) {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 107
+                        && kind_ != im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 107) {
+                    deleteUserSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    deleteUserSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 107;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder clearDeleteUserSettingsRequest() {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 107) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 107) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                deleteUserSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest.Builder getDeleteUserSettingsRequestBuilder() {
+            return getDeleteUserSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequestOrBuilder getDeleteUserSettingsRequestOrBuilder() {
+            if ((kindCase_ == 107) && (deleteUserSettingsRequestBuilder_ != null)) {
+                return deleteUserSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 107) {
+                    return (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequestOrBuilder> getDeleteUserSettingsRequestFieldBuilder() {
+            if (deleteUserSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 107)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest
+                            .getDefaultInstance();
+                }
+                deleteUserSettingsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.user.DeleteUserSettingsRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 107;
+            onChanged();
+            return deleteUserSettingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequestOrBuilder> queryUserSettingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         *
+         * @return Whether the queryUserSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasQueryUserSettingsRequest() {
+            return kindCase_ == 108;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         *
+         * @return The queryUserSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest() {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 108) {
+                    return (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 108) {
+                    return queryUserSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder setQueryUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest value) {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                queryUserSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 108;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder setQueryUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest.Builder builderForValue) {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                queryUserSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 108;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder mergeQueryUserSettingsRequest(
+                im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest value) {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 108
+                        && kind_ != im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 108) {
+                    queryUserSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    queryUserSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 108;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder clearQueryUserSettingsRequest() {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 108) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 108) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                queryUserSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest.Builder getQueryUserSettingsRequestBuilder() {
+            return getQueryUserSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequestOrBuilder getQueryUserSettingsRequestOrBuilder() {
+            if ((kindCase_ == 108) && (queryUserSettingsRequestBuilder_ != null)) {
+                return queryUserSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 108) {
+                    return (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest, im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequestOrBuilder> getQueryUserSettingsRequestFieldBuilder() {
+            if (queryUserSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 108)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest
+                            .getDefaultInstance();
+                }
+                queryUserSettingsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                        (im.turms.server.common.access.client.dto.request.user.QueryUserSettingsRequest) kind_,
+                        getParentForChildren(),
+                        isClean());
+                kind_ = null;
+            }
+            kindCase_ = 108;
+            onChanged();
+            return queryUserSettingsRequestBuilder_;
         }
 
         private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequest.Builder, im.turms.server.common.access.client.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder> createFriendRequestRequestBuilder_;
@@ -15877,6 +16795,522 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             kindCase_ = 1004;
             onChanged();
             return updateMessageAttachmentInfoRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequestOrBuilder> deleteConversationSettingsRequestBuilder_;
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         *
+         * @return Whether the deleteConversationSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasDeleteConversationSettingsRequest() {
+            return kindCase_ == 1100;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         *
+         * @return The deleteConversationSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest() {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1100) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 1100) {
+                    return deleteConversationSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder setDeleteConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest value) {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                deleteConversationSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 1100;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder setDeleteConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest.Builder builderForValue) {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                deleteConversationSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 1100;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder mergeDeleteConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest value) {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1100
+                        && kind_ != im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 1100) {
+                    deleteConversationSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    deleteConversationSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 1100;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder clearDeleteConversationSettingsRequest() {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1100) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 1100) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                deleteConversationSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest.Builder getDeleteConversationSettingsRequestBuilder() {
+            return getDeleteConversationSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequestOrBuilder getDeleteConversationSettingsRequestOrBuilder() {
+            if ((kindCase_ == 1100) && (deleteConversationSettingsRequestBuilder_ != null)) {
+                return deleteConversationSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 1100) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequestOrBuilder> getDeleteConversationSettingsRequestFieldBuilder() {
+            if (deleteConversationSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 1100)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest
+                            .getDefaultInstance();
+                }
+                deleteConversationSettingsRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.conversation.DeleteConversationSettingsRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 1100;
+            onChanged();
+            return deleteConversationSettingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequestOrBuilder> queryConversationSettingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         *
+         * @return Whether the queryConversationSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasQueryConversationSettingsRequest() {
+            return kindCase_ == 1101;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         *
+         * @return The queryConversationSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest() {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1101) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 1101) {
+                    return queryConversationSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder setQueryConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest value) {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                queryConversationSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 1101;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder setQueryConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest.Builder builderForValue) {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                queryConversationSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 1101;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder mergeQueryConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest value) {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1101
+                        && kind_ != im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 1101) {
+                    queryConversationSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    queryConversationSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 1101;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder clearQueryConversationSettingsRequest() {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1101) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 1101) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                queryConversationSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest.Builder getQueryConversationSettingsRequestBuilder() {
+            return getQueryConversationSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequestOrBuilder getQueryConversationSettingsRequestOrBuilder() {
+            if ((kindCase_ == 1101) && (queryConversationSettingsRequestBuilder_ != null)) {
+                return queryConversationSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 1101) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequestOrBuilder> getQueryConversationSettingsRequestFieldBuilder() {
+            if (queryConversationSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 1101)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest
+                            .getDefaultInstance();
+                }
+                queryConversationSettingsRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.conversation.QueryConversationSettingsRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 1101;
+            onChanged();
+            return queryConversationSettingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder> updateConversationSettingsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         *
+         * @return Whether the updateConversationSettingsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasUpdateConversationSettingsRequest() {
+            return kindCase_ == 1102;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         *
+         * @return The updateConversationSettingsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest() {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1102) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 1102) {
+                    return updateConversationSettingsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder setUpdateConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest value) {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                updateConversationSettingsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 1102;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder setUpdateConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest.Builder builderForValue) {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                updateConversationSettingsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 1102;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder mergeUpdateConversationSettingsRequest(
+                im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest value) {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1102
+                        && kind_ != im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 1102) {
+                    updateConversationSettingsRequestBuilder_.mergeFrom(value);
+                } else {
+                    updateConversationSettingsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 1102;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder clearUpdateConversationSettingsRequest() {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                if (kindCase_ == 1102) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 1102) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                updateConversationSettingsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest.Builder getUpdateConversationSettingsRequestBuilder() {
+            return getUpdateConversationSettingsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder getUpdateConversationSettingsRequestOrBuilder() {
+            if ((kindCase_ == 1102) && (updateConversationSettingsRequestBuilder_ != null)) {
+                return updateConversationSettingsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 1102) {
+                    return (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest.Builder, im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder> getUpdateConversationSettingsRequestFieldBuilder() {
+            if (updateConversationSettingsRequestBuilder_ == null) {
+                if (!(kindCase_ == 1102)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest
+                            .getDefaultInstance();
+                }
+                updateConversationSettingsRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 1102;
+            onChanged();
+            return updateConversationSettingsRequestBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsRequest)

@@ -28,8 +28,8 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 QueryRelationshipsRequest.class.getName());
     }
@@ -42,7 +42,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
     private QueryRelationshipsRequest() {
         userIds_ = emptyLongList();
         groupIndexes_ = emptyIntList();
-        name_ = "";
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -174,56 +173,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         return lastUpdatedDate_;
     }
 
-    public static final int NAME_FIELD_NUMBER = 5;
-    @SuppressWarnings("serial")
-    private volatile java.lang.Object name_ = "";
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return Whether the name field is set.
-     */
-    @java.lang.Override
-    public boolean hasName() {
-        return ((bitField0_ & 0x00000004) != 0);
-    }
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return The name.
-     */
-    @java.lang.Override
-    public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-            return (java.lang.String) ref;
-        } else {
-            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            name_ = s;
-            return s;
-        }
-    }
-
-    /**
-     * <code>optional string name = 5;</code>
-     *
-     * @return The bytes for name.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-            name_ = b;
-            return b;
-        } else {
-            return (com.google.protobuf.ByteString) ref;
-        }
-    }
-
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -262,9 +211,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt64(4, lastUpdatedDate_);
-        }
-        if (((bitField0_ & 0x00000004) != 0)) {
-            com.google.protobuf.GeneratedMessage.writeString(output, 5, name_);
         }
         getUnknownFields().writeTo(output);
     }
@@ -309,9 +255,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(4, lastUpdatedDate_);
         }
-        if (((bitField0_ & 0x00000004) != 0)) {
-            size += com.google.protobuf.GeneratedMessage.computeStringSize(5, name_);
-        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -348,14 +291,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                 return false;
             }
         }
-        if (hasName() != other.hasName()) {
-            return false;
-        }
-        if (hasName()) {
-            if (!getName().equals(other.getName())) {
-                return false;
-            }
-        }
         return getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -381,10 +316,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         if (hasLastUpdatedDate()) {
             hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getLastUpdatedDate());
-        }
-        if (hasName()) {
-            hash = (37 * hash) + NAME_FIELD_NUMBER;
-            hash = (53 * hash) + getName().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -532,7 +463,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
             blocked_ = false;
             groupIndexes_ = emptyIntList();
             lastUpdatedDate_ = 0L;
-            name_ = "";
             return this;
         }
 
@@ -589,10 +519,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000002;
             }
-            if (((from_bitField0_ & 0x00000010) != 0)) {
-                result.name_ = name_;
-                to_bitField0_ |= 0x00000004;
-            }
             result.bitField0_ |= to_bitField0_;
         }
 
@@ -640,11 +566,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
             }
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());
-            }
-            if (other.hasName()) {
-                name_ = other.name_;
-                bitField0_ |= 0x00000010;
-                onChanged();
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
@@ -706,10 +627,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000008;
                         } // case 32
-                        case 42 -> {
-                            name_ = input.readStringRequireUtf8();
-                            bitField0_ |= 0x00000010;
-                        } // case 42
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -1009,96 +926,6 @@ public final class QueryRelationshipsRequest extends com.google.protobuf.Generat
         public Builder clearLastUpdatedDate() {
             bitField0_ &= ~0x00000008;
             lastUpdatedDate_ = 0L;
-            onChanged();
-            return this;
-        }
-
-        private java.lang.Object name_ = "";
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @return Whether the name field is set.
-         */
-        public boolean hasName() {
-            return ((bitField0_ & 0x00000010) != 0);
-        }
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @return The name.
-         */
-        public java.lang.String getName() {
-            java.lang.Object ref = name_;
-            if (!(ref instanceof java.lang.String)) {
-                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
-                java.lang.String s = bs.toStringUtf8();
-                name_ = s;
-                return s;
-            } else {
-                return (java.lang.String) ref;
-            }
-        }
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @return The bytes for name.
-         */
-        public com.google.protobuf.ByteString getNameBytes() {
-            java.lang.Object ref = name_;
-            if (ref instanceof String) {
-                com.google.protobuf.ByteString b =
-                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
-                name_ = b;
-                return b;
-            } else {
-                return (com.google.protobuf.ByteString) ref;
-            }
-        }
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @param value The name to set.
-         * @return This builder for chaining.
-         */
-        public Builder setName(java.lang.String value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            name_ = value;
-            bitField0_ |= 0x00000010;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @return This builder for chaining.
-         */
-        public Builder clearName() {
-            name_ = getDefaultInstance().getName();
-            bitField0_ &= ~0x00000010;
-            onChanged();
-            return this;
-        }
-
-        /**
-         * <code>optional string name = 5;</code>
-         *
-         * @param value The bytes for name to set.
-         * @return This builder for chaining.
-         */
-        public Builder setNameBytes(com.google.protobuf.ByteString value) {
-            if (value == null) {
-                throw new NullPointerException();
-            }
-            checkByteStringIsUtf8(value);
-            name_ = value;
-            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }

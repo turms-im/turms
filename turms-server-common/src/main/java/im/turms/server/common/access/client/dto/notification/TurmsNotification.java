@@ -28,8 +28,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 TurmsNotification.class.getName());
     }
@@ -554,6 +554,68 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         im.turms.server.common.access.client.dto.model.storage.StorageResourceInfosOrBuilder getStorageResourceInfosOrBuilder();
 
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return Whether the conversationSettingsList field is set.
+         */
+        boolean hasConversationSettingsList();
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return The conversationSettingsList.
+         */
+        im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList getConversationSettingsList();
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsListOrBuilder getConversationSettingsListOrBuilder();
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return Whether the userSettings field is set.
+         */
+        boolean hasUserSettings();
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return The userSettings.
+         */
+        im.turms.server.common.access.client.dto.model.user.UserSettings getUserSettings();
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        im.turms.server.common.access.client.dto.model.user.UserSettingsOrBuilder getUserSettingsOrBuilder();
+
         im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.KindCase getKindCase();
     }
 
@@ -568,8 +630,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
-                    /* minor= */ 26,
-                    /* patch= */ 1,
+                    /* minor= */ 27,
+                    /* patch= */ 0,
                     /* suffix= */ "",
                     Data.class.getName());
         }
@@ -622,6 +684,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             GROUPS_WITH_VERSION(20),
             MEETINGS(40),
             STORAGE_RESOURCE_INFOS(50),
+            CONVERSATION_SETTINGS_LIST(200),
+            USER_SETTINGS(400),
             KIND_NOT_SET(0);
 
             private final int value;
@@ -664,6 +728,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     case 20 -> GROUPS_WITH_VERSION;
                     case 40 -> MEETINGS;
                     case 50 -> STORAGE_RESOURCE_INFOS;
+                    case 200 -> CONVERSATION_SETTINGS_LIST;
+                    case 400 -> USER_SETTINGS;
                     case 0 -> KIND_NOT_SET;
                     default -> null;
                 };
@@ -1598,6 +1664,106 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     .getDefaultInstance();
         }
 
+        public static final int CONVERSATION_SETTINGS_LIST_FIELD_NUMBER = 200;
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return Whether the conversationSettingsList field is set.
+         */
+        @java.lang.Override
+        public boolean hasConversationSettingsList() {
+            return kindCase_ == 200;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return The conversationSettingsList.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList getConversationSettingsList() {
+            if (kindCase_ == 200) {
+                return (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                    .getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsListOrBuilder getConversationSettingsListOrBuilder() {
+            if (kindCase_ == 200) {
+                return (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                    .getDefaultInstance();
+        }
+
+        public static final int USER_SETTINGS_FIELD_NUMBER = 400;
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return Whether the userSettings field is set.
+         */
+        @java.lang.Override
+        public boolean hasUserSettings() {
+            return kindCase_ == 400;
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return The userSettings.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.user.UserSettings getUserSettings() {
+            if (kindCase_ == 400) {
+                return (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.user.UserSettings
+                    .getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.model.user.UserSettingsOrBuilder getUserSettingsOrBuilder() {
+            if (kindCase_ == 400) {
+                return (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_;
+            }
+            return im.turms.server.common.access.client.dto.model.user.UserSettings
+                    .getDefaultInstance();
+        }
+
         private byte memoizedIsInitialized = -1;
 
         @java.lang.Override
@@ -1703,6 +1869,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 output.writeMessage(50,
                         (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
             }
+            if (kindCase_ == 200) {
+                output.writeMessage(200,
+                        (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_);
+            }
+            if (kindCase_ == 400) {
+                output.writeMessage(400,
+                        (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_);
+            }
             getUnknownFields().writeTo(output);
         }
 
@@ -1799,6 +1973,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             if (kindCase_ == 50) {
                 size += com.google.protobuf.CodedOutputStream.computeMessageSize(50,
                         (im.turms.server.common.access.client.dto.model.storage.StorageResourceInfos) kind_);
+            }
+            if (kindCase_ == 200) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(200,
+                        (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_);
+            }
+            if (kindCase_ == 400) {
+                size += com.google.protobuf.CodedOutputStream.computeMessageSize(400,
+                        (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSize = size;
@@ -1935,6 +2117,17 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                         return false;
                     }
                 }
+                case 200 -> {
+                    if (!getConversationSettingsList()
+                            .equals(other.getConversationSettingsList())) {
+                        return false;
+                    }
+                }
+                case 400 -> {
+                    if (!getUserSettings().equals(other.getUserSettings())) {
+                        return false;
+                    }
+                }
                 default -> {
                 }
             }
@@ -2036,6 +2229,14 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 case 50 -> {
                     hash = (37 * hash) + STORAGE_RESOURCE_INFOS_FIELD_NUMBER;
                     hash = (53 * hash) + getStorageResourceInfos().hashCode();
+                }
+                case 200 -> {
+                    hash = (37 * hash) + CONVERSATION_SETTINGS_LIST_FIELD_NUMBER;
+                    hash = (53 * hash) + getConversationSettingsList().hashCode();
+                }
+                case 400 -> {
+                    hash = (37 * hash) + USER_SETTINGS_FIELD_NUMBER;
+                    hash = (53 * hash) + getUserSettings().hashCode();
                 }
                 default -> {
                 }
@@ -2245,6 +2446,12 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 if (storageResourceInfosBuilder_ != null) {
                     storageResourceInfosBuilder_.clear();
                 }
+                if (conversationSettingsListBuilder_ != null) {
+                    conversationSettingsListBuilder_.clear();
+                }
+                if (userSettingsBuilder_ != null) {
+                    userSettingsBuilder_.clear();
+                }
                 kindCase_ = 0;
                 kind_ = null;
                 return this;
@@ -2353,6 +2560,12 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 if (kindCase_ == 50 && storageResourceInfosBuilder_ != null) {
                     result.kind_ = storageResourceInfosBuilder_.build();
                 }
+                if (kindCase_ == 200 && conversationSettingsListBuilder_ != null) {
+                    result.kind_ = conversationSettingsListBuilder_.build();
+                }
+                if (kindCase_ == 400 && userSettingsBuilder_ != null) {
+                    result.kind_ = userSettingsBuilder_.build();
+                }
             }
 
             @java.lang.Override
@@ -2414,6 +2627,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     case MEETINGS -> mergeMeetings(other.getMeetings());
                     case STORAGE_RESOURCE_INFOS ->
                         mergeStorageResourceInfos(other.getStorageResourceInfos());
+                    case CONVERSATION_SETTINGS_LIST ->
+                        mergeConversationSettingsList(other.getConversationSettingsList());
+                    case USER_SETTINGS -> mergeUserSettings(other.getUserSettings());
                     case KIND_NOT_SET -> {
                     }
                 }
@@ -2562,6 +2778,17 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                                         extensionRegistry);
                                 kindCase_ = 50;
                             } // case 402
+                            case 1602 -> {
+                                input.readMessage(
+                                        getConversationSettingsListFieldBuilder().getBuilder(),
+                                        extensionRegistry);
+                                kindCase_ = 200;
+                            } // case 1602
+                            case 3202 -> {
+                                input.readMessage(getUserSettingsFieldBuilder().getBuilder(),
+                                        extensionRegistry);
+                                kindCase_ = 400;
+                            } // case 3202
                             default -> {
                                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                     done = true; // was an endgroup tag
@@ -6162,6 +6389,396 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 kindCase_ = 50;
                 onChanged();
                 return storageResourceInfosBuilder_;
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList, im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsListOrBuilder> conversationSettingsListBuilder_;
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             *
+             * @return Whether the conversationSettingsList field is set.
+             */
+            @java.lang.Override
+            public boolean hasConversationSettingsList() {
+                return kindCase_ == 200;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             *
+             * @return The conversationSettingsList.
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList getConversationSettingsList() {
+                if (conversationSettingsListBuilder_ == null) {
+                    if (kindCase_ == 200) {
+                        return (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                            .getDefaultInstance();
+                } else {
+                    if (kindCase_ == 200) {
+                        return conversationSettingsListBuilder_.getMessage();
+                    }
+                    return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder setConversationSettingsList(
+                    im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList value) {
+                if (conversationSettingsListBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    kind_ = value;
+                    onChanged();
+                } else {
+                    conversationSettingsListBuilder_.setMessage(value);
+                }
+                kindCase_ = 200;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder setConversationSettingsList(
+                    im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList.Builder builderForValue) {
+                if (conversationSettingsListBuilder_ == null) {
+                    kind_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    conversationSettingsListBuilder_.setMessage(builderForValue.build());
+                }
+                kindCase_ = 200;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder mergeConversationSettingsList(
+                    im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList value) {
+                if (conversationSettingsListBuilder_ == null) {
+                    if (kindCase_ == 200
+                            && kind_ != im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                                    .getDefaultInstance()) {
+                        kind_ = im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                                .newBuilder(
+                                        (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_)
+                                .mergeFrom(value)
+                                .buildPartial();
+                    } else {
+                        kind_ = value;
+                    }
+                    onChanged();
+                } else {
+                    if (kindCase_ == 200) {
+                        conversationSettingsListBuilder_.mergeFrom(value);
+                    } else {
+                        conversationSettingsListBuilder_.setMessage(value);
+                    }
+                }
+                kindCase_ = 200;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder clearConversationSettingsList() {
+                if (conversationSettingsListBuilder_ == null) {
+                    if (kindCase_ == 200) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                        onChanged();
+                    }
+                } else {
+                    if (kindCase_ == 200) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                    }
+                    conversationSettingsListBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList.Builder getConversationSettingsListBuilder() {
+                return getConversationSettingsListFieldBuilder().getBuilder();
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsListOrBuilder getConversationSettingsListOrBuilder() {
+                if ((kindCase_ == 200) && (conversationSettingsListBuilder_ != null)) {
+                    return conversationSettingsListBuilder_.getMessageOrBuilder();
+                } else {
+                    if (kindCase_ == 200) {
+                        return (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList, im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList.Builder, im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsListOrBuilder> getConversationSettingsListFieldBuilder() {
+                if (conversationSettingsListBuilder_ == null) {
+                    if (!(kindCase_ == 200)) {
+                        kind_ = im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList
+                                .getDefaultInstance();
+                    }
+                    conversationSettingsListBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                            (im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList) kind_,
+                            getParentForChildren(),
+                            isClean());
+                    kind_ = null;
+                }
+                kindCase_ = 200;
+                onChanged();
+                return conversationSettingsListBuilder_;
+            }
+
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserSettings, im.turms.server.common.access.client.dto.model.user.UserSettings.Builder, im.turms.server.common.access.client.dto.model.user.UserSettingsOrBuilder> userSettingsBuilder_;
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             *
+             * @return Whether the userSettings field is set.
+             */
+            @java.lang.Override
+            public boolean hasUserSettings() {
+                return kindCase_ == 400;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             *
+             * @return The userSettings.
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.user.UserSettings getUserSettings() {
+                if (userSettingsBuilder_ == null) {
+                    if (kindCase_ == 400) {
+                        return (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.user.UserSettings
+                            .getDefaultInstance();
+                } else {
+                    if (kindCase_ == 400) {
+                        return userSettingsBuilder_.getMessage();
+                    }
+                    return im.turms.server.common.access.client.dto.model.user.UserSettings
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder setUserSettings(
+                    im.turms.server.common.access.client.dto.model.user.UserSettings value) {
+                if (userSettingsBuilder_ == null) {
+                    if (value == null) {
+                        throw new NullPointerException();
+                    }
+                    kind_ = value;
+                    onChanged();
+                } else {
+                    userSettingsBuilder_.setMessage(value);
+                }
+                kindCase_ = 400;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder setUserSettings(
+                    im.turms.server.common.access.client.dto.model.user.UserSettings.Builder builderForValue) {
+                if (userSettingsBuilder_ == null) {
+                    kind_ = builderForValue.build();
+                    onChanged();
+                } else {
+                    userSettingsBuilder_.setMessage(builderForValue.build());
+                }
+                kindCase_ = 400;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder mergeUserSettings(
+                    im.turms.server.common.access.client.dto.model.user.UserSettings value) {
+                if (userSettingsBuilder_ == null) {
+                    if (kindCase_ == 400
+                            && kind_ != im.turms.server.common.access.client.dto.model.user.UserSettings
+                                    .getDefaultInstance()) {
+                        kind_ = im.turms.server.common.access.client.dto.model.user.UserSettings
+                                .newBuilder(
+                                        (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_)
+                                .mergeFrom(value)
+                                .buildPartial();
+                    } else {
+                        kind_ = value;
+                    }
+                    onChanged();
+                } else {
+                    if (kindCase_ == 400) {
+                        userSettingsBuilder_.mergeFrom(value);
+                    } else {
+                        userSettingsBuilder_.setMessage(value);
+                    }
+                }
+                kindCase_ = 400;
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder clearUserSettings() {
+                if (userSettingsBuilder_ == null) {
+                    if (kindCase_ == 400) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                        onChanged();
+                    }
+                } else {
+                    if (kindCase_ == 400) {
+                        kindCase_ = 0;
+                        kind_ = null;
+                    }
+                    userSettingsBuilder_.clear();
+                }
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public im.turms.server.common.access.client.dto.model.user.UserSettings.Builder getUserSettingsBuilder() {
+                return getUserSettingsFieldBuilder().getBuilder();
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            @java.lang.Override
+            public im.turms.server.common.access.client.dto.model.user.UserSettingsOrBuilder getUserSettingsOrBuilder() {
+                if ((kindCase_ == 400) && (userSettingsBuilder_ != null)) {
+                    return userSettingsBuilder_.getMessageOrBuilder();
+                } else {
+                    if (kindCase_ == 400) {
+                        return (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_;
+                    }
+                    return im.turms.server.common.access.client.dto.model.user.UserSettings
+                            .getDefaultInstance();
+                }
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.model.user.UserSettings, im.turms.server.common.access.client.dto.model.user.UserSettings.Builder, im.turms.server.common.access.client.dto.model.user.UserSettingsOrBuilder> getUserSettingsFieldBuilder() {
+                if (userSettingsBuilder_ == null) {
+                    if (!(kindCase_ == 400)) {
+                        kind_ = im.turms.server.common.access.client.dto.model.user.UserSettings
+                                .getDefaultInstance();
+                    }
+                    userSettingsBuilder_ = new com.google.protobuf.SingleFieldBuilder<>(
+                            (im.turms.server.common.access.client.dto.model.user.UserSettings) kind_,
+                            getParentForChildren(),
+                            isClean());
+                    kind_ = null;
+                }
+                kindCase_ = 400;
+                onChanged();
+                return userSettingsBuilder_;
             }
 
             // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsNotification.Data)

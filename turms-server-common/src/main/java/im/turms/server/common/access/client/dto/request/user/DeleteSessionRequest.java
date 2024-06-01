@@ -28,8 +28,8 @@ public final class DeleteSessionRequest extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 DeleteSessionRequest.class.getName());
     }
@@ -320,13 +320,13 @@ public final class DeleteSessionRequest extends com.google.protobuf.GeneratedMes
                 boolean done = false;
                 while (!done) {
                     int tag = input.readTag();
-                    switch (tag) {
-                        case 0 -> done = true;
-                        default -> {
-                            if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                                done = true; // was an endgroup tag
-                            }
-                        } // default:
+                    // default:
+                    if (tag == 0) {
+                        done = true;
+                    } else {
+                        if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                            done = true; // was an endgroup tag
+                        }
                     } // switch (tag)
                 } // while (!done)
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {

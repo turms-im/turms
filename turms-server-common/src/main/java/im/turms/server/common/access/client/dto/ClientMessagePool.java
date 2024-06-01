@@ -21,8 +21,11 @@ import io.netty.util.concurrent.FastThreadLocal;
 
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.common.StringsWithVersion;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.model.conference.Meeting;
 import im.turms.server.common.access.client.dto.model.conference.Meetings;
+import im.turms.server.common.access.client.dto.model.conversation.ConversationSettings;
+import im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsList;
 import im.turms.server.common.access.client.dto.model.conversation.Conversations;
 import im.turms.server.common.access.client.dto.model.conversation.GroupConversation;
 import im.turms.server.common.access.client.dto.model.conversation.PrivateConversation;
@@ -56,6 +59,7 @@ import im.turms.server.common.access.client.dto.model.user.UserRelationship;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroup;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipsWithVersion;
+import im.turms.server.common.access.client.dto.model.user.UserSettings;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.conference.UpdateMeetingInvitationRequest;
@@ -84,6 +88,22 @@ public class ClientMessagePool {
                 @Override
                 protected Conversations.Builder initialValue() {
                     return Conversations.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<ConversationSettings.Builder> CONVERSATION_SETTINGS =
+            new FastThreadLocal<>() {
+                @Override
+                protected ConversationSettings.Builder initialValue() {
+                    return ConversationSettings.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<ConversationSettingsList.Builder> CONVERSATION_SETTINGS_LIST =
+            new FastThreadLocal<>() {
+                @Override
+                protected ConversationSettingsList.Builder initialValue() {
+                    return ConversationSettingsList.newBuilder();
                 }
             };
 
@@ -448,8 +468,33 @@ public class ClientMessagePool {
                 }
             };
 
+    private static final FastThreadLocal<UserSettings.Builder> USER_SETTINGS =
+            new FastThreadLocal<>() {
+                @Override
+                protected UserSettings.Builder initialValue() {
+                    return UserSettings.newBuilder();
+                }
+            };
+
+    private static final FastThreadLocal<Value.Builder> VALUE = new FastThreadLocal<>() {
+        @Override
+        protected Value.Builder initialValue() {
+            return Value.newBuilder();
+        }
+    };
+
     public static Conversations.Builder getConversationsBuilder() {
         return CONVERSATIONS.get()
+                .clear();
+    }
+
+    public static ConversationSettings.Builder getConversationSettingsBuilder() {
+        return CONVERSATION_SETTINGS.get()
+                .clear();
+    }
+
+    public static ConversationSettingsList.Builder getConversationSettingsListBuilder() {
+        return CONVERSATION_SETTINGS_LIST.get()
                 .clear();
     }
 
@@ -680,6 +725,16 @@ public class ClientMessagePool {
 
     public static UserRelationshipsWithVersion.Builder getUserRelationshipsWithVersionBuilder() {
         return USER_RELATIONSHIPS_WITH_VERSION.get()
+                .clear();
+    }
+
+    public static UserSettings.Builder getUserSettingsBuilder() {
+        return USER_SETTINGS.get()
+                .clear();
+    }
+
+    public static Value.Builder getValueBuilder() {
+        return VALUE.get()
                 .clear();
     }
 

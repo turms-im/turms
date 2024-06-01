@@ -26,22 +26,22 @@ public interface UpdateConversationRequestOrBuilder extends
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return Whether the targetId field is set.
+     * @return Whether the userId field is set.
      */
-    boolean hasTargetId();
+    boolean hasUserId();
 
     /**
      * <pre>
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return The targetId.
+     * @return The userId.
      */
-    long getTargetId();
+    long getUserId();
 
     /**
      * <code>optional int64 group_id = 2;</code>

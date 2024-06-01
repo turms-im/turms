@@ -28,8 +28,8 @@ public final class QueryGroupMembersRequest extends com.google.protobuf.Generate
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 26,
-                /* patch= */ 1,
+                /* minor= */ 27,
+                /* patch= */ 0,
                 /* suffix= */ "",
                 QueryGroupMembersRequest.class.getName());
     }
