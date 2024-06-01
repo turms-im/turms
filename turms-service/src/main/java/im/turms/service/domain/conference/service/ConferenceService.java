@@ -266,6 +266,9 @@ public class ConferenceService {
         } catch (Exception e) {
             return Mono.error(e);
         }
+        if (!hasConferenceServiceProvider()) {
+            return CONFERENCE_NOT_IMPLEMENTED;
+        }
         Mono<Void> check;
         if (userId == null) {
             if (groupId == null) {
@@ -415,6 +418,9 @@ public class ConferenceService {
             return Mono
                     .error(ResponseException.get(ResponseStatusCode.CANCELING_MEETING_IS_DISABLED));
         }
+        if (!hasConferenceServiceProvider()) {
+            return CONFERENCE_NOT_IMPLEMENTED;
+        }
         return meetingRepository.findById(meetingId)
                 .switchIfEmpty(ResponseExceptionPublisherPool.resourceNotFound())
                 .flatMap(meeting -> {
@@ -538,6 +544,9 @@ public class ConferenceService {
             Validator.notNull(responseAction, "responseAction");
         } catch (Exception e) {
             return Mono.error(e);
+        }
+        if (!hasConferenceServiceProvider()) {
+            return CONFERENCE_NOT_IMPLEMENTED;
         }
         if (ResponseAction.IGNORE == responseAction
                 || ResponseAction.UNRECOGNIZED == responseAction) {
@@ -732,6 +741,10 @@ public class ConferenceService {
 
     private boolean isMeetingStarted(@NotNull Date startDate, long now) {
         return startDate.getTime() <= now;
+    }
+
+    private boolean hasConferenceServiceProvider() {
+        return pluginManager.hasRunningExtensions(ConferenceServiceProvider.class);
     }
 
     private im.turms.server.common.access.client.dto.model.conference.Meeting getMeetingInfoForParticipant(
