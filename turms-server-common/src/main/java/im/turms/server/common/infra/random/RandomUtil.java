@@ -19,6 +19,15 @@ package im.turms.server.common.infra.random;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import im.turms.server.common.infra.lang.StringUtil;
+
+import static im.turms.server.common.infra.lang.StringUtil.ALPHABETIC_TABLE;
+import static im.turms.server.common.infra.lang.StringUtil.ALPHABETIC_TABLE_LENGTH;
+import static im.turms.server.common.infra.lang.StringUtil.ALPHANUMERIC_TABLE;
+import static im.turms.server.common.infra.lang.StringUtil.ALPHANUMERIC_TABLE_LENGTH;
+import static im.turms.server.common.infra.lang.StringUtil.NUMERIC_TABLE;
+import static im.turms.server.common.infra.lang.StringUtil.NUMERIC_TABLE_LENGTH;
+
 /**
  * @author James Chen
  */
@@ -41,6 +50,44 @@ public final class RandomUtil {
         return l == 0L
                 ? 1L
                 : l;
+    }
+
+    public static String nextAlphabeticString(int minLengthInclusive, int maxLengthExclusive) {
+        return nextString(minLengthInclusive,
+                maxLengthExclusive,
+                ALPHABETIC_TABLE,
+                ALPHABETIC_TABLE_LENGTH);
+    }
+
+    public static String nextAlphanumericString(int minLengthInclusive, int maxLengthExclusive) {
+        return nextString(minLengthInclusive,
+                maxLengthExclusive,
+                ALPHANUMERIC_TABLE,
+                ALPHANUMERIC_TABLE_LENGTH);
+    }
+
+    public static String nextNumericString(int minLengthInclusive, int maxLengthExclusive) {
+        return nextString(minLengthInclusive,
+                maxLengthExclusive,
+                NUMERIC_TABLE,
+                NUMERIC_TABLE_LENGTH);
+    }
+
+    private static String nextString(
+            int minLengthInclusive,
+            int maxLengthExclusive,
+            byte[] table,
+            int tableLength) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int length = random.nextInt(minLengthInclusive, maxLengthExclusive);
+        if (length == 0) {
+            return "";
+        }
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++) {
+            bytes[i] = table[random.nextInt(tableLength)];
+        }
+        return StringUtil.newLatin1String(bytes);
     }
 
 }

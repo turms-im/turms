@@ -45,6 +45,24 @@ public final class StringUtil {
     private static final byte SINGLE_TOKEN = '?';
     private static final byte MULTIPLE_TOKEN = '*';
 
+    // @formatter:off
+    public static final byte[] ALPHABETIC_TABLE = {
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
+    public static final byte[] ALPHANUMERIC_TABLE = {
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
+    public static final byte[] NUMERIC_TABLE = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    };
+    // @formatter:on
+    public static final int ALPHABETIC_TABLE_LENGTH = ALPHABETIC_TABLE.length;
+    public static final int ALPHANUMERIC_TABLE_LENGTH = ALPHANUMERIC_TABLE.length;
+    public static final int NUMERIC_TABLE_LENGTH = NUMERIC_TABLE.length;
+
     private static final Unsafe UNSAFE = UnsafeUtil.UNSAFE;
     private static final long STRING_VALUE_OFFSET;
     private static final long STRING_CODER_OFFSET;

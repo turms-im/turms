@@ -30,7 +30,6 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
 import com.mongodb.reactivestreams.client.ClientSession;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -60,6 +59,7 @@ import im.turms.server.common.infra.property.env.service.business.conference.mee
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.PasswordProperties;
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.QuotaProperties;
 import im.turms.server.common.infra.property.env.service.business.conference.meeting.SchedulingProperties;
+import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
@@ -888,10 +888,10 @@ public class ConferenceService {
     private String generatePassword() {
         return switch (passwordType) {
             case ALPHANUMERIC ->
-                RandomStringUtils.randomAlphanumeric(passwordMinLength, passwordMaxLength);
-            case NUMERIC -> RandomStringUtils.randomNumeric(passwordMinLength, passwordMaxLength);
+                RandomUtil.nextAlphanumericString(passwordMinLength, passwordMaxLength);
+            case NUMERIC -> RandomUtil.nextNumericString(passwordMinLength, passwordMaxLength);
             case ALPHABETIC ->
-                RandomStringUtils.randomAlphabetic(passwordMinLength, passwordMaxLength);
+                RandomUtil.nextAlphabeticString(passwordMinLength, passwordMaxLength);
         };
     }
 }
