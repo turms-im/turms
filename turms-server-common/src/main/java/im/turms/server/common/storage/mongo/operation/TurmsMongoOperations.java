@@ -125,6 +125,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     // CRUD
     private static final CountOptions DEFAULT_COUNT_OPTIONS = new CountOptions();
+    private static final CountOptions COUNT_OPTIONS_LIMIT_1 = new CountOptions().limit(1);
     private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
     private static final InsertManyOptions DEFAULT_INSERT_MANY_OPTIONS = new InsertManyOptions();
     private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
@@ -206,13 +207,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<Boolean> exists(Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> publisher = find(collection,
-                filter,
-                QueryOptions.newBuilder(2)
-                        .projection(ID_ONLY)
-                        .limit(1));
-        return Mono.from(publisher)
-                .hasElement();
+        Publisher<Long> source = collection.countDocuments(filter, COUNT_OPTIONS_LIMIT_1);
+        return Mono.from(source)
+                .map(count -> count > 0);
     }
 
     // Count
