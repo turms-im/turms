@@ -129,6 +129,17 @@
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- TODO: Wait for spring-boot to fix the problem that it
+                            includes dependencies with "provided" scope in the fat jar:
+                            https://github.com/spring-projects/spring-boot/issues/13289 -->
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>repackage</id>

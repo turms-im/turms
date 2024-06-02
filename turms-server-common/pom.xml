@@ -48,6 +48,12 @@
         <dependency>
             <groupId>io.projectreactor.netty</groupId>
             <artifactId>reactor-netty</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.projectreactor.netty.incubator</groupId>
+                    <artifactId>reactor-netty-incubator-quic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
@@ -125,12 +131,6 @@
         <dependency>
             <groupId>io.projectreactor.addons</groupId>
             <artifactId>reactor-extra</artifactId>
-        </dependency>
-
-        <!-- Diagnostics -->
-        <dependency>
-            <groupId>io.projectreactor.tools</groupId>
-            <artifactId>blockhound</artifactId>
         </dependency>
 
         <!-- Observation -->
@@ -256,6 +256,16 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <dependencies>
+                <!-- Diagnostics -->
+                <dependency>
+                    <groupId>io.projectreactor.tools</groupId>
+                    <artifactId>blockhound</artifactId>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
