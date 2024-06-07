@@ -17,10 +17,13 @@
 
 package im.turms.server.common.infra.property.env.common.adminapi;
 
+import jakarta.validation.constraints.Min;
+
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.common.SslProperties;
+import im.turms.server.common.infra.property.metadata.Description;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -30,10 +33,27 @@ import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 @Data
 public class AdminHttpProperties {
 
+    @Description("The bind host")
     private String host = "0.0.0.0";
 
+    @Description("The bind port")
     private int port = -1;
 
+    @Description("The connect timeout")
+    @Min(0)
+    private int connectTimeoutMillis = 30 * 1000;
+
+    @Description("The idle timeout on the connection when it is waiting for an HTTP request to come. "
+            + "Once the timeout is reached, the connection will be closed")
+    @Min(0)
+    private int idleTimeoutMillis = 3 * 60 * 1000;
+
+    @Description("The read timeout on the connection when it is waiting for an HTTP request to be fully read. "
+            + "Once the timeout is reached, the connection will be closed")
+    @Min(0)
+    private int requestReadTimeoutMillis = 3 * 60 * 1000;
+
+    @Description("The max request body size in bytes")
     private int maxRequestBodySizeBytes = 10 * MB;
 
     @NestedConfigurationProperty

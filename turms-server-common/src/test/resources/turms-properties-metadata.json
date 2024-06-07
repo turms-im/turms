@@ -42,15 +42,33 @@
         "type": "boolean"
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -58,6 +76,15 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -379,15 +406,33 @@
         "type": "boolean"
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -395,6 +440,15 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -2417,15 +2471,33 @@
         "type": "boolean"
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -2433,6 +2505,15 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
           "global": false,
           "mutable": false,
           "sensitive": false,

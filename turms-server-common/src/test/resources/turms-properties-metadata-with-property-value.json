@@ -46,16 +46,36 @@
         "value": true
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 30000
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string",
           "value": "0.0.0.0"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -64,11 +84,21 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "int",
           "value": 5510
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
         }
       },
       "log": {
@@ -430,16 +460,36 @@
         "value": true
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 30000
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string",
           "value": "0.0.0.0"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -448,11 +498,21 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "int",
           "value": 9510
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
         }
       },
       "log": {
@@ -2790,16 +2850,36 @@
         "value": true
       },
       "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 30000
+        },
         "host": {
           "deprecated": false,
+          "description": "The bind host",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "string",
           "value": "0.0.0.0"
         },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
+        },
         "maxRequestBodySizeBytes": {
           "deprecated": false,
+          "description": "The max request body size in bytes",
           "global": false,
           "mutable": false,
           "sensitive": false,
@@ -2808,11 +2888,21 @@
         },
         "port": {
           "deprecated": false,
+          "description": "The bind port",
           "global": false,
           "mutable": false,
           "sensitive": false,
           "type": "int",
           "value": 8510
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int",
+          "value": 180000
         }
       },
       "log": {
