@@ -90,7 +90,7 @@ class JsPluginManagerTests {
         StepVerifier.create(actual)
                 .expectNextMatches(notifications -> {
                     assertThat(notifications).hasSize(1);
-                    TurmsNotification notification = notifications.get(0);
+                    TurmsNotification notification = notifications.getFirst();
                     assertThat(notifications).hasSize(1);
                     assertThat(notification.getCode()).isEqualTo(123);
                     assertThat(notification.getReason()).isEqualTo("reason");
@@ -157,7 +157,7 @@ class JsPluginManagerTests {
                 Collections.emptySet());
         List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
         assertThat(list).hasSize(1);
-        return list.get(0);
+        return list.getFirst();
     }
 
 }

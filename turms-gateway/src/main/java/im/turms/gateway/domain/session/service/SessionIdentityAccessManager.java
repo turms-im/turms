@@ -95,8 +95,7 @@ public class SessionIdentityAccessManager {
                             identityAccessManagementProperties.getLdap());
                 };
 
-        updateGlobalProperties(propertiesManager.getGlobalProperties());
-        propertiesManager.addGlobalPropertiesChangeListener(this::updateGlobalProperties);
+        propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateGlobalProperties);
     }
 
     private void updateGlobalProperties(TurmsProperties properties) {

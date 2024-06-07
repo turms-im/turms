@@ -87,14 +87,13 @@ public class MetricsController {
                 throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                         "Names must not be empty if tags are not empty");
             }
-            Collection<List<Meter>> metersList;
-            metersList = pool.findAllMeters()
+            Collection<List<Meter>> metersList = pool.findAllMeters()
                     .stream()
                     .collect(Collectors.groupingBy(meter -> meter.getId()
                             .getName()))
                     .values();
             List<MetricDTO> list = metersList.stream()
-                    .map(meters -> meters2Dto(meters.get(0)
+                    .map(meters -> meters2Dto(meters.getFirst()
                             .getId()
                             .getName(), meters, returnDescription, returnAvailableTags))
                     .collect(CollectorUtil.toList(metersList.size()));

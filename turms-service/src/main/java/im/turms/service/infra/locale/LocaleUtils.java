@@ -29,10 +29,11 @@ public final class LocaleUtils {
     private static final Map<String, Locale> ID_TO_LOCALE;
 
     static {
-        ID_TO_LOCALE = new HashMap<>(2048);
+        Map<String, Locale> idToLocale = new HashMap<>(2048);
         // Use "availableLocales()" to avoid unnecessary copy.
         Locale.availableLocales()
-                .forEach(locale -> ID_TO_LOCALE.put(locale.toLanguageTag(), locale));
+                .forEach(locale -> idToLocale.put(locale.toLanguageTag(), locale));
+        ID_TO_LOCALE = Map.copyOf(idToLocale);
     }
 
     private LocaleUtils() {

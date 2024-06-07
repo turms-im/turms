@@ -133,7 +133,7 @@ public class MongoContext {
     public <T> MongoCollection<T> getCollection(Class<T> entityClass) {
         MongoCollection<T> collection = (MongoCollection<T>) classToCollection.get(entityClass);
         if (collection == null) {
-            return (MongoCollection<T>) registerEntitiesByClasses(List.of(entityClass)).get(0)
+            return (MongoCollection<T>) registerEntitiesByClasses(List.of(entityClass)).getFirst()
                     .second();
         }
         return collection;
@@ -146,7 +146,7 @@ public class MongoContext {
     public <T> MongoEntity<T> getEntity(Class<T> entityClass) {
         MongoEntity<T> entity = (MongoEntity<T>) classToEntity.get(entityClass);
         if (entity == null) {
-            return (MongoEntity<T>) registerEntitiesByClasses(List.of(entityClass)).get(0)
+            return (MongoEntity<T>) registerEntitiesByClasses(List.of(entityClass)).getFirst()
                     .first();
         }
         return entity;

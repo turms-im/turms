@@ -715,8 +715,9 @@ public class ElasticsearchManager {
                         null));
         String finalIndex = index;
         return elasticsearchClient.putIndex(index, request)
-                .doOnSuccess(unused -> LOGGER.info("Created an index: "
-                        + finalIndex))
+                .doOnSuccess(unused -> LOGGER.info("Created an index: \""
+                        + finalIndex
+                        + "\""))
                 .onErrorResume(ErrorResponseException.class, e -> {
                     ErrorResponse errorResponse = e.getErrorResponse();
                     if ("resource_already_exists_exception".equals(errorResponse.error()

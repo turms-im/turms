@@ -403,7 +403,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         if (values.isEmpty()) {
             return Mono.empty();
         }
-        MongoCollection collection = context.getCollection(values.get(0)
+        MongoCollection collection = context.getCollection(values.getFirst()
                 .getClass());
         Publisher<InsertManyResult> source =
                 collection.insertMany(values, DEFAULT_INSERT_MANY_OPTIONS);
@@ -417,7 +417,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         if (values.isEmpty()) {
             return Mono.empty();
         }
-        MongoCollection collection = context.getCollection(values.get(0)
+        MongoCollection collection = context.getCollection(values.getFirst()
                 .getClass());
         Publisher<InsertManyResult> source = session == null
                 ? collection.insertMany(values, DEFAULT_INSERT_MANY_OPTIONS)

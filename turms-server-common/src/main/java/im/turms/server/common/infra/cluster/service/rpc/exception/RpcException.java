@@ -76,7 +76,7 @@ public final class RpcException extends StacklessException {
     public static RpcException get(
             RpcErrorCode errorCode,
             ResponseStatusCode statusCode,
-            String description) {
+            @Nullable String description) {
         if (description != null) {
             return new RpcException(errorCode, statusCode, description, null);
         }

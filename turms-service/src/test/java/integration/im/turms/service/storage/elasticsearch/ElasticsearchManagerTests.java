@@ -153,6 +153,7 @@ class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
         var idRef = new Object() {
             long id = 1L;
         };
+        when(node.getLocalMemberId()).thenReturn("fake-node-id");
         when(node.nextIncreasingId(any())).then(invocation -> idRef.id++);
 
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);

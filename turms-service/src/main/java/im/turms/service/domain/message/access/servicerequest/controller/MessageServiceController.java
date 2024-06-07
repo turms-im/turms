@@ -366,15 +366,15 @@ public class MessageServiceController extends BaseServiceController {
                             resultMono = resultMono.doOnSuccess(ignored -> {
                                 Mono<Void> mono = areGroupMessages
                                         ? conversationService
-                                                .upsertGroupConversationReadDate(messages.get(0)
+                                                .upsertGroupConversationReadDate(messages.getFirst()
                                                         .groupId(), userId, new Date())
                                         : conversationService.upsertPrivateConversationReadDate(
                                                 userId,
-                                                messages.get(0)
+                                                messages.getFirst()
                                                         .getTargetId(),
                                                 new Date());
                                 mono.subscribe(null, t -> {
-                                    Message message = messages.get(0);
+                                    Message message = messages.getFirst();
                                     if (areGroupMessages) {
                                         LOGGER.error(
                                                 "Caught an error while upserting the group conversation read date: {}",

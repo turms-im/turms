@@ -195,7 +195,7 @@ public class TurmsRedisClientManager {
                 ReferenceCountUtil.safeEnsureReleased(keysBuffer);
                 return Flux.error(e);
             }
-            TurmsRedisClient client = clients.get(0);
+            TurmsRedisClient client = clients.getFirst();
             Mono<T> eval = client.eval(script, keyCount, new CustomKeyBuffer(keysBuffer));
             return Flux.from(eval);
         }

@@ -142,7 +142,7 @@ class JavaPluginManagerTests {
                 propertiesManager,
                 Collections.emptySet());
         return manager.getExtensionPoints(MyExtensionPoint.class)
-                .get(0);
+                .getFirst();
     }
 
 }

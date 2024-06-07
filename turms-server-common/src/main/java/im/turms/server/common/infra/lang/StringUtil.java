@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SequencedCollection;
 import jakarta.annotation.Nullable;
 
 import sun.misc.Unsafe;
@@ -175,8 +176,8 @@ public final class StringUtil {
             return "[]";
         }
         if (itemCount == 1) {
-            Object obj = items instanceof List<?> list
-                    ? list.get(0)
+            Object obj = items instanceof SequencedCollection<?> collection
+                    ? collection.getFirst()
                     : items.iterator()
                             .next();
             if (obj instanceof String str) {
@@ -529,15 +530,15 @@ public final class StringUtil {
         return newLatin1String(bytes);
     }
 
-    public static boolean isBlank(String string) {
+    public static boolean isBlank(@Nullable String string) {
         return string == null || string.isBlank();
     }
 
-    public static boolean isNotBlank(String string) {
+    public static boolean isNotBlank(@Nullable String string) {
         return string != null && !string.isBlank();
     }
 
-    public static boolean isEmpty(String string) {
+    public static boolean isEmpty(@Nullable String string) {
         return string == null || string.isEmpty();
     }
 

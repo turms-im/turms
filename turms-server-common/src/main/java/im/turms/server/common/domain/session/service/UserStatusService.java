@@ -289,7 +289,7 @@ public class UserStatusService {
                     int size = userIdGenerator.estimatedSize();
                     Set<Long> nonexistentUserIds = CollectionUtil.newSetWithExpectedSize(size);
                     for (List<ByteBuf> buffers : objects) {
-                        if (buffers.size() == 1 && buffers.get(0) == null) {
+                        if (buffers.size() == 1 && buffers.getFirst() == null) {
                             return Collections.emptySet();
                         }
                         for (ByteBuf buffer : buffers) {

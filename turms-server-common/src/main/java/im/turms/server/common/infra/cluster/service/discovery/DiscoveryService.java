@@ -872,7 +872,7 @@ public class DiscoveryService implements ClusterService {
                 }
             }
         }
-        return electNewLeaderByNodeId(qualifiedMembers.get(0)
+        return electNewLeaderByNodeId(qualifiedMembers.getFirst()
                 .getNodeId());
     }
 

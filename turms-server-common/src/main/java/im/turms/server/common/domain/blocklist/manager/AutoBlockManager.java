@@ -93,7 +93,7 @@ public class AutoBlockManager<T> {
                 onClientBlocked.accept(id, status.currentLevelProperties.getBlockDurationSeconds());
             } else if (status.triggerTimes >= blockTriggerTimes) {
                 status.currentLevel = 0;
-                status.currentLevelProperties = levels.get(0);
+                status.currentLevelProperties = levels.getFirst();
                 status.triggerTimes = 0;
                 onClientBlocked.accept(id, status.currentLevelProperties.getBlockDurationSeconds());
             } else {

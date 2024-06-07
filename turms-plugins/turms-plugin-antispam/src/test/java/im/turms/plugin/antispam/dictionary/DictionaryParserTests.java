@@ -57,7 +57,7 @@ class DictionaryParserTests {
         Date epoch = new Date(0);
 
         assertThat(words).hasSize(4);
-        assertThat((ExtendedWord) words.get(0)).isEqualTo(ExtendedWord.builder()
+        assertThat((ExtendedWord) words.getFirst()).isEqualTo(ExtendedWord.builder()
                 .setWord("你好".toCharArray())
                 .setId("123")
                 .setLevel(1)

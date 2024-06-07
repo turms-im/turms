@@ -97,7 +97,7 @@ public class GroupQuestionController extends BaseController {
                                 addGroupJoinQuestionDTO.question(),
                                 addGroupJoinQuestionDTO.answers(),
                                 addGroupJoinQuestionDTO.score())))
-                .map(questions -> questions.get(0));
+                .map(List::getFirst);
         return HttpHandlerResult.okIfTruthy(createMono);
     }
 

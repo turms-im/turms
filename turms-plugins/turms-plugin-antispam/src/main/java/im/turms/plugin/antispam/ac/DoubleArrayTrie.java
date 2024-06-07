@@ -34,8 +34,9 @@ public class DoubleArrayTrie {
     private static final float GROW_FACTOR = 1.5f;
 
     /**
-     * nextState = base[currentState] + code value: 0 if unused; positive for termination; negative
-     * for leaf range: [0, currentMaxPos]
+     * nextState = base[currentState] + code
+     * <p>
+     * value: 0 if unused; positive for termination; negative for leaf range: [0, currentMaxPos]
      */
     int[] base;
     /**
@@ -122,7 +123,7 @@ public class DoubleArrayTrie {
     private void insert(Queue<SiblingGroup> siblingGroupQueue, SiblingGroup siblingGroup) {
         List<NodeEntry> siblings = siblingGroup.siblings;
         int siblingCount = siblings.size();
-        int firstSiblingPos = siblings.get(0).pos;
+        int firstSiblingPos = siblings.getFirst().pos;
         int lastSiblingPos = siblingCount > 1
                 ? siblings.get(siblingCount - 1).pos
                 : firstSiblingPos;

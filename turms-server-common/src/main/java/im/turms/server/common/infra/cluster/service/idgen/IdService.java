@@ -102,7 +102,7 @@ public class IdService implements ClusterService {
         Integer localWorkerId = discoveryService.getLocalServiceMemberIndex();
         if (localWorkerId == null) {
             // Use the previous worker ID instead of 0
-            // to decrease chance of collision
+            // to decrease the chance of collision.
             return previousLocalWorkerId;
         }
         if (localWorkerId >= SnowflakeIdGenerator.MAX_WORKER_ID) {

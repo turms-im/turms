@@ -375,15 +375,9 @@ public class UserServiceController extends BaseServiceController {
                         if (!changed) {
                             return Mono.just(RequestHandlerResult.OK);
                         }
-                        if (!notifyNonBlockedRelatedUsersOfUserInfoUpdated) {
-                            return Mono.just(RequestHandlerResult.of(
-                                    notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
-                                    clientRequest.turmsRequest()));
-                        }
-                        // TODO: make configurable.
-                        boolean shouldNotifyNonBlockedRelatedUsers =
-                                name != null || intro != null || profilePicture != null;
-                        if (!shouldNotifyNonBlockedRelatedUsers) {
+                        if (!notifyNonBlockedRelatedUsersOfUserInfoUpdated
+                                // TODO: make configurable.
+                                || (name == null && intro == null && profilePicture == null)) {
                             return Mono.just(RequestHandlerResult.of(
                                     notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
                                     clientRequest.turmsRequest()));

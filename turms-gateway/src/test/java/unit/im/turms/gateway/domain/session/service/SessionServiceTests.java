@@ -59,6 +59,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -273,6 +274,8 @@ class SessionServiceTests {
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getGlobalProperties()).thenReturn(properties);
         when(propertiesManager.getLocalProperties()).thenReturn(properties);
+        doCallRealMethod().when(propertiesManager)
+                .notifyAndAddGlobalPropertiesChangeListener(any());
 
         PluginManager pluginManager = mock(PluginManager.class);
         when(pluginManager.invokeExtensionPointsSimultaneously(any(), any(), any()))

@@ -51,7 +51,7 @@ public class PolicyManager {
                             + MAX_ALLOWED_STATEMENTS);
         }
         if (statementCount == 1) {
-            PolicyStatement statement = statements.get(0);
+            PolicyStatement statement = statements.getFirst();
             if (statement.effect() != PolicyStatementEffect.ALLOW) {
                 return Collections.emptySet();
             }

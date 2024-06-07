@@ -70,7 +70,7 @@ public class OcrController {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Only support one image");
         }
-        MultipartFile file = files.get(0);
+        MultipartFile file = files.getFirst();
         String imagePath = file.file()
                 .toPath()
                 .toAbsolutePath()
@@ -104,7 +104,7 @@ public class OcrController {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Only support one image");
         }
-        MultipartFile file = files.get(0);
+        MultipartFile file = files.getFirst();
         Path path = ocrService.ocrAndWriteToFile(file.file());
         return new FileResource("result.png", path, t -> {
             try {

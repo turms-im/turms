@@ -56,7 +56,7 @@ class PolicyDeserializerTests {
         Policy policy = PolicyDeserializer.parse(map);
         assertThat(policy.statements()).hasSize(1);
         assertThat(policy.statements()
-                .get(0))
+                .getFirst())
                 .isEqualTo(new PolicyStatement(
                         PolicyStatementEffect.ALLOW,
                         Set.of(PolicyStatementAction.ALL),

@@ -144,8 +144,8 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         Set<Map.Entry<Long, Map<String, String>>> entries = recipientIdToDetails.entrySet();
         int count = entries.size() << 2;
         List<Mono<Void>> monos = new ArrayList<>(count);
-        for (Map.Entry<Long, Map<String, String>> recipientToDetail : entries) {
-            Map<String, String> deviceDetails = recipientToDetail.getValue();
+        for (Map.Entry<Long, Map<String, String>> recipientAndDeviceDetail : entries) {
+            Map<String, String> deviceDetails = recipientAndDeviceDetail.getValue();
             for (Map.Entry<String, String> detail : deviceDetails.entrySet()) {
                 String providerStr = detail.getKey();
                 PushNotificationServiceProvider provider =

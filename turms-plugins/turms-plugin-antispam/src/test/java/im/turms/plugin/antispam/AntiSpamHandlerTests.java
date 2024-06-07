@@ -60,7 +60,7 @@ class AntiSpamHandlerTests {
         TurmsRequest.Builder builder = TurmsRequest.newBuilder()
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName(new String(
-                                Store.UNWANTED_WORDS.get(0)
+                                Store.UNWANTED_WORDS.getFirst()
                                         .getWord()))
                         .build());
         ClientRequest clientRequest =
@@ -79,7 +79,7 @@ class AntiSpamHandlerTests {
                 .setCreateGroupJoinQuestionsRequest(CreateGroupJoinQuestionsRequest.newBuilder()
                         .addQuestions(GroupJoinQuestion.newBuilder()
                                 .setQuestion(new String(
-                                        Store.UNWANTED_WORDS.get(0)
+                                        Store.UNWANTED_WORDS.getFirst()
                                                 .getWord()))
                                 .build())
                         .build());

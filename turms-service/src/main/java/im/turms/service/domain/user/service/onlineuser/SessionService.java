@@ -296,9 +296,9 @@ public class SessionService {
         // fast path
         if (nodeCount == 1) {
             if (offlineUserSessions == null) {
-                return sessionsFromNodes.get(0);
+                return sessionsFromNodes.getFirst();
             } else {
-                offlineUserSessions.addAll(sessionsFromNodes.get(0));
+                offlineUserSessions.addAll(sessionsFromNodes.getFirst());
                 return offlineUserSessions;
             }
         }

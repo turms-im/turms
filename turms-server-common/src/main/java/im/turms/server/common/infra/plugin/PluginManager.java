@@ -653,7 +653,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                     ? Mono.empty()
                     : defaultValue;
         }
-        T extensionPoint = extensionPoints.get(0);
+        T extensionPoint = extensionPoints.getFirst();
         TurmsExtension extension = (TurmsExtension) extensionPoint;
         if (!extension.isRunning()) {
             return defaultValue == null

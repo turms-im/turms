@@ -96,6 +96,7 @@ public class UserService implements RpcUserService {
     private final GroupMemberService groupMemberService;
     private final UserRelationshipService userRelationshipService;
     private final UserRelationshipGroupService userRelationshipGroupService;
+    private final UserSettingsService userSettingsService;
     private final UserVersionService userVersionService;
     private final SessionService sessionService;
     private final ConversationService conversationService;
@@ -109,7 +110,6 @@ public class UserService implements RpcUserService {
 
     private final Counter registeredUsersCounter;
     private final Counter deletedUsersCounter;
-    private final UserSettingsService userSettingsService;
 
     private boolean activateUserWhenAdded;
     private boolean deleteUserLogically;

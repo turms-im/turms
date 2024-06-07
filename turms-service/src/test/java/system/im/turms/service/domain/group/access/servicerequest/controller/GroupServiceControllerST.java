@@ -280,7 +280,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
             List<Long> ids = data.getLongsWithVersion()
                     .getLongsList();
             assertThat(ids).hasSize(1);
-            groupJoinQuestionId = ids.get(0);
+            groupJoinQuestionId = ids.getFirst();
         });
     }
 

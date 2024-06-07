@@ -57,7 +57,7 @@ public class ListCodec implements Codec<List<?>> {
         if (size == 0) {
             return;
         }
-        Class<?> elementClass = data.get(0)
+        Class<?> elementClass = data.getFirst()
                 .getClass();
         Codec<Object> codec = CodecPool.getCodec(elementClass);
         output.writeShort(codec.getCodecId()
@@ -88,7 +88,7 @@ public class ListCodec implements Codec<List<?>> {
             // 1 byte for size
             return 1;
         }
-        Object item = items.get(0);
+        Object item = items.getFirst();
         Codec<Object> codec = CodecPool.getCodec(item.getClass());
         if (codec == null) {
             throw new IllegalArgumentException(
