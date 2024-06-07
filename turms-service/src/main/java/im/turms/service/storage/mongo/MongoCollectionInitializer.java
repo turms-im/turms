@@ -67,6 +67,7 @@ import im.turms.server.common.storage.mongo.entity.Zone;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.model.Tag;
 import im.turms.service.domain.conference.po.Meeting;
+import im.turms.service.domain.conversation.po.ConversationSettings;
 import im.turms.service.domain.conversation.po.GroupConversation;
 import im.turms.service.domain.conversation.po.PrivateConversation;
 import im.turms.service.domain.group.po.Group;
@@ -83,7 +84,9 @@ import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
+import im.turms.service.domain.user.po.UserSettings;
 import im.turms.service.domain.user.po.UserVersion;
+import im.turms.service.storage.elasticsearch.mongo.SyncLog;
 
 import static im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties.StorageTierProperties;
 
@@ -230,14 +233,20 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 groupMongoClient.createCollectionIfNotExists(GroupBlockedUser.class),
                 groupMongoClient.createCollectionIfNotExists(GroupInvitation.class),
                 groupMongoClient.createCollectionIfNotExists(GroupJoinQuestion.class),
+                groupMongoClient.createCollectionIfNotExists(GroupJoinRequest.class),
                 groupMongoClient.createCollectionIfNotExists(GroupMember.class),
                 groupMongoClient.createCollectionIfNotExists(GroupType.class),
                 groupMongoClient.createCollectionIfNotExists(GroupVersion.class),
 
-                conversationMongoClient.createCollectionIfNotExists(PrivateConversation.class),
-                conversationMongoClient.createCollectionIfNotExists(GroupConversation.class),
+                messageMongoClient.createCollectionIfNotExists(Meeting.class),
 
                 messageMongoClient.createCollectionIfNotExists(Message.class),
+
+                conversationMongoClient.createCollectionIfNotExists(ConversationSettings.class),
+                conversationMongoClient.createCollectionIfNotExists(GroupConversation.class),
+                conversationMongoClient.createCollectionIfNotExists(PrivateConversation.class),
+
+                conversationMongoClient.createCollectionIfNotExists(SyncLog.class),
 
                 userMongoClient.createCollectionIfNotExists(User.class),
                 userMongoClient.createCollectionIfNotExists(UserFriendRequest.class),
@@ -245,6 +254,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 userMongoClient.createCollectionIfNotExists(UserRelationship.class),
                 userMongoClient.createCollectionIfNotExists(UserRelationshipGroup.class),
                 userMongoClient.createCollectionIfNotExists(UserRelationshipGroupMember.class),
+                userMongoClient.createCollectionIfNotExists(UserSettings.class),
                 userMongoClient.createCollectionIfNotExists(UserVersion.class));
     }
 

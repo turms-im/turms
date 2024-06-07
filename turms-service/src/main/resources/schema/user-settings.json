@@ -1,0 +1,19 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "s"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "s": {
+        "bsonType": "object"
+      },
+      "lud": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

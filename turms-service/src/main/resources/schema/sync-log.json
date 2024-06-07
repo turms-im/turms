@@ -1,0 +1,40 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "nodeId",
+      "mongoCollection",
+      "esIndex",
+      "status",
+      "creationDate",
+      "lastUpdatedDate",
+      "version"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "nodeId": {
+        "bsonType": "string"
+      },
+      "mongoCollection": {
+        "bsonType": "string"
+      },
+      "esIndex": {
+        "bsonType": "string"
+      },
+      "status": {
+        "bsonType": "string"
+      },
+      "creationDate": {
+        "bsonType": "date"
+      },
+      "lastUpdatedDate": {
+        "bsonType": "date"
+      },
+      "version": {
+        "bsonType": "int"
+      }
+    }
+  }
+}
