@@ -177,10 +177,13 @@ services:
     profiles:
       - elasticsearch
     environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-changeme}
+      bootstrap.memory_lock: true
       discovery.type: single-node
       network.host: 0.0.0.0
       http.port: 9200
-      bootstrap.memory_lock: true
+      xpack.security.http.ssl.enabled: false
+      xpack.security.transport.ssl.enabled: false
 #      ES_JAVA_OPTS: -Xms1g -Xmx1g
 #      xpack.security.enabled: false
 
@@ -216,7 +219,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -fsSL http://localhost:9200/_cat/health?h=status | grep -q -E 'green|yellow'"
+        "curl -u elastic:${ELASTIC_PASSWORD:-changeme} -fsSL http://localhost:9200/_cat/health?h=status | grep -q -E 'green|yellow'"
       ]
       interval: 5s
       timeout: 5s
