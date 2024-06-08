@@ -26,7 +26,7 @@ import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.message.SequenceIdProperties;
-import im.turms.server.common.storage.redis.CommonRedisConfig;
+import im.turms.server.common.storage.redis.BaseRedisConfig;
 import im.turms.server.common.storage.redis.RedisProperties;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
@@ -35,7 +35,7 @@ import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
  * @author James Chen
  */
 @Configuration
-public class RedisConfig extends CommonRedisConfig {
+public class RedisConfig extends BaseRedisConfig {
 
     private final TurmsRedisClientManager sequenceIdRedisClientManager;
 
@@ -65,10 +65,7 @@ public class RedisConfig extends CommonRedisConfig {
 
     public static TurmsRedisClientManager newSequenceIdRedisClientManager(
             RedisProperties properties) {
-        return new TurmsRedisClientManager(
-                properties,
-                RedisCodecContext.builder()
-                        .build());
+        return new TurmsRedisClientManager(properties, RedisCodecContext.DEFAULT);
     }
 
     @Bean

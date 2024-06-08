@@ -20,7 +20,7 @@ package im.turms.server.common.infra.throttle;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
+import im.turms.server.common.infra.property.env.common.BaseRateLimitingProperties;
 
 /**
  * @author James Chen
@@ -33,11 +33,11 @@ public class TokenBucketContext {
     int refillIntervalMillis;
     int initialTokens;
 
-    public TokenBucketContext(CommonRateLimitingProperties properties) {
+    public TokenBucketContext(BaseRateLimitingProperties properties) {
         updateRequestTokenBucket(properties);
     }
 
-    public void updateRequestTokenBucket(CommonRateLimitingProperties properties) {
+    public void updateRequestTokenBucket(BaseRateLimitingProperties properties) {
         capacity = properties.getCapacity();
         initialTokens = properties.getInitialTokens();
         tokensPerPeriod = properties.getTokensPerPeriod();

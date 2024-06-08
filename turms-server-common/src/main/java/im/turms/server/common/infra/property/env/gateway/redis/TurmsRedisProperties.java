@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
+import im.turms.server.common.infra.property.env.common.BaseRedisProperties;
 
 /**
  * @author James Chen
@@ -29,5 +29,5 @@ import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class TurmsRedisProperties extends CommonRedisProperties {
+public class TurmsRedisProperties extends BaseRedisProperties {
 }

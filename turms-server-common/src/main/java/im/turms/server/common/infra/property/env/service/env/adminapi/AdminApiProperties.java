@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
+import im.turms.server.common.infra.property.env.common.adminapi.BaseAdminApiProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -34,7 +34,7 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-public class AdminApiProperties extends CommonAdminApiProperties {
+public class AdminApiProperties extends BaseAdminApiProperties {
 
     @Description("Whether to allow administrators to delete data without any filter. "
             + "Better false to prevent administrators from deleting all data by accident")

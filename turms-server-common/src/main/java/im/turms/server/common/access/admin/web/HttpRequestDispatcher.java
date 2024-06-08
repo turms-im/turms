@@ -78,7 +78,7 @@ import im.turms.server.common.infra.plugin.extension.AdminActionHandler;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
-import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
+import im.turms.server.common.infra.property.env.common.adminapi.BaseAdminApiProperties;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -143,7 +143,7 @@ public class HttpRequestDispatcher {
         authenticator = new HttpRequestAuthenticator(adminService);
 
         TurmsProperties properties = propertiesManager.getLocalProperties();
-        CommonAdminApiProperties apiProperties = switch (node.getNodeType()) {
+        BaseAdminApiProperties apiProperties = switch (node.getNodeType()) {
             case AI_SERVING -> properties.getAiServing()
                     .getAdminApi();
             case GATEWAY -> properties.getGateway()
@@ -190,7 +190,7 @@ public class HttpRequestDispatcher {
     // region Properties
     private void updateGlobalProperties(TurmsProperties properties) {
         NodeType nodeType = node.getNodeType();
-        CommonAdminApiProperties apiProperties = switch (nodeType) {
+        BaseAdminApiProperties apiProperties = switch (nodeType) {
             case AI_SERVING -> properties.getAiServing()
                     .getAdminApi();
             case GATEWAY -> properties.getGateway()

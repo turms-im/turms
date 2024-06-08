@@ -20,14 +20,14 @@ package im.turms.server.common.infra.property.env.gateway;
 import lombok.Builder;
 import lombok.Data;
 
-import im.turms.server.common.infra.property.env.common.adminapi.CommonAdminApiProperties;
+import im.turms.server.common.infra.property.env.common.adminapi.BaseAdminApiProperties;
 
 /**
  * @author James Chen
  */
 @Builder(toBuilder = true)
 @Data
-public class AdminApiProperties extends CommonAdminApiProperties {
+public class AdminApiProperties extends BaseAdminApiProperties {
 
     public AdminApiProperties() {
         http.setPort(9510);

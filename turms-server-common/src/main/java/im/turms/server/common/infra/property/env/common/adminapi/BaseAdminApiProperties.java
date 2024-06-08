@@ -27,7 +27,7 @@ import im.turms.server.common.infra.property.metadata.Description;
  * @author James Chen
  */
 @Data
-public abstract class CommonAdminApiProperties {
+public abstract class BaseAdminApiProperties {
 
     @Description("Whether to enable the APIs for administrators")
     private boolean enabled = true;

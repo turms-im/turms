@@ -17,12 +17,12 @@
 
 package im.turms.server.common.infra.property.env.common.adminapi;
 
-import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
+import im.turms.server.common.infra.property.env.common.BaseRateLimitingProperties;
 
 /**
  * @author James Chen
  */
-public class AdminApiRateLimitingProperties extends CommonRateLimitingProperties {
+public class AdminApiRateLimitingProperties extends BaseRateLimitingProperties {
 
     public AdminApiRateLimitingProperties() {
         setCapacity(50);

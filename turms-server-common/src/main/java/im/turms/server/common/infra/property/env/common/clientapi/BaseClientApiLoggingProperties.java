@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.metadata.Description;
  * @author James Chen
  */
 @Data
-public abstract class CommonClientApiLoggingProperties {
+public abstract class BaseClientApiLoggingProperties {
 
     private static final String DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS =
             "Turms will get the requests to log from the union of "

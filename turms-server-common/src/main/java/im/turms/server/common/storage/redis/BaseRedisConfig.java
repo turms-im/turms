@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.JobShutdownOrder;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.property.env.common.CommonRedisProperties;
+import im.turms.server.common.infra.property.env.common.BaseRedisProperties;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
 
@@ -37,7 +37,7 @@ import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;
  * @see org.springframework.boot.autoconfigure.data.redis.RedisConnectionConfiguration
  * @see org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration
  */
-public abstract class CommonRedisConfig {
+public abstract class BaseRedisConfig {
 
     private final TurmsRedisClientManager sessionRedisClientManager;
     private final TurmsRedisClientManager locationRedisClientManager;
@@ -48,9 +48,9 @@ public abstract class CommonRedisConfig {
     private final List<TurmsRedisClientManager> registeredClientManagers = new LinkedList<>();
     private final List<TurmsRedisClient> registeredClients = new LinkedList<>();
 
-    protected CommonRedisConfig(
+    protected BaseRedisConfig(
             TurmsApplicationContext context,
-            CommonRedisProperties redisProperties,
+            BaseRedisProperties redisProperties,
             boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         sessionRedisClientManager = newSessionRedisClientManager(redisProperties.getSession());
         locationRedisClientManager = newLocationRedisClientManager(redisProperties.getLocation(),
@@ -64,13 +64,14 @@ public abstract class CommonRedisConfig {
         context.addShutdownHook(JobShutdownOrder.CLOSE_REDIS_CONNECTIONS, this::destroy);
     }
 
-    public static TurmsRedisClientManager newSessionRedisClientManager(RedisProperties properties) {
+    private static TurmsRedisClientManager newSessionRedisClientManager(
+            RedisProperties properties) {
         return new TurmsRedisClientManager(
                 properties,
                 RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT);
     }
 
-    public static TurmsRedisClientManager newLocationRedisClientManager(
+    private static TurmsRedisClientManager newLocationRedisClientManager(
             RedisProperties properties,
             boolean treatUserIdAndDeviceTypeAsUniqueUser) {
         RedisCodecContext codecContext = treatUserIdAndDeviceTypeAsUniqueUser
@@ -79,18 +80,12 @@ public abstract class CommonRedisConfig {
         return new TurmsRedisClientManager(properties, codecContext);
     }
 
-    public static TurmsRedisClient newIpBlocklistRedisClient(String uri) {
-        return new TurmsRedisClient(
-                uri,
-                RedisCodecContext.builder()
-                        .build());
+    private TurmsRedisClient newIpBlocklistRedisClient(String uri) {
+        return new TurmsRedisClient(uri, RedisCodecContext.DEFAULT);
     }
 
-    public static TurmsRedisClient newUserIdBlocklistRedisClient(String uri) {
-        return new TurmsRedisClient(
-                uri,
-                RedisCodecContext.builder()
-                        .build());
+    private TurmsRedisClient newUserIdBlocklistRedisClient(String uri) {
+        return new TurmsRedisClient(uri, RedisCodecContext.DEFAULT);
     }
 
     public void registerClientManagers(List<TurmsRedisClientManager> clientManagers) {

@@ -31,24 +31,16 @@ public final class RedisCodecContextPool {
     private RedisCodecContextPool() {
     }
 
-    public static final RedisCodecContext GEO_USER_SESSION_ID_CODEC_CONTEXT;
-    public static final RedisCodecContext GEO_USER_ID_CODEC_CONTEXT;
-    public static final RedisCodecContext USER_SESSIONS_STATUS_CODEC_CONTEXT;
-
-    static {
-        GEO_USER_SESSION_ID_CODEC_CONTEXT = RedisCodecContext.builder()
-                .geoMemberCodec(new GeoUserSessionIdCodec())
-                .build();
-
-        GEO_USER_ID_CODEC_CONTEXT = RedisCodecContext.builder()
-                .geoMemberCodec(new GeoUserIdCodec())
-                .build();
-
-        USER_SESSIONS_STATUS_CODEC_CONTEXT = RedisCodecContext.builder()
-                .hashKeyCodec(new SessionKeyCodec())
-                .hashFieldCodec(new SessionHashFieldCodec())
-                .hashValueCodec(new SessionHashValueCodec())
-                .build();
-    }
+    public static final RedisCodecContext GEO_USER_SESSION_ID_CODEC_CONTEXT =
+            new RedisCodecContext(null, null, null, null, new GeoUserSessionIdCodec());
+    public static final RedisCodecContext GEO_USER_ID_CODEC_CONTEXT =
+            new RedisCodecContext(null, null, null, null, new GeoUserIdCodec());
+    public static final RedisCodecContext USER_SESSIONS_STATUS_CODEC_CONTEXT =
+            new RedisCodecContext(
+                    new SessionKeyCodec(),
+                    new SessionHashFieldCodec(),
+                    new SessionHashValueCodec(),
+                    null,
+                    null);
 
 }

@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.RefCntCorrectorByteBuf;
-import lombok.Builder;
 import lombok.Data;
 
 import im.turms.server.common.infra.netty.ByteBufUtil;
@@ -32,15 +31,16 @@ import im.turms.server.common.storage.redis.codec.TurmsRedisCodec;
  * @author James Chen
  */
 @Data
-@Builder
 public class RedisCodecContext {
 
-    private TurmsRedisCodec hashKeyCodec;
-    private TurmsRedisCodec hashFieldCodec;
-    private TurmsRedisCodec hashValueCodec;
+    public static final RedisCodecContext DEFAULT =
+            new RedisCodecContext(null, null, null, null, null);
 
-    private TurmsRedisCodec geoKeyCodec;
-    private TurmsRedisCodec geoMemberCodec;
+    private final TurmsRedisCodec hashKeyCodec;
+    private final TurmsRedisCodec hashFieldCodec;
+    private final TurmsRedisCodec hashValueCodec;
+    private final TurmsRedisCodec geoKeyCodec;
+    private final TurmsRedisCodec geoMemberCodec;
 
     // Hashes
 

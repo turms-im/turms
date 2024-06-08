@@ -18,9 +18,9 @@
 package im.turms.server.common.infra.property.env.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.storage.redis.RedisProperties;
@@ -30,10 +30,10 @@ import im.turms.server.common.storage.redis.SimpleRedisProperties;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CommonRedisProperties {
+@SuperBuilder(toBuilder = true)
+public abstract class BaseRedisProperties {
 
     @NestedConfigurationProperty
     private transient RedisProperties session = new RedisProperties();

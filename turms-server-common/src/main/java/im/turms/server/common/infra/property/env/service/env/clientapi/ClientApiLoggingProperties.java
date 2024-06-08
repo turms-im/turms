@@ -21,7 +21,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import im.turms.server.common.infra.property.env.common.clientapi.CommonClientApiLoggingProperties;
+import im.turms.server.common.infra.property.env.common.clientapi.BaseClientApiLoggingProperties;
 
 /**
  * @author James Chen
@@ -29,5 +29,5 @@ import im.turms.server.common.infra.property.env.common.clientapi.CommonClientAp
 @Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ClientApiLoggingProperties extends CommonClientApiLoggingProperties {
+public class ClientApiLoggingProperties extends BaseClientApiLoggingProperties {
 }

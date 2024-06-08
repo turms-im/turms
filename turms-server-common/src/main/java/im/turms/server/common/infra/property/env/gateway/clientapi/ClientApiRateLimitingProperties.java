@@ -19,11 +19,11 @@ package im.turms.server.common.infra.property.env.gateway.clientapi;
 
 import lombok.NoArgsConstructor;
 
-import im.turms.server.common.infra.property.env.common.CommonRateLimitingProperties;
+import im.turms.server.common.infra.property.env.common.BaseRateLimitingProperties;
 
 /**
  * @author James Chen
  */
 @NoArgsConstructor
-public class ClientApiRateLimitingProperties extends CommonRateLimitingProperties {
+public class ClientApiRateLimitingProperties extends BaseRateLimitingProperties {
 }

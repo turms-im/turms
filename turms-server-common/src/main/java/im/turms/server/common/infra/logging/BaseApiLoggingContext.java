@@ -32,7 +32,9 @@ import im.turms.server.common.infra.property.env.service.env.clientapi.property.
 /**
  * @author James Chen
  */
-public abstract class CommonApiLoggingContext {
+public abstract class BaseApiLoggingContext {
+
+    public abstract boolean shouldLogNotification(TurmsRequest.KindCase requestType);
 
     protected Map<TurmsRequest.KindCase, LoggingRequestProperties> getSupportedLoggingRequestProperties(
             Set<LoggingCategoryProperties> includedCategories,

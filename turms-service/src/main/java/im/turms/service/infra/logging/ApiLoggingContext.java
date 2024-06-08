@@ -22,7 +22,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Configuration;
 
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
-import im.turms.server.common.infra.logging.CommonApiLoggingContext;
+import im.turms.server.common.infra.logging.BaseApiLoggingContext;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.property.LoggingRequestProperties;
@@ -31,7 +31,7 @@ import im.turms.server.common.infra.property.env.service.env.clientapi.property.
  * @author James Chen
  */
 @Configuration
-public class ApiLoggingContext extends CommonApiLoggingContext {
+public class ApiLoggingContext extends BaseApiLoggingContext {
 
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> typeToSupportedLoggingRequestProperties;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> typeToSupportedLoggingNotificationProperties;

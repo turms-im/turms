@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public abstract class CommonRateLimitingProperties {
+public abstract class BaseRateLimitingProperties {
 
     @Description("The maximum number of tokens that the bucket can hold")
     @GlobalProperty

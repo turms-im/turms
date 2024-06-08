@@ -34,7 +34,8 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import im.turms.server.common.infra.task.TaskManager;
-import im.turms.server.common.storage.redis.CommonRedisConfig;
+import im.turms.server.common.storage.redis.TurmsRedisClient;
+import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.testing.BaseIntegrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -301,12 +302,13 @@ class BlocklistServiceIT extends BaseIntegrationTest {
         String uri = testEnvironmentManager.getRedisUri();
 
         BlocklistService.maxLogQueueSize = maxLogSize;
+        TurmsRedisClient redisClient = new TurmsRedisClient(uri, RedisCodecContext.DEFAULT);
         return new BlocklistService(
                 node,
                 new TaskManager(),
                 mock(TurmsApplicationContext.class),
-                CommonRedisConfig.newIpBlocklistRedisClient(uri),
-                CommonRedisConfig.newUserIdBlocklistRedisClient(uri),
+                redisClient,
+                redisClient,
                 propertiesManager,
                 null);
     }
