@@ -226,6 +226,27 @@ services:
       retries: 10
       start_period: 1m
 
+  # LiveKit
+  livekit:
+    image: livekit/livekit-server:v1.6.1
+    command: --config /etc/livekit.yaml
+    ports:
+      - "7880:7880/tcp"
+      - "7881:7881/tcp"
+      - "7882:7882/udp"
+    profiles:
+      - conference
+    depends_on:
+      - redis
+    healthcheck:
+      # language=sh
+      test: wget --no-verbose --spider --tries=1 http://localhost:7880 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    volumes:
+#      - ./livekit/livekit.yaml:/etc/livekit.yaml
+
   # Rasa
   rasa:
     image: rasa/rasa:3.6.19-full
@@ -356,8 +377,9 @@ services:
         -Dturms.service.redis.user-id-blocklist.uri=redis://redis:6379
 
 #        -Dturms.plugin.network.plugins[0].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-antispam-0.10.0-SNAPSHOT.jar
-#        -Dturms.plugin.network.plugins[1].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-minio-0.10.0-SNAPSHOT.jar
-#        -Dturms.plugin.network.plugins[2].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-rasa-0.10.0-SNAPSHOT.jar
+#        -Dturms.plugin.network.plugins[1].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-livekit-0.10.0-SNAPSHOT.jar
+#        -Dturms.plugin.network.plugins[2].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-minio-0.10.0-SNAPSHOT.jar
+#        -Dturms.plugin.network.plugins[3].url=https://github.com/turms-im/turms/releases/download/v0.10.0-SNAPSHOT/turms-plugin-rasa-0.10.0-SNAPSHOT.jar
     mem_limit: 2g
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms-service:8510/health | grep UP || exit 1"

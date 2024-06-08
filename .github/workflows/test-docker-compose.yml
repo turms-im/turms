@@ -23,7 +23,10 @@ jobs:
           docker build -t "ghcr.io/turms-im/turms-gateway:latest" -f turms-gateway/Dockerfile .
           docker build -t "ghcr.io/turms-im/turms-service:latest" -f turms-service/Dockerfile .
 
-          ENV=prod docker compose -f docker-compose.standalone.yml up -d
+          export COMPOSE_PROFILES="conference,elasticsearch,storage"
+          export ENV=prod
+          
+          docker compose -f docker-compose.standalone.yml up -d
 
           sleep 10
           RETRY=0
