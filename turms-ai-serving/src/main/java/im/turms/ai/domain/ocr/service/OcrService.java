@@ -31,9 +31,8 @@ import java.util.stream.Stream;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PreDestroy;
 
-import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.output.DetectedObjects;
-import ai.djl.opencv.OpenCVImageUtil;
+import ai.djl.opencv.ExtendedOpenCVImage;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.springframework.stereotype.Service;
@@ -80,8 +79,9 @@ public class OcrService {
                 modelDir.resolve("recognition.tar"));
 
         // Warm up
-        Image image = OpenCVImageUtil.create(Mat.zeros(1, 1, CvType.CV_8U));
-        ocrManager.ocr(image);
+        try (ExtendedOpenCVImage image = new ExtendedOpenCVImage(Mat.zeros(1, 1, CvType.CV_8U))) {
+            ocrManager.ocr(image);
+        }
     }
 
     private void registerCustomFonts(Path fontDir) {
@@ -157,13 +157,11 @@ public class OcrService {
                 .toAbsolutePath()
                 .normalize()
                 .toString();
-        Image image = OpenCVImageUtil.create(imagePath);
-        DetectedObjects detectedObjects = ocrManager.ocr(image);
-
-        Mat mat = (Mat) image.getWrappedImage();
-        mat = ImageUtil.drawBoundingBoxes(mat, detectedObjects, font);
-
-        return ImageUtil.writeTempImageFile(mat);
+        try (ExtendedOpenCVImage image = new ExtendedOpenCVImage(imagePath)) {
+            DetectedObjects detectedObjects = ocrManager.ocr(image);
+            Mat mat = ImageUtil.drawBoundingBoxes(image.getWrappedImage(), detectedObjects, font);
+            return ImageUtil.writeTempImageFile(mat);
+        }
     }
 
 }

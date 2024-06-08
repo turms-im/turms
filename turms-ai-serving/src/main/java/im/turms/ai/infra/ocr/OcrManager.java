@@ -28,7 +28,7 @@ import ai.djl.modality.Classifications;
 import ai.djl.modality.cv.Image;
 import ai.djl.modality.cv.output.BoundingBox;
 import ai.djl.modality.cv.output.DetectedObjects;
-import ai.djl.opencv.OpenCVImageUtil;
+import ai.djl.opencv.ExtendedOpenCVImage;
 import ai.djl.paddlepaddle.engine.PpEngine;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.ZooModel;
@@ -37,8 +37,6 @@ import ai.djl.util.cuda.CudaUtils;
 import io.netty.util.concurrent.FastThreadLocal;
 import nu.pattern.OpenCV;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
 
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -165,19 +163,14 @@ public class OcrManager {
     }
 
     public DetectedObjects ocr(String imagePath) {
-        Mat img = Imgcodecs.imread(imagePath);
-        if (img.empty()) {
-            throw new RuntimeException(
-                    "Failed to read from the path: "
-                            + imagePath);
+        try (ExtendedOpenCVImage image = new ExtendedOpenCVImage(imagePath)) {
+            return ocr(image);
         }
-        Image image = OpenCVImageUtil.create(img);
-        return ocr(image);
     }
 
     public DetectedObjects ocr(Image image) {
-        DetectedObjects detect = detect(image);
-        List<DetectedObjects.DetectedObject> detectedObjects = detect.items();
+        DetectedObjects detectResult = detect(image);
+        List<DetectedObjects.DetectedObject> detectedObjects = detectResult.items();
         int size = detectedObjects.size();
         List<String> names = new ArrayList<>(size);
         List<Double> probabilities = new ArrayList<>(size);

@@ -17,25 +17,34 @@
 
 package ai.djl.opencv;
 
-import ai.djl.modality.cv.Image;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
 /**
  * @author James Chen
  */
-public final class OpenCVImageUtil {
+public class ExtendedOpenCVImage extends OpenCVImage implements AutoCloseable {
 
-    private OpenCVImageUtil() {
+    public ExtendedOpenCVImage(Mat image) {
+        super(image);
     }
 
-    public static Image create(String imagePath) {
+    public ExtendedOpenCVImage(String imagePath) {
+        super(read(imagePath));
+    }
+
+    private static Mat read(String imagePath) {
         Mat mat = Imgcodecs.imread(imagePath);
-        return new OpenCVImage(mat);
+        if (mat.empty()) {
+            throw new RuntimeException(
+                    "Failed to read from the path: "
+                            + imagePath);
+        }
+        return mat;
     }
 
-    public static Image create(Mat image) {
-        return new OpenCVImage(image);
+    @Override
+    public void close() {
+        getWrappedImage().release();
     }
-
 }
