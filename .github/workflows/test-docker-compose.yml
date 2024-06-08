@@ -13,6 +13,7 @@ jobs:
         run: docker compose -f docker-compose.standalone.yml config -q
 
       - name: Check Service Health
+        # language=sh
         run: |
           sed -i 's|pull_policy: always|pull_policy: never|g' docker-compose.standalone.yml
           echo "Docker compose file to run with:"
@@ -26,19 +27,22 @@ jobs:
 
           sleep 10
           RETRY=0
-          SERVICES=$(docker compose -f docker-compose.standalone.yml ps -q)
-          echo "Services for checking health: $SERVICES"
+          INSTANCE_IDS=$(docker compose -f docker-compose.standalone.yml ps -q)
+          DISPLAY_NAMES=$(echo "$INSTANCE_IDS" | xargs -I {} docker inspect --format="{{.Name}} ({{.ID}})" {})
+          echo "Services for checking health: $DISPLAY_NAMES"
           while true
           do
             ALL_HEALTHY=true
-            for SERVICE in $SERVICES; do
-              HEALTH_STATUS=$(docker inspect --format='{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}' "$SERVICE")
+            for INSTANCE_ID in $INSTANCE_IDS; do
+              HEALTH_STATUS=$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$INSTANCE_ID")
+              DISPLAY_NAME=$(docker inspect --format="{{.Name}} ({{.ID}})" "$INSTANCE_ID")
               if [ -z "$HEALTH_STATUS" ]; then
-                echo "Service $SERVICE does not have a health check configured, passing through"
+                echo "Service $DISPLAY_NAME does not have a health check configured, passing through"
               elif [ "$HEALTH_STATUS" = "healthy" ]; then
-                echo "$SERVICE is healthy"
+                echo "Service $DISPLAY_NAME is healthy"
               else
-                echo "$SERVICE is not healthy"
+                LOGS=$(docker inspect --format="{{json .State.Health}}" $INSTANCE_ID | jq)
+                echo "Service $DISPLAY_NAME is not healthy: $LOGS"
                 ALL_HEALTHY=false
                 break
               fi
