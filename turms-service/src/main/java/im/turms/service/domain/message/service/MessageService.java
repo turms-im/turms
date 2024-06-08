@@ -63,6 +63,7 @@ import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.message.OutboundMessageManager;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -126,11 +127,13 @@ public class MessageService {
     private static final Method GET_MESSAGES_TO_DELETE_METHOD;
 
     private final MessageRepository messageRepository;
+
+    private final OutboundMessageManager outboundMessageManager;
     @Nullable
     private final TurmsRedisClientManager redisClientManager;
     private final Node node;
+
     private final ConversationService conversationService;
-    private final OutboundMessageService outboundMessageService;
     private final GroupService groupService;
     private final GroupMemberService groupMemberService;
     private final UserService userService;
@@ -181,6 +184,7 @@ public class MessageService {
     @Autowired
     public MessageService(
             MessageRepository messageRepository,
+            OutboundMessageManager outboundMessageManager,
             @Nullable @Autowired(
                     required = false) @Qualifier("sequenceIdRedisClientManager") TurmsRedisClientManager sequenceIdRedisClientManager,
 
@@ -191,25 +195,25 @@ public class MessageService {
             GroupService groupService,
             GroupMemberService groupMemberService,
             UserService userService,
-            OutboundMessageService outboundMessageService,
             MetricsService metricsService,
 
             PluginManager pluginManager,
             TaskManager taskManager) {
         this.messageRepository = messageRepository;
+        this.outboundMessageManager = outboundMessageManager;
         this.redisClientManager = sequenceIdRedisClientManager;
         this.node = node;
         this.conversationService = conversationService;
         this.groupService = groupService;
         this.groupMemberService = groupMemberService;
         this.userService = userService;
-        this.outboundMessageService = outboundMessageService;
         this.pluginManager = pluginManager;
 
         TurmsProperties globalProperties = propertiesManager.getGlobalProperties();
         MessageProperties messageProperties = globalProperties.getService()
                 .getMessage();
         useConversationId = messageProperties.isUseConversationId();
+
         SequenceIdProperties sequenceIdProperties = messageProperties.getSequenceId();
         useSequenceIdForGroupConversation =
                 sequenceIdProperties.isUseSequenceIdForGroupConversation();
@@ -1446,7 +1450,7 @@ public class MessageService {
         } else {
             excludedUserSessionIds = Collections.emptySet();
         }
-        return outboundMessageService
+        return outboundMessageManager
                 .forwardNotification(notification, recipientIds, excludedUserSessionIds)
                 // TODO: Should trigger extension points
                 // https://github.com/turms-im/turms/issues/1189

@@ -56,6 +56,7 @@ import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.message.OutboundMessageManager;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoDecoder;
@@ -64,7 +65,6 @@ import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
-import im.turms.service.domain.message.service.OutboundMessageService;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.ClientApiLogging;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
@@ -91,8 +91,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private final ApiLoggingContext apiLoggingContext;
     private final BlocklistService blocklistService;
+    private final OutboundMessageManager outboundMessageManager;
     private final ServerStatusManager serverStatusManager;
-    private final OutboundMessageService outboundMessageService;
     private final PluginManager pluginManager;
 
     private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> requestTypeToHandler;
@@ -123,14 +123,14 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             ApiLoggingContext apiLoggingContext,
             ApplicationContext context,
             BlocklistService blocklistService,
+            OutboundMessageManager outboundMessageManager,
             ServerStatusManager serverStatusManager,
-            OutboundMessageService outboundMessageService,
             PluginManager pluginManager,
             TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
+        this.outboundMessageManager = outboundMessageManager;
         this.serverStatusManager = serverStatusManager;
-        this.outboundMessageService = outboundMessageService;
         this.pluginManager = pluginManager;
         Set<TurmsRequest.KindCase> disabledEndpoints = propertiesManager.getLocalProperties()
                 .getService()
@@ -435,19 +435,19 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         Mono<Set<Long>> mono;
         if (forwardNotificationToRequesterOtherOnlineSessions) {
             if (noRecipient) {
-                mono = outboundMessageService.forwardNotification(notificationForRecipients,
+                mono = outboundMessageManager.forwardNotification(notificationForRecipients,
                         notificationByteBuf,
                         requesterId,
                         requesterDevice);
             } else {
                 notificationByteBuf.retain(2);
                 Mono<Set<Long>> notifyRequesterMono =
-                        outboundMessageService.forwardNotification(notificationForRecipients,
+                        outboundMessageManager.forwardNotification(notificationForRecipients,
                                 notificationByteBuf,
                                 requesterId,
                                 requesterDevice);
                 Mono<Set<Long>> notifyRecipientsMono =
-                        outboundMessageService.forwardNotification(notificationForRecipients,
+                        outboundMessageManager.forwardNotification(notificationForRecipients,
                                 notificationByteBuf,
                                 recipients);
                 mono = Flux.mergeDelayError(2, notifyRequesterMono, notifyRecipientsMono)
@@ -456,7 +456,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         .doFinally(signal -> notificationByteBuf.release());
             }
         } else {
-            mono = outboundMessageService.forwardNotification(notificationForRecipients,
+            mono = outboundMessageManager.forwardNotification(notificationForRecipients,
                     notificationByteBuf,
                     recipients);
         }

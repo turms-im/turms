@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.domain.message.service;
+package im.turms.server.common.infra.message;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,15 +41,17 @@ import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
+import im.turms.server.common.infra.logging.BaseApiLoggingContext;
+import im.turms.server.common.infra.logging.BaseNotificationLoggingManager;
 import im.turms.server.common.infra.proto.ProtoEncoder;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
-import im.turms.service.infra.logging.ApiLoggingContext;
-import im.turms.service.infra.logging.NotificationLogging;
 
 /**
+ * The class is responsible for sending the outbound message buffer to any users on any servers.
+ *
  * @author James Chen
  * @implNote 1. All operations that send the outbound message buffer to other servers need to ensure
  *           that the buffer will be released by 1.
@@ -60,18 +62,21 @@ import im.turms.service.infra.logging.NotificationLogging;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class OutboundMessageService {
+public class OutboundMessageManager {
 
     private final Node node;
-    private final ApiLoggingContext apiLoggingContext;
+    private final BaseApiLoggingContext apiLoggingContext;
+    private final BaseNotificationLoggingManager notificationLoggingManager;
     private final UserStatusService userStatusService;
 
-    public OutboundMessageService(
+    public OutboundMessageManager(
             Node node,
-            ApiLoggingContext apiLoggingContext,
+            BaseApiLoggingContext apiLoggingContext,
+            BaseNotificationLoggingManager notificationLoggingManager,
             UserStatusService userStatusService) {
         this.node = node;
         this.apiLoggingContext = apiLoggingContext;
+        this.notificationLoggingManager = notificationLoggingManager;
         this.userStatusService = userStatusService;
     }
 
@@ -402,8 +407,8 @@ public class OutboundMessageService {
             int offlineRecipientCount = CollectionUtil.getSize(signal.get());
             try (TracingCloseableContext ignored =
                     TracingContext.getCloseableContext(signal.getContextView())) {
-                NotificationLogging
-                        .log(recipientCount, recipientCount - offlineRecipientCount, notification);
+                notificationLoggingManager
+                        .log(notification, recipientCount, recipientCount - offlineRecipientCount);
             }
         });
     }

@@ -57,6 +57,7 @@ public class ApiLoggingContext extends BaseApiLoggingContext {
         return shouldLog(requestType, typeToSupportedLoggingRequestProperties);
     }
 
+    @Override
     public boolean shouldLogNotification(TurmsRequest.KindCase requestType) {
         return shouldLog(requestType, typeToSupportedLoggingNotificationProperties);
     }

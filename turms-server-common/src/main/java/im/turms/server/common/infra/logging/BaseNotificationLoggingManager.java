@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.logging;
+package im.turms.server.common.infra.logging;
 
 import io.netty.buffer.ByteBuf;
 
@@ -29,21 +29,14 @@ import static im.turms.server.common.infra.logging.CommonLogger.NOTIFICATION_LOG
 
 /**
  * @author James Chen
- * @implNote Don't use StringBuilder because String#join is more efficient
  */
-public final class NotificationLogging {
-
-    private NotificationLogging() {
-    }
+public abstract class BaseNotificationLoggingManager {
 
     /**
      * Note that although TurmsNotification can represent a "response" or "notification", the method
      * is only designed to log "notification" instead of "response"
      */
-    public static void log(
-            int recipientCount,
-            int onlineRecipientCount,
-            TurmsNotification notification) {
+    public void log(TurmsNotification notification, int recipientCount, int onlineRecipientCount) {
         TurmsRequest relayedRequest = notification.getRelayedRequest();
         ByteBuf buffer = ByteBufUtil.join(64,
                 LOG_FIELD_DELIMITER,
