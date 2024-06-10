@@ -334,7 +334,7 @@
                             <include>src/test/java/**/*.java</include>
                         </includes>
                         <excludes>
-                            <exclude>src/main/java/im/turms/plugin/antispam/character/data/*.java</exclude>
+                            <exclude>src/main/java/im/turms/plugin/antispam/core/character/data/*.java</exclude>
                         </excludes>
                         <eclipse>
                             <version>${spotless-maven-plugin.eclipse.version}</version>

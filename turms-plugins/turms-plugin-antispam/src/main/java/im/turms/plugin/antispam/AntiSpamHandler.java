@@ -19,6 +19,7 @@ package im.turms.plugin.antispam;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,12 +28,16 @@ import jakarta.annotation.Nullable;
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
+import lombok.Getter;
 import reactor.core.publisher.Mono;
 
-import im.turms.plugin.antispam.ac.AhoCorasickCodec;
-import im.turms.plugin.antispam.ac.AhoCorasickDoubleArrayTrie;
-import im.turms.plugin.antispam.dictionary.DictionaryParser;
-import im.turms.plugin.antispam.dictionary.Word;
+import im.turms.plugin.antispam.controller.ContentModerationController;
+import im.turms.plugin.antispam.core.SpamDetector;
+import im.turms.plugin.antispam.core.TextPreprocessor;
+import im.turms.plugin.antispam.core.ac.AhoCorasickCodec;
+import im.turms.plugin.antispam.core.ac.AhoCorasickDoubleArrayTrie;
+import im.turms.plugin.antispam.core.dictionary.DictionaryParser;
+import im.turms.plugin.antispam.core.dictionary.Word;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.DictionaryParsingProperties;
 import im.turms.plugin.antispam.property.TextType;
@@ -40,9 +45,11 @@ import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.ResponseException;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.plugin.ExtensionPointMethod;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.test.VisibleForTesting;
+import im.turms.server.common.infra.validation.Validator;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
 
@@ -85,17 +92,18 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
     protected Mono<Void> start() {
         AntiSpamProperties properties = loadProperties(AntiSpamProperties.class);
         enabled = properties.isEnabled();
-        textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
-        unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
-        mask = properties.getMask();
-        maxNumberOfUnwantedWordsToReturn = properties.getMaxNumberOfUnwantedWordsToReturn();
-        spamDetector = enabled
-                ? new SpamDetector(
-                        textPreprocessor,
-                        buildTrie(properties.getDictParsing(), textPreprocessor))
-                : null;
-        textTypeToProperties = createTextTypeToPropertiesMap(properties.getTextTypes(),
-                properties.getSilentIllegalTextTypes());
+        if (enabled) {
+            textPreprocessor = new TextPreprocessor(properties.getTextParsingStrategy());
+            unwantedWordHandleStrategy = properties.getUnwantedWordHandleStrategy();
+            mask = properties.getMask();
+            maxNumberOfUnwantedWordsToReturn = properties.getMaxNumberOfUnwantedWordsToReturn();
+            spamDetector = new SpamDetector(
+                    textPreprocessor,
+                    buildTrie(properties.getDictParsing(), textPreprocessor));
+            textTypeToProperties = createTextTypeToPropertiesMap(properties.getTextTypes(),
+                    properties.getSilentIllegalTextTypes());
+            registerController(new ContentModerationController(this));
+        }
         return Mono.empty();
     }
 
@@ -121,6 +129,35 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
                     rejectSilently));
         }
         return map;
+    }
+
+    public void updateTrie(String binFilePath) {
+        if (!enabled) {
+            return;
+        }
+        AhoCorasickDoubleArrayTrie trie = AhoCorasickCodec.deserialize(binFilePath);
+        spamDetector = new SpamDetector(textPreprocessor, trie);
+    }
+
+    private AhoCorasickDoubleArrayTrie buildTrie(
+            DictionaryParsingProperties dictParsing,
+            TextPreprocessor textPreprocessor) {
+        String path = dictParsing.getBinFilePath();
+        if (path != null && !path.isBlank()) {
+            return AhoCorasickCodec.deserialize(path);
+        }
+        String textFilePath = dictParsing.getTextFilePath();
+        if (textFilePath == null || textFilePath.isBlank()) {
+            throw new IllegalArgumentException(
+                    "The binary file path and the text file path must not be both blank");
+        }
+        DictionaryParser parser = new DictionaryParser(textPreprocessor);
+        List<Word> words = parser.parse(Path.of(textFilePath),
+                dictParsing.getTextFileCharset(),
+                dictParsing.isSkipInvalidCharacter(),
+                dictParsing.getExtendedWord()
+                        .isEnabled());
+        return new AhoCorasickDoubleArrayTrie(words);
     }
 
     @ExtensionPointMethod
@@ -230,25 +267,22 @@ public class AntiSpamHandler extends TurmsExtension implements ClientRequestTran
         return null;
     }
 
-    private AhoCorasickDoubleArrayTrie buildTrie(
-            DictionaryParsingProperties dictParsing,
-            TextPreprocessor textPreprocessor) {
-        String path = dictParsing.getBinFilePath();
-        if (path != null && !path.isBlank()) {
-            return AhoCorasickCodec.deserialize(path);
+    public Pair<String, List<String>> detectUnwantedWords(
+            String text,
+            @Nullable Integer maxNumberOfUnwantedWordsToReturn,
+            @Nullable Byte mask) {
+        Validator.notNull(text, "text");
+        if (!enabled) {
+            return Pair.of(text, Collections.emptyList());
         }
-        String textFilePath = dictParsing.getTextFilePath();
-        if (textFilePath == null || textFilePath.isBlank()) {
-            throw new IllegalArgumentException(
-                    "The binary file path and the text file path must not be both blank");
-        }
-        DictionaryParser parser = new DictionaryParser(textPreprocessor);
-        List<Word> words = parser.parse(Path.of(textFilePath),
-                dictParsing.getTextFileCharset(),
-                dictParsing.isSkipInvalidCharacter(),
-                dictParsing.getExtendedWord()
-                        .isEnabled());
-        return new AhoCorasickDoubleArrayTrie(words);
+        String maskedText = mask == null
+                ? text
+                : spamDetector.mask(text, mask);
+        List<String> words = spamDetector.findUnwantedWordList(text,
+                maxNumberOfUnwantedWordsToReturn == null
+                        ? Integer.MAX_VALUE
+                        : maxNumberOfUnwantedWordsToReturn);
+        return Pair.of(maskedText, words);
     }
 
     private record TextTypeProperties(

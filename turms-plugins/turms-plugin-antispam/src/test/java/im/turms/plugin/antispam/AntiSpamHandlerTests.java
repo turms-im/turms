@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import im.turms.plugin.antispam.ac.Store;
+import im.turms.plugin.antispam.core.SpamDetector;
+import im.turms.plugin.antispam.core.ac.Store;
 import im.turms.plugin.antispam.property.AntiSpamProperties;
 import im.turms.plugin.antispam.property.TextParsingStrategy;
 import im.turms.plugin.antispam.property.UnwantedWordHandleStrategy;

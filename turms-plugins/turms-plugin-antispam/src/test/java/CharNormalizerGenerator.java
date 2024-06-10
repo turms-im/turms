@@ -40,7 +40,7 @@ public class CharNormalizerGenerator {
         URI outputPath = CharNormalizerGenerator.class.getClassLoader()
                 .getResource(".")
                 .toURI()
-                .resolve("../../src/main/java/im/turms/plugin/antispam/character/data");
+                .resolve("../../src/main/java/im/turms/plugin/antispam/core/character/data");
         generate(Path.of(outputPath));
     }
 
@@ -117,7 +117,7 @@ public class CharNormalizerGenerator {
         String template = """
                 // Generated Code - Do NOT edit manually
 
-                package im.turms.plugin.antispam.character.data;
+                package im.turms.plugin.antispam.core.character.data;
 
                 public final class Common {
 
@@ -160,7 +160,7 @@ public class CharNormalizerGenerator {
         String template = """
                 // Generated Code - Do NOT edit manually
 
-                package im.turms.plugin.antispam.character.data;
+                package im.turms.plugin.antispam.core.character.data;
 
                 public final class %s {
 
@@ -200,6 +200,7 @@ public class CharNormalizerGenerator {
 
     private static void writeStr(Path path, String str) {
         try {
+            Files.createDirectories(path.getParent());
             Files.writeString(path, str, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new InputOutputException(

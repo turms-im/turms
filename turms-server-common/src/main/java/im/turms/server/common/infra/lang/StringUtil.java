@@ -579,6 +579,20 @@ public final class StringUtil {
         }
     }
 
+    public static String newUtf16String(byte[] srcBytes, int srcPos, int length) {
+        byte[] bytes = new byte[length];
+        System.arraycopy(srcBytes, srcPos, bytes, 0, length);
+        return newUtf16String(bytes);
+    }
+
+    public static String newUtf16String(byte[] bytes) {
+        try {
+            return (String) NEW_STRING.invokeExact(bytes, UTF16);
+        } catch (Throwable e) {
+            throw new IncompatibleJvmException("Failed to new a string", e);
+        }
+    }
+
     // Case format conversion
 
     /**
