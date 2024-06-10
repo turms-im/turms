@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import jakarta.annotation.Nullable;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -42,6 +43,7 @@ import im.turms.server.common.infra.json.JsonCodecPool;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.LongUtil;
 import im.turms.server.common.infra.lang.MathUtil;
+import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -144,60 +146,22 @@ public class DebugService {
         // 4. Find method
         Method methodToCall;
         try {
-            methodToCall = getTargetMethod(receiverClass, methodName);
+            methodToCall = findTargetMethod(receiverClass, methodName);
         } catch (Exception e) {
             return Mono.error(e);
         }
         ReflectionUtil.setAccessible(methodToCall);
         // 5. Prepare arguments
-        Parameter[] parameters = methodToCall.getParameters();
-        int paramCount = parameters.length;
-        int inputParamCount = CollectionUtil.getSize(params);
-        if (inputParamCount > paramCount) {
-            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "The count of arguments must not exceed "
-                            + paramCount));
-        }
-        Object[] paramValues = new Object[paramCount];
-        if (inputParamCount > 0) {
-            boolean hasName = params.getFirst()
-                    .name() != null;
-            if (hasName) {
-                Map<String, Parameter> nameToParam =
-                        CollectionUtil.newMapWithExpectedSize(paramCount);
-                for (Parameter parameter : parameters) {
-                    nameToParam.put(parameter.getName(), parameter);
-                }
-                for (int i = 0; i < inputParamCount; i++) {
-                    CreateMethodCallDTO.ParamDTO param = params.get(i);
-                    String name = param.name();
-                    if (name == null) {
-                        throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                "The parameter at index "
-                                        + i
-                                        + " has not specified a name");
-                    }
-                    Parameter parameter = nameToParam.get(name);
-                    if (parameter == null) {
-                        throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                                "The specified parameter is not found: \""
-                                        + param.name()
-                                        + "\"");
-                    }
-                    paramValues[i] = parseArg(parameter.getType(), param.value());
-                }
-            } else {
-                for (int i = 0; i < inputParamCount; i++) {
-                    CreateMethodCallDTO.ParamDTO param = params.get(i);
-                    Class<?> parameterType = parameters[i].getType();
-                    paramValues[i] = parseArg(parameterType, param.value());
-                }
-            }
+        Object[] arguments;
+        try {
+            arguments = prepareArguments(params, methodToCall);
+        } catch (Exception e) {
+            return Mono.error(e);
         }
         // 6. Invoke method
         Object returnValue;
         try {
-            returnValue = methodToCall.invoke(receiver, paramValues);
+            returnValue = methodToCall.invoke(receiver, arguments);
         } catch (Exception e) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Failed to invoke the method: "
@@ -213,7 +177,7 @@ public class DebugService {
         };
     }
 
-    private Method getTargetMethod(Class<?> specifiedClass, String methodName) {
+    private Method findTargetMethod(Class<?> specifiedClass, String methodName) {
         int indexOfBrace = methodName.indexOf('(');
         boolean useMethodSignature = indexOfBrace >= 0;
         Class<?> currentClass = specifiedClass;
@@ -281,6 +245,66 @@ public class DebugService {
                 return candidateMethods.getFirst();
             }
         }
+    }
+
+    private Object[] prepareArguments(
+            @Nullable List<CreateMethodCallDTO.ParamDTO> inputParams,
+            Method methodToCall) {
+        Parameter[] parameters = methodToCall.getParameters();
+        int paramCount = parameters.length;
+        int inputParamCount = CollectionUtil.getSize(inputParams);
+        if (inputParamCount > paramCount) {
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "The count of arguments must not exceed "
+                            + paramCount);
+        }
+        Object[] arguments = new Object[paramCount];
+        if (inputParamCount == 0) {
+            return arguments;
+        }
+        boolean hasName = inputParams.getFirst()
+                .name() != null;
+        if (hasName) {
+            Set<String> specifiedNames = CollectionUtil.newSetWithExpectedSize(inputParamCount);
+            Map<String, Pair<Integer, Parameter>> nameToParam =
+                    CollectionUtil.newMapWithExpectedSize(paramCount);
+            for (int i = 0; i < paramCount; i++) {
+                Parameter parameter = parameters[i];
+                nameToParam.put(parameter.getName(), Pair.of(i, parameter));
+            }
+            for (int i = 0; i < inputParamCount; i++) {
+                CreateMethodCallDTO.ParamDTO param = inputParams.get(i);
+                String name = param.name();
+                if (name == null) {
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "The parameter at index "
+                                    + i
+                                    + " has not specified a name");
+                }
+                Pair<Integer, Parameter> parameter = nameToParam.get(name);
+                if (parameter == null) {
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "The specified parameter is not found: \""
+                                    + param.name()
+                                    + "\"");
+                }
+                if (!specifiedNames.add(name)) {
+                    throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                            "The specified parameter is duplicated: \""
+                                    + name
+                                    + "\"");
+                }
+                arguments[parameter.first()] = parseArg(parameter.second()
+                        .getType(), param.value());
+            }
+        } else {
+            for (int i = 0; i < inputParamCount; i++) {
+                CreateMethodCallDTO.ParamDTO param = inputParams.get(i);
+                Class<?> parameterType = parameters[i].getType();
+                arguments[i] = parseArg(parameterType, param.value());
+            }
+        }
+        return arguments;
     }
 
     @Nullable
