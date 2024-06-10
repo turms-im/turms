@@ -33,6 +33,16 @@
           "type": "boolean"
         }
       },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
       "http": {},
       "log": {
         "enabled": {
@@ -165,6 +175,16 @@
           "deprecated": false,
           "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
           "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
           "mutable": true,
           "sensitive": false,
           "type": "boolean"
@@ -623,6 +643,16 @@
         "mutable": true,
         "sensitive": false,
         "type": "boolean"
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       },
       "defaultAvailableRecordsPerRequest": {
         "deprecated": false,

@@ -13,6 +13,9 @@ turms:
       debug:
         enabled: true
   service:
+    admin-api:
+      debug:
+        enabled: true
     client-api:
       logging:
         included-notification-categories:

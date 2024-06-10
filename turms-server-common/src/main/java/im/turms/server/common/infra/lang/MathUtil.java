@@ -17,6 +17,9 @@
 
 package im.turms.server.common.infra.lang;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * @author James Chen
  */
@@ -81,6 +84,52 @@ public final class MathUtil {
             return Integer.MIN_VALUE;
         }
         return (int) value;
+    }
+
+    public static BigDecimal toBigDecimalExact(Object value) {
+        return switch (value) {
+            case BigDecimal val -> val;
+            case String val -> new BigDecimal(val);
+            case Byte val -> new BigDecimal(val);
+            case Short val -> new BigDecimal(val);
+            case Integer val -> new BigDecimal(val);
+            case Long val -> new BigDecimal(val);
+            case Float val -> BigDecimal.valueOf(val);
+            case Double val -> BigDecimal.valueOf(val);
+            default -> throw new IllegalArgumentException(
+                    "The value is not a number: "
+                            + value);
+        };
+    }
+
+    public static BigInteger toBigIntegerExact(Object value) {
+        return switch (value) {
+            case BigInteger val -> val;
+            case String val -> new BigInteger(val);
+            case Byte val -> BigInteger.valueOf(val);
+            case Short val -> BigInteger.valueOf(val);
+            case Integer val -> BigInteger.valueOf(val);
+            case Long val -> BigInteger.valueOf(val);
+            case Float val -> {
+                if (val % 1 == 0) {
+                    yield BigInteger.valueOf(val.longValue());
+                }
+                throw new IllegalArgumentException(
+                        "The value is not an integer: "
+                                + value);
+            }
+            case Double val -> {
+                if (val % 1 == 0) {
+                    yield BigInteger.valueOf(val.longValue());
+                }
+                throw new IllegalArgumentException(
+                        "The value is not an integer: "
+                                + value);
+            }
+            default -> throw new IllegalArgumentException(
+                    "The value is not an integer: "
+                            + value);
+        };
     }
 
 }

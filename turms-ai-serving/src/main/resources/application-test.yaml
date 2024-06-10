@@ -5,14 +5,10 @@ spring:
 ############################### Turms ###############################
 
 turms:
-  gateway:
+  ai-serving:
     admin-api:
       debug:
         enabled: true
   logging:
     console:
       enabled: true
-  plugin:
-    js:
-      debug:
-        enabled: true

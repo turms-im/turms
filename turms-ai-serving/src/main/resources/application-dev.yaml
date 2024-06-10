@@ -16,6 +16,9 @@ turms:
     console:
       enabled: true
   ai-serving:
+    admin-api:
+      debug:
+        enabled: true
     mongo:
       admin:
         uri: mongodb://localhost:27017/turms-dev

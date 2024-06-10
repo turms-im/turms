@@ -44,6 +44,9 @@ public abstract class BaseAdminApiProperties {
     private AddressProperties address = new AddressProperties();
 
     @NestedConfigurationProperty
+    private DebugProperties debug = new DebugProperties();
+
+    @NestedConfigurationProperty
     private AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
 
     @NestedConfigurationProperty

@@ -75,6 +75,9 @@ public enum ResponseStatusCode {
     IP_BLOCKLIST_IS_DISABLED(1400, "Blocking an IP is disabled", 403),
     USER_ID_BLOCKLIST_IS_DISABLED(1401, "Blocking a user ID is disabled", 403),
 
+    // Admin - Debug
+    DEBUG_IS_DISABLED(1500, "Debug is disabled", 403),
+
     // Admin - Cluster - Leader
     NONEXISTENT_MEMBER_TO_BE_LEADER(1800, "Could not find the node", 404),
     NO_QUALIFIED_MEMBER_TO_BE_LEADER(1801, "No qualified node to be a leader", 503),

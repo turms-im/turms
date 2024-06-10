@@ -36,6 +36,17 @@
           "value": true
         }
       },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
+        }
+      },
       "enabled": {
         "deprecated": false,
         "description": "Whether to enable the APIs for administrators",
@@ -448,6 +459,17 @@
           "sensitive": false,
           "type": "boolean",
           "value": true
+        }
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
         }
       },
       "enabled": {
@@ -2830,6 +2852,17 @@
         "sensitive": false,
         "type": "boolean",
         "value": false
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
+        }
       },
       "defaultAvailableRecordsPerRequest": {
         "deprecated": false,
