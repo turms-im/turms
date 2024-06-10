@@ -86,7 +86,6 @@ import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.po.UserSettings;
 import im.turms.service.domain.user.po.UserVersion;
-import im.turms.service.storage.elasticsearch.mongo.SyncLog;
 
 import static im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties.StorageTierProperties;
 
@@ -99,10 +98,11 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoCollectionInitializer.class);
 
     private final TurmsMongoClient adminMongoClient;
-    private final TurmsMongoClient userMongoClient;
-    private final TurmsMongoClient groupMongoClient;
+    private final TurmsMongoClient conferenceMongoClient;
     private final TurmsMongoClient conversationMongoClient;
+    private final TurmsMongoClient groupMongoClient;
     private final TurmsMongoClient messageMongoClient;
+    private final TurmsMongoClient userMongoClient;
     private final List<TurmsMongoClient> clients;
 
     private final TurmsApplicationContext context;
@@ -118,20 +118,22 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     public MongoCollectionInitializer(
             @Lazy Node node,
             TurmsMongoClient adminMongoClient,
-            TurmsMongoClient userMongoClient,
-            TurmsMongoClient groupMongoClient,
+            TurmsMongoClient conferenceMongoClient,
             TurmsMongoClient conversationMongoClient,
+            TurmsMongoClient groupMongoClient,
             TurmsMongoClient messageMongoClient,
+            TurmsMongoClient userMongoClient,
             PasswordManager passwordManager,
             TaskManager taskManager,
             TurmsApplicationContext context,
             TurmsPropertiesManager propertiesManager) {
         this.node = node;
         this.adminMongoClient = adminMongoClient;
-        this.userMongoClient = userMongoClient;
-        this.groupMongoClient = groupMongoClient;
+        this.conferenceMongoClient = conferenceMongoClient;
         this.conversationMongoClient = conversationMongoClient;
+        this.groupMongoClient = groupMongoClient;
         this.messageMongoClient = messageMongoClient;
+        this.userMongoClient = userMongoClient;
         clients = List.of(adminMongoClient,
                 userMongoClient,
                 groupMongoClient,
@@ -238,7 +240,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 groupMongoClient.createCollectionIfNotExists(GroupType.class),
                 groupMongoClient.createCollectionIfNotExists(GroupVersion.class),
 
-                messageMongoClient.createCollectionIfNotExists(Meeting.class),
+                conferenceMongoClient.createCollectionIfNotExists(Meeting.class),
 
                 messageMongoClient.createCollectionIfNotExists(Message.class),
 
@@ -246,7 +248,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 conversationMongoClient.createCollectionIfNotExists(GroupConversation.class),
                 conversationMongoClient.createCollectionIfNotExists(PrivateConversation.class),
 
-                conversationMongoClient.createCollectionIfNotExists(SyncLog.class),
+                // ElasticsearchManager has its own logic to create collections dynamically,
+                // so we don't need to create collections for it.
+//                mongoClient.createCollectionIfNotExists(SyncLog.class),
 
                 userMongoClient.createCollectionIfNotExists(User.class),
                 userMongoClient.createCollectionIfNotExists(UserFriendRequest.class),
