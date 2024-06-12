@@ -18,9 +18,11 @@
 package im.turms.gateway.infra.logging;
 
 import io.netty.buffer.ByteBuf;
+import org.springframework.stereotype.Component;
 
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.server.common.infra.lang.NumberFormatter;
+import im.turms.server.common.infra.logging.BaseNotificationLoggingManager;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;
@@ -29,12 +31,10 @@ import static im.turms.server.common.infra.logging.CommonLogger.NOTIFICATION_LOG
 /**
  * @author James Chen
  */
-public final class NotificationLogging {
+@Component
+public class NotificationLoggingManager extends BaseNotificationLoggingManager {
 
-    private NotificationLogging() {
-    }
-
-    public static void log(
+    public void log(
             SimpleTurmsNotification notification,
             int notificationBytes,
             int recipientCount,

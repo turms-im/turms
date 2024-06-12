@@ -34,6 +34,7 @@ import im.turms.gateway.domain.notification.service.NotificationService;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
+import im.turms.gateway.infra.logging.NotificationLoggingManager;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequestTypePool;
@@ -60,7 +61,7 @@ class NotificationServiceTests {
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties());
 
         NotificationService notificationService =
-                new NotificationService(null, null, null, propertiesManager);
+                new NotificationService(null, null, null, null, propertiesManager);
         assertThat(notificationService).isNotNull();
     }
 
@@ -132,6 +133,8 @@ class NotificationServiceTests {
         ApiLoggingContext apiLoggingContext = mock(ApiLoggingContext.class);
         when(apiLoggingContext.shouldLogNotification(any())).thenReturn(true);
 
+        NotificationLoggingManager notificationLoggingManager =
+                mock(NotificationLoggingManager.class);
         PluginManager pluginManager = mock(PluginManager.class);
 
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
@@ -142,6 +145,7 @@ class NotificationServiceTests {
         return new NotificationService(
                 apiLoggingContext,
                 sessionService,
+                notificationLoggingManager,
                 pluginManager,
                 propertiesManager);
     }

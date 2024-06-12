@@ -32,7 +32,7 @@ import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.domain.session.manager.UserSessionsManager;
 import im.turms.gateway.domain.session.service.SessionService;
 import im.turms.gateway.infra.logging.ApiLoggingContext;
-import im.turms.gateway.infra.logging.NotificationLogging;
+import im.turms.gateway.infra.logging.NotificationLoggingManager;
 import im.turms.gateway.infra.plugin.extension.NotificationHandler;
 import im.turms.gateway.infra.proto.SimpleTurmsNotification;
 import im.turms.gateway.infra.proto.TurmsNotificationParser;
@@ -64,6 +64,7 @@ public class NotificationService implements RpcNotificationService {
 
     private final ApiLoggingContext apiLoggingContext;
     private final SessionService sessionService;
+    private final NotificationLoggingManager notificationLoggingManager;
     private final PluginManager pluginManager;
 
     private final boolean isNotificationLoggingEnabled;
@@ -80,10 +81,12 @@ public class NotificationService implements RpcNotificationService {
     public NotificationService(
             ApiLoggingContext apiLoggingContext,
             SessionService sessionService,
+            NotificationLoggingManager notificationLoggingManager,
             PluginManager pluginManager,
             TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.sessionService = sessionService;
+        this.notificationLoggingManager = notificationLoggingManager;
         this.pluginManager = pluginManager;
         isNotificationLoggingEnabled = propertiesManager.getLocalProperties()
                 .getGateway()
@@ -182,7 +185,7 @@ public class NotificationService implements RpcNotificationService {
                         int notificationBytes = notificationData.readableBytes();
                         try (TracingCloseableContext ignored =
                                 TracingContext.getCloseableContext(context)) {
-                            NotificationLogging.log(notification,
+                            notificationLoggingManager.log(notification,
                                     notificationBytes,
                                     recipientCount,
                                     recipientCount - offlineRecipientCount);
