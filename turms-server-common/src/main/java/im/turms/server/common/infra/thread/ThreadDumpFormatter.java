@@ -47,7 +47,7 @@ public class ThreadDumpFormatter {
     private static final byte[] NONE = StringUtil.getBytes("\t- None\n");
     private static final byte[] OWNED_BY = StringUtil.getBytes(" owned by \"");
     private static final byte[] PARKING_TO_WAIT_FOR =
-            StringUtil.getBytes("\t- parking to wait for %s\n");
+            StringUtil.getBytes("\t- parking to wait for ");
     private static final byte[] THREAD = StringUtil.getBytes(" - Thread t@");
     private static final byte[] THREAD_STATE_CLASS_NAME =
             StringUtil.getBytes(Thread.State.class.getCanonicalName());
