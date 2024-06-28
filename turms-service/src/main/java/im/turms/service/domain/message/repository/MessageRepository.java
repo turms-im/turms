@@ -48,6 +48,10 @@ public class MessageRepository extends BaseRepository<Message, Long> {
 
     private static final String[] FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID =
             {Message.Fields.IS_GROUP_MESSAGE, Message.Fields.TARGET_ID};
+    private static final String[] FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID_AND_DELIVERY_DATE =
+            {Message.Fields.IS_GROUP_MESSAGE,
+                    Message.Fields.TARGET_ID,
+                    Message.Fields.DELIVERY_DATE};
 
     public MessageRepository(@Qualifier("messageMongoClient") TurmsMongoClient mongoClient) {
         super(mongoClient, Message.class);
@@ -57,14 +61,16 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             Set<Long> messageIds,
             @Nullable Boolean isSystemMessage,
             @Nullable Integer senderIp,
+            @Nullable Date recallDate,
             @Nullable String text,
             @Nullable List<byte[]> records,
             @Nullable Integer burnAfter,
             @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, messageIds);
-        Update update = Update.newBuilder(5)
-                .setIfNotNull(Message.Fields.MODIFICATION_DATE, new Date())
+        Update update = Update.newBuilder(7)
+                .set(Message.Fields.MODIFICATION_DATE, new Date())
+                .setIfNotNull(Message.Fields.RECALL_DATE, recallDate)
                 .setIfNotNull(Message.Fields.TEXT, text)
                 .setIfNotNull(Message.Fields.SENDER_IP, senderIp)
                 .setIfNotNull(Message.Fields.RECORDS, records)
@@ -218,6 +224,17 @@ public class MessageRepository extends BaseRepository<Message, Long> {
                 .eq(Message.Fields.SENDER_ID, senderId);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID);
+        return mongoClient.findOne(entityClass, filter, options);
+    }
+
+    public Mono<Message> findIsGroupMessageAndTargetIdAndDeliveryDate(
+            Long messageId,
+            Long senderId) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(DomainFieldName.ID, messageId)
+                .eq(Message.Fields.SENDER_ID, senderId);
+        QueryOptions options = QueryOptions.newBuilder(1)
+                .include(FIELDS_IS_GROUP_MESSAGE_AND_TARGET_ID_AND_DELIVERY_DATE);
         return mongoClient.findOne(entityClass, filter, options);
     }
 
