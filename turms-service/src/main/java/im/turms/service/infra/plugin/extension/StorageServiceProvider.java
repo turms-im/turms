@@ -29,13 +29,14 @@ import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.Singleton;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.service.domain.storage.bo.StorageResourceInfo;
 
 /**
  * @author James Chen
  */
-public interface StorageServiceProvider extends ExtensionPoint {
+public interface StorageServiceProvider extends ExtensionPoint, Singleton {
 
     // User profile picture
 

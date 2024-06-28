@@ -15,26 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.plugin;
-
-import java.util.Set;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import im.turms.server.common.infra.plugin.ExtensionPoint;
-import im.turms.service.infra.plugin.extension.ConferenceServiceProvider;
-import im.turms.service.infra.plugin.extension.StorageServiceProvider;
+package im.turms.server.common.infra.plugin;
 
 /**
+ * Used to mark a class as a singleton extension point to ensure only one instance of the extension
+ * point is registered at most.
+ *
  * @author James Chen
  */
-@Configuration
-public class PluginConfiguration {
-
-    @Bean
-    public Set<Class<? extends ExtensionPoint>> singletonExtensionPoints() {
-        return Set.of(ConferenceServiceProvider.class, StorageServiceProvider.class);
-    }
-
+public interface Singleton {
 }

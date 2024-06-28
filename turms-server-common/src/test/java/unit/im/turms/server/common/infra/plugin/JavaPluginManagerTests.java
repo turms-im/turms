@@ -135,12 +135,8 @@ class JavaPluginManagerTests {
                         .dir(".")
                         .build())
                 .build());
-        PluginManager manager = new PluginManager(
-                NodeType.GATEWAY,
-                context,
-                applicationContext,
-                propertiesManager,
-                Collections.emptySet());
+        PluginManager manager =
+                new PluginManager(NodeType.GATEWAY, context, applicationContext, propertiesManager);
         return manager.getExtensionPoints(MyExtensionPoint.class)
                 .getFirst();
     }

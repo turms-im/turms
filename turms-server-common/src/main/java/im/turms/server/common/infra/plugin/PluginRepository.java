@@ -42,11 +42,6 @@ public class PluginRepository {
     private final ConcurrentHashMap<String, Plugin> idToPlugin = new ConcurrentHashMap<>(16);
     private final NonBlockingIdentityHashMap<Class<? extends ExtensionPoint>, List<ExtensionPoint>> classToExtensionPoint =
             new NonBlockingIdentityHashMap<>(16);
-    private final Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses;
-
-    public PluginRepository(Set<Class<? extends ExtensionPoint>> singletonExtensionPointClasses) {
-        this.singletonExtensionPointClasses = singletonExtensionPointClasses;
-    }
 
     public void register(Plugin plugin) {
         String id = plugin.descriptor()
@@ -59,7 +54,7 @@ public class PluginRepository {
                     List<ExtensionPoint> extensionPoints =
                             classToExtensionPoint.computeIfAbsent(extensionPointClass,
                                     key -> new CopyOnWriteArrayList<>());
-                    if (singletonExtensionPointClasses.contains(extensionPointClass)
+                    if (Singleton.class.isAssignableFrom(extensionPointClass)
                             && !extensionPoints.isEmpty()) {
                         throw new DuplicateResourceException(
                                 "The singleton extension point ("

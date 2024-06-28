@@ -119,18 +119,13 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             NodeType nodeType,
             ApplicationContext context,
             TurmsApplicationContext applicationContext,
-            TurmsPropertiesManager propertiesManager,
-            @Autowired(
-                    required = false) Set<Class<? extends ExtensionPoint>> singletonExtensionPoints) {
+            TurmsPropertiesManager propertiesManager) {
         this.nodeType = nodeType;
         this.context = context;
         PluginProperties pluginProperties = propertiesManager.getLocalProperties()
                 .getPlugin();
         enabled = pluginProperties.isEnabled();
-        pluginRepository = new PluginRepository(
-                singletonExtensionPoints == null
-                        ? Collections.emptySet()
-                        : singletonExtensionPoints);
+        pluginRepository = new PluginRepository();
         pluginDir = getPluginDir(applicationContext.getHome(), pluginProperties.getDir());
         isJsScriptEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsScriptEnabled);

@@ -149,12 +149,8 @@ class JsPluginManagerTests {
                         .dir(".")
                         .build())
                 .build());
-        PluginManager manager = new PluginManager(
-                NodeType.GATEWAY,
-                context,
-                applicationContext,
-                propertiesManager,
-                Collections.emptySet());
+        PluginManager manager =
+                new PluginManager(NodeType.GATEWAY, context, applicationContext, propertiesManager);
         List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
         assertThat(list).hasSize(1);
         return list.getFirst();

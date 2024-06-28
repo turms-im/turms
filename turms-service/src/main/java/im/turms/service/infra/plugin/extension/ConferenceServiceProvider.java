@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.exception.NotImplementedException;
 import im.turms.server.common.infra.plugin.ExtensionPoint;
+import im.turms.server.common.infra.plugin.Singleton;
 import im.turms.service.domain.conference.po.Meeting;
 import im.turms.service.infra.plugin.extension.model.AcceptMeetingInvitationResult;
 import im.turms.service.infra.plugin.extension.model.CreateMeetingOptions;
@@ -33,7 +34,7 @@ import im.turms.service.infra.plugin.extension.model.MeetingEndedEvent;
 /**
  * @author James Chen
  */
-public interface ConferenceServiceProvider extends ExtensionPoint {
+public interface ConferenceServiceProvider extends ExtensionPoint, Singleton {
 
     default Mono<Void> addMeetingEndedEventListener(@NotNull Consumer<MeetingEndedEvent> listener) {
         return Mono.empty();
