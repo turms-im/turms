@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import jakarta.annotation.Nullable;
@@ -37,6 +38,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import io.lettuce.core.ScriptOutputType;
 import io.micrometer.core.instrument.Counter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -44,9 +46,11 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.math.MathFlux;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -64,6 +68,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.message.OutboundMessageManager;
 import im.turms.server.common.infra.net.InetAddressUtil;
+import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
@@ -75,12 +80,15 @@ import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.server.common.infra.time.DateRange;
 import im.turms.server.common.infra.time.DateUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
+import im.turms.server.common.storage.redis.RedisEntryIdConst;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
+import im.turms.server.common.storage.redis.script.RedisScript;
 import im.turms.service.domain.conversation.service.ConversationService;
 import im.turms.service.domain.group.service.GroupMemberService;
 import im.turms.service.domain.group.service.GroupService;
@@ -118,8 +126,6 @@ public class MessageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
 
-    private static final byte[] GROUP_CONVERSATION_SEQUENCE_ID_PREFIX = {'g', 'i'};
-    private static final byte[] PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX = {'p', 'i'};
     private static final Method GET_MESSAGES_TO_DELETE_METHOD;
 
     private final MessageRepository messageRepository;
@@ -134,6 +140,9 @@ public class MessageService {
     private final GroupMemberService groupMemberService;
     private final UserService userService;
     private final PluginManager pluginManager;
+
+    private final RedisScript<Long> deletePrivateMessageSequenceIdScript;
+    private final RedisScript<Long> getPrivateMessageSequenceIdScript;
 
     private final boolean useConversationId;
     private final boolean useSequenceIdForGroupConversation;
@@ -204,6 +213,23 @@ public class MessageService {
         this.groupMemberService = groupMemberService;
         this.userService = userService;
         this.pluginManager = pluginManager;
+
+        Map<String, Object> scriptParams = Map.of("RELATED_USER_IDS_KEY",
+                "\""
+                        + RedisEntryIdConst.KEY_RELATED_USER_IDS
+                        + "\"",
+                "PRIVATE_MESSAGE_SEQUENCE_ID_KEY",
+                "\""
+                        + RedisEntryIdConst.KEY_PRIVATE_MESSAGE_SEQUENCE_ID
+                        + "\"");
+        deletePrivateMessageSequenceIdScript = RedisScript.get(
+                new ClassPathResource("redis/message/delete_private_message_sequence_id.lua"),
+                ScriptOutputType.INTEGER,
+                scriptParams);
+        getPrivateMessageSequenceIdScript = RedisScript.get(
+                new ClassPathResource("redis/message/get_private_message_sequence_id.lua"),
+                ScriptOutputType.INTEGER,
+                scriptParams);
 
         TurmsProperties globalProperties = propertiesManager.getGlobalProperties();
         MessageProperties messageProperties = globalProperties.getService()
@@ -592,14 +618,14 @@ public class MessageService {
                     ? MessageRepository.getGroupConversationId(targetId)
                     : null;
             if (useSequenceIdForGroupConversation) {
-                sequenceId = fetchSequenceId(true, targetId);
+                sequenceId = fetchGroupMessageSequenceId(targetId);
             }
         } else {
             conversationId = useConversationId
                     ? MessageRepository.getPrivateConversationId(senderId, targetId)
                     : null;
             if (useSequenceIdForPrivateConversation) {
-                sequenceId = fetchSequenceId(false, targetId);
+                sequenceId = fetchPrivateMessageSequenceId(senderId, targetId);
             }
         }
         Mono<Message> saveMessage;
@@ -1566,38 +1592,115 @@ public class MessageService {
 
     // Sequence ID
 
-    public Mono<Void> deleteSequenceIds(boolean isGroupConversation, Set<Long> targetIds) {
+    public Mono<Long> deleteGroupMessageSequenceIds(Set<Long> groupIds) {
         if (redisClientManager == null) {
-            return Mono.empty();
+            return PublisherPool.LONG_ZERO;
         }
-        return redisClientManager.execute(targetIds, (client, keyList) -> {
-            List<ByteBuf> keys = new ArrayList<>(keyList.size());
-            for (Long targetId : keyList) {
-                byte[] prefix = isGroupConversation
-                        ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
-                        : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
-                ByteBuf buffer =
-                        PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
-                                .writeBytes(prefix)
-                                .writeLong(targetId);
-                keys.add(buffer);
+        Flux<Long> execute = redisClientManager.execute(groupIds, (client, keyList) -> {
+            ByteBuf[] keys = new ByteBuf[keyList.size()];
+            int i = 0;
+            try {
+                for (Long groupId : keyList) {
+                    ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES);
+                    keys[i++] = buffer;
+                    buffer.writeLong(groupId);
+                }
+            } catch (Exception e) {
+                ReferenceCountUtil.ensureReleased(keys);
+                return Mono.error(e);
             }
-            return client.del(keys);
-        })
-                .then();
+            return client.hdel(RedisEntryIdConst.KEY_GROUP_MESSAGE_SEQUENCE_ID_BUFFER,
+                    (Object[]) keys);
+        });
+        return MathFlux.sumLong(execute);
     }
 
-    private Mono<Long> fetchSequenceId(boolean isGroupConversation, Long targetId) {
+    /**
+     * Note that if there is an user1, when the sequence ID-related data of their last related user
+     * is deleted, the sequence ID-related data of user1 in Redis will be deleted automatically (the
+     * behavior is expected to save memory), which indicate that calling this method with user1 is
+     * unnecessary, and will return 0 instead of 1.
+     */
+    public Mono<Long> deletePrivateMessageSequenceIds(Set<Long> userIds) {
+        if (redisClientManager == null) {
+            return PublisherPool.LONG_ZERO;
+        }
+        Flux<Long> flux = Mono.fromCallable(() -> {
+            ByteBuf[] keys = new ByteBuf[userIds.size()];
+            int i = 0;
+            try {
+                for (Long userId : userIds) {
+                    ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES);
+                    keys[i++] = buffer;
+                    buffer.writeLong(userId);
+                }
+            } catch (Exception e) {
+                ReferenceCountUtil.ensureReleased(keys);
+                throw e;
+            }
+            return keys;
+        })
+                .flatMapMany(keys -> redisClientManager.execute(client -> {
+                    ReferenceCountUtil.retain(keys);
+                    return client.eval(deletePrivateMessageSequenceIdScript, keys)
+                            .doFinally(signalType -> ReferenceCountUtil.release(keys));
+                })
+                        .doFinally(signalType -> ReferenceCountUtil.release(keys)));
+        return MathFlux.sumLong(flux);
+    }
+
+    /**
+     * @implNote If the client application detects that the sequence ID goes backward, it should
+     *           delete the existent cache for the sequence ID, and cache and use the new sequence
+     *           ID so that the client application can still work fine.
+     *           <p>
+     *           This is an expected behavior for client applications to suffer from data loss in
+     *           Redis due to any reason.
+     */
+    @VisibleForTesting
+    public Mono<Long> fetchGroupMessageSequenceId(Long groupId) {
         if (redisClientManager == null) {
             return Mono.empty();
         }
-        byte[] prefix = isGroupConversation
-                ? GROUP_CONVERSATION_SEQUENCE_ID_PREFIX
-                : PRIVATE_CONVERSATION_SEQUENCE_ID_PREFIX;
-        ByteBuf keyBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(prefix.length + Long.BYTES)
-                .writeBytes(prefix)
-                .writeLong(targetId);
-        return redisClientManager.incr(targetId, keyBuffer);
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES);
+        try {
+            buffer.writeLong(groupId);
+        } catch (Exception e) {
+            buffer.release();
+            return Mono.error(e);
+        }
+        return redisClientManager
+                .hincr(groupId, RedisEntryIdConst.KEY_GROUP_MESSAGE_SEQUENCE_ID_BUFFER, buffer);
+    }
+
+    @VisibleForTesting
+    public Mono<Long> fetchPrivateMessageSequenceId(Long userId1, Long userId2) {
+        if (redisClientManager == null) {
+            return Mono.empty();
+        }
+        ByteBuf key1 = null;
+        ByteBuf key2 = null;
+        try {
+            key1 = PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES);
+            key2 = PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES);
+            if (userId1 < userId2) {
+                key1 = key1.writeLong(userId1);
+                key2 = key2.writeLong(userId2);
+            } else {
+                key1 = key1.writeLong(userId2);
+                key2 = key2.writeLong(userId1);
+            }
+        } catch (Exception e) {
+            if (key1 != null) {
+                key1.release();
+            }
+            if (key2 != null) {
+                key2.release();
+            }
+            return Mono.error(e);
+        }
+        return redisClientManager
+                .eval(userId1 ^ userId2, getPrivateMessageSequenceIdScript, key1, key2);
     }
 
     // conversation ID

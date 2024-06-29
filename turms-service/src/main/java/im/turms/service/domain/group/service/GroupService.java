@@ -350,9 +350,9 @@ public class GroupService {
                 if (count > 0) {
                     deletedGroupsCounter.increment(count);
                 }
-                Mono<Void> deleteSequenceIds = groupIds == null
-                        ? Mono.empty()
-                        : messageService.deleteSequenceIds(true, groupIds);
+                Mono<Long> deleteSequenceIds = groupIds == null
+                        ? PublisherPool.LONG_ZERO
+                        : messageService.deleteGroupMessageSequenceIds(groupIds);
                 return groupMemberService.deleteAllGroupMembers(groupIds, session, false)
                         .then(conversationService.deleteGroupConversations(groupIds, session))
                         .then(groupVersionService.delete(groupIds, session))

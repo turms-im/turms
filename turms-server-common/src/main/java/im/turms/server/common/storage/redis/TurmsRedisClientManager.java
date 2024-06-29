@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
@@ -76,6 +77,16 @@ public class TurmsRedisClientManager {
         return Mono.whenDelayError(monos);
     }
 
+    public <T> Flux<T> execute(Function<TurmsRedisClient, Mono<T>> execute) {
+        int clientCount = clients.size();
+        Mono<T>[] results = new Mono[clientCount];
+        for (int i = 0; i < clientCount; i++) {
+            TurmsRedisClient client = clients.get(i);
+            results[i] = execute.apply(client);
+        }
+        return Flux.mergeDelayError(clientCount, results);
+    }
+
     public <T> Flux<T> execute(
             Set<Long> shardKeys,
             BiFunction<TurmsRedisClient, Collection<Long>, Mono<T>> execute) {
@@ -113,6 +124,10 @@ public class TurmsRedisClientManager {
 
     public Mono<Long> hdel(Long shardKey, Object key, Object[] fields) {
         return getClient(shardKey).hdel(key, fields);
+    }
+
+    public Mono<Long> hincr(Long shardKey, ByteBuf key, ByteBuf field) {
+        return getClient(shardKey).hincr(key, field);
     }
 
     public <K, V> Flux<Map.Entry<K, V>> hgetall(Long shardKey, Object key) {

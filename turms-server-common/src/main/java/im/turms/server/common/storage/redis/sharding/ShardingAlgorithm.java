@@ -18,6 +18,10 @@
 package im.turms.server.common.storage.redis.sharding;
 
 /**
+ * Used to shard data on the client side (i.e. in Turms servers) so that we don't need a Redis
+ * gateway since the turms-service server is the gateway already, and turms-service servers can work
+ * with multiple Redis clusters.
+ *
  * @author James Chen
  */
 public abstract class ShardingAlgorithm {
@@ -25,6 +29,6 @@ public abstract class ShardingAlgorithm {
     /**
      * @return the server index
      */
-    public abstract int doSharding(long userId, int serverSize);
+    public abstract int doSharding(long shardKey, int serverSize);
 
 }

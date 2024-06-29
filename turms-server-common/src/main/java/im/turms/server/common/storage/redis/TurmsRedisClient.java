@@ -159,6 +159,10 @@ public class TurmsRedisClient {
         });
     }
 
+    public Mono<Long> hincr(ByteBuf key, ByteBuf field) {
+        return commands.hincrby(key, field, 1);
+    }
+
     public <K, V> Flux<Map.Entry<K, V>> hgetall(K key) {
         return Flux.defer(() -> {
             ByteBuf keyBuffer = serializationContext.encodeHashKey(key);

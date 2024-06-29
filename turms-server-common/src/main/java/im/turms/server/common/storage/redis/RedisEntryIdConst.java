@@ -24,13 +24,24 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 /**
  * @author James Chen
  */
-public final class RedisEntryId {
+public final class RedisEntryIdConst {
 
-    private RedisEntryId() {
+    private RedisEntryIdConst() {
     }
 
-    public static final byte SESSIONS_STATUS = '$';
-    public static final ByteBuf LOCATION_BUFFER =
+    // region: key
+    public static final ByteBuf KEY_LOCATION_BUFFER =
             ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'l'});
+
+    public static final ByteBuf KEY_GROUP_MESSAGE_SEQUENCE_ID_BUFFER =
+            ByteBufUtil.getUnreleasableDirectBuffer(new byte[]{'g', 's'});
+
+    public static final String KEY_PRIVATE_MESSAGE_SEQUENCE_ID = "ps";
+    public static final String KEY_RELATED_USER_IDS = "ru";
+    // endregion
+
+    // region: hash field
+    public static final byte FIELD_SESSIONS_STATUS = '$';
+    // endregion
 
 }

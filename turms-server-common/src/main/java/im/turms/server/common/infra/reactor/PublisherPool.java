@@ -37,6 +37,7 @@ public class PublisherPool {
     public static final Mono<Boolean> FALSE = Mono.just(false);
 
     public static final Mono<Integer> INT_ZERO = Mono.just(0);
+    public static final Mono<Long> LONG_ZERO = Mono.just(0L);
 
     public static final Mono EMPTY_LIST = Mono.just(Collections.emptyList());
     public static final Mono EMPTY_SET = Mono.just(Collections.emptySet());

@@ -17,6 +17,9 @@
 
 package im.turms.server.common.infra.netty;
 
+import java.util.List;
+
+import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCounted;
 
 /**
@@ -25,6 +28,22 @@ import io.netty.util.ReferenceCounted;
 public final class ReferenceCountUtil {
 
     private ReferenceCountUtil() {
+    }
+
+    public static void retain(ReferenceCounted[] values) {
+        for (ReferenceCounted value : values) {
+            if (value != null) {
+                value.retain();
+            }
+        }
+    }
+
+    public static void release(ReferenceCounted[] values) {
+        for (ReferenceCounted value : values) {
+            if (value != null) {
+                value.release();
+            }
+        }
     }
 
     public static void ensureReleased(ReferenceCounted value) {
@@ -46,6 +65,27 @@ public final class ReferenceCountUtil {
         ReferenceCounted value;
         for (int i = start; i < end; i++) {
             value = values[i];
+            if (value != null) {
+                ensureReleased(value);
+            }
+        }
+    }
+
+    public static <T extends ReferenceCounted> void ensureReleased(List<T> values) {
+        for (ReferenceCounted value : values) {
+            if (value != null) {
+                ensureReleased(value);
+            }
+        }
+    }
+
+    public static <T extends ReferenceCounted> void ensureReleased(
+            List<T> values,
+            int start,
+            int end) {
+        ReferenceCounted value;
+        for (int i = start; i < end; i++) {
+            value = values.get(i);
             if (value != null) {
                 ensureReleased(value);
             }

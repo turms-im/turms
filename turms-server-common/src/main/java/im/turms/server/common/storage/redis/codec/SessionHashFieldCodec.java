@@ -26,7 +26,7 @@ import im.turms.server.common.domain.session.bo.UserStatusField;
 import im.turms.server.common.domain.session.bo.UserStatusFieldType;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.storage.redis.RedisEntryId;
+import im.turms.server.common.storage.redis.RedisEntryIdConst;
 
 /**
  * @author James Chen
@@ -50,7 +50,7 @@ public class SessionHashFieldCodec implements TurmsRedisCodec<Object> {
         byte[] nodeIdBytes;
         if (readableBytes == 1) {
             b = in.get();
-            if (b == RedisEntryId.SESSIONS_STATUS) {
+            if (b == RedisEntryIdConst.FIELD_SESSIONS_STATUS) {
                 return UserStatusField.USER_STATUS;
             }
             DeviceType deviceType = DeviceType.forNumber(b);

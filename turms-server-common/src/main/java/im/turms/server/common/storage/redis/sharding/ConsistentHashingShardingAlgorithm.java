@@ -26,8 +26,8 @@ public class ConsistentHashingShardingAlgorithm extends ShardingAlgorithm {
     private static final long SLOT_MASK = SLOT_COUNT - 1L;
 
     @Override
-    public int doSharding(long userId, int serverCount) {
-        int slot = (int) (userId & SLOT_MASK);
+    public int doSharding(long shardKey, int serverCount) {
+        int slot = (int) (shardKey & SLOT_MASK);
         int span = SLOT_COUNT / serverCount;
         return slot / span;
     }

@@ -533,7 +533,8 @@ public class UserService implements RpcUserService {
                                                             t);
                                                     return Mono.empty();
                                                 }))
-                                        .then(messageService.deleteSequenceIds(false, userIds)
+                                        .then(messageService
+                                                .deletePrivateMessageSequenceIds(userIds)
                                                 .doOnError(t -> LOGGER.error(
                                                         "Failed to remove the message sequence IDs of the users: "
                                                                 + userIds,
