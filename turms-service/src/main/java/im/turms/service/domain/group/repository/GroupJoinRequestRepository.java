@@ -78,9 +78,10 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
         Filter filter = Filter.newBuilder(2)
                 .eq(DomainFieldName.ID, requestId)
                 .eq(GroupJoinRequest.Fields.STATUS, RequestStatus.PENDING);
-        Update update = Update.newBuilder(3)
+        Update update = Update.newBuilder(4)
                 .set(GroupJoinRequest.Fields.STATUS, status)
                 .set(GroupJoinRequest.Fields.RESPONDER_ID, responderId)
+                .set(GroupJoinRequest.Fields.RESPONSE_DATE, new Date())
                 .setIfNotNull(GroupJoinRequest.Fields.REASON, reason);
         return mongoClient.updateOne(session, entityClass, filter, update);
     }

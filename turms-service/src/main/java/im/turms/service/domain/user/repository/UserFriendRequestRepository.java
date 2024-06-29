@@ -101,8 +101,9 @@ public class UserFriendRequestRepository
                 .eq(DomainFieldName.ID, requestId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
                 .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getEntityExpirationDate());
-        Update update = Update.newBuilder(2)
+        Update update = Update.newBuilder(3)
                 .set(UserFriendRequest.Fields.STATUS, requestStatus)
+                .set(UserFriendRequest.Fields.RESPONSE_DATE, new Date())
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason);
         return mongoClient.updateOne(session, entityClass, filter, update);
     }

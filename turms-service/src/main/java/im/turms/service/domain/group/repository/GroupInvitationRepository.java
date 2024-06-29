@@ -77,8 +77,9 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
                 .eq(DomainFieldName.ID, invitationId)
                 .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING)
                 .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getEntityExpirationDate());
-        Update update = Update.newBuilder(2)
+        Update update = Update.newBuilder(3)
                 .set(GroupInvitation.Fields.STATUS, requestStatus)
+                .setIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, new Date())
                 .setIfNotNull(GroupInvitation.Fields.REASON, reason);
         return mongoClient.updateOne(session, entityClass, filter, update);
     }
