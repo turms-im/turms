@@ -22,15 +22,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.function.Supplier;
 
 import lombok.extern.slf4j.Slf4j;
 
 import im.turms.server.common.testing.environment.ServiceTestEnvironmentType;
 import im.turms.server.common.testing.environment.TestEnvironmentManager;
+import im.turms.server.common.testing.properties.ElasticsearchTestEnvironmentProperties;
+import im.turms.server.common.testing.properties.MinioTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.MongoTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.RedisTestEnvironmentProperties;
 import im.turms.server.common.testing.properties.TestProperties;
+import im.turms.server.common.testing.properties.TurmsGatewayTestEnvironmentProperties;
+import im.turms.server.common.testing.properties.TurmsServiceTestEnvironmentProperties;
 
 /**
  * @author James Chen
@@ -73,6 +76,29 @@ public abstract class BaseIntegrationTest {
         testEnvironmentManager.start();
         log.info("Set up the test environment from properties");
         return testEnvironmentManager;
+    }
+
+    public static synchronized TestEnvironmentManager setupLocalTestEnvironment() {
+        return setupTestEnvironment(new TestProperties().toBuilder()
+                .elasticsearch(new ElasticsearchTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .minio(new MinioTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .mongo(new MongoTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .redis(new RedisTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .turmsGateway(new TurmsGatewayTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .turmsService(new TurmsServiceTestEnvironmentProperties().toBuilder()
+                        .type(ServiceTestEnvironmentType.LOCAL)
+                        .build())
+                .build());
     }
 
     protected String readText(String path) {
