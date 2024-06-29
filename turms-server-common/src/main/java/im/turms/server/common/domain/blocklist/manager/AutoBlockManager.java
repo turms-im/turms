@@ -49,14 +49,16 @@ public class AutoBlockManager<T> {
             ObjLongConsumer<T> onClientBlocked) {
         this.onClientBlocked = onClientBlocked;
         levels = CollectionUtil.toListSupportRandomAccess(autoBlockProperties.getBlockLevels());
-        maxLevel = levels.size() - 1;
         isEnabled = autoBlockProperties.isEnabled() && !levels.isEmpty();
-        blockTriggerTimes = autoBlockProperties.getBlockTriggerTimes();
-        if (isEnabled) {
+        if (!isEnabled) {
             blockedClientIdToStatus = null;
+            maxLevel = UNSET_BLOCK_LEVEL;
+            blockTriggerTimes = 0;
             return;
         }
         blockedClientIdToStatus = new ConcurrentHashMap<>(1024);
+        maxLevel = levels.size() - 1;
+        blockTriggerTimes = autoBlockProperties.getBlockTriggerTimes();
     }
 
     public void tryBlockClient(T id) {
@@ -104,10 +106,16 @@ public class AutoBlockManager<T> {
     }
 
     public void unblockClient(T id) {
+        if (!isEnabled) {
+            return;
+        }
         blockedClientIdToStatus.remove(id);
     }
 
     public void evictExpiredBlockedClients() {
+        if (!isEnabled) {
+            return;
+        }
         long now = System.currentTimeMillis();
         Iterator<BlockStatus> iterator = blockedClientIdToStatus.values()
                 .iterator();
