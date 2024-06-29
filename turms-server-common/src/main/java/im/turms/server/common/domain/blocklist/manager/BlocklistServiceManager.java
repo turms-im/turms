@@ -98,12 +98,12 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
     private static final long UNINITIALIZED_TIMESTAMP = -1;
     private static final int UNINITIALIZED_LOG_ID = -1;
 
-    private final RedisScript blockClientsScript;
-    private final RedisScript unblockClientsScript;
-    private final RedisScript getBlockedClientsScript;
-    private final RedisScript evictAllBlockedClients;
-    private final RedisScript evictExpiredBlockedClients;
-    private final RedisScript getBlocklistLogsScript;
+    private final RedisScript<List<Object>> blockClientsScript;
+    private final RedisScript<List<Object>> unblockClientsScript;
+    private final RedisScript<List<Object>> getBlockedClientsScript;
+    private final RedisScript<Boolean> evictAllBlockedClients;
+    private final RedisScript<Boolean> evictExpiredBlockedClients;
+    private final RedisScript<List<Object>> getBlocklistLogsScript;
 
     private final Node node;
     private final TurmsRedisClient redisClient;
@@ -138,12 +138,12 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
             Node node,
             TurmsRedisClient redisClient,
             ScheduledThreadPoolExecutor threadPoolExecutor,
-            RedisScript blockClientsScript,
-            RedisScript unblockClientsScript,
-            RedisScript getBlockedClientsScript,
-            RedisScript evictAllBlockedClients,
-            RedisScript evictExpiredBlockedClients,
-            RedisScript getBlocklistLogsScript,
+            RedisScript<List<Object>> blockClientsScript,
+            RedisScript<List<Object>> unblockClientsScript,
+            RedisScript<List<Object>> getBlockedClientsScript,
+            RedisScript<Boolean> evictAllBlockedClients,
+            RedisScript<Boolean> evictExpiredBlockedClients,
+            RedisScript<List<Object>> getBlocklistLogsScript,
             Consumer<T> onTargetBlocked) {
         this.node = node;
         this.redisClient = redisClient;
@@ -262,7 +262,8 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
     public Mono<Void> unblockAll() {
         blockedClientIdToBlockEndTimeMillis.clear();
         blockedClientSkipList.clear();
-        return redisClient.eval(evictAllBlockedClients, getBlocklistKey());
+        return redisClient.eval(evictAllBlockedClients, getBlocklistKey())
+                .then();
     }
 
     private void evictLocalExpiredBlockedClients() {

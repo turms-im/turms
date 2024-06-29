@@ -24,19 +24,19 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public final class LocaleUtils {
+public final class LocaleUtil {
 
     private static final Map<String, Locale> ID_TO_LOCALE;
 
     static {
         Map<String, Locale> idToLocale = new HashMap<>(2048);
-        // Use "availableLocales()" to avoid unnecessary copy.
+        // Use "availableLocales()" instead of "getAvailableLocales()" to avoid unnecessary copy.
         Locale.availableLocales()
                 .forEach(locale -> idToLocale.put(locale.toLanguageTag(), locale));
         ID_TO_LOCALE = Map.copyOf(idToLocale);
     }
 
-    private LocaleUtils() {
+    private LocaleUtil() {
     }
 
     public static boolean isAvailableLanguage(String languageId) {

@@ -112,24 +112,24 @@ public class BlocklistService {
 
         Map<String, Object> params = Map.of("MAX_LOG_QUEUE_SIZE", maxLogQueueSize);
 
-        RedisScript blockClientsScript =
+        RedisScript<List<Object>> blockClientsScript =
                 RedisScript.get(new ClassPathResource("redis/blocklist/block_clients.lua"),
                         ScriptOutputType.MULTI,
                         params);
-        RedisScript unblockClientsScript =
+        RedisScript<List<Object>> unblockClientsScript =
                 RedisScript.get(new ClassPathResource("redis/blocklist/unblock_clients.lua"),
                         ScriptOutputType.MULTI,
                         params);
-        RedisScript getBlockedClientsScript =
+        RedisScript<List<Object>> getBlockedClientsScript =
                 RedisScript.get(new ClassPathResource("redis/blocklist/get_blocked_clients.lua"),
                         ScriptOutputType.MULTI);
-        RedisScript evictAllBlockedClients = RedisScript.get(
+        RedisScript<Boolean> evictAllBlockedClients = RedisScript.get(
                 new ClassPathResource("redis/blocklist/evict_all_blocked_clients.lua"),
                 ScriptOutputType.BOOLEAN);
-        RedisScript evictExpiredBlockedClients = RedisScript.get(
+        RedisScript<Boolean> evictExpiredBlockedClients = RedisScript.get(
                 new ClassPathResource("redis/blocklist/evict_expired_blocked_clients.lua"),
                 ScriptOutputType.BOOLEAN);
-        RedisScript getBlocklistLogsScript =
+        RedisScript<List<Object>> getBlocklistLogsScript =
                 RedisScript.get(new ClassPathResource("redis/blocklist/get_blocklist_logs.lua"),
                         ScriptOutputType.MULTI,
                         params);

@@ -37,7 +37,7 @@ import im.turms.server.common.infra.property.env.service.business.common.setting
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingStringValueProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingValueProperties;
-import im.turms.service.infra.locale.LocaleUtils;
+import im.turms.service.infra.locale.LocaleUtil;
 
 /**
  * @author James Chen
@@ -261,7 +261,7 @@ public abstract class CustomSettingService {
             };
             case LANGUAGE -> {
                 String languageId = value.getStringValue();
-                if (!LocaleUtils.isAvailableLanguage(languageId)) {
+                if (!LocaleUtil.isAvailableLanguage(languageId)) {
                     throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                             "The value of the setting \""
                                     + sourceName
