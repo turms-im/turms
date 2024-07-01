@@ -124,12 +124,34 @@ public final class Message extends BaseEntity {
     private final Long senderId;
 
     /**
-     * Use {@link Integer} instead of {@link byte[]} to support IP range query in an efficient way
-     * at the cost of not supporting IPv6. TODO: DTO model conversion
+     * The int represents the big-endian unsigned int32 value of the IPv4 address.
+     * <p>
+     * e.g., "0.0.0.0" is {@link Integer.MIN_VALUE} and "255.255.255.255" is
+     * {@link Integer.MAX_VALUE}.
      */
     @Field(Fields.SENDER_IP)
-    @Indexed(optional = true, reason = EXTENDED_FEATURE)
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.SENDER_IP
+                    + ":{$exists:true}}")
     private final Integer senderIp;
+
+    /**
+     * The bytes represent the big-endian unsigned int128 value of the IPv6 address. Note that
+     * though MongoDB docs say "BinData values act as bitmasks and are interpreted as though they
+     * are arbitrary-length unsigned little-endian numbers", but after tests in MongoDB 6/7.x.x,
+     * BinData represents the unsigned big-endian number in fact.
+     */
+    @Field(Fields.SENDER_IPV6)
+    @Indexed(
+            optional = true,
+            reason = EXTENDED_FEATURE,
+            partialFilter = "{"
+                    + Fields.SENDER_IPV6
+                    + ":{$exists:true}}")
+    private final byte[] senderIpV6;
 
     /**
      * Use "target" rather than "recipient" because the target may be a recipient or a group.
@@ -180,6 +202,7 @@ public final class Message extends BaseEntity {
         public static final String TEXT = "txt";
         public static final String SENDER_ID = "sid";
         public static final String SENDER_IP = "sip";
+        public static final String SENDER_IPV6 = "sip6";
         public static final String TARGET_ID = "tid";
         public static final String RECORDS = "rec";
         public static final String BURN_AFTER = "bf";

@@ -61,6 +61,7 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             Set<Long> messageIds,
             @Nullable Boolean isSystemMessage,
             @Nullable Integer senderIp,
+            @Nullable byte[] senderIpV6,
             @Nullable Date recallDate,
             @Nullable String text,
             @Nullable List<byte[]> records,
@@ -68,11 +69,12 @@ public class MessageRepository extends BaseRepository<Message, Long> {
             @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, messageIds);
-        Update update = Update.newBuilder(7)
+        Update update = Update.newBuilder(8)
                 .set(Message.Fields.MODIFICATION_DATE, new Date())
                 .setIfNotNull(Message.Fields.RECALL_DATE, recallDate)
                 .setIfNotNull(Message.Fields.TEXT, text)
                 .setIfNotNull(Message.Fields.SENDER_IP, senderIp)
+                .setIfNotNull(Message.Fields.SENDER_IPV6, senderIpV6)
                 .setIfNotNull(Message.Fields.RECORDS, records)
                 .setIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, isSystemMessage)
                 .setIfNotNull(Message.Fields.BURN_AFTER, burnAfter);

@@ -4531,6 +4531,14 @@
               "sensitive": false,
               "type": "boolean",
               "value": true
+            },
+            "senderIpV6": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean",
+              "value": true
             }
           }
         },

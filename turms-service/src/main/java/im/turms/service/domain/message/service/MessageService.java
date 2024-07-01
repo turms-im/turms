@@ -629,6 +629,24 @@ public class MessageService {
             }
         }
         Mono<Message> saveMessage;
+        Integer senderIpV4;
+        byte[] senderIpV6;
+        if (senderIp == null) {
+            senderIpV4 = null;
+            senderIpV6 = null;
+        } else {
+            int length = senderIp.length;
+            if (length == InetAddressUtil.IPV4_BYTE_LENGTH) {
+                senderIpV4 = InetAddressUtil.ipV4BytesToUnsignedInt(senderIp);
+                senderIpV6 = null;
+            } else if (length == InetAddressUtil.IPV6_BYTE_LENGTH) {
+                senderIpV4 = null;
+                senderIpV6 = senderIp;
+            } else {
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "\"senderIp\" must be an IPv4 or IPv6 address"));
+            }
+        }
         if (sequenceId == null) {
             Message message = new Message(
                     messageId,
@@ -641,9 +659,8 @@ public class MessageService {
                     null,
                     text,
                     senderId,
-                    senderIp == null
-                            ? null
-                            : InetAddressUtil.ipV4BytesToUnsignedInt(senderIp),
+                    senderIpV4,
+                    senderIpV6,
                     targetId,
                     records,
                     burnAfter,
@@ -657,7 +674,6 @@ public class MessageService {
             Date finalDeliveryDate = deliveryDate;
             List<byte[]> finalRecords = records;
             Long finalPreMessageId = preMessageId;
-            byte[] finalSenderIp = senderIp;
             saveMessage = sequenceId.flatMap(seqId -> {
                 Message message = new Message(
                         finalMessageId,
@@ -670,9 +686,8 @@ public class MessageService {
                         null,
                         text,
                         senderId,
-                        finalSenderIp == null
-                                ? null
-                                : InetAddressUtil.ipV4BytesToUnsignedInt(finalSenderIp),
+                        senderIpV4,
+                        senderIpV6,
                         targetId,
                         finalRecords,
                         burnAfter,
@@ -778,11 +793,28 @@ public class MessageService {
         if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate, senderIp)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
+        Integer senderIpV4;
+        byte[] senderIpV6;
+        if (senderIp == null) {
+            senderIpV4 = null;
+            senderIpV6 = null;
+        } else {
+            int length = senderIp.length;
+            if (length == InetAddressUtil.IPV4_BYTE_LENGTH) {
+                senderIpV4 = InetAddressUtil.ipV4BytesToUnsignedInt(senderIp);
+                senderIpV6 = null;
+            } else if (length == InetAddressUtil.IPV6_BYTE_LENGTH) {
+                senderIpV4 = null;
+                senderIpV6 = senderIp;
+            } else {
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "\"senderIp\" must be an IPv4 or IPv6 address"));
+            }
+        }
         Mono<UpdateResult> update = messageRepository.updateMessages(messageIds,
                 isSystemMessage,
-                senderIp == null
-                        ? null
-                        : InetAddressUtil.ipV4BytesToUnsignedInt(senderIp),
+                senderIpV4,
+                senderIpV6,
                 recallDate,
                 text,
                 records,
@@ -1562,6 +1594,7 @@ public class MessageService {
                         null,
                         null,
                         message.getSenderId(),
+                        null,
                         null,
                         message.getTargetId(),
                         null,

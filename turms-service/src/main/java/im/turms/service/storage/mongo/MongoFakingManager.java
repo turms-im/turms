@@ -282,14 +282,33 @@ public final class MongoFakingManager {
         // Message
         long senderId = 1L;
         Set<Long> targetIds = CollectionUtil.newSetWithExpectedSize(100);
-        byte[] ip = new byte[]{127, 0, 0, 1};
-        Integer ipBytes = InetAddressUtil.ipV4BytesToUnsignedInt(ip);
+        byte[] ipv4Bytes = new byte[]{127, 0, 0, 1};
+        // @formatter:off
+        byte[] ipv6Bytes = new byte[]{
+                0x00, 0x00, 0x00, 0x00, // 0000
+                0x00, 0x00, 0x00, 0x00, // 0000
+                0x00, 0x00, 0x00, 0x00, // 0000
+                0x00, 0x00, 0x00, 0x00, // 0000
+                0x00, 0x00, 0x00, 0x01  // 0001
+        };
+        // @formatter:on
+        Integer ipv4 = InetAddressUtil.ipV4BytesToUnsignedInt(ipv4Bytes);
         for (int i = 1; i <= 100; i++) {
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
             byte[] privateConversationId =
                     MessageRepository.getPrivateConversationId(senderId, targetId);
             Date deliveryDate = DateUtils.addHours(epoch, i);
+            boolean useIPv4 = i % 2 == 0;
+            Integer currentIpv4;
+            byte[] currentIpV6;
+            if (useIPv4) {
+                currentIpv4 = ipv4;
+                currentIpV6 = null;
+            } else {
+                currentIpv4 = null;
+                currentIpV6 = ipv6Bytes;
+            }
             Message privateMessage1 = new Message(
                     nextId(),
                     privateConversationId,
@@ -302,7 +321,8 @@ public final class MongoFakingManager {
                     "private-message-text"
                             + RandomStringUtils.randomAlphanumeric(16),
                     senderId,
-                    ipBytes,
+                    currentIpv4,
+                    currentIpV6,
                     targetId,
                     null,
                     30,
@@ -321,7 +341,8 @@ public final class MongoFakingManager {
                     "private-message-text"
                             + RandomStringUtils.randomAlphanumeric(16),
                     targetId,
-                    ipBytes,
+                    currentIpv4,
+                    currentIpV6,
                     senderId,
                     null,
                     30,
@@ -341,7 +362,8 @@ public final class MongoFakingManager {
                     "group-message-text"
                             + RandomStringUtils.randomAlphanumeric(16),
                     1L,
-                    ipBytes,
+                    currentIpv4,
+                    currentIpV6,
                     groupId,
                     null,
                     30,

@@ -61,6 +61,7 @@ public class MessageMongoProperties extends TurmsMongoProperties {
         private boolean deletionDate = true;
         private boolean senderId;
         private boolean senderIp = true;
+        private boolean senderIpV6 = true;
         private boolean referenceId;
     }
 

@@ -43,7 +43,6 @@ class InetAddressUtilTests {
                     new IpV4TestCase("255.255.255.1", 2147483393),
                     new IpV4TestCase("255.255.255.255", Integer.MAX_VALUE));
 
-
     @Test
     void ipIntBytesConversion() throws UnknownHostException {
         for (IpV4TestCase testCase : IPV4_TEST_CASES) {
@@ -69,4 +68,5 @@ class InetAddressUtilTests {
             int unsignedInt
     ) {
     }
+
 }

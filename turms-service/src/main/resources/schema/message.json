@@ -30,6 +30,9 @@
       "sip": {
         "bsonType": "int"
       },
+      "sip6": {
+        "bsonType": "binData"
+      },
       "txt": {
         "bsonType": "string"
       },

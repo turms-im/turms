@@ -3971,6 +3971,13 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean"
+            },
+            "senderIpV6": {
+              "deprecated": false,
+              "global": false,
+              "mutable": false,
+              "sensitive": false,
+              "type": "boolean"
             }
           }
         },
