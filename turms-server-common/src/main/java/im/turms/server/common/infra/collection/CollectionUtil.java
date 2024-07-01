@@ -50,32 +50,62 @@ import im.turms.server.common.infra.lang.StrJoiner;
 public final class CollectionUtil {
 
     private static final Map.Entry[] EMPTY_ENTRY_ARRAY = new Map.Entry[0];
+
     private static final Class<?> IMMUTABLE_COLLECTION_CLASS;
     private static final Class<?> IMMUTABLE_SET_CLASS;
     private static final Class<?> IMMUTABLE_MAP_CLASS;
+
+    private static final Class<?> IMMUTABLE_EMPTY_LIST_CLASS;
+    private static final Class<?> IMMUTABLE_EMPTY_SET_CLASS;
+    private static final Class<?> IMMUTABLE_EMPTY_MAP_CLASS;
 
     static {
         IMMUTABLE_SET_CLASS = Set.of()
                 .getClass()
                 .getSuperclass();
-        if (!IMMUTABLE_SET_CLASS.getName()
-                .equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
+        String immutableSetClassName = IMMUTABLE_SET_CLASS.getName();
+        if (!immutableSetClassName.equals("java.util.ImmutableCollections$AbstractImmutableSet")) {
             throw new IncompatibleJvmException(
-                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableSet");
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableSet. Found: "
+                            + immutableSetClassName);
         }
         IMMUTABLE_COLLECTION_CLASS = IMMUTABLE_SET_CLASS.getSuperclass();
-        if (!IMMUTABLE_COLLECTION_CLASS.getName()
+        String immutableCollectionClassName = IMMUTABLE_COLLECTION_CLASS.getName();
+        if (!immutableCollectionClassName
                 .equals("java.util.ImmutableCollections$AbstractImmutableCollection")) {
             throw new IncompatibleJvmException(
-                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableCollection");
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableCollection. Found: "
+                            + immutableCollectionClassName);
         }
         IMMUTABLE_MAP_CLASS = Map.of()
                 .getClass()
                 .getSuperclass();
-        if (!IMMUTABLE_MAP_CLASS.getName()
-                .equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
+        String immutableMapClassName = IMMUTABLE_MAP_CLASS.getName();
+        if (!immutableMapClassName.equals("java.util.ImmutableCollections$AbstractImmutableMap")) {
             throw new IncompatibleJvmException(
-                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableMap");
+                    "Could not find the class: java.util.ImmutableCollections$AbstractImmutableMap. Found: "
+                            + immutableMapClassName);
+        }
+        IMMUTABLE_EMPTY_LIST_CLASS = Collections.EMPTY_LIST.getClass();
+        String immutableEmptyListClassName = IMMUTABLE_EMPTY_LIST_CLASS.getName();
+        if (!immutableEmptyListClassName.equals("java.util.Collections$EmptyList")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.Collections$EmptyList. Found: "
+                            + immutableEmptyListClassName);
+        }
+        IMMUTABLE_EMPTY_SET_CLASS = Collections.EMPTY_SET.getClass();
+        String immutableEmptySetClassName = IMMUTABLE_EMPTY_SET_CLASS.getName();
+        if (!immutableEmptySetClassName.equals("java.util.Collections$EmptySet")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.Collections$EmptySet. Found: "
+                            + immutableEmptySetClassName);
+        }
+        IMMUTABLE_EMPTY_MAP_CLASS = Collections.EMPTY_MAP.getClass();
+        String immutableEmptyMapClassName = IMMUTABLE_EMPTY_MAP_CLASS.getName();
+        if (!immutableEmptyMapClassName.equals("java.util.Collections$EmptyMap")) {
+            throw new IncompatibleJvmException(
+                    "Could not find the class: java.util.Collections$EmptyMap. Found: "
+                            + immutableEmptyMapClassName);
         }
     }
 
@@ -230,17 +260,31 @@ public final class CollectionUtil {
         return map != null && !map.isEmpty();
     }
 
+    /**
+     * Note that the method only checks the immutable classes used by Turms.
+     */
     public static boolean isImmutable(Iterable<?> iterable) {
         return IMMUTABLE_COLLECTION_CLASS.isInstance(iterable)
+                || IMMUTABLE_EMPTY_LIST_CLASS.isInstance(iterable)
+                || IMMUTABLE_EMPTY_SET_CLASS.isInstance(iterable)
                 || iterable instanceof ImmutableCollection;
     }
 
+    /**
+     * Note that the method only checks the immutable classes used by Turms.
+     */
     public static boolean isImmutable(Map<?, ?> map) {
-        return IMMUTABLE_MAP_CLASS.isInstance(map) || map instanceof ImmutableMap<?, ?>;
+        return IMMUTABLE_MAP_CLASS.isInstance(map)
+                || IMMUTABLE_EMPTY_MAP_CLASS.isInstance(map)
+                || map instanceof ImmutableMap<?, ?>;
     }
 
+    /**
+     * Note that the method only checks the immutable classes used by Turms.
+     */
     public static boolean isImmutableSet(Iterable<?> iterable) {
-        return IMMUTABLE_SET_CLASS.isInstance(iterable);
+        return IMMUTABLE_SET_CLASS.isInstance(iterable)
+                || IMMUTABLE_EMPTY_SET_CLASS.isInstance(iterable);
     }
     // endregion
 
