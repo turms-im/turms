@@ -23,6 +23,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import jakarta.annotation.Nullable;
 
 import io.netty.handler.codec.http.HttpStatusClass;
@@ -40,6 +41,10 @@ import im.turms.server.common.infra.property.env.common.IpProperties;
  */
 @Component
 public class IpDetector {
+
+    private static final Mono<String> EXCEPTION_NO_AVAILABLE_ADDRESS_FOUND =
+            Mono.error(new NoAvailableAddressFoundException(
+                    "Failed to detect the public IP of the local node because there is no available IP"));
 
     private final TurmsPropertiesManager propertiesManager;
     @Nullable
@@ -132,9 +137,15 @@ public class IpDetector {
                     publicIpLastUpdatedDate = System.currentTimeMillis();
                     cachedPublicIp = ip;
                 })
-                .onErrorMap(t -> new NoAvailableAddressFoundException(
-                        "Failed to detect the public IP of the local node because there is no available IP",
-                        t));
+                .switchIfEmpty(EXCEPTION_NO_AVAILABLE_ADDRESS_FOUND)
+                .onErrorResume(t -> {
+                    if (t instanceof NoSuchElementException) {
+                        return EXCEPTION_NO_AVAILABLE_ADDRESS_FOUND;
+                    }
+                    return Mono.error(new RuntimeException(
+                            "Failed to detect the public IP of the local node",
+                            t));
+                });
     }
 
 }
