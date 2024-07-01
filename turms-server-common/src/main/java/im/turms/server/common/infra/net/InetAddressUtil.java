@@ -20,7 +20,6 @@ package im.turms.server.common.infra.net;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import jakarta.annotation.Nullable;
 
 import io.netty.util.NetUtil;
 
@@ -77,24 +76,31 @@ public final class InetAddressUtil {
         }
     }
 
-    @Nullable
-    public static Integer ipBytesToInt(byte[] ip) {
-        if (ip.length != IPV4_BYTE_LENGTH) {
-            return null;
+    /**
+     * The min value (i.e., {@link Integer.MIN_VALUE}) represents "0.0.0.0", and the max value
+     * (i.e., {@link Integer.MAX_VALUE}) represents "255.255.255.255".
+     */
+    public static int ipV4BytesToUnsignedInt(byte[] ip) {
+        return (ip[3] & 0xFF | ((ip[2] << 8) & 0xFF00) | ((ip[1] << 16) & 0xFF_0000)
+                | ((ip[0] << 24) & 0xFF00_0000)) ^ 0x80000000;
+    }
+
+    public static byte[] ipV4UnsignedIntToBytes(int ip) {
+        return new byte[]{(byte) ((ip ^ 0x80000000) >>> 24),
+                (byte) (ip >>> 16),
+                (byte) (ip >>> 8),
+                (byte) ip};
+    }
+
+    public static boolean isIp(byte[] ip) {
+        if (ip == null) {
+            return false;
         }
-        return ip[3] & 0xFF | ((ip[2] << 8) & 0xFF00) | ((ip[1] << 16) & 0xFF_0000)
-                | ((ip[0] << 24) & 0xFF00_0000);
+        int length = ip.length;
+        return length == IPV4_BYTE_LENGTH || length == IPV6_BYTE_LENGTH;
     }
 
-    public static byte[] ipIntToBytes(int ip) {
-        return new byte[]{(byte) (ip >>> 24), (byte) (ip >>> 16), (byte) (ip >>> 8), (byte) ip};
-    }
-
-    public static boolean isIpV4OrV6(byte[] ip) {
-        return ip != null && (ip.length == IPV4_BYTE_LENGTH || ip.length == IPV6_BYTE_LENGTH);
-    }
-
-    public static boolean isInetAddress(String ipString) {
+    public static boolean isIp(String ipString) {
         return NetUtil.isValidIpV4Address(ipString) || NetUtil.isValidIpV6Address(ipString);
     }
 

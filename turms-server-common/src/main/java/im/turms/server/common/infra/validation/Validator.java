@@ -398,7 +398,7 @@ public final class Validator {
     }
 
     public static void ip(@Nullable byte[] ip, String name) {
-        if (ip != null && !InetAddressUtil.isIpV4OrV6(ip)) {
+        if (ip != null && !InetAddressUtil.isIp(ip)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     ("\""
                             + name

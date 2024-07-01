@@ -69,7 +69,7 @@ public final class ServiceRequest {
             @Nullable Long requestId,
             @Nullable TurmsRequest.KindCase type,
             ByteBuf turmsRequestBuffer) {
-        if (!InetAddressUtil.isIpV4OrV6(ip)) {
+        if (!InetAddressUtil.isIp(ip)) {
             throw new IllegalArgumentException(
                     "Illegal IP bytes: "
                             + Arrays.toString(ip));

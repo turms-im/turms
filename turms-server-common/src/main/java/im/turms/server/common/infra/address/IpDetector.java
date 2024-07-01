@@ -125,7 +125,7 @@ public class IpDetector {
                                     ? body.asString()
                                             .flatMap(ip -> {
                                                 ip = ip.trim();
-                                                return InetAddressUtil.isInetAddress(ip)
+                                                return InetAddressUtil.isIp(ip)
                                                         ? Mono.just(ip)
                                                         : Mono.empty();
                                             })

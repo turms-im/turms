@@ -643,7 +643,7 @@ public class MessageService {
                     senderId,
                     senderIp == null
                             ? null
-                            : InetAddressUtil.ipBytesToInt(senderIp),
+                            : InetAddressUtil.ipV4BytesToUnsignedInt(senderIp),
                     targetId,
                     records,
                     burnAfter,
@@ -672,7 +672,7 @@ public class MessageService {
                         senderId,
                         finalSenderIp == null
                                 ? null
-                                : InetAddressUtil.ipBytesToInt(finalSenderIp),
+                                : InetAddressUtil.ipV4BytesToUnsignedInt(finalSenderIp),
                         targetId,
                         finalRecords,
                         burnAfter,
@@ -782,7 +782,7 @@ public class MessageService {
                 isSystemMessage,
                 senderIp == null
                         ? null
-                        : InetAddressUtil.ipBytesToInt(senderIp),
+                        : InetAddressUtil.ipV4BytesToUnsignedInt(senderIp),
                 recallDate,
                 text,
                 records,

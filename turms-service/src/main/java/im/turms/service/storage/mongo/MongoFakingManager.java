@@ -283,7 +283,7 @@ public final class MongoFakingManager {
         long senderId = 1L;
         Set<Long> targetIds = CollectionUtil.newSetWithExpectedSize(100);
         byte[] ip = new byte[]{127, 0, 0, 1};
-        Integer ipBytes = InetAddressUtil.ipBytesToInt(ip);
+        Integer ipBytes = InetAddressUtil.ipV4BytesToUnsignedInt(ip);
         for (int i = 1; i <= 100; i++) {
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
