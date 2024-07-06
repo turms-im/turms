@@ -147,6 +147,13 @@
             <artifactId>server-test-common</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Used to run UI tests for OpenAPI pages.
+        Note that the JARs of Playwright are huge (e.g., "com.microsoft.playwright:driver-bundle:1.45.0" is 163MB) -->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Processor -->
         <dependency>

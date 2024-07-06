@@ -47,6 +47,7 @@
 
         <!-- Runtime Deps for Testing -->
         <jmh.version>1.37</jmh.version>
+        <playwright.version>1.45.0</playwright.version>
         <testcontainers.version>1.19.8</testcontainers.version>
 
         <!-- Maven plugins -->
@@ -230,6 +231,11 @@
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-generator-annprocess</artifactId>
                 <version>${jmh.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.playwright</groupId>
+                <artifactId>playwright</artifactId>
+                <version>${playwright.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

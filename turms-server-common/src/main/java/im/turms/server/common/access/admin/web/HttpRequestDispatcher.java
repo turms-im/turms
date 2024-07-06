@@ -189,6 +189,10 @@ public class HttpRequestDispatcher {
         }
     }
 
+    public int port() {
+        return server.port();
+    }
+
     // region Properties
     private void updateGlobalProperties(TurmsProperties properties) {
         NodeType nodeType = node.getNodeType();

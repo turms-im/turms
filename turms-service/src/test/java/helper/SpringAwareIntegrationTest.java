@@ -19,6 +19,7 @@ package helper;
 
 import org.springframework.test.context.ContextConfiguration;
 
+import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.testing.BaseSpringAwareIntegrationTest;
 import im.turms.service.TurmsServiceApplication;
 
@@ -27,4 +28,11 @@ import im.turms.service.TurmsServiceApplication;
  */
 @ContextConfiguration(classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class})
 public abstract class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
+
+    @Override
+    protected int getAdminApiHttpServerPort() {
+        return context.getBean(HttpRequestDispatcher.class)
+                .port();
+    }
+
 }
