@@ -58,59 +58,57 @@ public class ApplicationEnvironmentEventListener
      */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
-        configureContextForLogging(event);
-    }
-
-    private void configureContextForLogging(ApplicationEnvironmentPreparedEvent event) {
-        ConfigurableEnvironment env = event.getEnvironment();
-        // Though it is more reasonable to init the node type/ID in
-        // "im.turms.server.common.infra.cluster.node.Node",
-        // we need to ensure the local node info is logged even if the local node hasn't been
-        // inited.
-        // So we initialize the node info here.
         Class<?> mainApplicationClass = event.getSpringApplication()
                 .getMainApplicationClass();
-        String applicationClassName = mainApplicationClass.getSimpleName();
-        NodeType nodeType = switch (applicationClassName) {
-            case "TurmsAiServingApplication" -> NodeType.AI_SERVING;
-            case "TurmsGatewayApplication" -> NodeType.GATEWAY;
-            case "TurmsServiceApplication" -> NodeType.SERVICE;
-            default -> {
-                Class<?> currentClass = mainApplicationClass;
-                do {
-                    for (Annotation annotation : currentClass.getDeclaredAnnotations()) {
-                        String annotationName = annotation.annotationType()
-                                .getName();
-                        if ("org.springframework.boot.test.context.SpringBootTest"
-                                .equals(annotationName)) {
-                            for (Object source : event.getSpringApplication()
-                                    .getAllSources()) {
-                                if (source instanceof Class<?> clazz) {
-                                    switch (clazz.getSimpleName()) {
-                                        case "TurmsAiServingApplication" -> {
-                                            yield NodeType.AI_SERVING;
-                                        }
-                                        case "TurmsGatewayApplication" -> {
-                                            yield NodeType.GATEWAY;
-                                        }
-                                        case "TurmsServiceApplication" -> {
-                                            yield NodeType.SERVICE;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
+        ConfigurableEnvironment env = event.getEnvironment();
+        // Though it is more reasonable to init the node ID and ID in
+        // "im.turms.server.common.infra.cluster.node.Node",
+        // we need to ensure the local node info is logged
+        // even if the local node hasn't been inited.
+        // So we initialize the node info here.
+        String nodeId = Node.initNodeId(env.getProperty(TURMS_CLUSTER_NODE_ID, String.class));
+        NodeType nodeType = findNodeType(event, mainApplicationClass);
+        Node.nodeType = nodeType;
+        configureContextForLogging(env, nodeId, nodeType);
+    }
+
+    private NodeType findNodeType(
+            ApplicationEnvironmentPreparedEvent event,
+            Class<?> applicationClass) {
+        Application application = applicationClass.getDeclaredAnnotation(Application.class);
+        if (application != null) {
+            return application.nodeType();
+        }
+        Class<?> currentClass = applicationClass;
+        do {
+            for (Annotation annotation : currentClass.getDeclaredAnnotations()) {
+                String annotationName = annotation.annotationType()
+                        .getName();
+                if (!"org.springframework.boot.test.context.SpringBootTest"
+                        .equals(annotationName)) {
+                    continue;
+                }
+                for (Object source : event.getSpringApplication()
+                        .getAllSources()) {
+                    if (source instanceof Class<?> clazz) {
+                        application = clazz.getDeclaredAnnotation(Application.class);
+                        if (application != null) {
+                            return application.nodeType();
                         }
                     }
-                    currentClass = currentClass.getSuperclass();
-                } while (currentClass != null);
-                throw new RuntimeException(
-                        "Unknown application class name: "
-                                + applicationClassName);
+                }
             }
-        };
-        Node.initNodeId(env.getProperty(TURMS_CLUSTER_NODE_ID, String.class));
+            currentClass = currentClass.getSuperclass();
+        } while (currentClass != null);
+        throw new RuntimeException(
+                "Could not find the node type of the application: "
+                        + applicationClass.getName());
+    }
 
+    private void configureContextForLogging(
+            ConfigurableEnvironment env,
+            String nodeId,
+            NodeType nodeType) {
         ConsoleLoggingProperties consoleLoggingProperties = ConsoleLoggingProperties.builder()
                 .enabled(env.getProperty(TURMS_LOGGING_CONSOLE_ENABLED,
                         Boolean.class,
@@ -145,7 +143,7 @@ public class ApplicationEnvironmentEventListener
                 .file(fileLoggingProperties)
                 .build();
 
-        LoggerFactory.init(false, nodeType, Node.getNodeId(), loggingProperties);
+        LoggerFactory.init(false, nodeId, nodeType, loggingProperties);
     }
 
 }

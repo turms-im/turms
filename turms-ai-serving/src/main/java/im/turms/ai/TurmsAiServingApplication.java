@@ -20,11 +20,14 @@ package im.turms.ai;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import im.turms.server.common.BaseTurmsApplication;
+import im.turms.server.common.infra.application.Application;
+import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.lang.PackageConst;
 
 /**
  * @author James Chen
  */
+@Application(nodeType = NodeType.AI_SERVING)
 @SpringBootApplication(
         scanBasePackages = {PackageConst.AI_SERVING, PackageConst.SERVER_COMMON},
         proxyBeanMethods = false)

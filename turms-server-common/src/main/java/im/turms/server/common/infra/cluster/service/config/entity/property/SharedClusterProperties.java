@@ -28,6 +28,7 @@ import lombok.experimental.FieldNameConstants;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.env.aiserving.AiServingProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
+import im.turms.server.common.infra.property.env.mocknode.MockNodeProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -57,6 +58,8 @@ public class SharedClusterProperties {
 
     private ServiceProperties serviceProperties;
 
+    private MockNodeProperties mockNodeProperties;
+
     private Date lastUpdatedTime;
 
     private transient TurmsProperties turmsProperties;
@@ -73,6 +76,7 @@ public class SharedClusterProperties {
         aiServingProperties = localProperties.getAiServing();
         gatewayProperties = localProperties.getGateway();
         serviceProperties = localProperties.getService();
+        mockNodeProperties = localProperties.getMockNode();
         this.lastUpdatedTime = lastUpdatedTime;
     }
 
@@ -108,7 +112,8 @@ public class SharedClusterProperties {
                 localCommonProperties.getUserStatus(),
                 aiServingProperties,
                 gatewayProperties,
-                serviceProperties);
+                serviceProperties,
+                mockNodeProperties);
     }
 
     @PropertySetter
@@ -132,6 +137,12 @@ public class SharedClusterProperties {
     @PropertySetter
     public void setServiceProperties(ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
+        tryInitTurmsProperties();
+    }
+
+    @PropertySetter
+    public void setMockNodeProperties(MockNodeProperties mockNodeProperties) {
+        this.mockNodeProperties = mockNodeProperties;
         tryInitTurmsProperties();
     }
 

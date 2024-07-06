@@ -150,6 +150,8 @@ public class HttpRequestDispatcher {
                     .getAdminApi();
             case SERVICE -> properties.getService()
                     .getAdminApi();
+            case MOCK -> properties.getMockNode()
+                    .getAdminApi();
         };
         useAuthentication = apiProperties.isUseAuthentication();
         isApiEnabled = apiProperties.isEnabled();
@@ -196,6 +198,8 @@ public class HttpRequestDispatcher {
             case GATEWAY -> properties.getGateway()
                     .getAdminApi();
             case SERVICE -> properties.getService()
+                    .getAdminApi();
+            case MOCK -> properties.getMockNode()
                     .getAdminApi();
         };
         allowDeleteWithoutFilter = nodeType == NodeType.SERVICE

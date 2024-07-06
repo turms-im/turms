@@ -15,23 +15,31 @@
  * limitations under the License.
  */
 
-package unit.im.turms.service.infra.cluster;
+package im.turms.server.common.infra.property.env.mocknode;
 
-import org.junit.jupiter.api.Test;
-
-import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.service.infra.cluster.NodeConfig;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
-class NodeConfigTests {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class MockNodeProperties {
 
-    @Test
-    void nodeType_shouldReturnService() {
-        assertThat(new NodeConfig().nodeType()).isEqualTo(NodeType.SERVICE);
-    }
+    // API
+
+    @NestedConfigurationProperty
+    private AdminApiProperties adminApi = new AdminApiProperties();
+
+    // Data Store
+
+    @NestedConfigurationProperty
+    private MongoProperties mongo = new MongoProperties();
 
 }

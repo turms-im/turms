@@ -53,6 +53,7 @@ import reactor.netty.transport.ProxyProvider;
 import im.turms.server.common.access.admin.web.MultipartFile;
 import im.turms.server.common.infra.application.JobShutdownOrder;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.codec.Base16Util;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -114,11 +115,11 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             new NonBlockingIdentityHashMap<>();
 
     public PluginManager(
-            NodeType nodeType,
+            Node node,
             ApplicationContext context,
             TurmsApplicationContext applicationContext,
             TurmsPropertiesManager propertiesManager) {
-        this.nodeType = nodeType;
+        this.nodeType = node.getNodeType();
         this.context = context;
         PluginProperties pluginProperties = propertiesManager.getLocalProperties()
                 .getPlugin();

@@ -37,6 +37,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.debug.access.admin.dto.request.CreateMethodCallDTO;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -71,13 +72,13 @@ public class DebugService extends BaseService {
     private boolean enabled;
 
     protected DebugService(
+            Node node,
             ApplicationContext applicationContext,
-            TurmsPropertiesManager propertiesManager,
-            NodeType nodeType) {
+            TurmsPropertiesManager propertiesManager) {
         this.applicationContext = applicationContext;
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(
-                properties -> updateGlobalProperties(properties, nodeType));
+                properties -> updateGlobalProperties(properties, node.getNodeType()));
     }
 
     protected void updateGlobalProperties(TurmsProperties properties, NodeType nodeType) {
@@ -87,6 +88,8 @@ public class DebugService extends BaseService {
             case GATEWAY -> properties.getGateway()
                     .getAdminApi();
             case SERVICE -> properties.getService()
+                    .getAdminApi();
+            case MOCK -> properties.getMockNode()
                     .getAdminApi();
         };
 

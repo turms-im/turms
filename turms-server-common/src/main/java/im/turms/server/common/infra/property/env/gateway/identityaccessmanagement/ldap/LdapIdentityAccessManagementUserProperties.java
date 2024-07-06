@@ -25,7 +25,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.security.SensitiveProperty;
 
 /**
  * @author James Chen

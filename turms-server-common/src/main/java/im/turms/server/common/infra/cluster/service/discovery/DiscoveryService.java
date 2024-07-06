@@ -655,6 +655,7 @@ public class DiscoveryService implements ClusterService {
             case AI_SERVING -> otherActiveConnectedAiServingMembers;
             case GATEWAY -> otherActiveConnectedGatewayMembers;
             case SERVICE -> otherActiveConnectedServiceMembers;
+            case MOCK -> Collections.emptyList();
         };
         int size = isAdd
                 ? memberList.size() + 1

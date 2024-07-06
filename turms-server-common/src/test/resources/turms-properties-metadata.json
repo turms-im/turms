@@ -2068,6 +2068,173 @@
       }
     }
   },
+  "mockNode": {
+    "adminApi": {
+      "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "string"
+        },
+        "advertiseStrategy": {
+          "deprecated": false,
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "global": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "PRIVATE_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "sensitive": false,
+          "type": "enum"
+        },
+        "attachPortToHost": {
+          "deprecated": false,
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "enabled": {
+        "deprecated": false,
+        "description": "Whether to enable the APIs for administrators",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean"
+      },
+      "http": {
+        "connectTimeoutMillis": {
+          "deprecated": false,
+          "description": "The connect timeout",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "host": {
+          "deprecated": false,
+          "description": "The bind host",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "string"
+        },
+        "idleTimeoutMillis": {
+          "deprecated": false,
+          "description": "The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxRequestBodySizeBytes": {
+          "deprecated": false,
+          "description": "The max request body size in bytes",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "port": {
+          "deprecated": false,
+          "description": "The bind port",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        },
+        "requestReadTimeoutMillis": {
+          "deprecated": false,
+          "description": "The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed",
+          "global": false,
+          "mutable": false,
+          "sensitive": false,
+          "type": "int"
+        }
+      },
+      "log": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to log API calls",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "logRequestParams": {
+          "deprecated": false,
+          "description": "Whether to log the parameters of requests",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "rateLimiting": {
+        "capacity": {
+          "deprecated": false,
+          "description": "The maximum number of tokens that the bucket can hold",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "initialTokens": {
+          "deprecated": false,
+          "description": "The initial number of tokens for new session",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "description": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "tokensPerPeriod": {
+          "deprecated": false,
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        }
+      },
+      "useAuthentication": {
+        "deprecated": false,
+        "description": "Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc",
+        "global": false,
+        "mutable": false,
+        "sensitive": false,
+        "type": "boolean"
+      }
+    },
+    "mongo": {
+      "admin": {}
+    }
+  },
   "plugin": {
     "dir": {
       "deprecated": false,

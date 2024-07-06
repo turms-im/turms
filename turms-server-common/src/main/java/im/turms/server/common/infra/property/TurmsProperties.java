@@ -37,6 +37,7 @@ import im.turms.server.common.infra.property.env.common.logging.LoggingPropertie
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 import im.turms.server.common.infra.property.env.common.security.SecurityProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
+import im.turms.server.common.infra.property.env.mocknode.MockNodeProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 
 /**
@@ -99,5 +100,8 @@ public class TurmsProperties {
 
     @NestedConfigurationProperty
     private ServiceProperties service = new ServiceProperties();
+
+    @NestedConfigurationProperty
+    private MockNodeProperties mockNode = new MockNodeProperties();
 
 }

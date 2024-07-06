@@ -15,22 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.service.infra.cluster;
+package im.turms.server.common.infra.application;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import im.turms.server.common.infra.cluster.node.NodeType;
 
 /**
  * @author James Chen
  */
-@Configuration
-public class NodeConfig {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Application {
 
-    @Bean
-    public NodeType nodeType() {
-        return NodeType.SERVICE;
-    }
+    NodeType nodeType();
 
 }

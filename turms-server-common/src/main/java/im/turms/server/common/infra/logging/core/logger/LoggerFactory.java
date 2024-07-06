@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import jakarta.annotation.Nullable;
 
 import lombok.Getter;
 import org.jctools.queues.MpscUnboundedArrayQueue;
@@ -46,15 +45,15 @@ import im.turms.server.common.infra.property.env.common.logging.FileLoggingPrope
 import im.turms.server.common.infra.property.env.common.logging.LoggingProperties;
 import im.turms.server.common.infra.system.SystemUtil;
 
+import static im.turms.server.common.infra.application.ApplicationConst.PROPERTY_NAME_TURMS_AI_SERVING_HOME;
+import static im.turms.server.common.infra.application.ApplicationConst.PROPERTY_NAME_TURMS_GATEWAY_HOME;
+import static im.turms.server.common.infra.application.ApplicationConst.PROPERTY_NAME_TURMS_MOCK_NODE_HOME;
+import static im.turms.server.common.infra.application.ApplicationConst.PROPERTY_NAME_TURMS_SERVICE_HOME;
+
 /**
  * @author James Chen
  */
 public class LoggerFactory {
-
-    private static final String PROPERTY_NAME_TURMS_AI_SERVING_HOME = "TURMS_AI_SERVING_HOME";
-    private static final String PROPERTY_NAME_TURMS_GATEWAY_HOME = "TURMS_GATEWAY_HOME";
-    private static final String PROPERTY_NAME_TURMS_SERVICE_HOME = "TURMS_SERVICE_HOME";
-    private static final String SERVER_TYPE_UNKNOWN = "unknown";
 
     private static TurmsTemplateLayout layout;
 
@@ -80,25 +79,22 @@ public class LoggerFactory {
 
     public static synchronized void init(
             boolean runWithTests,
-            @Nullable NodeType nodeType,
             String nodeId,
+            NodeType nodeType,
             LoggingProperties properties) {
         if (initialized) {
             return;
         }
-        if (nodeType != null) {
-            homeDir = switch (nodeType) {
-                case AI_SERVING -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_AI_SERVING_HOME);
-                case GATEWAY -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_GATEWAY_HOME);
-                case SERVICE -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_SERVICE_HOME);
-            };
-        }
+        homeDir = switch (nodeType) {
+            case AI_SERVING -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_AI_SERVING_HOME);
+            case GATEWAY -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_GATEWAY_HOME);
+            case SERVICE -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_SERVICE_HOME);
+            case MOCK -> SystemUtil.getProperty(PROPERTY_NAME_TURMS_MOCK_NODE_HOME);
+        };
         if (homeDir == null) {
             homeDir = ".";
         }
-        serverTypeName = nodeType == null
-                ? SERVER_TYPE_UNKNOWN
-                : nodeType.getId();
+        serverTypeName = nodeType.getId();
         ConsoleLoggingProperties consoleLoggingProperties = properties.getConsole();
         FileLoggingProperties fileLoggingProperties = properties.getFile();
         if (consoleLoggingProperties.isEnabled()) {
@@ -146,13 +142,15 @@ public class LoggerFactory {
     }
 
     private static synchronized void initForTest() {
-        NodeType nodeType = null;
+        NodeType nodeType;
         if (ClassUtil.exists("im.turms.ai.TurmsAiServingApplication")) {
             nodeType = NodeType.AI_SERVING;
         } else if (ClassUtil.exists("im.turms.gateway.TurmsGatewayApplication")) {
             nodeType = NodeType.GATEWAY;
         } else if (ClassUtil.exists("im.turms.service.TurmsServiceApplication")) {
             nodeType = NodeType.SERVICE;
+        } else {
+            nodeType = NodeType.MOCK;
         }
         // We use "INFO" level for tests because:
         // 1. If "DEBUG", in fact we never view these logs because they are too many to view.
@@ -162,8 +160,8 @@ public class LoggerFactory {
         // dependency.
         // Use "INFO" can just avoid Netty trying to log when initializing
         init(true,
-                nodeType,
                 "test",
+                nodeType,
                 LoggingProperties.builder()
                         .console(new ConsoleLoggingProperties().toBuilder()
                                 .level(LogLevel.INFO)

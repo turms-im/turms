@@ -15,22 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.infra.cluster;
+package im.turms.server.common.infra.property.env.mocknode;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import lombok.Builder;
+import lombok.Data;
 
-import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.property.env.common.adminapi.BaseAdminApiProperties;
 
 /**
  * @author James Chen
  */
-@Configuration
-public class NodeConfig {
+@Builder(toBuilder = true)
+@Data
+public class AdminApiProperties extends BaseAdminApiProperties {
 
-    @Bean
-    public NodeType nodeType() {
-        return NodeType.GATEWAY;
+    public AdminApiProperties() {
+        http.setPort(21510);
     }
 
 }

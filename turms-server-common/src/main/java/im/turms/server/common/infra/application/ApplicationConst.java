@@ -15,22 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.ai.infra.cluster;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import im.turms.server.common.infra.cluster.node.NodeType;
+package im.turms.server.common.infra.application;
 
 /**
  * @author James Chen
  */
-@Configuration
-public class NodeConfig {
+public final class ApplicationConst {
 
-    @Bean
-    public NodeType nodeType() {
-        return NodeType.AI_SERVING;
+    public static final String PROPERTY_NAME_TURMS_AI_SERVING_HOME = "TURMS_AI_SERVING_HOME";
+    public static final String PROPERTY_NAME_TURMS_GATEWAY_HOME = "TURMS_GATEWAY_HOME";
+    public static final String PROPERTY_NAME_TURMS_SERVICE_HOME = "TURMS_SERVICE_HOME";
+    public static final String PROPERTY_NAME_TURMS_MOCK_NODE_HOME = "TURMS_MOCK_NODE_HOME";
+
+    private ApplicationConst() {
     }
 
 }

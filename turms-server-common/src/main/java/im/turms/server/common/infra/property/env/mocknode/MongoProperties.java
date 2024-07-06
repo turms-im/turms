@@ -15,24 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.cluster.node;
+package im.turms.server.common.infra.property.env.mocknode;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.common.mongo.TurmsMongoProperties;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
-@Getter
-public enum NodeType {
-    AI_SERVING("turms-ai-serving", "Turms AI Serving"),
-    GATEWAY("turms-gateway", "Turms Gateway"),
-    SERVICE("turms-service", "Turms Service"),
-    // This is a special node type for the tests
-    // that don't belong to any other node type.
-    MOCK("turms-mock", "Turms Mock");
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class MongoProperties {
 
-    private final String id;
-    private final String displayName;
+    @NestedConfigurationProperty
+    private TurmsMongoProperties admin = new TurmsMongoProperties();
+
 }

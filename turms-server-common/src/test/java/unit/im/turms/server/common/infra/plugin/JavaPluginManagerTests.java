@@ -28,6 +28,7 @@ import org.springframework.context.ApplicationContext;
 
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -111,10 +112,14 @@ class JavaPluginManagerTests {
     }
 
     private MyExtensionPoint getMyExtensionPoint() {
+        Node node = mock(Node.class);
+        when(node.getNodeType()).thenReturn(NodeType.MOCK);
+
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
         when(applicationContext.getHome()).thenReturn(JAR_FILE.getParent()
                 .toAbsolutePath());
+
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
                 .plugin(new PluginProperties().toBuilder()
@@ -122,8 +127,9 @@ class JavaPluginManagerTests {
                         .dir(".")
                         .build())
                 .build());
+
         PluginManager manager =
-                new PluginManager(NodeType.GATEWAY, context, applicationContext, propertiesManager);
+                new PluginManager(node, context, applicationContext, propertiesManager);
         return manager.getExtensionPoints(MyExtensionPoint.class)
                 .getFirst();
     }

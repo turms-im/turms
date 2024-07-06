@@ -574,6 +574,108 @@
       "compression": {}
     }
   },
+  "mockNode": {
+    "adminApi": {
+      "address": {
+        "advertiseHost": {
+          "deprecated": false,
+          "description": "The advertise address of the local node exposed to admins. (e.g. 100.131.251.96)",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "string"
+        },
+        "advertiseStrategy": {
+          "deprecated": false,
+          "description": "The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs",
+          "global": false,
+          "mutable": true,
+          "options": [
+            "ADVERTISE_ADDRESS",
+            "BIND_ADDRESS",
+            "PRIVATE_ADDRESS",
+            "PUBLIC_ADDRESS"
+          ],
+          "sensitive": false,
+          "type": "enum"
+        },
+        "attachPortToHost": {
+          "deprecated": false,
+          "description": "Whether to attach the local port to the host.\ne.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510",
+          "global": false,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "debug": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to enable debug APIs",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "http": {},
+      "log": {
+        "enabled": {
+          "deprecated": false,
+          "description": "Whether to log API calls",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "logRequestParams": {
+          "deprecated": false,
+          "description": "Whether to log the parameters of requests",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "rateLimiting": {
+        "capacity": {
+          "deprecated": false,
+          "description": "The maximum number of tokens that the bucket can hold",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "initialTokens": {
+          "deprecated": false,
+          "description": "The initial number of tokens for new session",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "refillIntervalMillis": {
+          "deprecated": false,
+          "description": "The time interval to refill. 0 means never refill",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "tokensPerPeriod": {
+          "deprecated": false,
+          "description": "Refills the bucket with the specified number of tokens per period if the bucket is not full",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        }
+      }
+    },
+    "mongo": {
+      "admin": {}
+    }
+  },
   "plugin": {
     "java": {},
     "js": {

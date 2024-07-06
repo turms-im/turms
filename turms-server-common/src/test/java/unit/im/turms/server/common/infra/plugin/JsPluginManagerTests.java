@@ -29,6 +29,7 @@ import reactor.test.StepVerifier;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -138,9 +139,14 @@ class JsPluginManagerTests {
     }
 
     private MyExtensionPointForJs createExtensionPoint() {
+        Node node = mock(Node.class);
+        when(node.getNodeType()).thenReturn(NodeType.MOCK);
+
         ApplicationContext context = mock(ApplicationContext.class);
+
         TurmsApplicationContext applicationContext = mock(TurmsApplicationContext.class);
         when(applicationContext.getHome()).thenReturn(Path.of("./src/test/resources"));
+
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
                 .plugin(new PluginProperties().toBuilder()
@@ -149,7 +155,7 @@ class JsPluginManagerTests {
                         .build())
                 .build());
         PluginManager manager =
-                new PluginManager(NodeType.GATEWAY, context, applicationContext, propertiesManager);
+                new PluginManager(node, context, applicationContext, propertiesManager);
         List<MyExtensionPointForJs> list = manager.getExtensionPoints(MyExtensionPointForJs.class);
         assertThat(list).hasSize(1);
         return list.getFirst();

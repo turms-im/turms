@@ -43,7 +43,7 @@ import org.springframework.util.FileSystemUtils;
 import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
-import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.io.ResourceNotFoundException;
@@ -66,6 +66,8 @@ public class TurmsApplicationContext {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TurmsApplicationContext.class);
 
+    private static final String SPRING_CONFIG_LOCATION = "spring.config.location";
+
     private static final String BUILD_INFO_PROPS_PATH = "git.properties";
     private static final String PROPERTY_BUILD_VERSION = "git.build.version";
     private static final String PROPERTY_BUILD_TIME = "git.build.time";
@@ -86,23 +88,29 @@ public class TurmsApplicationContext {
     private long shutdownJobTimeoutMillis;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
-    public TurmsApplicationContext(Environment environment, NodeType nodeType) {
+    public TurmsApplicationContext(Environment environment) {
         LoggerFactory.bindContext(this);
 
-        String homeDir = switch (nodeType) {
-            case AI_SERVING -> SystemUtil.getProperty("TURMS_AI_SERVING_HOME");
-            case GATEWAY -> SystemUtil.getProperty("TURMS_GATEWAY_HOME");
-            case SERVICE -> SystemUtil.getProperty("TURMS_SERVICE_HOME");
-        };
+        // The usage of "Node.nodeType" should be avoided,
+        // but we use it here to avoid circular dependency.
+        String homeDir = SystemUtil.getProperty(switch (Node.nodeType) {
+            case AI_SERVING -> ApplicationConst.PROPERTY_NAME_TURMS_AI_SERVING_HOME;
+            case GATEWAY -> ApplicationConst.PROPERTY_NAME_TURMS_GATEWAY_HOME;
+            case SERVICE -> ApplicationConst.PROPERTY_NAME_TURMS_SERVICE_HOME;
+            case MOCK -> ApplicationConst.PROPERTY_NAME_TURMS_MOCK_NODE_HOME;
+            case null -> throw new IllegalStateException("The node type is not set");
+        });
         home = Path.of(homeDir == null
                 ? ""
                 : homeDir)
                 .toAbsolutePath();
 
         // The property should be passed from "bin/run.sh"
-        String configDir = System.getProperty("spring.config.location");
+        String configDir = System.getProperty(SPRING_CONFIG_LOCATION);
         if (configDir == null || configDir.isBlank()) {
-            LOGGER.warn("The property \"spring.config.location\" is empty");
+            LOGGER.warn("The property \""
+                    + SPRING_CONFIG_LOCATION
+                    + "\" is empty");
             configDir = "./config";
         }
         this.configDir = configDir;
