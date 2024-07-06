@@ -18,21 +18,18 @@
 package unit.im.turms.server.common.infra.plugin;
 
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
+import helper.JarUtil;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
-import util.JarUtil;
 
 import im.turms.plugin.MyExtensionPoint;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.plugin.PluginClassLoader;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -50,6 +47,7 @@ class JavaPluginManagerTests {
 
     private static final String JAR_NAME = "MyPluginForTest.jar";
     private static final Path JAR_FILE;
+    private static final ClassLoader SYSTEM_CLASS_LOADER = ClassLoader.getSystemClassLoader();
 
     static {
         JAR_FILE = JarUtil.createJarFile(JAR_NAME,
@@ -60,16 +58,13 @@ class JavaPluginManagerTests {
                 List.of("plugin.yaml"));
     }
 
-    @Disabled("legacy test and should be rewritten later")
     @Test
-    void shouldLoadPluginWithPluginLoader() {
+    void shouldLoadPluginWithSystemClassLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
 
-        assertThat(myExtensionPoint.getClass()).isNotEqualTo(MyExtension.class);
+        assertThat(myExtensionPoint.getClass()).isEqualTo(MyExtension.class);
         assertThat(myExtensionPoint.getClass()
-                .getName()).isEqualTo(MyExtension.class.getName());
-        assertThat(myExtensionPoint.getClass()
-                .getClassLoader()).isInstanceOf(PluginClassLoader.class);
+                .getClassLoader()).isEqualTo(SYSTEM_CLASS_LOADER);
     }
 
     @SneakyThrows
@@ -89,27 +84,19 @@ class JavaPluginManagerTests {
         assertThat(rpcServiceClass.getClassLoader()).isEqualTo(ClassLoader.getSystemClassLoader());
     }
 
-    @Disabled("legacy test and should be rewritten later")
     @SneakyThrows
     @Test
-    void shouldPreferClassesInPlugin() {
+    void shouldPreferClassesInParentClassLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
         TurmsExtension myExtension = (TurmsExtension) myExtensionPoint;
         Object application = myExtension.getClass()
                 .getDeclaredField("application")
                 .get(myExtension);
 
-        assertThat(application.getClass()).isNotEqualTo(SpringApplication.class);
+        assertThat(application.getClass()).isEqualTo(SpringApplication.class);
         assertThat(application.getClass()
-                .getName()).isEqualTo(SpringApplication.class.getName());
-        assertThat(application.getClass()
-                .getClassLoader()).isInstanceOf(PluginClassLoader.class);
-
-        boolean testMethodRetVal = (boolean) application.getClass()
-                .getDeclaredMethod("test")
-                .invoke(application);
-
-        assertThat(testMethodRetVal).isTrue();
+                // Should not be an instance of PluginClassLoader.
+                .getClassLoader()).isEqualTo(SYSTEM_CLASS_LOADER);
     }
 
     @SneakyThrows
