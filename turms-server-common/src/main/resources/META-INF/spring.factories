@@ -1,1 +1,1 @@
-org.springframework.context.ApplicationListener=im.turms.server.common.infra.context.ApplicationEnvironmentEventListener
+org.springframework.context.ApplicationListener=im.turms.server.common.infra.application.ApplicationEnvironmentEventListener

@@ -20,7 +20,7 @@ package im.turms.server.common.domain.info.access.admin.controller;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.domain.info.access.admin.dto.InfoDTO;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 
 /**
  * @author James Chen

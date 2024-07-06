@@ -19,8 +19,8 @@ package im.turms.server.common.infra.healthcheck;
 
 import org.springframework.stereotype.Component;
 
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 
 /**
  * @author James Chen

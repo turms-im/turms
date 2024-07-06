@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import im.turms.gateway.storage.mongo.MongoConfig;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;

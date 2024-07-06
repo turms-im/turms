@@ -34,8 +34,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;

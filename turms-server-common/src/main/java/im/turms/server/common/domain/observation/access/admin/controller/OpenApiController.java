@@ -29,9 +29,8 @@ import im.turms.server.common.access.admin.web.HttpRequestDispatcher;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
-import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 

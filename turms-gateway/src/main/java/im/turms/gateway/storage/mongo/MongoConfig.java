@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.user.po.User;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;

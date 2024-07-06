@@ -29,6 +29,8 @@ import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
+import im.turms.server.common.infra.application.ApplicationEnvironmentEventListener;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.service.ClusterService;
 import im.turms.server.common.infra.cluster.service.codec.CodecService;
 import im.turms.server.common.infra.cluster.service.config.SharedConfigService;
@@ -38,8 +40,6 @@ import im.turms.server.common.infra.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.infra.cluster.service.idgen.IdService;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
-import im.turms.server.common.infra.context.ApplicationEnvironmentEventListener;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;

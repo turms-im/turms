@@ -23,9 +23,9 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.infra.application.JobShutdownOrder;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.context.JobShutdownOrder;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.common.BaseRedisProperties;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContextPool;

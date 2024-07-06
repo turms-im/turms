@@ -18,7 +18,7 @@
 package im.turms.server.common.domain.info.access.admin.dto;
 
 import im.turms.server.common.domain.common.access.dto.ControllerDTO;
-import im.turms.server.common.infra.context.BuildProperties;
+import im.turms.server.common.infra.application.BuildProperties;
 
 /**
  * @author James Chen

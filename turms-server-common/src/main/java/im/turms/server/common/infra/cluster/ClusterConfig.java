@@ -23,10 +23,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
+import im.turms.server.common.infra.application.JobShutdownOrder;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.server.common.infra.context.JobShutdownOrder;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.healthcheck.HealthCheckManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;

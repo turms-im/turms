@@ -27,9 +27,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import im.turms.plugin.MyExtensionPoint;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;

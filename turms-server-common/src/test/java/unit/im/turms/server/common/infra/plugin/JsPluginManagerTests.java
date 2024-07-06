@@ -19,7 +19,6 @@ package unit.im.turms.server.common.infra.plugin;
 
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -29,8 +28,8 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.NodeType;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;

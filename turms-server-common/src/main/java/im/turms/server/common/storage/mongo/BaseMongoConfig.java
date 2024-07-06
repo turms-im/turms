@@ -27,8 +27,8 @@ import java.util.Set;
 import com.mongodb.connection.ClusterType;
 import reactor.core.publisher.Mono;
 
-import im.turms.server.common.infra.context.JobShutdownOrder;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.JobShutdownOrder;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.infra.time.DurationConst;
 

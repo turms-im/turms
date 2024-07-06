@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service;
 import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
 import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.observation.model.RecordingSession;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.io.FileUtil;

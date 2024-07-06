@@ -31,7 +31,7 @@ import im.turms.server.common.access.admin.web.HttpResponseException;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.service.BaseService;
-import im.turms.server.common.infra.context.TurmsApplicationContext;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.io.FileUtil;
 import im.turms.server.common.infra.io.InputOutputException;

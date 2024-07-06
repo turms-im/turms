@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.context;
+package im.turms.server.common.infra.application;
 
 /**
  * @author James Chen
