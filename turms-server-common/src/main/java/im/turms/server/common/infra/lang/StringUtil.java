@@ -399,10 +399,11 @@ public final class StringUtil {
 
     /**
      * @implNote 1. The strings must be ASCII and the method won't validate their coder for better
-     *           performance. 2. The number of placeholder "{}" must the same as the number of
-     *           arguments, or its will throw. We don't support mismatch to avoiding growing or
-     *           shrinking the result string, or preprocess the message, which cause a bad
-     *           performance while it can be avoided.
+     *           performance.
+     *           <p>
+     *           2. The number of placeholder "{}" must equal the number of arguments, or its will
+     *           throw. We don't support mismatch to avoid growing or shrinking the result string,
+     *           or preprocess the message, which causes a bad performance while it can be avoided.
      */
     public static String substitute(String message, String... args) {
         byte[] bytes = getBytes(message);

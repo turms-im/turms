@@ -17,6 +17,7 @@
 
 package im.turms.server.common.domain.observation.access.admin.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 
@@ -31,6 +32,7 @@ import im.turms.server.common.access.admin.web.annotation.RestController;
 import im.turms.server.common.infra.address.BaseServiceAddressManager;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
+import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.openapi.OpenApiBuilder;
 
@@ -42,7 +44,6 @@ import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSS;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_HTML;
 import static im.turms.server.common.infra.openapi.OpenApiResourceConst.FAVICON_32x32;
 import static im.turms.server.common.infra.openapi.OpenApiResourceConst.INDEX_CSS;
-import static im.turms.server.common.infra.openapi.OpenApiResourceConst.INDEX_HTML;
 import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_BUNDLE;
 import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_CSS;
 import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_STANDALONE_PRESET;
@@ -53,33 +54,64 @@ import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_
 @RestController("openapi")
 public class OpenApiController {
 
+    private final Node node;
     private final ApplicationContext context;
+
     private volatile ByteBuf apiBuffer;
+    private final ByteBuf indexHtml;
     private final ByteBuf swaggerInitializer;
 
     public OpenApiController(
+            Node node,
             ApplicationContext context,
             BaseServiceAddressManager serviceAddressManager) {
+        this.node = node;
         this.context = context;
-        swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer(
-                // language=JavaScript
+        // language=HTML
+        String indexHtmlStr =
                 """
-                        window.onload = function() {
-                          window.ui = SwaggerUIBundle({
-                            url: "%s/openapi/docs",
-                            dom_id: '#swagger-ui',
-                            deepLinking: true,
-                            presets: [
-                              SwaggerUIBundle.presets.apis,
-                              SwaggerUIStandalonePreset
-                            ],
-                            plugins: [
-                              SwaggerUIBundle.plugins.DownloadUrl
-                            ],
-                            layout: "StandaloneLayout"
-                          });
-                        };
-                        """.formatted(serviceAddressManager.getAdminApiAddress()));
+                        <!DOCTYPE html>
+                        <html lang="en">
+                          <head>
+                            <meta charset="UTF-8">
+                            <title>{} OpenAPI</title>
+                            <link rel="stylesheet" type="text/css" href="/openapi/ui/swagger-ui.css" />
+                            <link rel="stylesheet" type="text/css" href="/openapi/ui/index.css" />
+                            <link rel="icon" type="image/png" href="/openapi/ui/favicon-32x32.png" sizes="32x32" />
+                          </head>
+                          <body>
+                            <div id="swagger-ui"></div>
+                            <script src="/openapi/ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
+                            <script src="/openapi/ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+                            <script src="/openapi/ui/swagger-initializer.js" charset="UTF-8"> </script>
+                          </body>
+                        </html>
+                        """;
+        indexHtml = ByteBufUtil.getUnreleasableDirectBuffer(StringUtil
+                .substitute(indexHtmlStr,
+                        node.getNodeType()
+                                .getDisplayName())
+                .getBytes(StandardCharsets.UTF_8));
+        // language=JavaScript
+        String swaggerInitializerStr = """
+                window.onload = function() {
+                  window.ui = SwaggerUIBundle({
+                    url: "{}/openapi/docs",
+                    dom_id: '#swagger-ui',
+                    deepLinking: true,
+                    presets: [
+                      SwaggerUIBundle.presets.apis,
+                      SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                      SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: "StandaloneLayout"
+                  });
+                };
+                """;
+        swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer(StringUtil
+                .substitute(swaggerInitializerStr, serviceAddressManager.getAdminApiAddress()));
     }
 
     @GetMapping(value = "docs", produces = APPLICATION_JSON)
@@ -96,7 +128,7 @@ public class OpenApiController {
 
     @GetMapping(value = "ui", produces = TEXT_HTML)
     public ByteBuf getIndexHtml() {
-        return INDEX_HTML;
+        return indexHtml;
     }
 
     @GetMapping(value = "ui/favicon-32x32.png", produces = IMAGE_PNG)
@@ -150,8 +182,7 @@ public class OpenApiController {
         byte[] bytes = OpenApiBuilder.build(context.getBean(TurmsApplicationContext.class)
                 .getBuildProperties()
                 .version(),
-                context.getBean(Node.class)
-                        .getNodeType()
+                node.getNodeType()
                         .getDisplayName(),
                 context.getBean(BaseServiceAddressManager.class)
                         .getAdminApiAddress(),
