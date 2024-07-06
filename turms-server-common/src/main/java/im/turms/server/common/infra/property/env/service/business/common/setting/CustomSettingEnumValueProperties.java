@@ -17,9 +17,11 @@
 
 package im.turms.server.common.infra.property.env.service.business.common.setting;
 
+import java.util.Collections;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -32,19 +34,13 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
  */
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class CustomSettingIntValueProperties extends CustomSettingEnumValueProperties<Integer> {
+public abstract class CustomSettingEnumValueProperties<T> {
 
-    @Description("The minimum allowed value")
+    @Description("Allowed values")
     @GlobalProperty
     @MutableProperty
-    private int min = Integer.MIN_VALUE;
-
-    @Description("The maximum allowed value")
-    @GlobalProperty
-    @MutableProperty
-    private int max = Integer.MAX_VALUE;
+    private Set<T> allowedValues = Collections.emptySet();
 
 }

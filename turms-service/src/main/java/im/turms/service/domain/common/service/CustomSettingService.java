@@ -37,7 +37,7 @@ import im.turms.server.common.infra.property.env.service.business.common.setting
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingLongValueProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingStringValueProperties;
-import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingValueProperties;
+import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingValueOneOfProperties;
 import im.turms.service.infra.locale.LocaleUtil;
 
 /**
@@ -123,17 +123,71 @@ public abstract class CustomSettingService extends BaseService {
     }
 
     private Object parseValue(
-            CustomSettingValueProperties valueProperties,
+            CustomSettingValueOneOfProperties oneOfProperties,
             String sourceName,
             Value value) {
-        return switch (valueProperties.getType()) {
+        return switch (oneOfProperties.getType()) {
             case INT -> {
-                CustomSettingIntValueProperties properties = valueProperties.getIntValue();
+                CustomSettingIntValueProperties properties = oneOfProperties.getIntValue();
+                Set<Integer> allowedValues = properties.getAllowedValues();
+                if (!allowedValues.isEmpty()) {
+                    yield switch (value.getKindCase()) {
+                        case INT32_VALUE -> {
+                            int val = value.getInt32Value();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case INT64_VALUE -> {
+                            int val;
+                            try {
+                                val = Math.toIntExact(value.getInt64Value());
+                            } catch (Exception e) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        default -> throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The value of the setting \""
+                                        + sourceName
+                                        + "\" must be one of "
+                                        + allowedValues);
+                    };
+                }
                 int min = properties.getMin();
                 int max = properties.getMax();
                 int val = switch (value.getKindCase()) {
                     case INT32_VALUE -> value.getInt32Value();
-                    case INT64_VALUE -> (int) value.getInt64Value();
+                    case INT64_VALUE -> {
+                        try {
+                            yield Math.toIntExact(value.getInt64Value());
+                        } catch (Exception e) {
+                            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                    "The value of the setting \""
+                                            + sourceName
+                                            + "\" must be in ["
+                                            + min
+                                            + ", "
+                                            + max
+                                            + "]");
+                        }
+                    }
                     default -> throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                             "The value of the setting \""
                                     + sourceName
@@ -156,7 +210,39 @@ public abstract class CustomSettingService extends BaseService {
                 yield val;
             }
             case LONG -> {
-                CustomSettingLongValueProperties properties = valueProperties.getLongValue();
+                CustomSettingLongValueProperties properties = oneOfProperties.getLongValue();
+                Set<Long> allowedValues = properties.getAllowedValues();
+                if (!allowedValues.isEmpty()) {
+                    yield switch (value.getKindCase()) {
+                        case INT32_VALUE -> {
+                            long val = value.getInt32Value();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case INT64_VALUE -> {
+                            long val = value.getInt64Value();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        default -> throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The value of the setting \""
+                                        + sourceName
+                                        + "\" must be one of "
+                                        + allowedValues);
+                    };
+                }
                 long min = properties.getMin();
                 long max = properties.getMax();
                 long val = switch (value.getKindCase()) {
@@ -184,7 +270,39 @@ public abstract class CustomSettingService extends BaseService {
                 yield val;
             }
             case DOUBLE -> {
-                CustomSettingDoubleValueProperties properties = valueProperties.getDoubleValue();
+                CustomSettingDoubleValueProperties properties = oneOfProperties.getDoubleValue();
+                Set<Double> allowedValues = properties.getAllowedValues();
+                if (!allowedValues.isEmpty()) {
+                    yield switch (value.getKindCase()) {
+                        case FLOAT_VALUE -> {
+                            double val = value.getFloatValue();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case DOUBLE_VALUE -> {
+                            double val = value.getDoubleValue();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        default -> throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The value of the setting \""
+                                        + sourceName
+                                        + "\" must be one of "
+                                        + allowedValues);
+                    };
+                }
                 double min = properties.getMin();
                 double max = properties.getMax();
                 double val = switch (value.getKindCase()) {
@@ -212,7 +330,83 @@ public abstract class CustomSettingService extends BaseService {
                 yield val;
             }
             case STRING -> {
-                CustomSettingStringValueProperties properties = valueProperties.getStringValue();
+                CustomSettingStringValueProperties properties = oneOfProperties.getStringValue();
+                Set<String> allowedValues = properties.getAllowedValues();
+                if (!allowedValues.isEmpty()) {
+                    yield switch (value.getKindCase()) {
+                        case INT32_VALUE -> {
+                            String val = String.valueOf(value.getInt32Value());
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case INT64_VALUE -> {
+                            String val = String.valueOf(value.getInt64Value());
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case FLOAT_VALUE -> {
+                            String val = String.valueOf(value.getFloatValue());
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case DOUBLE_VALUE -> {
+                            String val = String.valueOf(value.getDoubleValue());
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case BOOL_VALUE -> {
+                            String val = String.valueOf(value.getBoolValue());
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        case STRING_VALUE -> {
+                            String val = value.getStringValue();
+                            if (!allowedValues.contains(val)) {
+                                throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                        "The value of the setting \""
+                                                + sourceName
+                                                + "\" must be one of "
+                                                + allowedValues);
+                            }
+                            yield val;
+                        }
+                        default -> throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "The value of the setting \""
+                                        + sourceName
+                                        + "\" must be one of "
+                                        + allowedValues);
+                    };
+                }
                 int minLength = properties.getMinLength();
                 int maxLength = properties.getMaxLength();
                 List<Pattern> parsedRegexes = properties.getParsedRegexes();

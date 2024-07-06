@@ -41,7 +41,7 @@ import im.turms.server.common.infra.validation.ValidRegex;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CustomSettingStringValueProperties {
+public class CustomSettingStringValueProperties extends CustomSettingEnumValueProperties<String> {
 
     @Description("The minimum allowed length")
     @GlobalProperty

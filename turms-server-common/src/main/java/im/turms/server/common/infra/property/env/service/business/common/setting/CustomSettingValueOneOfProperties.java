@@ -35,7 +35,7 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CustomSettingValueProperties {
+public class CustomSettingValueOneOfProperties {
 
     @Description("The setting value type")
     @GlobalProperty
