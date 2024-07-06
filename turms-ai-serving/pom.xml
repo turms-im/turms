@@ -15,7 +15,7 @@
 
         <djl.version>0.27.0</djl.version>
         <paddlepaddle-native.version>2.3.2</paddlepaddle-native.version>
-        <pytorch-native.version>2.1.1</pytorch-native.version>
+        <pytorch-native.version>2.2.2</pytorch-native.version>
 
         <os.name>linux</os.name>
         <paddlepaddle-native.artifactId>paddlepaddle-native-cpu</paddlepaddle-native.artifactId>

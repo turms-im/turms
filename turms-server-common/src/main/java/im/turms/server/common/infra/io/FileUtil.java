@@ -20,25 +20,17 @@ package im.turms.server.common.infra.io;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import org.springframework.util.AntPathMatcher;
-import org.webjars.WebJarAssetLocator;
 
 /**
  * @author James Chen
  */
 public class FileUtil {
-
-    private static final Set<String> WEB_JAR_ASSETS = new WebJarAssetLocator().listAssets();
-    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
     private static Path tempDir;
 
@@ -77,45 +69,6 @@ public class FileUtil {
                             + filePath,
                     e);
         }
-    }
-
-    public static ByteBuf getWebJarAssetAsBuffer(String resourceNamePattern) {
-        byte[] bytes = getWebJarAssetAsBytes(resourceNamePattern);
-        return Unpooled.unreleasableBuffer(Unpooled.directBuffer(bytes.length)
-                .writeBytes(bytes));
-    }
-
-    public static byte[] getWebJarAssetAsBytes(String resourceNamePattern) {
-        try {
-            return getWebJarAsset(resourceNamePattern).readAllBytes();
-        } catch (IOException e) {
-            throw new InputOutputException(e);
-        }
-    }
-
-    public static InputStream getWebJarAsset(String resourceNamePattern) {
-        resourceNamePattern = WebJarAssetLocator.WEBJARS_PATH_PREFIX
-                + "/"
-                + resourceNamePattern;
-        String resourcePath = null;
-        for (String asset : WEB_JAR_ASSETS) {
-            if (ANT_PATH_MATCHER.match(resourceNamePattern, asset)) {
-                resourcePath = asset;
-            }
-        }
-        if (resourcePath == null) {
-            throw new ResourceNotFoundException(
-                    "No resource found: "
-                            + resourceNamePattern);
-        }
-        InputStream inputStream = FileUtil.class.getClassLoader()
-                .getResourceAsStream(resourcePath);
-        if (inputStream == null) {
-            throw new ResourceNotFoundException(
-                    "Could not find the resource: "
-                            + resourcePath);
-        }
-        return inputStream;
     }
 
     public static long size(Path path) {

@@ -120,12 +120,6 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     }
 
     @Override
-    @Deprecated
-    public FindPublisher<T> oplogReplay(final boolean oplogReplay) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public FindPublisher<T> partial(final boolean partial) {
         throw new NotImplementedException();
     }

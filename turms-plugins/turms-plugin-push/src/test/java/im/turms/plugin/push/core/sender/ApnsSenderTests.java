@@ -78,7 +78,7 @@ class ApnsSenderTests {
         payload = sender.buildPayload(notification, "en", Collections::emptyMap);
         expected =
                 """
-                        {"aps":{"mutable_content":1,"alert":{"title":"「幻华」（城之内ミサ）","body":"{\\"aps\\":{\\"mutable_content\\":1,\\"alert\\":{\\"title\\":\\"Nujabes\\",\\"body\\":\\"Reflection Eternal\\"},\\"badge\\":99}}"}}}""";
+                        {"aps":{"alert":{"title":"「幻华」（城之内ミサ）","body":"{\\"aps\\":{\\"alert\\":{\\"title\\":\\"Nujabes\\",\\"body\\":\\"Reflection Eternal\\"},\\"badge\\":99,\\"mutable_content\\":1}}"},"mutable_content":1}}""";
         assertThat(objectMapper.readTree(payload)).isEqualTo(objectMapper.readTree(expected));
     }
 

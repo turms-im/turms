@@ -28,9 +28,9 @@ import com.mongodb.internal.async.function.RetryState;
 import com.mongodb.internal.binding.AsyncReadBinding;
 import com.mongodb.internal.binding.ReadBinding;
 import com.mongodb.internal.connection.NoOpSessionContext;
-import com.mongodb.internal.connection.QueryResult;
 import com.mongodb.internal.session.SessionContext;
 import com.mongodb.lang.Nullable;
+import lombok.Getter;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.bson.codecs.Decoder;
@@ -44,7 +44,6 @@ import static com.mongodb.internal.operation.CommandOperationHelper.initialRetry
 import static com.mongodb.internal.operation.ExplainHelper.asExplainCommand;
 import static com.mongodb.internal.operation.OperationHelper.LOGGER;
 import static com.mongodb.internal.operation.OperationHelper.canRetryRead;
-import static com.mongodb.internal.operation.OperationHelper.cursorDocumentToQueryResult;
 import static com.mongodb.internal.operation.OperationReadConcernHelper.appendReadConcernToCommand;
 import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSION;
 
@@ -56,6 +55,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         ExplainableReadOperation<BatchCursor<T>> {
     private static final String FIRST_BATCH = "firstBatch";
 
+    @Getter
     private final MongoNamespace namespace;
     private final Decoder<T> decoder;
     private final BsonDocument command;
@@ -68,10 +68,6 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
         this.namespace = notNull("namespace", namespace);
         this.decoder = notNull("decoder", decoder);
         this.command = notNull("command", command);
-    }
-
-    public MongoNamespace getNamespace() {
-        return namespace;
     }
 
     public TurmsFindOperation<T> retryReads(final boolean retryReads) {
@@ -172,21 +168,14 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     }
 
     private AsyncOperationHelper.CommandReadTransformerAsync<BsonDocument, AsyncBatchCursor<T>> asyncTransformer() {
-        return (result, source, connection) -> {
-            QueryResult<T> queryResult = cursorDocumentToQueryResult(result.getDocument("cursor"),
-                    connection.getDescription()
-                            .getServerAddress());
-            return new AsyncQueryBatchCursor<>(
-                    queryResult,
-                    getLimit(),
-                    getBatchSize(),
-                    0,
-                    decoder,
-                    null,
-                    source,
-                    connection,
-                    result);
-        };
+        return (result, source, connection) -> new AsyncCommandBatchCursor<>(
+                result,
+                getBatchSize(),
+                0,
+                decoder,
+                null,
+                source,
+                connection);
     }
 
     private int getBatchSize() {

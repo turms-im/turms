@@ -41,47 +41,18 @@ import static im.turms.server.common.access.admin.web.MediaTypeConst.APPLICATION
 import static im.turms.server.common.access.admin.web.MediaTypeConst.IMAGE_PNG;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_CSS;
 import static im.turms.server.common.access.admin.web.MediaTypeConst.TEXT_HTML;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.FAVICON_32x32;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.INDEX_CSS;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.INDEX_HTML;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_BUNDLE;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_CSS;
+import static im.turms.server.common.infra.openapi.OpenApiResourceConst.SWAGGER_UI_STANDALONE_PRESET;
 
 /**
  * @author James Chen
  */
 @RestController("openapi")
 public class OpenApiController {
-
-    private static final ByteBuf FAVICON_32_32;
-    private static final ByteBuf INDEX_HTML;
-    private static final ByteBuf INDEX_CSS;
-    private static final ByteBuf SWAGGER_UI_CSS;
-    private static final ByteBuf SWAGGER_UI_BUNDLE;
-    private static final ByteBuf SWAGGER_UI_STANDALONE_PRESET;
-
-    static {
-        FAVICON_32_32 = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/favicon-32x32.png");
-        INDEX_HTML = ByteBufUtil.getUnreleasableDirectBuffer(
-                """
-                        <!DOCTYPE html>
-                        <html lang="en">
-                          <head>
-                            <meta charset="UTF-8">
-                            <title>Swagger UI</title>
-                            <link rel="stylesheet" type="text/css" href="/openapi/ui/swagger-ui.css" />
-                            <link rel="stylesheet" type="text/css" href="/openapi/ui/index.css" />
-                            <link rel="icon" type="image/png" href="/openapi/ui/favicon-32x32.png" sizes="32x32" />
-                          </head>
-                          <body>
-                            <div id="swagger-ui"></div>
-                            <script src="/openapi/ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
-                            <script src="/openapi/ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-                            <script src="/openapi/ui/swagger-initializer.js" charset="UTF-8"> </script>
-                          </body>
-                        </html>
-                        """);
-        INDEX_CSS = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/index.css");
-        SWAGGER_UI_CSS = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui.css");
-        SWAGGER_UI_BUNDLE = FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui-bundle.js.gz");
-        SWAGGER_UI_STANDALONE_PRESET =
-                FileUtil.getWebJarAssetAsBuffer("swagger-ui/*/swagger-ui-standalone-preset.js.gz");
-    }
 
     private final ApplicationContext context;
     private volatile ByteBuf apiBuffer;
@@ -91,23 +62,25 @@ public class OpenApiController {
             ApplicationContext context,
             BaseServiceAddressManager serviceAddressManager) {
         this.context = context;
-        swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer("""
-                window.onload = function() {
-                  window.ui = SwaggerUIBundle({
-                    url: "%s/openapi/docs",
-                    dom_id: '#swagger-ui',
-                    deepLinking: true,
-                    presets: [
-                      SwaggerUIBundle.presets.apis,
-                      SwaggerUIStandalonePreset
-                    ],
-                    plugins: [
-                      SwaggerUIBundle.plugins.DownloadUrl
-                    ],
-                    layout: "StandaloneLayout"
-                  });
-                };
-                """.formatted(serviceAddressManager.getAdminApiAddress()));
+        swaggerInitializer = ByteBufUtil.getUnreleasableDirectBuffer(
+                // language=JavaScript
+                """
+                        window.onload = function() {
+                          window.ui = SwaggerUIBundle({
+                            url: "%s/openapi/docs",
+                            dom_id: '#swagger-ui',
+                            deepLinking: true,
+                            presets: [
+                              SwaggerUIBundle.presets.apis,
+                              SwaggerUIStandalonePreset
+                            ],
+                            plugins: [
+                              SwaggerUIBundle.plugins.DownloadUrl
+                            ],
+                            layout: "StandaloneLayout"
+                          });
+                        };
+                        """.formatted(serviceAddressManager.getAdminApiAddress()));
     }
 
     @GetMapping(value = "docs", produces = APPLICATION_JSON)
@@ -129,7 +102,7 @@ public class OpenApiController {
 
     @GetMapping(value = "ui/favicon-32x32.png", produces = IMAGE_PNG)
     public ByteBuf getFavicon3232() {
-        return FAVICON_32_32;
+        return FAVICON_32x32;
     }
 
     @GetMapping(value = "ui/index.css", produces = TEXT_CSS)
