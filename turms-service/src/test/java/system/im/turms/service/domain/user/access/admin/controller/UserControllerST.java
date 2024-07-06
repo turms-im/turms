@@ -17,8 +17,9 @@
 
 package system.im.turms.service.domain.user.access.admin.controller;
 
-import java.util.Collection;
+import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import helper.SpringAwareIntegrationTest;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +32,10 @@ class UserControllerST extends SpringAwareIntegrationTest {
 
     @Test
     void queryUsers_shouldReturnNotEmptyData() {
-        ResponseDTO<Collection<User>> response =
-                sendHttpRequest("/users?registrationDateStart=1970-01-01T00:00:00Z");
+        ResponseDTO<List<User>> response =
+                sendHttpRequest("/users?registrationDateStart=1970-01-01T00:00:00Z",
+                        new TypeReference<>() {
+                        });
         assertThat(response.data()).isNotEmpty();
     }
 

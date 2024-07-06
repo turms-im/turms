@@ -20,11 +20,10 @@ package helper;
 import org.springframework.test.context.ContextConfiguration;
 
 import im.turms.server.common.testing.BaseSpringAwareIntegrationTest;
-import im.turms.service.TurmsServiceApplication;
 
 /**
  * @author James Chen
  */
-@ContextConfiguration(classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class})
-public abstract class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
+@ContextConfiguration(classes = {TurmsMockApplication.class})
+public class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
 }

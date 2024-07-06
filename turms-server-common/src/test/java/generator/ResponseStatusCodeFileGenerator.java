@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+package generator;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;

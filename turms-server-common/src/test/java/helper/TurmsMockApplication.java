@@ -17,14 +17,24 @@
 
 package helper;
 
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import im.turms.server.common.testing.BaseSpringAwareIntegrationTest;
-import im.turms.service.TurmsServiceApplication;
+import im.turms.server.common.BaseTurmsApplication;
+import im.turms.server.common.infra.application.Application;
+import im.turms.server.common.infra.cluster.node.NodeType;
+import im.turms.server.common.infra.lang.PackageConst;
 
 /**
  * @author James Chen
  */
-@ContextConfiguration(classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class})
-public abstract class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
+@Application(nodeType = NodeType.MOCK)
+@SpringBootApplication(
+        scanBasePackages = {"helper", PackageConst.SERVER_COMMON},
+        proxyBeanMethods = false)
+public class TurmsMockApplication extends BaseTurmsApplication {
+
+    public static void main(String[] args) {
+        bootstrap(TurmsMockApplication.class, args);
+    }
+
 }

@@ -17,14 +17,21 @@
 
 package helper;
 
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Service;
 
-import im.turms.server.common.testing.BaseSpringAwareIntegrationTest;
-import im.turms.service.TurmsServiceApplication;
+import im.turms.server.common.domain.admin.service.BaseAdminRoleService;
+import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 
 /**
  * @author James Chen
  */
-@ContextConfiguration(classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class})
-public abstract class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
+@Service
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
+public class AdminRoleService extends BaseAdminRoleService {
+
+    public AdminRoleService(AdminRoleRepository adminRoleRepository) {
+        super(adminRoleRepository);
+    }
+
 }

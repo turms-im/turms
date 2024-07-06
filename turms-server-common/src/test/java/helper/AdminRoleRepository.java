@@ -17,14 +17,22 @@
 
 package helper;
 
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
-import im.turms.server.common.testing.BaseSpringAwareIntegrationTest;
-import im.turms.service.TurmsServiceApplication;
+import im.turms.server.common.domain.admin.po.AdminRole;
+import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.storage.mongo.TurmsMongoClient;
 
 /**
  * @author James Chen
  */
-@ContextConfiguration(classes = {TurmsServiceApplication.class, TestEnvironmentConfig.class})
-public abstract class SpringAwareIntegrationTest extends BaseSpringAwareIntegrationTest {
+@Repository
+public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
+
+    public AdminRoleRepository(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient) {
+        super(mongoClient, AdminRole.class);
+        this.mongoClient = mongoClient;
+    }
+
 }
