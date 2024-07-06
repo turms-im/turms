@@ -15,15 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.aiserving;
+package im.turms.server.common.infra.property.env.service.env.mongo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 
 /**
  * @author James Chen
@@ -32,9 +30,24 @@ import im.turms.server.common.infra.property.env.service.env.database.TurmsMongo
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class MongoProperties {
+public class MongoGroupProperties {
 
     @NestedConfigurationProperty
-    private TurmsMongoProperties admin = new TurmsMongoProperties();
+    private AdminMongoProperties admin = new AdminMongoProperties();
+
+    @NestedConfigurationProperty
+    private UserMongoProperties user = new UserMongoProperties();
+
+    @NestedConfigurationProperty
+    private GroupMongoProperties group = new GroupMongoProperties();
+
+    @NestedConfigurationProperty
+    private ConversationMongoProperties conversation = new ConversationMongoProperties();
+
+    @NestedConfigurationProperty
+    private MessageMongoProperties message = new MessageMongoProperties();
+
+    @NestedConfigurationProperty
+    private ConferenceMongoProperties conference = new ConferenceMongoProperties();
 
 }

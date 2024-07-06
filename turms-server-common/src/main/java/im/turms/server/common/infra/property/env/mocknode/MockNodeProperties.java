@@ -40,6 +40,6 @@ public class MockNodeProperties {
     // Data Store
 
     @NestedConfigurationProperty
-    private MongoProperties mongo = new MongoProperties();
+    private MongoGroupProperties mongo = new MongoGroupProperties();
 
 }

@@ -29,7 +29,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.application.JobShutdownOrder;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.time.DurationConst;
 
 /**
@@ -58,7 +58,7 @@ public abstract class BaseMongoConfig {
     }
 
     protected synchronized TurmsMongoClient getMongoClient(
-            TurmsMongoProperties properties,
+            MongoProperties properties,
             String name,
             Set<ClusterType> requiredClusterTypes) {
         return uriToClient.compute(properties.getUri(), (key, mongoClient) -> {

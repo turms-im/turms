@@ -66,7 +66,7 @@ public class GatewayProperties {
     // Data Store
 
     @NestedConfigurationProperty
-    private MongoProperties mongo = new MongoProperties();
+    private MongoGroupProperties mongo = new MongoGroupProperties();
 
     @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();

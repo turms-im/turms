@@ -40,7 +40,7 @@ public class AiServingProperties {
     // Data Store
 
     @NestedConfigurationProperty
-    private MongoProperties mongo = new MongoProperties();
+    private MongoGroupProperties mongo = new MongoGroupProperties();
 
     // OCR
 

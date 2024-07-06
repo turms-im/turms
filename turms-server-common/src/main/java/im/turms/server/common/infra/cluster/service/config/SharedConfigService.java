@@ -31,7 +31,7 @@ import im.turms.server.common.infra.cluster.service.config.entity.discovery.Lead
 import im.turms.server.common.infra.cluster.service.config.entity.discovery.Member;
 import im.turms.server.common.infra.cluster.service.config.entity.property.SharedClusterProperties;
 import im.turms.server.common.infra.collection.CollectionUtil;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
@@ -49,7 +49,7 @@ public class SharedConfigService implements ClusterService {
     // Service registry and config client
     private final TurmsMongoClient mongoClient;
 
-    public SharedConfigService(TurmsMongoProperties properties) {
+    public SharedConfigService(MongoProperties properties) {
         try {
             mongoClient = TurmsMongoClient.of(properties, "shared-config")
                     .block(DurationConst.ONE_MINUTE);

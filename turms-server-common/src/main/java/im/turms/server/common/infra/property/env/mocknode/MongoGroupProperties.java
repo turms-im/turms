@@ -15,25 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
+package im.turms.server.common.infra.property.env.mocknode;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class TurmsMongoProperties {
+public class MongoGroupProperties {
 
-    private transient String uri = "mongodb://localhost:27017/turms";
+    @NestedConfigurationProperty
+    private MongoProperties admin = new MongoProperties();
 
-    public TurmsMongoProperties(String uri) {
-        if (uri != null) {
-            this.uri = uri;
-        }
-    }
 }

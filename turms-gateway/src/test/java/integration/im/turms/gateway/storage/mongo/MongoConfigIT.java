@@ -25,11 +25,11 @@ import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
-import im.turms.server.common.infra.property.env.gateway.MongoProperties;
+import im.turms.server.common.infra.property.env.gateway.MongoGroupProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
 import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.testing.BaseIntegrationTest;
 
@@ -52,9 +52,8 @@ class MongoConfigIT extends BaseIntegrationTest {
         MongoConfig mongoConfig = new MongoConfig(mock(TurmsApplicationContext.class));
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
-                        .mongo(new MongoProperties().toBuilder()
-                                .user(new TurmsMongoProperties(
-                                        testEnvironmentManager.getMongoUri()))
+                        .mongo(new MongoGroupProperties().toBuilder()
+                                .user(new MongoProperties(testEnvironmentManager.getMongoUri()))
                                 .build())
                         .session(new SessionProperties().toBuilder()
                                 .identityAccessManagement(

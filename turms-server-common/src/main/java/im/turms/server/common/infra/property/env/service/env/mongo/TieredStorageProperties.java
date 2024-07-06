@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
+package im.turms.server.common.infra.property.env.service.env.mongo;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.mocknode;
+package im.turms.server.common.infra.property.env.aiserving;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.env.common.mongo.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 
 /**
  * @author James Chen
@@ -32,9 +32,9 @@ import im.turms.server.common.infra.property.env.common.mongo.TurmsMongoProperti
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class MongoProperties {
+public class MongoGroupProperties {
 
     @NestedConfigurationProperty
-    private TurmsMongoProperties admin = new TurmsMongoProperties();
+    private MongoProperties admin = new MongoProperties();
 
 }

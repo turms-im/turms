@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
+package im.turms.server.common.infra.property.env.service.env.mongo;
 
 import com.mongodb.WriteConcern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 
 /**
  * @author James Chen
@@ -34,7 +35,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class UserMongoProperties extends TurmsMongoProperties {
+public class UserMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
     private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();

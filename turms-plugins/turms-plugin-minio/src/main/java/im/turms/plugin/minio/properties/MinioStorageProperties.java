@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 
 /**
  * @author James Chen
@@ -49,7 +49,7 @@ public class MinioStorageProperties {
     private ResourceId resourceId = new ResourceId();
 
     @NestedConfigurationProperty
-    private TurmsMongoProperties mongo = new TurmsMongoProperties();
+    private MongoProperties mongo = new MongoProperties();
 
     @Data
     public static class Retry {

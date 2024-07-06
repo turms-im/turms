@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 
 /**
  * @author James Chen
@@ -35,7 +35,7 @@ import im.turms.server.common.infra.property.env.service.env.database.TurmsMongo
 public class SharedConfigProperties {
 
     @NestedConfigurationProperty
-    private transient TurmsMongoProperties mongo =
-            new TurmsMongoProperties("mongodb://localhost:27017/turms-config");
+    private transient MongoProperties mongo =
+            new MongoProperties("mongodb://localhost:27017/turms-config");
 
 }

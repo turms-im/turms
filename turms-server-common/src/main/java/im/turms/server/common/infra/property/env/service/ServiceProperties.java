@@ -34,8 +34,8 @@ import im.turms.server.common.infra.property.env.service.env.FakeProperties;
 import im.turms.server.common.infra.property.env.service.env.StatisticsProperties;
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.property.env.service.env.clientapi.ClientApiProperties;
-import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.infra.property.env.service.env.elasticsearch.TurmsElasticsearchProperties;
+import im.turms.server.common.infra.property.env.service.env.mongo.MongoGroupProperties;
 import im.turms.server.common.infra.property.env.service.env.push.PushNotificationProperties;
 import im.turms.server.common.infra.property.env.service.env.redis.TurmsRedisProperties;
 
@@ -63,7 +63,7 @@ public class ServiceProperties {
     private FakeProperties fake = new FakeProperties();
 
     @NestedConfigurationProperty
-    private MongoProperties mongo = new MongoProperties();
+    private MongoGroupProperties mongo = new MongoGroupProperties();
 
     @NestedConfigurationProperty
     private PushNotificationProperties pushNotification = new PushNotificationProperties();

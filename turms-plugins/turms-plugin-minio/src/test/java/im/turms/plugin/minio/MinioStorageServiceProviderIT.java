@@ -41,9 +41,9 @@ import im.turms.server.common.access.admin.web.MediaTypeConst;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
 import im.turms.server.common.infra.property.env.service.business.storage.StorageProperties;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.server.common.testing.environment.ServiceTestEnvironmentType;
 import im.turms.server.common.testing.properties.MinioTestEnvironmentProperties;
@@ -106,7 +106,7 @@ class MinioStorageServiceProviderIT extends BaseIntegrationTest {
                 .getContext();
         doReturn(new MinioStorageProperties().toBuilder()
                 .endpoint(testEnvironmentManager.getMinioUri())
-                .mongo(new TurmsMongoProperties(testEnvironmentManager.getMongoUri()))
+                .mongo(new MongoProperties(testEnvironmentManager.getMongoUri()))
                 .build()).when(provider)
                 .loadProperties(MinioStorageProperties.class);
 

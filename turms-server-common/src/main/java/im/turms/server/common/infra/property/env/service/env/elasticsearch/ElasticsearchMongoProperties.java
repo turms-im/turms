@@ -18,12 +18,11 @@
 package im.turms.server.common.infra.property.env.service.env.elasticsearch;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 
 /**
@@ -33,7 +32,7 @@ import im.turms.server.common.infra.property.metadata.Description;
 @SuperBuilder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class ElasticsearchMongoProperties extends TurmsMongoProperties {
+public class ElasticsearchMongoProperties extends MongoProperties {
 
     @Description("Whether to enable transaction for MongoDB. "
             + "If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, "

@@ -32,8 +32,8 @@ import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.constant.IdentityAccessManagementType;
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.infra.property.env.gateway.identityaccessmanagement.IdentityAccessManagementProperties;
-import im.turms.server.common.infra.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.storage.mongo.BaseMongoConfig;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
@@ -51,7 +51,7 @@ public class MongoConfig extends BaseMongoConfig {
 
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager propertiesManager) {
-        TurmsMongoProperties properties = propertiesManager.getLocalProperties()
+        MongoProperties properties = propertiesManager.getLocalProperties()
                 .getGateway()
                 .getMongo()
                 .getAdmin();
@@ -77,7 +77,7 @@ public class MongoConfig extends BaseMongoConfig {
                 || authenticationProperties.getType() != IdentityAccessManagementType.PASSWORD) {
             return null;
         }
-        TurmsMongoProperties properties = localProperties.getGateway()
+        MongoProperties properties = localProperties.getGateway()
                 .getMongo()
                 .getUser();
         TurmsMongoClient mongoClient = getMongoClient(properties,

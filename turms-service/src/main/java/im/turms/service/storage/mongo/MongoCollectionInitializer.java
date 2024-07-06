@@ -52,8 +52,8 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.ServiceProperties;
-import im.turms.server.common.infra.property.env.service.env.database.MongoProperties;
-import im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties;
+import im.turms.server.common.infra.property.env.service.env.mongo.MongoGroupProperties;
+import im.turms.server.common.infra.property.env.service.env.mongo.TieredStorageProperties;
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.reflect.ReflectionUtil;
 import im.turms.server.common.infra.security.password.PasswordManager;
@@ -87,7 +87,7 @@ import im.turms.service.domain.user.po.UserRelationshipGroupMember;
 import im.turms.service.domain.user.po.UserSettings;
 import im.turms.service.domain.user.po.UserVersion;
 
-import static im.turms.server.common.infra.property.env.service.env.database.TieredStorageProperties.StorageTierProperties;
+import static im.turms.server.common.infra.property.env.service.env.mongo.TieredStorageProperties.StorageTierProperties;
 
 /**
  * @author James Chen
@@ -108,7 +108,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final TurmsApplicationContext context;
     private final MongoFakingManager fakingManager;
     private final TieredStorageProperties messageTieredStorageProperties;
-    private final MongoProperties mongoProperties;
+    private final MongoGroupProperties mongoGroupProperties;
 
     private final boolean useConversationId;
 
@@ -151,7 +151,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 groupMongoClient,
                 conversationMongoClient,
                 messageMongoClient);
-        mongoProperties = serviceProperties.getMongo();
+        mongoGroupProperties = serviceProperties.getMongo();
         messageTieredStorageProperties = serviceProperties.getMongo()
                 .getMessage()
                 .getTieredStorage();
@@ -307,57 +307,57 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             String fieldName = field.getName();
             if (entityClass == Admin.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getAdmin()
+                        mongoGroupProperties.getAdmin()
                                 .getOptionalIndex()
                                 .getAdmin());
             } else if (entityClass == Group.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getGroup()
+                        mongoGroupProperties.getGroup()
                                 .getOptionalIndex()
                                 .getGroup());
             } else if (entityClass == GroupBlockedUser.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getGroup()
+                        mongoGroupProperties.getGroup()
                                 .getOptionalIndex()
                                 .getGroupBlockedUser());
             } else if (entityClass == GroupInvitation.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getGroup()
+                        mongoGroupProperties.getGroup()
                                 .getOptionalIndex()
                                 .getGroupInvitation());
             } else if (entityClass == GroupJoinRequest.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getGroup()
+                        mongoGroupProperties.getGroup()
                                 .getOptionalIndex()
                                 .getGroupJoinRequest());
             } else if (entityClass == GroupMember.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getGroup()
+                        mongoGroupProperties.getGroup()
                                 .getOptionalIndex()
                                 .getGroupMember());
             } else if (entityClass == Message.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getMessage()
+                        mongoGroupProperties.getMessage()
                                 .getOptionalIndex()
                                 .getMessage());
             } else if (entityClass == Meeting.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getConference()
+                        mongoGroupProperties.getConference()
                                 .getOptionalIndex()
                                 .getMeeting());
             } else if (entityClass == UserFriendRequest.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getUser()
+                        mongoGroupProperties.getUser()
                                 .getOptionalIndex()
                                 .getUserFriendRequest());
             } else if (entityClass == UserRelationship.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getUser()
+                        mongoGroupProperties.getUser()
                                 .getOptionalIndex()
                                 .getUserRelationship());
             } else if (entityClass == UserRelationshipGroupMember.class) {
                 return isCustomIndexEnabled.test(fieldName,
-                        mongoProperties.getUser()
+                        mongoGroupProperties.getUser()
                                 .getOptionalIndex()
                                 .getUserRelationshipGroupMember());
             } else {

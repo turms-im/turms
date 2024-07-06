@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.env.database;
+package im.turms.server.common.infra.property.env.service.env.mongo;
 
 import com.mongodb.WriteConcern;
 import lombok.AllArgsConstructor;
@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
+
 /**
  * @author James Chen
  */
@@ -33,13 +35,30 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class ConversationMongoProperties extends TurmsMongoProperties {
+public class AdminMongoProperties extends MongoProperties {
+
+    @NestedConfigurationProperty
+    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
     private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
-    public static class WriteConcernProperties {
-        private WriteConcern conversation = WriteConcern.MAJORITY;
+    public static class OptionalIndexProperties {
+        @NestedConfigurationProperty
+        private AdminOptionalIndexProperties admin = new AdminOptionalIndexProperties();
     }
+
+    @Data
+    public static class AdminOptionalIndexProperties {
+        private boolean roleId;
+        private boolean registrationDate;
+    }
+
+    @Data
+    public static class WriteConcernProperties {
+        private WriteConcern admin = WriteConcern.MAJORITY;
+        private WriteConcern adminRole = WriteConcern.MAJORITY;
+    }
+
 }
