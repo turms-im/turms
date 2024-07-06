@@ -48,6 +48,7 @@ import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.group.GroupMembersWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.collection.ChunkedArrayList;
@@ -84,7 +85,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupMemberService {
+public class GroupMemberService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupMemberService.class);
 

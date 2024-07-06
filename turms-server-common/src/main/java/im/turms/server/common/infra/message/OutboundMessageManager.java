@@ -28,6 +28,7 @@ import jakarta.validation.constraints.NotNull;
 
 import io.netty.buffer.ByteBuf;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -60,7 +61,7 @@ import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
  *           cancellation operation. In other words, it will leak memory if a cancellation operation
  *           occurs.
  */
-@Service
+@Component
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class OutboundMessageManager {
 

@@ -28,6 +28,7 @@ import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -42,7 +43,7 @@ import im.turms.service.infra.locale.LocaleUtil;
 /**
  * @author James Chen
  */
-public abstract class CustomSettingService {
+public abstract class CustomSettingService extends BaseService {
 
     protected List<CustomSettingProperties> settingPropertiesList;
     protected Set<String> immutableSettings;

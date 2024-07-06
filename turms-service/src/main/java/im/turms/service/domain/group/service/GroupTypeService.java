@@ -39,6 +39,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
@@ -65,7 +66,7 @@ import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GR
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupTypeService {
+public class GroupTypeService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupTypeService.class);
 

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import im.turms.gateway.domain.session.repository.UserRepository;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.security.password.PasswordManager;
 import im.turms.server.common.infra.validation.Validator;
@@ -33,7 +34,7 @@ import im.turms.server.common.infra.validation.Validator;
  * @author James Chen
  */
 @Service
-public class UserService {
+public class UserService extends BaseService {
 
     private final UserRepository userRepository;
     private final PasswordManager passwordManager;

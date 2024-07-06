@@ -28,6 +28,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -41,7 +42,7 @@ import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE
 /**
  * @author James Chen
  */
-public abstract class BaseAdminRoleService {
+public abstract class BaseAdminRoleService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminRoleService.class);
 

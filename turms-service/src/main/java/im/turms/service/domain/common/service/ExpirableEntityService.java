@@ -21,6 +21,7 @@ import java.util.Date;
 import jakarta.annotation.Nullable;
 
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.service.domain.common.po.Expirable;
 import im.turms.service.domain.common.repository.ExpirableEntityRepository;
 import im.turms.service.domain.common.util.ExpirableRequestInspector;
@@ -28,7 +29,7 @@ import im.turms.service.domain.common.util.ExpirableRequestInspector;
 /**
  * @author James Chen
  */
-public abstract class ExpirableEntityService<T extends Expirable> {
+public abstract class ExpirableEntityService<T extends Expirable> extends BaseService {
 
     private final ExpirableEntityRepository<T, ?> expirableEntityRepository;
 

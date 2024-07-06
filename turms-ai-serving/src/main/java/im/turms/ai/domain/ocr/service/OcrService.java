@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 import im.turms.ai.infra.image.ImageUtil;
 import im.turms.ai.infra.ocr.OcrManager;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.InputOutputException;
@@ -52,7 +53,7 @@ import im.turms.server.common.infra.property.env.aiserving.OcrProperties;
  * @author James Chen
  */
 @Service
-public class OcrService {
+public class OcrService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OcrService.class);
 

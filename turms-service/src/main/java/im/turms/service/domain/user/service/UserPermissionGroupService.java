@@ -35,6 +35,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
@@ -57,7 +58,7 @@ import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class UserPermissionGroupService {
+public class UserPermissionGroupService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserPermissionGroupService.class);
 

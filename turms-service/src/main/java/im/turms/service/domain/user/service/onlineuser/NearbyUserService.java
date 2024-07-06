@@ -31,6 +31,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.location.bo.NearbyUser;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.domain.session.service.SessionLocationService;
@@ -45,7 +46,7 @@ import im.turms.service.domain.user.service.UserService;
  * @author James Chen
  */
 @Service
-public class NearbyUserService {
+public class NearbyUserService extends BaseService {
 
     private final UserService userService;
     private final SessionLocationService sessionLocationService;

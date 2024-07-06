@@ -24,6 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.math.MathFlux;
 
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.observation.rpc.dto.CountOnlineUsersRequest;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.rpc.RpcErrorCode;
@@ -39,7 +40,7 @@ import im.turms.server.common.infra.task.TaskManager;
  */
 
 @Service
-public class StatisticsService {
+public class StatisticsService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsService.class);
 

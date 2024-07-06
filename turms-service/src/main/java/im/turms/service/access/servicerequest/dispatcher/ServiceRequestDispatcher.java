@@ -31,6 +31,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -79,7 +80,7 @@ import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_
 /**
  * @author James Chen
  */
-@Service
+@Component
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRequestDispatcher.class);

@@ -50,6 +50,7 @@ import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.group.GroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -98,7 +99,7 @@ import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RET
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupService {
+public class GroupService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupService.class);
 

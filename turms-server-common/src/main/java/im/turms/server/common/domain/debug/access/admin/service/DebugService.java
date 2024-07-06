@@ -35,6 +35,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.debug.access.admin.dto.request.CreateMethodCallDTO;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.collection.CollectionUtil;
@@ -58,7 +59,7 @@ import im.turms.server.common.infra.validation.Validator;
  * @author James Chen
  */
 @Service
-public class DebugService {
+public class DebugService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DebugService.class);
 

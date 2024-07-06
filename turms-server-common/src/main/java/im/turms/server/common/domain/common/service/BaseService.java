@@ -15,23 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.domain.observation.service;
-
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
-import lombok.Getter;
-import org.springframework.stereotype.Service;
-
-import im.turms.server.common.domain.common.service.BaseService;
+package im.turms.server.common.domain.common.service;
 
 /**
  * @author James Chen
  */
-
-@Service
-public class MetricsService extends BaseService {
-
-    @Getter
-    private final MeterRegistry registry = Metrics.globalRegistry;
-
+public abstract class BaseService {
 }

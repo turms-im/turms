@@ -29,13 +29,14 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.access.servicerequest.rpc.HandleServiceRequest;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.node.Node;
 
 /**
  * @author James Chen
  */
 @Service
-public class ServiceRequestService {
+public class ServiceRequestService extends BaseService {
 
     private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT =
             new ServiceResponse(ResponseStatusCode.NO_CONTENT, null, null);

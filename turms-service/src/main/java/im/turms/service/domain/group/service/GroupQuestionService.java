@@ -41,6 +41,7 @@ import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -73,7 +74,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupQuestionService {
+public class GroupQuestionService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupQuestionService.class);
 

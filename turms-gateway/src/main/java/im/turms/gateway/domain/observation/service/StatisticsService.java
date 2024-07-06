@@ -20,13 +20,14 @@ package im.turms.gateway.domain.observation.service;
 import org.springframework.stereotype.Service;
 
 import im.turms.gateway.domain.session.service.SessionService;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.observation.rpc.service.RpcStatisticsService;
 
 /**
  * @author James Chen
  */
 @Service
-public class StatisticsService implements RpcStatisticsService {
+public class StatisticsService extends BaseService implements RpcStatisticsService {
 
     private final SessionService sessionService;
 

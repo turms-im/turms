@@ -40,6 +40,7 @@ import org.jctools.queues.MpscUnboundedArrayQueue;
 import org.springframework.stereotype.Service;
 
 import im.turms.server.common.access.admin.dto.response.UpdateResultDTO;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.observation.model.RecordingSession;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
@@ -58,7 +59,7 @@ import im.turms.server.common.infra.validation.Validator;
  * @author James Chen
  */
 @Service
-public class FlightRecordingService {
+public class FlightRecordingService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlightRecordingService.class);
     private static final Path JFR_DIR = Path.of("jfr");

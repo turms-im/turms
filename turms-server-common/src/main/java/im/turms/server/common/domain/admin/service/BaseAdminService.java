@@ -30,6 +30,7 @@ import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -46,7 +47,7 @@ import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE
 /**
  * @author James Chen
  */
-public abstract class BaseAdminService {
+public abstract class BaseAdminService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminService.class);
 

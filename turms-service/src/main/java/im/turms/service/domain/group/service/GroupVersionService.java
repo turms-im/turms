@@ -29,6 +29,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -40,7 +41,7 @@ import im.turms.service.domain.group.repository.GroupVersionRepository;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupVersionService {
+public class GroupVersionService extends BaseService {
     private final GroupVersionRepository groupVersionRepository;
 
     public GroupVersionService(GroupVersionRepository groupVersionRepository) {

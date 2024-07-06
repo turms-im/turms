@@ -42,6 +42,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionsStatus;
@@ -74,7 +75,7 @@ import im.turms.server.common.storage.redis.script.RedisScript;
  */
 @ConditionalOnBean(name = "sessionRedisClientManager")
 @Service
-public class UserStatusService {
+public class UserStatusService extends BaseService {
 
     private static final long NODE_STATUS_TTL_MILLIS = 15_000L;
 

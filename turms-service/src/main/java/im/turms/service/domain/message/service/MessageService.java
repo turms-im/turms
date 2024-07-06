@@ -56,6 +56,7 @@ import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.session.bo.UserSessionId;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
@@ -122,7 +123,7 @@ import static im.turms.service.infra.metrics.MetricNameConst.SENT_MESSAGES_COUNT
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class MessageService {
+public class MessageService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
 

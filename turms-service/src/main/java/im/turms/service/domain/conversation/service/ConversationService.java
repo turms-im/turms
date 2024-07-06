@@ -36,6 +36,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -61,7 +62,7 @@ import im.turms.service.storage.mongo.OperationResultPublisherPool;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class ConversationService {
+public class ConversationService extends BaseService {
 
     private final UserRelationshipService userRelationshipService;
     private final GroupService groupService;

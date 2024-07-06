@@ -39,6 +39,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.user.UserRelationshipGroupsWithVersion;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
@@ -72,7 +73,7 @@ import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_RELA
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class UserRelationshipGroupService {
+public class UserRelationshipGroupService extends BaseService {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(UserRelationshipGroupService.class);

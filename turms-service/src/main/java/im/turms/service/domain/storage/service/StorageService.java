@@ -29,6 +29,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.plugin.PluginManager;
@@ -41,7 +42,7 @@ import im.turms.service.infra.plugin.extension.StorageServiceProvider;
  * @author James Chen
  */
 @Service
-public class StorageService {
+public class StorageService extends BaseService {
 
     private static final Mono STORAGE_NOT_IMPLEMENTED =
             Mono.error(ResponseException.get(ResponseStatusCode.STORAGE_NOT_IMPLEMENTED));

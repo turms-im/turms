@@ -39,6 +39,7 @@ import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ResponseExceptionPublisherPool;
@@ -67,7 +68,7 @@ import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RET
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class GroupBlocklistService {
+public class GroupBlocklistService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupBlocklistService.class);
 

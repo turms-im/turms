@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import im.turms.server.common.access.admin.web.HttpResponseException;
 import im.turms.server.common.access.admin.web.annotation.GetMapping;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.context.TurmsApplicationContext;
 import im.turms.server.common.infra.io.FileResource;
 import im.turms.server.common.infra.io.FileUtil;
@@ -41,7 +42,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
  * @author James Chen
  */
 @Service
-public class HeapDumpService {
+public class HeapDumpService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeapDumpService.class);
     private static final AtomicLong TEMP_HEAP_DUMP_FILE_ID = new AtomicLong(0);

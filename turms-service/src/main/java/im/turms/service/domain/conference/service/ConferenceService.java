@@ -38,6 +38,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
 import im.turms.server.common.infra.exception.IncompatibleJvmException;
@@ -87,7 +88,7 @@ import im.turms.service.infra.proto.ProtoModelConvertor;
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class ConferenceService {
+public class ConferenceService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConferenceService.class);
 

@@ -34,6 +34,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.bo.UserDeviceSessionInfo;
 import im.turms.server.common.domain.session.bo.UserSessionInfo;
@@ -57,7 +58,7 @@ import im.turms.service.domain.common.validation.DataValidator;
  * @author James Chen
  */
 @Service
-public class SessionService {
+public class SessionService extends BaseService {
 
     private final Node node;
     private final UserStatusService userStatusService;

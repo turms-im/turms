@@ -32,6 +32,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.UserSessionId;
@@ -50,7 +51,7 @@ import im.turms.server.common.storage.redis.TurmsRedisClientManager;
  */
 @ConditionalOnBean(name = "locationRedisClientManager")
 @Service
-public class SessionLocationService {
+public class SessionLocationService extends BaseService {
 
     private final TurmsRedisClientManager locationRedisClientManager;
 

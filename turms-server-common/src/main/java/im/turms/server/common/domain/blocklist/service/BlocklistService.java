@@ -35,6 +35,7 @@ import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.domain.blocklist.manager.AutoBlockManager;
 import im.turms.server.common.domain.blocklist.manager.BlocklistServiceManager;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.rpc.service.RpcSessionService;
@@ -64,7 +65,7 @@ import im.turms.server.common.storage.redis.script.RedisScript;
  */
 @ConditionalOnBean(name = "ipBlocklistRedisClient")
 @Service
-public class BlocklistService {
+public class BlocklistService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlocklistService.class);
 

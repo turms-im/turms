@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
@@ -39,7 +40,7 @@ import im.turms.server.common.infra.validation.ValidDeviceType;
  * @author James Chen
  */
 @Service
-public class UserSimultaneousLoginService {
+public class UserSimultaneousLoginService extends BaseService {
 
     private Map<DeviceType, Set<DeviceType>> deviceTypeToExclusiveDeviceTypes;
 

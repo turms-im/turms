@@ -51,6 +51,7 @@ import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
+import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.domain.common.util.DeviceTypeUtil;
 import im.turms.server.common.domain.location.bo.Location;
 import im.turms.server.common.domain.session.bo.CloseReason;
@@ -91,7 +92,7 @@ import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
  * @author James Chen
  */
 @Service
-public class SessionService implements RpcSessionService {
+public class SessionService extends BaseService implements RpcSessionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
