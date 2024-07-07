@@ -26,7 +26,7 @@ public final class UpdateConversationRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateConversationRequestOuterClass.class.getName());
     }
@@ -48,23 +48,31 @@ public final class UpdateConversationRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n6request/conversation/update_conversati"
-                + "on_request.proto\022\016im.turms.proto\"t\n\031Upda"
-                + "teConversationRequest\022\024\n\007user_id\030\001 \001(\003H\000"
-                + "\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022\021\n\tread_date\030"
-                + "\003 \001(\003B\n\n\010_user_idB\013\n\t_group_idBD\n=im.tur"
-                + "ms.server.common.access.client.dto.reque"
-                + "st.conversationP\001\272\002\000b\006proto3"};
+                + "on_request.proto\022\016im.turms.proto\032\030model/"
+                + "common/value.proto\"\246\001\n\031UpdateConversatio"
+                + "nRequest\022\024\n\007user_id\030\001 \001(\003H\000\210\001\001\022\025\n\010group_"
+                + "id\030\002 \001(\003H\001\210\001\001\022\021\n\tread_date\030\003 \001(\003\0220\n\021cust"
+                + "om_attributes\030\017 \003(\0132\025.im.turms.proto.Val"
+                + "ueB\n\n\010_user_idB\013\n\t_group_idBD\n=im.turms."
+                + "server.common.access.client.dto.request."
+                + "conversationP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateConversationRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateConversationRequest_descriptor,
-                        new java.lang.String[]{"UserId", "GroupId", "ReadDate",});
+                        new java.lang.String[]{"UserId",
+                                "GroupId",
+                                "ReadDate",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

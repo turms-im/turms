@@ -29,7 +29,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 TurmsNotification.class.getName());
     }
@@ -40,6 +40,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     private TurmsNotification() {
+        customAttributes_ = java.util.Collections.emptyList();
         reason_ = "";
     }
 
@@ -631,7 +632,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
                     /* minor= */ 27,
-                    /* patch= */ 0,
+                    /* patch= */ 2,
                     /* suffix= */ "",
                     Data.class.getName());
         }
@@ -656,7 +657,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                             im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
         }
 
-        private int kindCase_ = 0;
+        private int kindCase_;
         @SuppressWarnings("serial")
         private java.lang.Object kind_;
 
@@ -2586,50 +2587,84 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                     return this;
                 }
                 switch (other.getKindCase()) {
-                    case LONG -> setLong(other.getLong());
+                    case LONG -> {
+                        setLong(other.getLong());
+                    }
                     case STRING -> {
                         kindCase_ = 2;
                         kind_ = other.kind_;
                         onChanged();
                     }
-                    case LONGS_WITH_VERSION -> mergeLongsWithVersion(other.getLongsWithVersion());
-                    case STRINGS_WITH_VERSION ->
+                    case LONGS_WITH_VERSION -> {
+                        mergeLongsWithVersion(other.getLongsWithVersion());
+                    }
+                    case STRINGS_WITH_VERSION -> {
                         mergeStringsWithVersion(other.getStringsWithVersion());
-                    case CONVERSATIONS -> mergeConversations(other.getConversations());
-                    case MESSAGES -> mergeMessages(other.getMessages());
-                    case MESSAGES_WITH_TOTAL_LIST ->
+                    }
+                    case CONVERSATIONS -> {
+                        mergeConversations(other.getConversations());
+                    }
+                    case MESSAGES -> {
+                        mergeMessages(other.getMessages());
+                    }
+                    case MESSAGES_WITH_TOTAL_LIST -> {
                         mergeMessagesWithTotalList(other.getMessagesWithTotalList());
-                    case USER_SESSION -> mergeUserSession(other.getUserSession());
-                    case USER_INFOS_WITH_VERSION ->
+                    }
+                    case USER_SESSION -> {
+                        mergeUserSession(other.getUserSession());
+                    }
+                    case USER_INFOS_WITH_VERSION -> {
                         mergeUserInfosWithVersion(other.getUserInfosWithVersion());
-                    case USER_ONLINE_STATUSES ->
+                    }
+                    case USER_ONLINE_STATUSES -> {
                         mergeUserOnlineStatuses(other.getUserOnlineStatuses());
-                    case USER_FRIEND_REQUESTS_WITH_VERSION -> mergeUserFriendRequestsWithVersion(
-                            other.getUserFriendRequestsWithVersion());
-                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION ->
+                    }
+                    case USER_FRIEND_REQUESTS_WITH_VERSION -> {
+                        mergeUserFriendRequestsWithVersion(
+                                other.getUserFriendRequestsWithVersion());
+                    }
+                    case USER_RELATIONSHIP_GROUPS_WITH_VERSION -> {
                         mergeUserRelationshipGroupsWithVersion(
                                 other.getUserRelationshipGroupsWithVersion());
-                    case USER_RELATIONSHIPS_WITH_VERSION ->
+                    }
+                    case USER_RELATIONSHIPS_WITH_VERSION -> {
                         mergeUserRelationshipsWithVersion(other.getUserRelationshipsWithVersion());
-                    case NEARBY_USERS -> mergeNearbyUsers(other.getNearbyUsers());
-                    case GROUP_INVITATIONS_WITH_VERSION ->
+                    }
+                    case NEARBY_USERS -> {
+                        mergeNearbyUsers(other.getNearbyUsers());
+                    }
+                    case GROUP_INVITATIONS_WITH_VERSION -> {
                         mergeGroupInvitationsWithVersion(other.getGroupInvitationsWithVersion());
-                    case GROUP_JOIN_QUESTION_ANSWER_RESULT -> mergeGroupJoinQuestionAnswerResult(
-                            other.getGroupJoinQuestionAnswerResult());
-                    case GROUP_JOIN_REQUESTS_WITH_VERSION ->
+                    }
+                    case GROUP_JOIN_QUESTION_ANSWER_RESULT -> {
+                        mergeGroupJoinQuestionAnswerResult(
+                                other.getGroupJoinQuestionAnswerResult());
+                    }
+                    case GROUP_JOIN_REQUESTS_WITH_VERSION -> {
                         mergeGroupJoinRequestsWithVersion(other.getGroupJoinRequestsWithVersion());
-                    case GROUP_JOIN_QUESTIONS_WITH_VERSION -> mergeGroupJoinQuestionsWithVersion(
-                            other.getGroupJoinQuestionsWithVersion());
-                    case GROUP_MEMBERS_WITH_VERSION ->
+                    }
+                    case GROUP_JOIN_QUESTIONS_WITH_VERSION -> {
+                        mergeGroupJoinQuestionsWithVersion(
+                                other.getGroupJoinQuestionsWithVersion());
+                    }
+                    case GROUP_MEMBERS_WITH_VERSION -> {
                         mergeGroupMembersWithVersion(other.getGroupMembersWithVersion());
-                    case GROUPS_WITH_VERSION ->
+                    }
+                    case GROUPS_WITH_VERSION -> {
                         mergeGroupsWithVersion(other.getGroupsWithVersion());
-                    case MEETINGS -> mergeMeetings(other.getMeetings());
-                    case STORAGE_RESOURCE_INFOS ->
+                    }
+                    case MEETINGS -> {
+                        mergeMeetings(other.getMeetings());
+                    }
+                    case STORAGE_RESOURCE_INFOS -> {
                         mergeStorageResourceInfos(other.getStorageResourceInfos());
-                    case CONVERSATION_SETTINGS_LIST ->
+                    }
+                    case CONVERSATION_SETTINGS_LIST -> {
                         mergeConversationSettingsList(other.getConversationSettingsList());
-                    case USER_SETTINGS -> mergeUserSettings(other.getUserSettings());
+                    }
+                    case USER_SETTINGS -> {
+                        mergeUserSettings(other.getUserSettings());
+                    }
                     case KIND_NOT_SET -> {
                     }
                 }
@@ -2804,7 +2839,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return this;
             }
 
-            private int kindCase_ = 0;
+            private int kindCase_;
             private java.lang.Object kind_;
 
             public KindCase getKindCase() {
@@ -6836,7 +6871,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
     private int bitField0_;
     public static final int TIMESTAMP_FIELD_NUMBER = 1;
-    private long timestamp_ = 0L;
+    private long timestamp_;
 
     /**
      * <pre>
@@ -6852,8 +6887,54 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         return timestamp_;
     }
 
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
     public static final int REQUEST_ID_FIELD_NUMBER = 4;
-    private long requestId_ = 0L;
+    private long requestId_;
 
     /**
      * <pre>
@@ -6888,7 +6969,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int CODE_FIELD_NUMBER = 5;
-    private int code_ = 0;
+    private int code_;
 
     /**
      * <code>optional int32 code = 5;</code>
@@ -6998,7 +7079,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 10;
-    private long requesterId_ = 0L;
+    private long requesterId_;
 
     /**
      * <pre>
@@ -7035,7 +7116,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int CLOSE_STATUS_FIELD_NUMBER = 11;
-    private int closeStatus_ = 0;
+    private int closeStatus_;
 
     /**
      * <code>optional int32 close_status = 11;</code>
@@ -7113,6 +7194,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         if (timestamp_ != 0L) {
             output.writeInt64(1, timestamp_);
         }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(2, value);
+        }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(4, requestId_);
         }
@@ -7147,6 +7231,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         size = 0;
         if (timestamp_ != 0L) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, timestamp_);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(2, value);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(4, requestId_);
@@ -7185,6 +7272,9 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         }
 
         if (getTimestamp() != other.getTimestamp()) {
+            return false;
+        }
+        if (!getCustomAttributesList().equals(other.getCustomAttributesList())) {
             return false;
         }
         if (hasRequestId() != other.hasRequestId()) {
@@ -7255,6 +7345,10 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         hash = (19 * hash) + getDescriptor().hashCode();
         hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getTimestamp());
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
+        }
         if (hasRequestId()) {
             hash = (37 * hash) + REQUEST_ID_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getRequestId());
@@ -7423,6 +7517,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
         private void maybeForceBuilderInitialization() {
             if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                getCustomAttributesFieldBuilder();
                 getDataFieldBuilder();
                 getRelayedRequestFieldBuilder();
             }
@@ -7433,6 +7528,13 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             super.clear();
             bitField0_ = 0;
             timestamp_ = 0L;
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000002;
             requestId_ = 0L;
             code_ = 0;
             reason_ = "";
@@ -7477,11 +7579,25 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             im.turms.server.common.access.client.dto.notification.TurmsNotification result =
                     new im.turms.server.common.access.client.dto.notification.TurmsNotification(
                             this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.notification.TurmsNotification result) {
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00000002) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00000002;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -7491,33 +7607,33 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 result.timestamp_ = timestamp_;
             }
             int to_bitField0_ = 0;
-            if (((from_bitField0_ & 0x00000002) != 0)) {
+            if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.requestId_ = requestId_;
                 to_bitField0_ |= 0x00000001;
             }
-            if (((from_bitField0_ & 0x00000004) != 0)) {
+            if (((from_bitField0_ & 0x00000008) != 0)) {
                 result.code_ = code_;
                 to_bitField0_ |= 0x00000002;
             }
-            if (((from_bitField0_ & 0x00000008) != 0)) {
+            if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.reason_ = reason_;
                 to_bitField0_ |= 0x00000004;
             }
-            if (((from_bitField0_ & 0x00000010) != 0)) {
+            if (((from_bitField0_ & 0x00000020) != 0)) {
                 result.data_ = dataBuilder_ == null
                         ? data_
                         : dataBuilder_.build();
                 to_bitField0_ |= 0x00000008;
             }
-            if (((from_bitField0_ & 0x00000020) != 0)) {
+            if (((from_bitField0_ & 0x00000040) != 0)) {
                 result.requesterId_ = requesterId_;
                 to_bitField0_ |= 0x00000010;
             }
-            if (((from_bitField0_ & 0x00000040) != 0)) {
+            if (((from_bitField0_ & 0x00000080) != 0)) {
                 result.closeStatus_ = closeStatus_;
                 to_bitField0_ |= 0x00000020;
             }
-            if (((from_bitField0_ & 0x00000080) != 0)) {
+            if (((from_bitField0_ & 0x00000100) != 0)) {
                 result.relayedRequest_ = relayedRequestBuilder_ == null
                         ? relayedRequest_
                         : relayedRequestBuilder_.build();
@@ -7546,6 +7662,33 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             if (other.getTimestamp() != 0L) {
                 setTimestamp(other.getTimestamp());
             }
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000002;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000002;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
+            }
             if (other.hasRequestId()) {
                 setRequestId(other.getRequestId());
             }
@@ -7554,7 +7697,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             }
             if (other.hasReason()) {
                 reason_ = other.reason_;
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000010;
                 onChanged();
             }
             if (other.hasData()) {
@@ -7597,35 +7740,48 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                             timestamp_ = input.readInt64();
                             bitField0_ |= 0x00000001;
                         } // case 8
+                        case 18 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
+                                    input.readMessage(
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
+                                            extensionRegistry);
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 18
                         case 32 -> {
                             requestId_ = input.readInt64();
-                            bitField0_ |= 0x00000002;
+                            bitField0_ |= 0x00000004;
                         } // case 32
                         case 40 -> {
                             code_ = input.readInt32();
-                            bitField0_ |= 0x00000004;
+                            bitField0_ |= 0x00000008;
                         } // case 40
                         case 50 -> {
                             reason_ = input.readStringRequireUtf8();
-                            bitField0_ |= 0x00000008;
+                            bitField0_ |= 0x00000010;
                         } // case 50
                         case 58 -> {
                             input.readMessage(getDataFieldBuilder().getBuilder(),
                                     extensionRegistry);
-                            bitField0_ |= 0x00000010;
+                            bitField0_ |= 0x00000020;
                         } // case 58
                         case 80 -> {
                             requesterId_ = input.readInt64();
-                            bitField0_ |= 0x00000020;
+                            bitField0_ |= 0x00000040;
                         } // case 80
                         case 88 -> {
                             closeStatus_ = input.readInt32();
-                            bitField0_ |= 0x00000040;
+                            bitField0_ |= 0x00000080;
                         } // case 88
                         case 98 -> {
                             input.readMessage(getRelayedRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
-                            bitField0_ |= 0x00000080;
+                            bitField0_ |= 0x00000100;
                         } // case 98
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
@@ -7694,6 +7850,267 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             return this;
         }
 
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
+
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00000002) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00000002;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000002;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00000002) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
+        }
+
         private long requestId_;
 
         /**
@@ -7709,7 +8126,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         @java.lang.Override
         public boolean hasRequestId() {
-            return ((bitField0_ & 0x00000002) != 0);
+            return ((bitField0_ & 0x00000004) != 0);
         }
 
         /**
@@ -7743,7 +8160,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder setRequestId(long value) {
 
             requestId_ = value;
-            bitField0_ |= 0x00000002;
+            bitField0_ |= 0x00000004;
             onChanged();
             return this;
         }
@@ -7760,7 +8177,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return This builder for chaining.
          */
         public Builder clearRequestId() {
-            bitField0_ &= ~0x00000002;
+            bitField0_ &= ~0x00000004;
             requestId_ = 0L;
             onChanged();
             return this;
@@ -7775,7 +8192,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         @java.lang.Override
         public boolean hasCode() {
-            return ((bitField0_ & 0x00000004) != 0);
+            return ((bitField0_ & 0x00000008) != 0);
         }
 
         /**
@@ -7797,7 +8214,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder setCode(int value) {
 
             code_ = value;
-            bitField0_ |= 0x00000004;
+            bitField0_ |= 0x00000008;
             onChanged();
             return this;
         }
@@ -7808,7 +8225,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return This builder for chaining.
          */
         public Builder clearCode() {
-            bitField0_ &= ~0x00000004;
+            bitField0_ &= ~0x00000008;
             code_ = 0;
             onChanged();
             return this;
@@ -7822,7 +8239,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return Whether the reason field is set.
          */
         public boolean hasReason() {
-            return ((bitField0_ & 0x00000008) != 0);
+            return ((bitField0_ & 0x00000010) != 0);
         }
 
         /**
@@ -7870,7 +8287,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 throw new NullPointerException();
             }
             reason_ = value;
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -7882,7 +8299,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         public Builder clearReason() {
             reason_ = getDefaultInstance().getReason();
-            bitField0_ &= ~0x00000008;
+            bitField0_ &= ~0x00000010;
             onChanged();
             return this;
         }
@@ -7899,7 +8316,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             }
             checkByteStringIsUtf8(value);
             reason_ = value;
-            bitField0_ |= 0x00000008;
+            bitField0_ |= 0x00000010;
             onChanged();
             return this;
         }
@@ -7913,7 +8330,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return Whether the data field is set.
          */
         public boolean hasData() {
-            return ((bitField0_ & 0x00000010) != 0);
+            return ((bitField0_ & 0x00000020) != 0);
         }
 
         /**
@@ -7945,7 +8362,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 dataBuilder_.setMessage(value);
             }
-            bitField0_ |= 0x00000010;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -7960,7 +8377,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 dataBuilder_.setMessage(builderForValue.build());
             }
-            bitField0_ |= 0x00000010;
+            bitField0_ |= 0x00000020;
             onChanged();
             return this;
         }
@@ -7971,7 +8388,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder mergeData(
                 im.turms.server.common.access.client.dto.notification.TurmsNotification.Data value) {
             if (dataBuilder_ == null) {
-                if (((bitField0_ & 0x00000010) != 0)
+                if (((bitField0_ & 0x00000020) != 0)
                         && data_ != null
                         && data_ != im.turms.server.common.access.client.dto.notification.TurmsNotification.Data
                                 .getDefaultInstance()) {
@@ -7983,7 +8400,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 dataBuilder_.mergeFrom(value);
             }
             if (data_ != null) {
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000020;
                 onChanged();
             }
             return this;
@@ -7993,7 +8410,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
          */
         public Builder clearData() {
-            bitField0_ &= ~0x00000010;
+            bitField0_ &= ~0x00000020;
             data_ = null;
             if (dataBuilder_ != null) {
                 dataBuilder_.dispose();
@@ -8007,7 +8424,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <code>.im.turms.proto.TurmsNotification.Data data = 7;</code>
          */
         public im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder getDataBuilder() {
-            bitField0_ |= 0x00000010;
+            bitField0_ |= 0x00000020;
             onChanged();
             return getDataFieldBuilder().getBuilder();
         }
@@ -8056,7 +8473,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         @java.lang.Override
         public boolean hasRequesterId() {
-            return ((bitField0_ & 0x00000020) != 0);
+            return ((bitField0_ & 0x00000040) != 0);
         }
 
         /**
@@ -8092,7 +8509,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder setRequesterId(long value) {
 
             requesterId_ = value;
-            bitField0_ |= 0x00000020;
+            bitField0_ |= 0x00000040;
             onChanged();
             return this;
         }
@@ -8110,7 +8527,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return This builder for chaining.
          */
         public Builder clearRequesterId() {
-            bitField0_ &= ~0x00000020;
+            bitField0_ &= ~0x00000040;
             requesterId_ = 0L;
             onChanged();
             return this;
@@ -8125,7 +8542,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          */
         @java.lang.Override
         public boolean hasCloseStatus() {
-            return ((bitField0_ & 0x00000040) != 0);
+            return ((bitField0_ & 0x00000080) != 0);
         }
 
         /**
@@ -8147,7 +8564,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder setCloseStatus(int value) {
 
             closeStatus_ = value;
-            bitField0_ |= 0x00000040;
+            bitField0_ |= 0x00000080;
             onChanged();
             return this;
         }
@@ -8158,7 +8575,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return This builder for chaining.
          */
         public Builder clearCloseStatus() {
-            bitField0_ &= ~0x00000040;
+            bitField0_ &= ~0x00000080;
             closeStatus_ = 0;
             onChanged();
             return this;
@@ -8173,7 +8590,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * @return Whether the relayedRequest field is set.
          */
         public boolean hasRelayedRequest() {
-            return ((bitField0_ & 0x00000080) != 0);
+            return ((bitField0_ & 0x00000100) != 0);
         }
 
         /**
@@ -8205,7 +8622,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 relayedRequestBuilder_.setMessage(value);
             }
-            bitField0_ |= 0x00000080;
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -8220,7 +8637,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             } else {
                 relayedRequestBuilder_.setMessage(builderForValue.build());
             }
-            bitField0_ |= 0x00000080;
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -8231,7 +8648,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         public Builder mergeRelayedRequest(
                 im.turms.server.common.access.client.dto.request.TurmsRequest value) {
             if (relayedRequestBuilder_ == null) {
-                if (((bitField0_ & 0x00000080) != 0)
+                if (((bitField0_ & 0x00000100) != 0)
                         && relayedRequest_ != null
                         && relayedRequest_ != im.turms.server.common.access.client.dto.request.TurmsRequest
                                 .getDefaultInstance()) {
@@ -8243,7 +8660,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 relayedRequestBuilder_.mergeFrom(value);
             }
             if (relayedRequest_ != null) {
-                bitField0_ |= 0x00000080;
+                bitField0_ |= 0x00000100;
                 onChanged();
             }
             return this;
@@ -8253,7 +8670,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
          */
         public Builder clearRelayedRequest() {
-            bitField0_ &= ~0x00000080;
+            bitField0_ &= ~0x00000100;
             relayedRequest_ = null;
             if (relayedRequestBuilder_ != null) {
                 relayedRequestBuilder_.dispose();
@@ -8267,7 +8684,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
          * <code>.im.turms.proto.TurmsRequest relayed_request = 12;</code>
          */
         public im.turms.server.common.access.client.dto.request.TurmsRequest.Builder getRelayedRequestBuilder() {
-            bitField0_ |= 0x00000080;
+            bitField0_ |= 0x00000100;
             onChanged();
             return getRelayedRequestFieldBuilder().getBuilder();
         }

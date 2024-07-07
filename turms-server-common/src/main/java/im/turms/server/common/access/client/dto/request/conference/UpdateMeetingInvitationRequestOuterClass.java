@@ -26,7 +26,7 @@ public final class UpdateMeetingInvitationRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateMeetingInvitationRequestOuterClass.class.getName());
     }
@@ -49,27 +49,35 @@ public final class UpdateMeetingInvitationRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n:request/conference/update_meeting_invi"
                 + "tation_request.proto\022\016im.turms.proto\032\036co"
-                + "nstant/response_action.proto\"\221\001\n\036UpdateM"
-                + "eetingInvitationRequest\022\022\n\nmeeting_id\030\001 "
-                + "\001(\003\022\025\n\010password\030\002 \001(\tH\000\210\001\001\0227\n\017response_a"
-                + "ction\030\005 \001(\0162\036.im.turms.proto.ResponseAct"
-                + "ionB\013\n\t_passwordBB\n;im.turms.server.comm"
-                + "on.access.client.dto.request.conferenceP"
-                + "\001\272\002\000b\006proto3"};
+                + "nstant/response_action.proto\032\030model/comm"
+                + "on/value.proto\"\303\001\n\036UpdateMeetingInvitati"
+                + "onRequest\022\022\n\nmeeting_id\030\001 \001(\003\022\025\n\010passwor"
+                + "d\030\002 \001(\tH\000\210\001\001\0227\n\017response_action\030\005 \001(\0162\036."
+                + "im.turms.proto.ResponseAction\0220\n\021custom_"
+                + "attributes\030\017 \003(\0132\025.im.turms.proto.ValueB"
+                + "\013\n\t_passwordBB\n;im.turms.server.common.a"
+                + "ccess.client.dto.request.conferenceP\001\272\002\000"
+                + "b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
                         im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateMeetingInvitationRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateMeetingInvitationRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateMeetingInvitationRequest_descriptor,
-                        new java.lang.String[]{"MeetingId", "Password", "ResponseAction",});
+                        new java.lang.String[]{"MeetingId",
+                                "Password",
+                                "ResponseAction",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass.getDescriptor();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

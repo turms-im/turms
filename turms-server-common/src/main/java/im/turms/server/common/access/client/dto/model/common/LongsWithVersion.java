@@ -29,7 +29,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 LongsWithVersion.class.getName());
     }
@@ -92,7 +92,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
     private int longsMemoizedSerializedSize = -1;
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_ = 0L;
+    private long lastUpdatedDate_;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -133,7 +133,7 @@ public final class LongsWithVersion extends com.google.protobuf.GeneratedMessage
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         getSerializedSize();
-        if (getLongsList().size() > 0) {
+        if (!getLongsList().isEmpty()) {
             output.writeUInt32NoTag(10);
             output.writeUInt32NoTag(longsMemoizedSerializedSize);
         }

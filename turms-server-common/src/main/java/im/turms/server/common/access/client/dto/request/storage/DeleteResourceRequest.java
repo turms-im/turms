@@ -29,7 +29,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteResourceRequest.class.getName());
     }
@@ -42,22 +42,11 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
     private DeleteResourceRequest() {
         type_ = 0;
         idStr_ = "";
+        customAttributes_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
         return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
-    }
-
-    @SuppressWarnings({"rawtypes"})
-    @java.lang.Override
-    protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
-            int number) {
-        if (number == 4) {
-            return internalGetExtra();
-        }
-        throw new RuntimeException(
-                "Invalid map field number: "
-                        + number);
     }
 
     @java.lang.Override
@@ -70,7 +59,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
 
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_ = 0;
+    private int type_;
 
     /**
      * <code>.im.turms.proto.StorageResourceType type = 1;</code>
@@ -98,7 +87,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
     }
 
     public static final int ID_NUM_FIELD_NUMBER = 2;
-    private long idNum_ = 0L;
+    private long idNum_;
 
     /**
      * <code>optional int64 id_num = 2;</code>
@@ -170,91 +159,50 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         }
     }
 
-    public static final int EXTRA_FIELD_NUMBER = 4;
-
-    private static final class ExtraDefaultEntryHolder {
-        static final com.google.protobuf.MapEntry<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntry.newDefaultInstance(
-                        im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_descriptor,
-                        com.google.protobuf.WireFormat.FieldType.STRING,
-                        "",
-                        com.google.protobuf.WireFormat.FieldType.STRING,
-                        "");
-    }
-
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
     @SuppressWarnings("serial")
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String> extra_;
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
 
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String> internalGetExtra() {
-        if (extra_ == null) {
-            return com.google.protobuf.MapField.emptyMapField(ExtraDefaultEntryHolder.defaultEntry);
-        }
-        return extra_;
-    }
-
-    public int getExtraCount() {
-        return internalGetExtra().getMap()
-                .size();
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
     @java.lang.Override
-    public boolean containsExtra(java.lang.String key) {
-        if (key == null) {
-            throw new NullPointerException("map key");
-        }
-        return internalGetExtra().getMap()
-                .containsKey(key);
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
     }
 
     /**
-     * Use {@link #getExtraMap()} instead.
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String> getExtra() {
-        return getExtraMap();
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
     @java.lang.Override
-    public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
-        return internalGetExtra().getMap();
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
     @java.lang.Override
-    public /* nullable */
-    java.lang.String getExtraOrDefault(
-            java.lang.String key,
-            /* nullable */
-            java.lang.String defaultValue) {
-        if (key == null) {
-            throw new NullPointerException("map key");
-        }
-        java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra().getMap();
-        return map.getOrDefault(key, defaultValue);
-    }
-
-    /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
-     */
-    @java.lang.Override
-    public java.lang.String getExtraOrThrow(java.lang.String key) {
-        if (key == null) {
-            throw new NullPointerException("map key");
-        }
-        java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra().getMap();
-        if (!map.containsKey(key)) {
-            throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -285,10 +233,9 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         if (((bitField0_ & 0x00000002) != 0)) {
             com.google.protobuf.GeneratedMessage.writeString(output, 3, idStr_);
         }
-        com.google.protobuf.GeneratedMessage.serializeStringMapTo(output,
-                internalGetExtra(),
-                ExtraDefaultEntryHolder.defaultEntry,
-                4);
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(15, value);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -310,15 +257,8 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.GeneratedMessage.computeStringSize(3, idStr_);
         }
-        for (java.util.Map.Entry<java.lang.String, java.lang.String> entry : internalGetExtra()
-                .getMap()
-                .entrySet()) {
-            com.google.protobuf.MapEntry<java.lang.String, java.lang.String> extra__ =
-                    ExtraDefaultEntryHolder.defaultEntry.newBuilderForType()
-                            .setKey(entry.getKey())
-                            .setValue(entry.getValue())
-                            .build();
-            size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, extra__);
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -353,7 +293,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
                 return false;
             }
         }
-        return internalGetExtra().equals(other.internalGetExtra())
+        return getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -374,10 +314,9 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             hash = (37 * hash) + ID_STR_FIELD_NUMBER;
             hash = (53 * hash) + getIdStr().hashCode();
         }
-        if (!internalGetExtra().getMap()
-                .isEmpty()) {
-            hash = (37 * hash) + EXTRA_FIELD_NUMBER;
-            hash = (53 * hash) + internalGetExtra().hashCode();
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -498,28 +437,6 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
         }
 
-        @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
-                int number) {
-            if (number == 4) {
-                return internalGetExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        }
-
-        @SuppressWarnings({"rawtypes"})
-        protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
-                int number) {
-            if (number == 4) {
-                return internalGetMutableExtra();
-            }
-            throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        }
-
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable() {
             return im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
@@ -546,7 +463,13 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             type_ = 0;
             idNum_ = 0L;
             idStr_ = "";
-            internalGetMutableExtra().clear();
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000008;
             return this;
         }
 
@@ -576,11 +499,25 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest result =
                     new im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest(
                             this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest result) {
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00000008) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00000008;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -597,10 +534,6 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.idStr_ = idStr_;
                 to_bitField0_ |= 0x00000002;
-            }
-            if (((from_bitField0_ & 0x00000008) != 0)) {
-                result.extra_ = internalGetExtra();
-                result.extra_.makeImmutable();
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -633,8 +566,33 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
                 bitField0_ |= 0x00000004;
                 onChanged();
             }
-            internalGetMutableExtra().mergeFrom(other.internalGetExtra());
-            bitField0_ |= 0x00000008;
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
+            }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -671,15 +629,19 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
                             idStr_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
                         } // case 26
-                        case 34 -> {
-                            com.google.protobuf.MapEntry<String, String> extra__ =
+                        case 122 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
-                                            ExtraDefaultEntryHolder.defaultEntry.getParserForType(),
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
                                             extensionRegistry);
-                            internalGetMutableExtra().getMutableMap()
-                                    .put(extra__.getKey(), extra__.getValue());
-                            bitField0_ |= 0x00000008;
-                        } // case 34
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 122
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -697,7 +659,7 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
 
         private int bitField0_;
 
-        private int type_ = 0;
+        private int type_;
 
         /**
          * <code>.im.turms.proto.StorageResourceType type = 1;</code>
@@ -904,146 +866,265 @@ public final class DeleteResourceRequest extends com.google.protobuf.GeneratedMe
             return this;
         }
 
-        private com.google.protobuf.MapField<java.lang.String, java.lang.String> extra_;
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
 
-        private com.google.protobuf.MapField<java.lang.String, java.lang.String> internalGetExtra() {
-            if (extra_ == null) {
-                return com.google.protobuf.MapField
-                        .emptyMapField(ExtraDefaultEntryHolder.defaultEntry);
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00000008) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00000008;
             }
-            return extra_;
         }
 
-        private com.google.protobuf.MapField<java.lang.String, java.lang.String> internalGetMutableExtra() {
-            if (extra_ == null) {
-                extra_ = com.google.protobuf.MapField
-                        .newMapField(ExtraDefaultEntryHolder.defaultEntry);
-            }
-            if (!extra_.isMutable()) {
-                extra_ = extra_.copy();
-            }
-            bitField0_ |= 0x00000008;
-            onChanged();
-            return extra_;
-        }
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
 
-        public int getExtraCount() {
-            return internalGetExtra().getMap()
-                    .size();
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        @java.lang.Override
-        public boolean containsExtra(java.lang.String key) {
-            if (key == null) {
-                throw new NullPointerException("map key");
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
             }
-            return internalGetExtra().getMap()
-                    .containsKey(key);
         }
 
         /**
-         * Use {@link #getExtraMap()} instead.
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        @java.lang.Override
-        @java.lang.Deprecated
-        public java.util.Map<java.lang.String, java.lang.String> getExtra() {
-            return getExtraMap();
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        @java.lang.Override
-        public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
-            return internalGetExtra().getMap();
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        @java.lang.Override
-        public /* nullable */
-        java.lang.String getExtraOrDefault(
-                java.lang.String key,
-                /* nullable */
-                java.lang.String defaultValue) {
-            if (key == null) {
-                throw new NullPointerException("map key");
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
             }
-            java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra().getMap();
-            return map.getOrDefault(key, defaultValue);
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        @java.lang.Override
-        public java.lang.String getExtraOrThrow(java.lang.String key) {
-            if (key == null) {
-                throw new NullPointerException("map key");
-            }
-            java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra().getMap();
-            if (!map.containsKey(key)) {
-                throw new java.lang.IllegalArgumentException();
-            }
-            return map.get(key);
-        }
-
-        public Builder clearExtra() {
-            bitField0_ &= ~0x00000008;
-            internalGetMutableExtra().getMutableMap()
-                    .clear();
             return this;
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        public Builder removeExtra(java.lang.String key) {
-            if (key == null) {
-                throw new NullPointerException("map key");
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
             }
-            internalGetMutableExtra().getMutableMap()
-                    .remove(key);
             return this;
         }
 
         /**
-         * Use alternate mutation accessors instead.
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        @java.lang.Deprecated
-        public java.util.Map<java.lang.String, java.lang.String> getMutableExtra() {
-            bitField0_ |= 0x00000008;
-            return internalGetMutableExtra().getMutableMap();
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        public Builder putExtra(java.lang.String key, java.lang.String value) {
-            if (key == null) {
-                throw new NullPointerException("map key");
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
             }
-            if (value == null) {
-                throw new NullPointerException("map value");
-            }
-            internalGetMutableExtra().getMutableMap()
-                    .put(key, value);
-            bitField0_ |= 0x00000008;
             return this;
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        public Builder putAllExtra(java.util.Map<java.lang.String, java.lang.String> values) {
-            internalGetMutableExtra().getMutableMap()
-                    .putAll(values);
-            bitField0_ |= 0x00000008;
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
             return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000008;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00000008) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.DeleteResourceRequest)

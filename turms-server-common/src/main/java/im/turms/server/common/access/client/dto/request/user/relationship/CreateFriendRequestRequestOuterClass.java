@@ -26,7 +26,7 @@ public final class CreateFriendRequestRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateFriendRequestRequestOuterClass.class.getName());
     }
@@ -48,22 +48,27 @@ public final class CreateFriendRequestRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n=request/user/relationship/create_frien"
-                + "d_request_request.proto\022\016im.turms.proto\""
-                + "C\n\032CreateFriendRequestRequest\022\024\n\014recipie"
-                + "nt_id\030\001 \001(\003\022\017\n\007content\030\002 \001(\tBI\nBim.turms"
-                + ".server.common.access.client.dto.request"
-                + ".user.relationshipP\001\272\002\000b\006proto3"};
+                + "d_request_request.proto\022\016im.turms.proto\032"
+                + "\030model/common/value.proto\"u\n\032CreateFrien"
+                + "dRequestRequest\022\024\n\014recipient_id\030\001 \001(\003\022\017\n"
+                + "\007content\030\002 \001(\t\0220\n\021custom_attributes\030\017 \003("
+                + "\0132\025.im.turms.proto.ValueBI\nBim.turms.ser"
+                + "ver.common.access.client.dto.request.use"
+                + "r.relationshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_CreateFriendRequestRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateFriendRequestRequest_descriptor,
-                        new java.lang.String[]{"RecipientId", "Content",});
+                        new java.lang.String[]{"RecipientId", "Content", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

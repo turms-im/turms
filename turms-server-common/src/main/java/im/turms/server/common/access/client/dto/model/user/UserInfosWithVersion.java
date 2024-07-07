@@ -29,7 +29,7 @@ public final class UserInfosWithVersion extends com.google.protobuf.GeneratedMes
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserInfosWithVersion.class.getName());
     }

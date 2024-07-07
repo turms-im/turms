@@ -26,7 +26,7 @@ public final class DeleteMeetingRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteMeetingRequestOuterClass.class.getName());
     }
@@ -48,21 +48,26 @@ public final class DeleteMeetingRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n/request/conference/delete_meeting_requ"
-                + "est.proto\022\016im.turms.proto\".\n\024DeleteMeeti"
-                + "ngRequest\022\017\n\002id\030\001 \001(\003H\000\210\001\001B\005\n\003_idBB\n;im."
-                + "turms.server.common.access.client.dto.re"
-                + "quest.conferenceP\001\272\002\000b\006proto3"};
+                + "est.proto\022\016im.turms.proto\032\030model/common/"
+                + "value.proto\"`\n\024DeleteMeetingRequest\022\017\n\002i"
+                + "d\030\001 \001(\003H\000\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132"
+                + "\025.im.turms.proto.ValueB\005\n\003_idBB\n;im.turm"
+                + "s.server.common.access.client.dto.reques"
+                + "t.conferenceP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteMeetingRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteMeetingRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteMeetingRequest_descriptor,
-                        new java.lang.String[]{"Id",});
+                        new java.lang.String[]{"Id", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

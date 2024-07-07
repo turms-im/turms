@@ -56,7 +56,7 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserStatus.class.getName());
     }
@@ -148,7 +148,7 @@ public enum UserStatus implements com.google.protobuf.ProtocolMessageEnum {
         return im.turms.server.common.access.client.dto.constant.UserStatusOuterClass
                 .getDescriptor()
                 .getEnumTypes()
-                .get(0);
+                .getFirst();
     }
 
     private static final UserStatus[] VALUES = values();

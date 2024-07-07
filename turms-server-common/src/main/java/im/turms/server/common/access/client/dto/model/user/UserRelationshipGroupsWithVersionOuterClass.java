@@ -26,7 +26,7 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserRelationshipGroupsWithVersionOuterClass.class.getName());
     }
@@ -63,7 +63,7 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor,

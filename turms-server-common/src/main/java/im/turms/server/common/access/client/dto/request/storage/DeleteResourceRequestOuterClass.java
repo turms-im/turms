@@ -26,7 +26,7 @@ public final class DeleteResourceRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteResourceRequestOuterClass.class.getName());
     }
@@ -40,8 +40,6 @@ public final class DeleteResourceRequestOuterClass {
 
     static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
     static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable;
-    static final com.google.protobuf.Descriptors.Descriptor internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_descriptor;
-    static final com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_fieldAccessorTable;
 
     public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
         return descriptor;
@@ -51,37 +49,32 @@ public final class DeleteResourceRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n-request/storage/delete_resource_reques"
                 + "t.proto\022\016im.turms.proto\032$constant/storag"
-                + "e_resource_type.proto\"\371\001\n\025DeleteResource"
-                + "Request\0221\n\004type\030\001 \001(\0162#.im.turms.proto.S"
-                + "torageResourceType\022\023\n\006id_num\030\002 \001(\003H\000\210\001\001\022"
-                + "\023\n\006id_str\030\003 \001(\tH\001\210\001\001\022?\n\005extra\030\004 \003(\01320.im"
-                + ".turms.proto.DeleteResourceRequest.Extra"
-                + "Entry\032,\n\nExtraEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu"
-                + "e\030\002 \001(\t:\0028\001B\t\n\007_id_numB\t\n\007_id_strB?\n8im."
-                + "turms.server.common.access.client.dto.re"
-                + "quest.storageP\001\272\002\000b\006proto3"};
+                + "e_resource_type.proto\032\030model/common/valu"
+                + "e.proto\"\274\001\n\025DeleteResourceRequest\0221\n\004typ"
+                + "e\030\001 \001(\0162#.im.turms.proto.StorageResource"
+                + "Type\022\023\n\006id_num\030\002 \001(\003H\000\210\001\001\022\023\n\006id_str\030\003 \001("
+                + "\tH\001\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132\025.im.t"
+                + "urms.proto.ValueB\t\n\007_id_numB\t\n\007_id_strB?"
+                + "\n8im.turms.server.common.access.client.d"
+                + "to.request.storageP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
                         im.turms.server.common.access.client.dto.constant.StorageResourceTypeOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_DeleteResourceRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteResourceRequest_descriptor,
-                        new java.lang.String[]{"Type", "IdNum", "IdStr", "Extra",});
-        internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_descriptor =
-                internal_static_im_turms_proto_DeleteResourceRequest_descriptor.getNestedTypes()
-                        .get(0);
-        internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_fieldAccessorTable =
-                new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-                        internal_static_im_turms_proto_DeleteResourceRequest_ExtraEntry_descriptor,
-                        new java.lang.String[]{"Key", "Value",});
+                        new java.lang.String[]{"Type", "IdNum", "IdStr", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.StorageResourceTypeOuterClass
                 .getDescriptor();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -26,7 +26,7 @@ public final class QueryConversationSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 QueryConversationSettingsRequestOuterClass.class.getName());
     }
@@ -49,26 +49,32 @@ public final class QueryConversationSettingsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n>request/conversation/query_conversatio"
                 + "n_settings_request.proto\022\016im.turms.proto"
-                + "\"\230\001\n QueryConversationSettingsRequest\022\020\n"
-                + "\010user_ids\030\001 \003(\003\022\021\n\tgroup_ids\030\002 \003(\003\022\r\n\005na"
-                + "mes\030\003 \003(\t\022$\n\027last_updated_date_start\030\004 \001"
-                + "(\003H\000\210\001\001B\032\n\030_last_updated_date_startBD\n=i"
-                + "m.turms.server.common.access.client.dto."
-                + "request.conversationP\001\272\002\000b\006proto3"};
+                + "\032\030model/common/value.proto\"\312\001\n QueryConv"
+                + "ersationSettingsRequest\022\020\n\010user_ids\030\001 \003("
+                + "\003\022\021\n\tgroup_ids\030\002 \003(\003\022\r\n\005names\030\003 \003(\t\022$\n\027l"
+                + "ast_updated_date_start\030\004 \001(\003H\000\210\001\001\0220\n\021cus"
+                + "tom_attributes\030\017 \003(\0132\025.im.turms.proto.Va"
+                + "lueB\032\n\030_last_updated_date_startBD\n=im.tu"
+                + "rms.server.common.access.client.dto.requ"
+                + "est.conversationP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_QueryConversationSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_QueryConversationSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryConversationSettingsRequest_descriptor,
                         new java.lang.String[]{"UserIds",
                                 "GroupIds",
                                 "Names",
-                                "LastUpdatedDateStart",});
+                                "LastUpdatedDateStart",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

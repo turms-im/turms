@@ -30,7 +30,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateGroupInvitationRequest.class.getName());
     }
@@ -42,6 +42,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
 
     private CreateGroupInvitationRequest() {
         content_ = "";
+        customAttributes_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -57,7 +58,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_ = 0L;
+    private long groupId_;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -70,7 +71,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
     }
 
     public static final int INVITEE_ID_FIELD_NUMBER = 2;
-    private long inviteeId_ = 0L;
+    private long inviteeId_;
 
     /**
      * <code>int64 invitee_id = 2;</code>
@@ -122,6 +123,52 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         }
     }
 
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -149,6 +196,9 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         if (!com.google.protobuf.GeneratedMessage.isStringEmpty(content_)) {
             com.google.protobuf.GeneratedMessage.writeString(output, 3, content_);
         }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(15, value);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -169,6 +219,9 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         if (!com.google.protobuf.GeneratedMessage.isStringEmpty(content_)) {
             size += com.google.protobuf.GeneratedMessage.computeStringSize(3, content_);
         }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
+        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -186,10 +239,9 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         if (getGroupId() != other.getGroupId()) {
             return false;
         }
-        if (getInviteeId() != other.getInviteeId()) {
-            return false;
-        }
-        return getContent().equals(other.getContent())
+        return getInviteeId() == other.getInviteeId()
+                && getContent().equals(other.getContent())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -206,6 +258,10 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getInviteeId());
         hash = (37 * hash) + CONTENT_FIELD_NUMBER;
         hash = (53 * hash) + getContent().hashCode();
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
+        }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -351,6 +407,13 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
             groupId_ = 0L;
             inviteeId_ = 0L;
             content_ = "";
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000008;
             return this;
         }
 
@@ -380,11 +443,25 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
             im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest result =
                     new im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest(
                             this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.request.group.enrollment.CreateGroupInvitationRequest result) {
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00000008) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00000008;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -430,6 +507,33 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
                 bitField0_ |= 0x00000004;
                 onChanged();
             }
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
+            }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -466,6 +570,19 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
                             content_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000004;
                         } // case 26
+                        case 122 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
+                                    input.readMessage(
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
+                                            extensionRegistry);
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 122
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -638,6 +755,267 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
             bitField0_ |= 0x00000004;
             onChanged();
             return this;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
+
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00000008) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00000008;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000008;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00000008) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.CreateGroupInvitationRequest)

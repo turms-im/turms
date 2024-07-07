@@ -26,7 +26,7 @@ public final class UserRelationshipGroupOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserRelationshipGroupOuterClass.class.getName());
     }
@@ -48,21 +48,26 @@ public final class UserRelationshipGroupOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n(model/user/user_relationship_group.pro"
-                + "to\022\016im.turms.proto\"4\n\025UserRelationshipGr"
-                + "oup\022\r\n\005index\030\001 \001(\005\022\014\n\004name\030\002 \001(\tB:\n3im.t"
-                + "urms.server.common.access.client.dto.mod"
-                + "el.userP\001\272\002\000b\006proto3"};
+                + "to\022\016im.turms.proto\032\030model/common/value.p"
+                + "roto\"f\n\025UserRelationshipGroup\022\r\n\005index\030\001"
+                + " \001(\005\022\014\n\004name\030\002 \001(\t\0220\n\021custom_attributes\030"
+                + "\017 \003(\0132\025.im.turms.proto.ValueB:\n3im.turms"
+                + ".server.common.access.client.dto.model.u"
+                + "serP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UserRelationshipGroup_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserRelationshipGroup_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserRelationshipGroup_descriptor,
-                        new java.lang.String[]{"Index", "Name",});
+                        new java.lang.String[]{"Index", "Name", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

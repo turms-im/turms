@@ -26,7 +26,7 @@ public final class CreateMessageRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateMessageRequestOuterClass.class.getName());
     }
@@ -48,21 +48,25 @@ public final class CreateMessageRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n,request/message/create_message_request"
-                + ".proto\022\016im.turms.proto\"\367\002\n\024CreateMessage"
-                + "Request\022\027\n\nmessage_id\030\001 \001(\003H\000\210\001\001\022\036\n\021is_s"
-                + "ystem_message\030\002 \001(\010H\001\210\001\001\022\025\n\010group_id\030\003 \001"
-                + "(\003H\002\210\001\001\022\031\n\014recipient_id\030\004 \001(\003H\003\210\001\001\022\032\n\rde"
-                + "livery_date\030\005 \001(\003H\004\210\001\001\022\021\n\004text\030\006 \001(\tH\005\210\001"
-                + "\001\022\017\n\007records\030\007 \003(\014\022\027\n\nburn_after\030\010 \001(\005H\006"
-                + "\210\001\001\022\033\n\016pre_message_id\030\t \001(\003H\007\210\001\001B\r\n\013_mes"
-                + "sage_idB\024\n\022_is_system_messageB\013\n\t_group_"
-                + "idB\017\n\r_recipient_idB\020\n\016_delivery_dateB\007\n"
-                + "\005_textB\r\n\013_burn_afterB\021\n\017_pre_message_id"
-                + "B?\n8im.turms.server.common.access.client"
-                + ".dto.request.messageP\001\272\002\000b\006proto3"};
+                + ".proto\022\016im.turms.proto\032\030model/common/val"
+                + "ue.proto\"\251\003\n\024CreateMessageRequest\022\027\n\nmes"
+                + "sage_id\030\001 \001(\003H\000\210\001\001\022\036\n\021is_system_message\030"
+                + "\002 \001(\010H\001\210\001\001\022\025\n\010group_id\030\003 \001(\003H\002\210\001\001\022\031\n\014rec"
+                + "ipient_id\030\004 \001(\003H\003\210\001\001\022\032\n\rdelivery_date\030\005 "
+                + "\001(\003H\004\210\001\001\022\021\n\004text\030\006 \001(\tH\005\210\001\001\022\017\n\007records\030\007"
+                + " \003(\014\022\027\n\nburn_after\030\010 \001(\005H\006\210\001\001\022\033\n\016pre_mes"
+                + "sage_id\030\t \001(\003H\007\210\001\001\0220\n\021custom_attributes\030"
+                + "\017 \003(\0132\025.im.turms.proto.ValueB\r\n\013_message"
+                + "_idB\024\n\022_is_system_messageB\013\n\t_group_idB\017"
+                + "\n\r_recipient_idB\020\n\016_delivery_dateB\007\n\005_te"
+                + "xtB\r\n\013_burn_afterB\021\n\017_pre_message_idB?\n8"
+                + "im.turms.server.common.access.client.dto"
+                + ".request.messageP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_CreateMessageRequest_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
@@ -77,8 +81,10 @@ public final class CreateMessageRequestOuterClass {
                                 "Text",
                                 "Records",
                                 "BurnAfter",
-                                "PreMessageId",});
+                                "PreMessageId",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -26,7 +26,7 @@ public final class UpdateMeetingRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateMeetingRequestOuterClass.class.getName());
     }
@@ -48,24 +48,32 @@ public final class UpdateMeetingRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n/request/conference/update_meeting_requ"
-                + "est.proto\022\016im.turms.proto\"\214\001\n\024UpdateMeet"
-                + "ingRequest\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\021\n\004name\030\002 \001("
-                + "\tH\001\210\001\001\022\022\n\005intro\030\003 \001(\tH\002\210\001\001\022\025\n\010password\030\004"
-                + " \001(\tH\003\210\001\001B\005\n\003_idB\007\n\005_nameB\010\n\006_introB\013\n\t_"
-                + "passwordBB\n;im.turms.server.common.acces"
-                + "s.client.dto.request.conferenceP\001\272\002\000b\006pr"
-                + "oto3"};
+                + "est.proto\022\016im.turms.proto\032\030model/common/"
+                + "value.proto\"\276\001\n\024UpdateMeetingRequest\022\017\n\002"
+                + "id\030\001 \001(\003H\000\210\001\001\022\021\n\004name\030\002 \001(\tH\001\210\001\001\022\022\n\005intr"
+                + "o\030\003 \001(\tH\002\210\001\001\022\025\n\010password\030\004 \001(\tH\003\210\001\001\0220\n\021c"
+                + "ustom_attributes\030\017 \003(\0132\025.im.turms.proto."
+                + "ValueB\005\n\003_idB\007\n\005_nameB\010\n\006_introB\013\n\t_pass"
+                + "wordBB\n;im.turms.server.common.access.cl"
+                + "ient.dto.request.conferenceP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateMeetingRequest_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_UpdateMeetingRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateMeetingRequest_descriptor,
-                        new java.lang.String[]{"Id", "Name", "Intro", "Password",});
+                        new java.lang.String[]{"Id",
+                                "Name",
+                                "Intro",
+                                "Password",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -26,7 +26,7 @@ public final class DeleteRelationshipGroupRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteRelationshipGroupRequestOuterClass.class.getName());
     }
@@ -49,22 +49,29 @@ public final class DeleteRelationshipGroupRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nArequest/user/relationship/delete_relat"
                 + "ionship_group_request.proto\022\016im.turms.pr"
-                + "oto\"m\n\036DeleteRelationshipGroupRequest\022\023\n"
-                + "\013group_index\030\001 \001(\005\022\037\n\022target_group_index"
-                + "\030\002 \001(\005H\000\210\001\001B\025\n\023_target_group_indexBI\nBim"
-                + ".turms.server.common.access.client.dto.r"
-                + "equest.user.relationshipP\001\272\002\000b\006proto3"};
+                + "oto\032\030model/common/value.proto\"\237\001\n\036Delete"
+                + "RelationshipGroupRequest\022\023\n\013group_index\030"
+                + "\001 \001(\005\022\037\n\022target_group_index\030\002 \001(\005H\000\210\001\001\0220"
+                + "\n\021custom_attributes\030\017 \003(\0132\025.im.turms.pro"
+                + "to.ValueB\025\n\023_target_group_indexBI\nBim.tu"
+                + "rms.server.common.access.client.dto.requ"
+                + "est.user.relationshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteRelationshipGroupRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteRelationshipGroupRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteRelationshipGroupRequest_descriptor,
-                        new java.lang.String[]{"GroupIndex", "TargetGroupIndex",});
+                        new java.lang.String[]{"GroupIndex",
+                                "TargetGroupIndex",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

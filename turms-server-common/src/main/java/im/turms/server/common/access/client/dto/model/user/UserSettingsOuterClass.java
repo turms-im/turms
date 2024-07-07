@@ -26,7 +26,7 @@ public final class UserSettingsOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserSettingsOuterClass.class.getName());
     }
@@ -50,14 +50,15 @@ public final class UserSettingsOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\036model/user/user_settings.proto\022\016im.tur"
-                + "ms.proto\032\030model/common/value.proto\"\312\001\n\014U"
+                + "ms.proto\032\030model/common/value.proto\"\374\001\n\014U"
                 + "serSettings\022<\n\010settings\030\001 \003(\0132*.im.turms"
                 + ".proto.UserSettings.SettingsEntry\022\036\n\021las"
-                + "t_updated_date\030\002 \001(\003H\000\210\001\001\032F\n\rSettingsEnt"
-                + "ry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.im.turm"
-                + "s.proto.Value:\0028\001B\024\n\022_last_updated_dateB"
-                + ":\n3im.turms.server.common.access.client."
-                + "dto.model.userP\001\272\002\000b\006proto3"};
+                + "t_updated_date\030\002 \001(\003H\000\210\001\001\0220\n\021custom_attr"
+                + "ibutes\030\017 \003(\0132\025.im.turms.proto.Value\032F\n\rS"
+                + "ettingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\013"
+                + "2\025.im.turms.proto.Value:\0028\001B\024\n\022_last_upd"
+                + "ated_dateB:\n3im.turms.server.common.acce"
+                + "ss.client.dto.model.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -68,7 +69,7 @@ public final class UserSettingsOuterClass {
         internal_static_im_turms_proto_UserSettings_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserSettings_descriptor,
-                        new java.lang.String[]{"Settings", "LastUpdatedDate",});
+                        new java.lang.String[]{"Settings", "LastUpdatedDate", "CustomAttributes",});
         internal_static_im_turms_proto_UserSettings_SettingsEntry_descriptor =
                 internal_static_im_turms_proto_UserSettings_descriptor.getNestedTypes()
                         .get(0);

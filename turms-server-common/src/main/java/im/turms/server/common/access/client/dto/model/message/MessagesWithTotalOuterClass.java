@@ -26,7 +26,7 @@ public final class MessagesWithTotalOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 MessagesWithTotalOuterClass.class.getName());
     }
@@ -47,7 +47,7 @@ public final class MessagesWithTotalOuterClass {
 
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
-        java.lang.String[] descriptorData = {"\n\'model/message/messages_with_total.prot"
+        java.lang.String[] descriptorData = {"\n'model/message/messages_with_total.prot"
                 + "o\022\016im.turms.proto\032\033model/message/message"
                 + ".proto\"x\n\021MessagesWithTotal\022\r\n\005total\030\001 \001"
                 + "(\005\022\030\n\020is_group_message\030\002 \001(\010\022\017\n\007from_id\030"
@@ -61,7 +61,7 @@ public final class MessagesWithTotalOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_MessagesWithTotal_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_MessagesWithTotal_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_MessagesWithTotal_descriptor,

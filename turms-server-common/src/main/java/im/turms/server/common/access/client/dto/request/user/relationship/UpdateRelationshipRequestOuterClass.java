@@ -26,7 +26,7 @@ public final class UpdateRelationshipRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateRelationshipRequestOuterClass.class.getName());
     }
@@ -48,21 +48,25 @@ public final class UpdateRelationshipRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n;request/user/relationship/update_relat"
-                + "ionship_request.proto\022\016im.turms.proto\"\324\001"
-                + "\n\031UpdateRelationshipRequest\022\017\n\007user_id\030\001"
-                + " \001(\003\022\024\n\007blocked\030\002 \001(\010H\000\210\001\001\022\034\n\017new_group_"
-                + "index\030\003 \001(\005H\001\210\001\001\022\037\n\022delete_group_index\030\004"
-                + " \001(\005H\002\210\001\001\022\021\n\004name\030\005 \001(\tH\003\210\001\001B\n\n\010_blocked"
-                + "B\022\n\020_new_group_indexB\025\n\023_delete_group_in"
-                + "dexB\007\n\005_nameBI\nBim.turms.server.common.a"
-                + "ccess.client.dto.request.user.relationsh"
-                + "ipP\001\272\002\000b\006proto3"};
+                + "ionship_request.proto\022\016im.turms.proto\032\030m"
+                + "odel/common/value.proto\"\206\002\n\031UpdateRelati"
+                + "onshipRequest\022\017\n\007user_id\030\001 \001(\003\022\024\n\007blocke"
+                + "d\030\002 \001(\010H\000\210\001\001\022\034\n\017new_group_index\030\003 \001(\005H\001\210"
+                + "\001\001\022\037\n\022delete_group_index\030\004 \001(\005H\002\210\001\001\022\021\n\004n"
+                + "ame\030\005 \001(\tH\003\210\001\001\0220\n\021custom_attributes\030\017 \003("
+                + "\0132\025.im.turms.proto.ValueB\n\n\010_blockedB\022\n\020"
+                + "_new_group_indexB\025\n\023_delete_group_indexB"
+                + "\007\n\005_nameBI\nBim.turms.server.common.acces"
+                + "s.client.dto.request.user.relationshipP\001"
+                + "\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor,
@@ -70,8 +74,10 @@ public final class UpdateRelationshipRequestOuterClass {
                                 "Blocked",
                                 "NewGroupIndex",
                                 "DeleteGroupIndex",
-                                "Name",});
+                                "Name",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

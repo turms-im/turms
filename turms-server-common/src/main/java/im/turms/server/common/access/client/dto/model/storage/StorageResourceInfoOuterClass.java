@@ -26,7 +26,7 @@ public final class StorageResourceInfoOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 StorageResourceInfoOuterClass.class.getName());
     }
@@ -48,17 +48,21 @@ public final class StorageResourceInfoOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n)model/storage/storage_resource_info.pr"
-                + "oto\022\016im.turms.proto\"\305\001\n\023StorageResourceI"
-                + "nfo\022\023\n\006id_num\030\001 \001(\003H\000\210\001\001\022\023\n\006id_str\030\002 \001(\t"
-                + "H\001\210\001\001\022\021\n\004name\030\003 \001(\tH\002\210\001\001\022\027\n\nmedia_type\030\004"
-                + " \001(\tH\003\210\001\001\022\023\n\013uploader_id\030\005 \001(\003\022\025\n\rcreati"
-                + "on_date\030\006 \001(\003B\t\n\007_id_numB\t\n\007_id_strB\007\n\005_"
-                + "nameB\r\n\013_media_typeB=\n6im.turms.server.c"
-                + "ommon.access.client.dto.model.storageP\001\272"
-                + "\002\000b\006proto3"};
+                + "oto\022\016im.turms.proto\032\030model/common/value."
+                + "proto\"\367\001\n\023StorageResourceInfo\022\023\n\006id_num\030"
+                + "\001 \001(\003H\000\210\001\001\022\023\n\006id_str\030\002 \001(\tH\001\210\001\001\022\021\n\004name\030"
+                + "\003 \001(\tH\002\210\001\001\022\027\n\nmedia_type\030\004 \001(\tH\003\210\001\001\022\023\n\013u"
+                + "ploader_id\030\005 \001(\003\022\025\n\rcreation_date\030\006 \001(\003\022"
+                + "0\n\021custom_attributes\030\017 \003(\0132\025.im.turms.pr"
+                + "oto.ValueB\t\n\007_id_numB\t\n\007_id_strB\007\n\005_name"
+                + "B\r\n\013_media_typeB=\n6im.turms.server.commo"
+                + "n.access.client.dto.model.storageP\001\272\002\000b\006"
+                + "proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_StorageResourceInfo_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
@@ -70,8 +74,10 @@ public final class StorageResourceInfoOuterClass {
                                 "Name",
                                 "MediaType",
                                 "UploaderId",
-                                "CreationDate",});
+                                "CreationDate",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

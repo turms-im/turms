@@ -26,7 +26,7 @@ public final class DeleteGroupMembersRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteGroupMembersRequestOuterClass.class.getName());
     }
@@ -48,28 +48,33 @@ public final class DeleteGroupMembersRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n7request/group/member/delete_group_memb"
-                + "ers_request.proto\022\016im.turms.proto\"\247\001\n\031De"
-                + "leteGroupMembersRequest\022\020\n\010group_id\030\001 \001("
-                + "\003\022\022\n\nmember_ids\030\002 \003(\003\022\031\n\014successor_id\030\003 "
-                + "\001(\003H\000\210\001\001\022 \n\023quit_after_transfer\030\004 \001(\010H\001\210"
-                + "\001\001B\017\n\r_successor_idB\026\n\024_quit_after_trans"
-                + "ferBD\n=im.turms.server.common.access.cli"
-                + "ent.dto.request.group.memberP\001\272\002\000b\006proto"
-                + "3"};
+                + "ers_request.proto\022\016im.turms.proto\032\030model"
+                + "/common/value.proto\"\331\001\n\031DeleteGroupMembe"
+                + "rsRequest\022\020\n\010group_id\030\001 \001(\003\022\022\n\nmember_id"
+                + "s\030\002 \003(\003\022\031\n\014successor_id\030\003 \001(\003H\000\210\001\001\022 \n\023qu"
+                + "it_after_transfer\030\004 \001(\010H\001\210\001\001\0220\n\021custom_a"
+                + "ttributes\030\017 \003(\0132\025.im.turms.proto.ValueB\017"
+                + "\n\r_successor_idB\026\n\024_quit_after_transferB"
+                + "D\n=im.turms.server.common.access.client."
+                + "dto.request.group.memberP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteGroupMembersRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteGroupMembersRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteGroupMembersRequest_descriptor,
                         new java.lang.String[]{"GroupId",
                                 "MemberIds",
                                 "SuccessorId",
-                                "QuitAfterTransfer",});
+                                "QuitAfterTransfer",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

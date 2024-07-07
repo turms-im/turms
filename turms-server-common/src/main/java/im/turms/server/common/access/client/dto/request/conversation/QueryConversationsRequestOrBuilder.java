@@ -88,4 +88,30 @@ public interface QueryConversationsRequestOrBuilder extends
      * @return The groupIds at the given index.
      */
     long getGroupIds(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index);
 }

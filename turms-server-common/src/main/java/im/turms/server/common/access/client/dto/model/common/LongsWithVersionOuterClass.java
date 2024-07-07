@@ -26,7 +26,7 @@ public final class LongsWithVersionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 LongsWithVersionOuterClass.class.getName());
     }

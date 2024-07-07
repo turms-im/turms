@@ -26,7 +26,7 @@ public final class UserSessionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserSessionOuterClass.class.getName());
     }
@@ -48,20 +48,25 @@ public final class UserSessionOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\035model/user/user_session.proto\022\016im.turm"
-                + "s.proto\"4\n\013UserSession\022\022\n\nsession_id\030\001 \001"
-                + "(\t\022\021\n\tserver_id\030\002 \001(\tB:\n3im.turms.server"
-                + ".common.access.client.dto.model.userP\001\272\002"
-                + "\000b\006proto3"};
+                + "s.proto\032\030model/common/value.proto\"f\n\013Use"
+                + "rSession\022\022\n\nsession_id\030\001 \001(\t\022\021\n\tserver_i"
+                + "d\030\002 \001(\t\0220\n\021custom_attributes\030\017 \003(\0132\025.im."
+                + "turms.proto.ValueB:\n3im.turms.server.com"
+                + "mon.access.client.dto.model.userP\001\272\002\000b\006p"
+                + "roto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UserSession_descriptor = getDescriptor().getMessageTypes()
-                .get(0);
+                .getFirst();
         internal_static_im_turms_proto_UserSession_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserSession_descriptor,
-                        new java.lang.String[]{"SessionId", "ServerId",});
+                        new java.lang.String[]{"SessionId", "ServerId", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

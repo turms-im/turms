@@ -26,7 +26,7 @@ public final class UpdateUserSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateUserSettingsRequestOuterClass.class.getName());
     }
@@ -51,13 +51,14 @@ public final class UpdateUserSettingsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n/request/user/update_user_settings_requ"
                 + "est.proto\022\016im.turms.proto\032\030model/common/"
-                + "value.proto\"\256\001\n\031UpdateUserSettingsReques"
+                + "value.proto\"\340\001\n\031UpdateUserSettingsReques"
                 + "t\022I\n\010settings\030\001 \003(\01327.im.turms.proto.Upd"
-                + "ateUserSettingsRequest.SettingsEntry\032F\n\r"
-                + "SettingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001("
-                + "\0132\025.im.turms.proto.Value:\0028\001B<\n5im.turms"
-                + ".server.common.access.client.dto.request"
-                + ".userP\001\272\002\000b\006proto3"};
+                + "ateUserSettingsRequest.SettingsEntry\0220\n\021"
+                + "custom_attributes\030\017 \003(\0132\025.im.turms.proto"
+                + ".Value\032F\n\rSettingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005"
+                + "value\030\002 \001(\0132\025.im.turms.proto.Value:\0028\001B<"
+                + "\n5im.turms.server.common.access.client.d"
+                + "to.request.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -65,14 +66,14 @@ public final class UpdateUserSettingsRequestOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateUserSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateUserSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateUserSettingsRequest_descriptor,
-                        new java.lang.String[]{"Settings",});
+                        new java.lang.String[]{"Settings", "CustomAttributes",});
         internal_static_im_turms_proto_UpdateUserSettingsRequest_SettingsEntry_descriptor =
                 internal_static_im_turms_proto_UpdateUserSettingsRequest_descriptor.getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateUserSettingsRequest_SettingsEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateUserSettingsRequest_SettingsEntry_descriptor,

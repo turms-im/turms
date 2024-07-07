@@ -40,7 +40,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 ResponseAction.class.getName());
     }
@@ -112,7 +112,7 @@ public enum ResponseAction implements com.google.protobuf.ProtocolMessageEnum {
         return im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass
                 .getDescriptor()
                 .getEnumTypes()
-                .get(0);
+                .getFirst();
     }
 
     private static final ResponseAction[] VALUES = values();

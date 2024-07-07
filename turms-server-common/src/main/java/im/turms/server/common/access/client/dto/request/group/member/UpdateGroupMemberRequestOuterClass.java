@@ -26,7 +26,7 @@ public final class UpdateGroupMemberRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateGroupMemberRequestOuterClass.class.getName());
     }
@@ -49,18 +49,22 @@ public final class UpdateGroupMemberRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n6request/group/member/update_group_memb"
                 + "er_request.proto\022\016im.turms.proto\032 consta"
-                + "nt/group_member_role.proto\"\306\001\n\030UpdateGro"
-                + "upMemberRequest\022\020\n\010group_id\030\001 \001(\003\022\021\n\tmem"
-                + "ber_id\030\002 \001(\003\022\021\n\004name\030\003 \001(\tH\000\210\001\001\0222\n\004role\030"
-                + "\004 \001(\0162\037.im.turms.proto.GroupMemberRoleH\001"
-                + "\210\001\001\022\032\n\rmute_end_date\030\005 \001(\003H\002\210\001\001B\007\n\005_name"
-                + "B\007\n\005_roleB\020\n\016_mute_end_dateBD\n=im.turms."
-                + "server.common.access.client.dto.request."
-                + "group.memberP\001\272\002\000b\006proto3"};
+                + "nt/group_member_role.proto\032\030model/common"
+                + "/value.proto\"\370\001\n\030UpdateGroupMemberReques"
+                + "t\022\020\n\010group_id\030\001 \001(\003\022\021\n\tmember_id\030\002 \001(\003\022\021"
+                + "\n\004name\030\003 \001(\tH\000\210\001\001\0222\n\004role\030\004 \001(\0162\037.im.tur"
+                + "ms.proto.GroupMemberRoleH\001\210\001\001\022\032\n\rmute_en"
+                + "d_date\030\005 \001(\003H\002\210\001\001\0220\n\021custom_attributes\030\017"
+                + " \003(\0132\025.im.turms.proto.ValueB\007\n\005_nameB\007\n\005"
+                + "_roleB\020\n\016_mute_end_dateBD\n=im.turms.serv"
+                + "er.common.access.client.dto.request.grou"
+                + "p.memberP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
                         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor =
                 getDescriptor().getMessageTypes()
@@ -72,9 +76,11 @@ public final class UpdateGroupMemberRequestOuterClass {
                                 "MemberId",
                                 "Name",
                                 "Role",
-                                "MuteEndDate",});
+                                "MuteEndDate",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.GroupMemberRoleOuterClass.getDescriptor();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

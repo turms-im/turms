@@ -29,7 +29,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 Message.class.getName());
     }
@@ -42,6 +42,8 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     private Message() {
         text_ = "";
         records_ = emptyList(com.google.protobuf.ByteString.class);
+        reactionGroups_ = java.util.Collections.emptyList();
+        customAttributes_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -58,7 +60,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_ = 0L;
+    private long id_;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -81,7 +83,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int DELIVERY_DATE_FIELD_NUMBER = 2;
-    private long deliveryDate_ = 0L;
+    private long deliveryDate_;
 
     /**
      * <code>optional int64 delivery_date = 2;</code>
@@ -104,7 +106,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int MODIFICATION_DATE_FIELD_NUMBER = 3;
-    private long modificationDate_ = 0L;
+    private long modificationDate_;
 
     /**
      * <code>optional int64 modification_date = 3;</code>
@@ -177,7 +179,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int SENDER_ID_FIELD_NUMBER = 5;
-    private long senderId_ = 0L;
+    private long senderId_;
 
     /**
      * <code>optional int64 sender_id = 5;</code>
@@ -200,7 +202,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 6;
-    private long groupId_ = 0L;
+    private long groupId_;
 
     /**
      * <code>optional int64 group_id = 6;</code>
@@ -223,7 +225,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int IS_SYSTEM_MESSAGE_FIELD_NUMBER = 7;
-    private boolean isSystemMessage_ = false;
+    private boolean isSystemMessage_;
 
     /**
      * <code>optional bool is_system_message = 7;</code>
@@ -246,7 +248,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int RECIPIENT_ID_FIELD_NUMBER = 8;
-    private long recipientId_ = 0L;
+    private long recipientId_;
 
     /**
      * <code>optional int64 recipient_id = 8;</code>
@@ -303,7 +305,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int SEQUENCE_ID_FIELD_NUMBER = 10;
-    private int sequenceId_ = 0;
+    private int sequenceId_;
 
     /**
      * <code>optional int32 sequence_id = 10;</code>
@@ -326,7 +328,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int PRE_MESSAGE_ID_FIELD_NUMBER = 11;
-    private long preMessageId_ = 0L;
+    private long preMessageId_;
 
     /**
      * <code>optional int64 pre_message_id = 11;</code>
@@ -346,6 +348,98 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     @java.lang.Override
     public long getPreMessageId() {
         return preMessageId_;
+    }
+
+    public static final int REACTION_GROUPS_FIELD_NUMBER = 12;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup> reactionGroups_;
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup> getReactionGroupsList() {
+        return reactionGroups_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder> getReactionGroupsOrBuilderList() {
+        return reactionGroups_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public int getReactionGroupsCount() {
+        return reactionGroups_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.message.MessageReactionGroup getReactionGroups(
+            int index) {
+        return reactionGroups_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder getReactionGroupsOrBuilder(
+            int index) {
+        return reactionGroups_.get(index);
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -399,6 +493,12 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
         if (((bitField0_ & 0x00000200) != 0)) {
             output.writeInt64(11, preMessageId_);
         }
+        for (MessageReactionGroup messageReactionGroup : reactionGroups_) {
+            output.writeMessage(12, messageReactionGroup);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(15, value);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -447,6 +547,13 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
         }
         if (((bitField0_ & 0x00000200) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(11, preMessageId_);
+        }
+        for (MessageReactionGroup messageReactionGroup : reactionGroups_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(12,
+                    messageReactionGroup);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -545,7 +652,9 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
                 return false;
             }
         }
-        return getUnknownFields().equals(other.getUnknownFields());
+        return getReactionGroupsList().equals(other.getReactionGroupsList())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
+                && getUnknownFields().equals(other.getUnknownFields());
     }
 
     @java.lang.Override
@@ -598,6 +707,14 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
         if (hasPreMessageId()) {
             hash = (37 * hash) + PRE_MESSAGE_ID_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getPreMessageId());
+        }
+        if (getReactionGroupsCount() > 0) {
+            hash = (37 * hash) + REACTION_GROUPS_FIELD_NUMBER;
+            hash = (53 * hash) + getReactionGroupsList().hashCode();
+        }
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -752,6 +869,20 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
             records_ = emptyList(com.google.protobuf.ByteString.class);
             sequenceId_ = 0;
             preMessageId_ = 0L;
+            if (reactionGroupsBuilder_ == null) {
+                reactionGroups_ = java.util.Collections.emptyList();
+            } else {
+                reactionGroups_ = null;
+                reactionGroupsBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000800;
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00001000;
             return this;
         }
 
@@ -779,11 +910,34 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
         public im.turms.server.common.access.client.dto.model.message.Message buildPartial() {
             im.turms.server.common.access.client.dto.model.message.Message result =
                     new im.turms.server.common.access.client.dto.model.message.Message(this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.model.message.Message result) {
+            if (reactionGroupsBuilder_ == null) {
+                if (((bitField0_ & 0x00000800) != 0)) {
+                    reactionGroups_ = java.util.Collections.unmodifiableList(reactionGroups_);
+                    bitField0_ &= ~0x00000800;
+                }
+                result.reactionGroups_ = reactionGroups_;
+            } else {
+                result.reactionGroups_ = reactionGroupsBuilder_.build();
+            }
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00001000) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00001000;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -897,6 +1051,60 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
             if (other.hasPreMessageId()) {
                 setPreMessageId(other.getPreMessageId());
             }
+            if (reactionGroupsBuilder_ == null) {
+                if (!other.reactionGroups_.isEmpty()) {
+                    if (reactionGroups_.isEmpty()) {
+                        reactionGroups_ = other.reactionGroups_;
+                        bitField0_ &= ~0x00000800;
+                    } else {
+                        ensureReactionGroupsIsMutable();
+                        reactionGroups_.addAll(other.reactionGroups_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.reactionGroups_.isEmpty()) {
+                    if (reactionGroupsBuilder_.isEmpty()) {
+                        reactionGroupsBuilder_.dispose();
+                        reactionGroupsBuilder_ = null;
+                        reactionGroups_ = other.reactionGroups_;
+                        bitField0_ &= ~0x00000800;
+                        reactionGroupsBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getReactionGroupsFieldBuilder()
+                                        : null;
+                    } else {
+                        reactionGroupsBuilder_.addAllMessages(other.reactionGroups_);
+                    }
+                }
+            }
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00001000;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00001000;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
+            }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
             return this;
@@ -966,6 +1174,29 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
                             preMessageId_ = input.readInt64();
                             bitField0_ |= 0x00000400;
                         } // case 88
+                        case 98 -> {
+                            MessageReactionGroup m = input
+                                    .readMessage(MessageReactionGroup.parser(), extensionRegistry);
+                            if (reactionGroupsBuilder_ == null) {
+                                ensureReactionGroupsIsMutable();
+                                reactionGroups_.add(m);
+                            } else {
+                                reactionGroupsBuilder_.addMessage(m);
+                            }
+                        } // case 98
+                        case 122 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
+                                    input.readMessage(
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
+                                            extensionRegistry);
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 122
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -1604,6 +1835,528 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
             preMessageId_ = 0L;
             onChanged();
             return this;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup> reactionGroups_ =
+                java.util.Collections.emptyList();
+
+        private void ensureReactionGroupsIsMutable() {
+            if ((bitField0_ & 0x00000800) == 0) {
+                reactionGroups_ = new java.util.ArrayList<>(reactionGroups_);
+                bitField0_ |= 0x00000800;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup, im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder, im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder> reactionGroupsBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup> getReactionGroupsList() {
+            if (reactionGroupsBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(reactionGroups_);
+            } else {
+                return reactionGroupsBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public int getReactionGroupsCount() {
+            if (reactionGroupsBuilder_ == null) {
+                return reactionGroups_.size();
+            } else {
+                return reactionGroupsBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.message.MessageReactionGroup getReactionGroups(
+                int index) {
+            if (reactionGroupsBuilder_ == null) {
+                return reactionGroups_.get(index);
+            } else {
+                return reactionGroupsBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder setReactionGroups(
+                int index,
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup value) {
+            if (reactionGroupsBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.set(index, value);
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder setReactionGroups(
+                int index,
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder builderForValue) {
+            if (reactionGroupsBuilder_ == null) {
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup value) {
+            if (reactionGroupsBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.add(value);
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                int index,
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup value) {
+            if (reactionGroupsBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.add(index, value);
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder builderForValue) {
+            if (reactionGroupsBuilder_ == null) {
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.add(builderForValue.build());
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                int index,
+                im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder builderForValue) {
+            if (reactionGroupsBuilder_ == null) {
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addAllReactionGroups(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.message.MessageReactionGroup> values) {
+            if (reactionGroupsBuilder_ == null) {
+                ensureReactionGroupsIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, reactionGroups_);
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder clearReactionGroups() {
+            if (reactionGroupsBuilder_ == null) {
+                reactionGroups_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000800;
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder removeReactionGroups(int index) {
+            if (reactionGroupsBuilder_ == null) {
+                ensureReactionGroupsIsMutable();
+                reactionGroups_.remove(index);
+                onChanged();
+            } else {
+                reactionGroupsBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder getReactionGroupsBuilder(
+                int index) {
+            return getReactionGroupsFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder getReactionGroupsOrBuilder(
+                int index) {
+            if (reactionGroupsBuilder_ == null) {
+                return reactionGroups_.get(index);
+            } else {
+                return reactionGroupsBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder> getReactionGroupsOrBuilderList() {
+            if (reactionGroupsBuilder_ != null) {
+                return reactionGroupsBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(reactionGroups_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder addReactionGroupsBuilder() {
+            return getReactionGroupsFieldBuilder().addBuilder(
+                    im.turms.server.common.access.client.dto.model.message.MessageReactionGroup
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder addReactionGroupsBuilder(
+                int index) {
+            return getReactionGroupsFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.message.MessageReactionGroup
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder> getReactionGroupsBuilderList() {
+            return getReactionGroupsFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.message.MessageReactionGroup, im.turms.server.common.access.client.dto.model.message.MessageReactionGroup.Builder, im.turms.server.common.access.client.dto.model.message.MessageReactionGroupOrBuilder> getReactionGroupsFieldBuilder() {
+            if (reactionGroupsBuilder_ == null) {
+                reactionGroupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        reactionGroups_,
+                        ((bitField0_ & 0x00000800) != 0),
+                        getParentForChildren(),
+                        isClean());
+                reactionGroups_ = null;
+            }
+            return reactionGroupsBuilder_;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
+
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00001000) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00001000;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00001000;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00001000) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.Message)

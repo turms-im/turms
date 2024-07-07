@@ -33,7 +33,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 TurmsRequest.class.getName());
     }
@@ -44,6 +44,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     }
 
     private TurmsRequest() {
+        customAttributes_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -59,7 +60,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     }
 
     private int bitField0_;
-    private int kindCase_ = 0;
+    private int kindCase_;
     @SuppressWarnings("serial")
     private java.lang.Object kind_;
 
@@ -135,6 +136,8 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         DELETE_CONVERSATION_SETTINGS_REQUEST(1100),
         QUERY_CONVERSATION_SETTINGS_REQUEST(1101),
         UPDATE_CONVERSATION_SETTINGS_REQUEST(1102),
+        CREATE_MESSAGE_REACTIONS_REQUEST(1200),
+        DELETE_MESSAGE_REACTIONS_REQUEST(1201),
         KIND_NOT_SET(0);
 
         private final int value;
@@ -225,6 +228,8 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 case 1100 -> DELETE_CONVERSATION_SETTINGS_REQUEST;
                 case 1101 -> QUERY_CONVERSATION_SETTINGS_REQUEST;
                 case 1102 -> UPDATE_CONVERSATION_SETTINGS_REQUEST;
+                case 1200 -> CREATE_MESSAGE_REACTIONS_REQUEST;
+                case 1201 -> DELETE_MESSAGE_REACTIONS_REQUEST;
                 case 0 -> KIND_NOT_SET;
                 default -> null;
             };
@@ -240,7 +245,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_ = 0L;
+    private long requestId_;
 
     /**
      * <pre>
@@ -270,6 +275,52 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     @java.lang.Override
     public long getRequestId() {
         return requestId_;
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
     }
 
     public static final int CREATE_SESSION_REQUEST_FIELD_NUMBER = 3;
@@ -3076,6 +3127,94 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 .getDefaultInstance();
     }
 
+    public static final int CREATE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER = 1200;
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return Whether the createMessageReactionsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasCreateMessageReactionsRequest() {
+        return kindCase_ == 1200;
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return The createMessageReactionsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest() {
+        if (kindCase_ == 1200) {
+            return (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequestOrBuilder getCreateMessageReactionsRequestOrBuilder() {
+        if (kindCase_ == 1200) {
+            return (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
+    public static final int DELETE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER = 1201;
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return Whether the deleteMessageReactionsRequest field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeleteMessageReactionsRequest() {
+        return kindCase_ == 1201;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return The deleteMessageReactionsRequest.
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest() {
+        if (kindCase_ == 1201) {
+            return (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequestOrBuilder getDeleteMessageReactionsRequestOrBuilder() {
+        if (kindCase_ == 1201) {
+            return (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_;
+        }
+        return im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -3096,6 +3235,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(1, requestId_);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(2, value);
         }
         if (kindCase_ == 3) {
             output.writeMessage(3,
@@ -3377,6 +3519,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             output.writeMessage(1102,
                     (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_);
         }
+        if (kindCase_ == 1200) {
+            output.writeMessage(1200,
+                    (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_);
+        }
+        if (kindCase_ == 1201) {
+            output.writeMessage(1201,
+                    (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -3390,6 +3540,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, requestId_);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(2, value);
         }
         if (kindCase_ == 3) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(3,
@@ -3671,6 +3824,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(1102,
                     (im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequest) kind_);
         }
+        if (kindCase_ == 1200) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(1200,
+                    (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_);
+        }
+        if (kindCase_ == 1201) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(1201,
+                    (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_);
+        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -3692,6 +3853,9 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (getRequestId() != other.getRequestId()) {
                 return false;
             }
+        }
+        if (!getCustomAttributesList().equals(other.getCustomAttributesList())) {
+            return false;
         }
         if (!getKindCase().equals(other.getKindCase())) {
             return false;
@@ -4085,6 +4249,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                     return false;
                 }
             }
+            case 1200 -> {
+                if (!getCreateMessageReactionsRequest()
+                        .equals(other.getCreateMessageReactionsRequest())) {
+                    return false;
+                }
+            }
+            case 1201 -> {
+                if (!getDeleteMessageReactionsRequest()
+                        .equals(other.getDeleteMessageReactionsRequest())) {
+                    return false;
+                }
+            }
             default -> {
             }
         }
@@ -4101,6 +4277,10 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         if (hasRequestId()) {
             hash = (37 * hash) + REQUEST_ID_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getRequestId());
+        }
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
         }
         switch (kindCase_) {
             case 3 -> {
@@ -4383,6 +4563,14 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                 hash = (37 * hash) + UPDATE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER;
                 hash = (53 * hash) + getUpdateConversationSettingsRequest().hashCode();
             }
+            case 1200 -> {
+                hash = (37 * hash) + CREATE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getCreateMessageReactionsRequest().hashCode();
+            }
+            case 1201 -> {
+                hash = (37 * hash) + DELETE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER;
+                hash = (53 * hash) + getDeleteMessageReactionsRequest().hashCode();
+            }
             default -> {
             }
         }
@@ -4535,6 +4723,13 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             bitField1_ = 0;
             bitField2_ = 0;
             requestId_ = 0L;
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000002;
             if (createSessionRequestBuilder_ != null) {
                 createSessionRequestBuilder_.clear();
             }
@@ -4745,6 +4940,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (updateConversationSettingsRequestBuilder_ != null) {
                 updateConversationSettingsRequestBuilder_.clear();
             }
+            if (createMessageReactionsRequestBuilder_ != null) {
+                createMessageReactionsRequestBuilder_.clear();
+            }
+            if (deleteMessageReactionsRequestBuilder_ != null) {
+                deleteMessageReactionsRequestBuilder_.clear();
+            }
             kindCase_ = 0;
             kind_ = null;
             return this;
@@ -4774,6 +4975,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         public im.turms.server.common.access.client.dto.request.TurmsRequest buildPartial() {
             im.turms.server.common.access.client.dto.request.TurmsRequest result =
                     new im.turms.server.common.access.client.dto.request.TurmsRequest(this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
@@ -4786,6 +4988,19 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             buildPartialOneofs(result);
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.request.TurmsRequest result) {
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00000002) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00000002;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -5023,6 +5238,12 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (kindCase_ == 1102 && updateConversationSettingsRequestBuilder_ != null) {
                 result.kind_ = updateConversationSettingsRequestBuilder_.build();
             }
+            if (kindCase_ == 1200 && createMessageReactionsRequestBuilder_ != null) {
+                result.kind_ = createMessageReactionsRequestBuilder_.build();
+            }
+            if (kindCase_ == 1201 && deleteMessageReactionsRequestBuilder_ != null) {
+                result.kind_ = deleteMessageReactionsRequestBuilder_.build();
+            }
         }
 
         @java.lang.Override
@@ -5045,146 +5266,261 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             if (other.hasRequestId()) {
                 setRequestId(other.getRequestId());
             }
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000002;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000002;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
+            }
             switch (other.getKindCase()) {
-                case CREATE_SESSION_REQUEST ->
+                case CREATE_SESSION_REQUEST -> {
                     mergeCreateSessionRequest(other.getCreateSessionRequest());
-                case DELETE_SESSION_REQUEST ->
+                }
+                case DELETE_SESSION_REQUEST -> {
                     mergeDeleteSessionRequest(other.getDeleteSessionRequest());
-                case QUERY_CONVERSATIONS_REQUEST ->
+                }
+                case QUERY_CONVERSATIONS_REQUEST -> {
                     mergeQueryConversationsRequest(other.getQueryConversationsRequest());
-                case UPDATE_CONVERSATION_REQUEST ->
+                }
+                case UPDATE_CONVERSATION_REQUEST -> {
                     mergeUpdateConversationRequest(other.getUpdateConversationRequest());
-                case UPDATE_TYPING_STATUS_REQUEST ->
+                }
+                case UPDATE_TYPING_STATUS_REQUEST -> {
                     mergeUpdateTypingStatusRequest(other.getUpdateTypingStatusRequest());
-                case CREATE_MESSAGE_REQUEST ->
+                }
+                case CREATE_MESSAGE_REQUEST -> {
                     mergeCreateMessageRequest(other.getCreateMessageRequest());
-                case QUERY_MESSAGES_REQUEST ->
+                }
+                case QUERY_MESSAGES_REQUEST -> {
                     mergeQueryMessagesRequest(other.getQueryMessagesRequest());
-                case UPDATE_MESSAGE_REQUEST ->
+                }
+                case UPDATE_MESSAGE_REQUEST -> {
                     mergeUpdateMessageRequest(other.getUpdateMessageRequest());
-                case CREATE_GROUP_MEMBERS_REQUEST ->
+                }
+                case CREATE_GROUP_MEMBERS_REQUEST -> {
                     mergeCreateGroupMembersRequest(other.getCreateGroupMembersRequest());
-                case DELETE_GROUP_MEMBERS_REQUEST ->
+                }
+                case DELETE_GROUP_MEMBERS_REQUEST -> {
                     mergeDeleteGroupMembersRequest(other.getDeleteGroupMembersRequest());
-                case QUERY_GROUP_MEMBERS_REQUEST ->
+                }
+                case QUERY_GROUP_MEMBERS_REQUEST -> {
                     mergeQueryGroupMembersRequest(other.getQueryGroupMembersRequest());
-                case UPDATE_GROUP_MEMBER_REQUEST ->
+                }
+                case UPDATE_GROUP_MEMBER_REQUEST -> {
                     mergeUpdateGroupMemberRequest(other.getUpdateGroupMemberRequest());
-                case QUERY_USER_PROFILES_REQUEST ->
+                }
+                case QUERY_USER_PROFILES_REQUEST -> {
                     mergeQueryUserProfilesRequest(other.getQueryUserProfilesRequest());
-                case QUERY_NEARBY_USERS_REQUEST ->
+                }
+                case QUERY_NEARBY_USERS_REQUEST -> {
                     mergeQueryNearbyUsersRequest(other.getQueryNearbyUsersRequest());
-                case QUERY_USER_ONLINE_STATUSES_REQUEST ->
+                }
+                case QUERY_USER_ONLINE_STATUSES_REQUEST -> {
                     mergeQueryUserOnlineStatusesRequest(other.getQueryUserOnlineStatusesRequest());
-                case UPDATE_USER_LOCATION_REQUEST ->
+                }
+                case UPDATE_USER_LOCATION_REQUEST -> {
                     mergeUpdateUserLocationRequest(other.getUpdateUserLocationRequest());
-                case UPDATE_USER_ONLINE_STATUS_REQUEST ->
+                }
+                case UPDATE_USER_ONLINE_STATUS_REQUEST -> {
                     mergeUpdateUserOnlineStatusRequest(other.getUpdateUserOnlineStatusRequest());
-                case UPDATE_USER_REQUEST -> mergeUpdateUserRequest(other.getUpdateUserRequest());
-                case UPDATE_USER_SETTINGS_REQUEST ->
+                }
+                case UPDATE_USER_REQUEST -> {
+                    mergeUpdateUserRequest(other.getUpdateUserRequest());
+                }
+                case UPDATE_USER_SETTINGS_REQUEST -> {
                     mergeUpdateUserSettingsRequest(other.getUpdateUserSettingsRequest());
-                case DELETE_USER_SETTINGS_REQUEST ->
+                }
+                case DELETE_USER_SETTINGS_REQUEST -> {
                     mergeDeleteUserSettingsRequest(other.getDeleteUserSettingsRequest());
-                case QUERY_USER_SETTINGS_REQUEST ->
+                }
+                case QUERY_USER_SETTINGS_REQUEST -> {
                     mergeQueryUserSettingsRequest(other.getQueryUserSettingsRequest());
-                case CREATE_FRIEND_REQUEST_REQUEST ->
+                }
+                case CREATE_FRIEND_REQUEST_REQUEST -> {
                     mergeCreateFriendRequestRequest(other.getCreateFriendRequestRequest());
-                case CREATE_RELATIONSHIP_GROUP_REQUEST ->
+                }
+                case CREATE_RELATIONSHIP_GROUP_REQUEST -> {
                     mergeCreateRelationshipGroupRequest(other.getCreateRelationshipGroupRequest());
-                case CREATE_RELATIONSHIP_REQUEST ->
+                }
+                case CREATE_RELATIONSHIP_REQUEST -> {
                     mergeCreateRelationshipRequest(other.getCreateRelationshipRequest());
-                case DELETE_FRIEND_REQUEST_REQUEST ->
+                }
+                case DELETE_FRIEND_REQUEST_REQUEST -> {
                     mergeDeleteFriendRequestRequest(other.getDeleteFriendRequestRequest());
-                case DELETE_RELATIONSHIP_GROUP_REQUEST ->
+                }
+                case DELETE_RELATIONSHIP_GROUP_REQUEST -> {
                     mergeDeleteRelationshipGroupRequest(other.getDeleteRelationshipGroupRequest());
-                case DELETE_RELATIONSHIP_REQUEST ->
+                }
+                case DELETE_RELATIONSHIP_REQUEST -> {
                     mergeDeleteRelationshipRequest(other.getDeleteRelationshipRequest());
-                case QUERY_FRIEND_REQUESTS_REQUEST ->
+                }
+                case QUERY_FRIEND_REQUESTS_REQUEST -> {
                     mergeQueryFriendRequestsRequest(other.getQueryFriendRequestsRequest());
-                case QUERY_RELATED_USER_IDS_REQUEST ->
+                }
+                case QUERY_RELATED_USER_IDS_REQUEST -> {
                     mergeQueryRelatedUserIdsRequest(other.getQueryRelatedUserIdsRequest());
-                case QUERY_RELATIONSHIP_GROUPS_REQUEST ->
+                }
+                case QUERY_RELATIONSHIP_GROUPS_REQUEST -> {
                     mergeQueryRelationshipGroupsRequest(other.getQueryRelationshipGroupsRequest());
-                case QUERY_RELATIONSHIPS_REQUEST ->
+                }
+                case QUERY_RELATIONSHIPS_REQUEST -> {
                     mergeQueryRelationshipsRequest(other.getQueryRelationshipsRequest());
-                case UPDATE_FRIEND_REQUEST_REQUEST ->
+                }
+                case UPDATE_FRIEND_REQUEST_REQUEST -> {
                     mergeUpdateFriendRequestRequest(other.getUpdateFriendRequestRequest());
-                case UPDATE_RELATIONSHIP_GROUP_REQUEST ->
+                }
+                case UPDATE_RELATIONSHIP_GROUP_REQUEST -> {
                     mergeUpdateRelationshipGroupRequest(other.getUpdateRelationshipGroupRequest());
-                case UPDATE_RELATIONSHIP_REQUEST ->
+                }
+                case UPDATE_RELATIONSHIP_REQUEST -> {
                     mergeUpdateRelationshipRequest(other.getUpdateRelationshipRequest());
-                case CREATE_GROUP_REQUEST -> mergeCreateGroupRequest(other.getCreateGroupRequest());
-                case DELETE_GROUP_REQUEST -> mergeDeleteGroupRequest(other.getDeleteGroupRequest());
-                case QUERY_GROUPS_REQUEST -> mergeQueryGroupsRequest(other.getQueryGroupsRequest());
-                case QUERY_JOINED_GROUP_IDS_REQUEST ->
+                }
+                case CREATE_GROUP_REQUEST -> {
+                    mergeCreateGroupRequest(other.getCreateGroupRequest());
+                }
+                case DELETE_GROUP_REQUEST -> {
+                    mergeDeleteGroupRequest(other.getDeleteGroupRequest());
+                }
+                case QUERY_GROUPS_REQUEST -> {
+                    mergeQueryGroupsRequest(other.getQueryGroupsRequest());
+                }
+                case QUERY_JOINED_GROUP_IDS_REQUEST -> {
                     mergeQueryJoinedGroupIdsRequest(other.getQueryJoinedGroupIdsRequest());
-                case QUERY_JOINED_GROUP_INFOS_REQUEST ->
+                }
+                case QUERY_JOINED_GROUP_INFOS_REQUEST -> {
                     mergeQueryJoinedGroupInfosRequest(other.getQueryJoinedGroupInfosRequest());
-                case UPDATE_GROUP_REQUEST -> mergeUpdateGroupRequest(other.getUpdateGroupRequest());
-                case CREATE_GROUP_BLOCKED_USER_REQUEST ->
+                }
+                case UPDATE_GROUP_REQUEST -> {
+                    mergeUpdateGroupRequest(other.getUpdateGroupRequest());
+                }
+                case CREATE_GROUP_BLOCKED_USER_REQUEST -> {
                     mergeCreateGroupBlockedUserRequest(other.getCreateGroupBlockedUserRequest());
-                case DELETE_GROUP_BLOCKED_USER_REQUEST ->
+                }
+                case DELETE_GROUP_BLOCKED_USER_REQUEST -> {
                     mergeDeleteGroupBlockedUserRequest(other.getDeleteGroupBlockedUserRequest());
-                case QUERY_GROUP_BLOCKED_USER_IDS_REQUEST -> mergeQueryGroupBlockedUserIdsRequest(
-                        other.getQueryGroupBlockedUserIdsRequest());
-                case QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST ->
+                }
+                case QUERY_GROUP_BLOCKED_USER_IDS_REQUEST -> {
+                    mergeQueryGroupBlockedUserIdsRequest(
+                            other.getQueryGroupBlockedUserIdsRequest());
+                }
+                case QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST -> {
                     mergeQueryGroupBlockedUserInfosRequest(
                             other.getQueryGroupBlockedUserInfosRequest());
-                case CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST ->
+                }
+                case CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST -> {
                     mergeCheckGroupJoinQuestionsAnswersRequest(
                             other.getCheckGroupJoinQuestionsAnswersRequest());
-                case CREATE_GROUP_INVITATION_REQUEST ->
+                }
+                case CREATE_GROUP_INVITATION_REQUEST -> {
                     mergeCreateGroupInvitationRequest(other.getCreateGroupInvitationRequest());
-                case CREATE_GROUP_JOIN_REQUEST_REQUEST ->
+                }
+                case CREATE_GROUP_JOIN_REQUEST_REQUEST -> {
                     mergeCreateGroupJoinRequestRequest(other.getCreateGroupJoinRequestRequest());
-                case CREATE_GROUP_JOIN_QUESTIONS_REQUEST -> mergeCreateGroupJoinQuestionsRequest(
-                        other.getCreateGroupJoinQuestionsRequest());
-                case DELETE_GROUP_INVITATION_REQUEST ->
+                }
+                case CREATE_GROUP_JOIN_QUESTIONS_REQUEST -> {
+                    mergeCreateGroupJoinQuestionsRequest(
+                            other.getCreateGroupJoinQuestionsRequest());
+                }
+                case DELETE_GROUP_INVITATION_REQUEST -> {
                     mergeDeleteGroupInvitationRequest(other.getDeleteGroupInvitationRequest());
-                case DELETE_GROUP_JOIN_REQUEST_REQUEST ->
+                }
+                case DELETE_GROUP_JOIN_REQUEST_REQUEST -> {
                     mergeDeleteGroupJoinRequestRequest(other.getDeleteGroupJoinRequestRequest());
-                case DELETE_GROUP_JOIN_QUESTIONS_REQUEST -> mergeDeleteGroupJoinQuestionsRequest(
-                        other.getDeleteGroupJoinQuestionsRequest());
-                case QUERY_GROUP_INVITATIONS_REQUEST ->
+                }
+                case DELETE_GROUP_JOIN_QUESTIONS_REQUEST -> {
+                    mergeDeleteGroupJoinQuestionsRequest(
+                            other.getDeleteGroupJoinQuestionsRequest());
+                }
+                case QUERY_GROUP_INVITATIONS_REQUEST -> {
                     mergeQueryGroupInvitationsRequest(other.getQueryGroupInvitationsRequest());
-                case QUERY_GROUP_JOIN_REQUESTS_REQUEST ->
+                }
+                case QUERY_GROUP_JOIN_REQUESTS_REQUEST -> {
                     mergeQueryGroupJoinRequestsRequest(other.getQueryGroupJoinRequestsRequest());
-                case QUERY_GROUP_JOIN_QUESTIONS_REQUEST ->
+                }
+                case QUERY_GROUP_JOIN_QUESTIONS_REQUEST -> {
                     mergeQueryGroupJoinQuestionsRequest(other.getQueryGroupJoinQuestionsRequest());
-                case UPDATE_GROUP_INVITATION_REQUEST ->
+                }
+                case UPDATE_GROUP_INVITATION_REQUEST -> {
                     mergeUpdateGroupInvitationRequest(other.getUpdateGroupInvitationRequest());
-                case UPDATE_GROUP_JOIN_QUESTION_REQUEST ->
+                }
+                case UPDATE_GROUP_JOIN_QUESTION_REQUEST -> {
                     mergeUpdateGroupJoinQuestionRequest(other.getUpdateGroupJoinQuestionRequest());
-                case UPDATE_GROUP_JOIN_REQUEST_REQUEST ->
+                }
+                case UPDATE_GROUP_JOIN_REQUEST_REQUEST -> {
                     mergeUpdateGroupJoinRequestRequest(other.getUpdateGroupJoinRequestRequest());
-                case CREATE_MEETING_REQUEST ->
+                }
+                case CREATE_MEETING_REQUEST -> {
                     mergeCreateMeetingRequest(other.getCreateMeetingRequest());
-                case DELETE_MEETING_REQUEST ->
+                }
+                case DELETE_MEETING_REQUEST -> {
                     mergeDeleteMeetingRequest(other.getDeleteMeetingRequest());
-                case QUERY_MEETINGS_REQUEST ->
+                }
+                case QUERY_MEETINGS_REQUEST -> {
                     mergeQueryMeetingsRequest(other.getQueryMeetingsRequest());
-                case UPDATE_MEETING_REQUEST ->
+                }
+                case UPDATE_MEETING_REQUEST -> {
                     mergeUpdateMeetingRequest(other.getUpdateMeetingRequest());
-                case UPDATE_MEETING_INVITATION_REQUEST ->
+                }
+                case UPDATE_MEETING_INVITATION_REQUEST -> {
                     mergeUpdateMeetingInvitationRequest(other.getUpdateMeetingInvitationRequest());
-                case DELETE_RESOURCE_REQUEST ->
+                }
+                case DELETE_RESOURCE_REQUEST -> {
                     mergeDeleteResourceRequest(other.getDeleteResourceRequest());
-                case QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST -> mergeQueryResourceDownloadInfoRequest(
-                        other.getQueryResourceDownloadInfoRequest());
-                case QUERY_RESOURCE_UPLOAD_INFO_REQUEST ->
+                }
+                case QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST -> {
+                    mergeQueryResourceDownloadInfoRequest(
+                            other.getQueryResourceDownloadInfoRequest());
+                }
+                case QUERY_RESOURCE_UPLOAD_INFO_REQUEST -> {
                     mergeQueryResourceUploadInfoRequest(other.getQueryResourceUploadInfoRequest());
-                case QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST ->
+                }
+                case QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST -> {
                     mergeQueryMessageAttachmentInfosRequest(
                             other.getQueryMessageAttachmentInfosRequest());
-                case UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST ->
+                }
+                case UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST -> {
                     mergeUpdateMessageAttachmentInfoRequest(
                             other.getUpdateMessageAttachmentInfoRequest());
-                case DELETE_CONVERSATION_SETTINGS_REQUEST -> mergeDeleteConversationSettingsRequest(
-                        other.getDeleteConversationSettingsRequest());
-                case QUERY_CONVERSATION_SETTINGS_REQUEST -> mergeQueryConversationSettingsRequest(
-                        other.getQueryConversationSettingsRequest());
-                case UPDATE_CONVERSATION_SETTINGS_REQUEST -> mergeUpdateConversationSettingsRequest(
-                        other.getUpdateConversationSettingsRequest());
+                }
+                case DELETE_CONVERSATION_SETTINGS_REQUEST -> {
+                    mergeDeleteConversationSettingsRequest(
+                            other.getDeleteConversationSettingsRequest());
+                }
+                case QUERY_CONVERSATION_SETTINGS_REQUEST -> {
+                    mergeQueryConversationSettingsRequest(
+                            other.getQueryConversationSettingsRequest());
+                }
+                case UPDATE_CONVERSATION_SETTINGS_REQUEST -> {
+                    mergeUpdateConversationSettingsRequest(
+                            other.getUpdateConversationSettingsRequest());
+                }
+                case CREATE_MESSAGE_REACTIONS_REQUEST -> {
+                    mergeCreateMessageReactionsRequest(other.getCreateMessageReactionsRequest());
+                }
+                case DELETE_MESSAGE_REACTIONS_REQUEST -> {
+                    mergeDeleteMessageReactionsRequest(other.getDeleteMessageReactionsRequest());
+                }
                 case KIND_NOT_SET -> {
                 }
             }
@@ -5216,6 +5552,19 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                             requestId_ = input.readInt64();
                             bitField0_ |= 0x00000001;
                         } // case 8
+                        case 18 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
+                                    input.readMessage(
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
+                                            extensionRegistry);
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 18
                         case 26 -> {
                             input.readMessage(getCreateSessionRequestFieldBuilder().getBuilder(),
                                     extensionRegistry);
@@ -5623,6 +5972,18 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
                                     extensionRegistry);
                             kindCase_ = 1102;
                         } // case 8818
+                        case 9602 -> {
+                            input.readMessage(
+                                    getCreateMessageReactionsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 1200;
+                        } // case 9602
+                        case 9610 -> {
+                            input.readMessage(
+                                    getDeleteMessageReactionsRequestFieldBuilder().getBuilder(),
+                                    extensionRegistry);
+                            kindCase_ = 1201;
+                        } // case 9610
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -5638,7 +5999,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             return this;
         }
 
-        private int kindCase_ = 0;
+        private int kindCase_;
         private java.lang.Object kind_;
 
         public KindCase getKindCase() {
@@ -5722,6 +6083,267 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             requestId_ = 0L;
             onChanged();
             return this;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
+
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00000002) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00000002;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000002;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00000002) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
         }
 
         private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.user.CreateSessionRequest, im.turms.server.common.access.client.dto.request.user.CreateSessionRequest.Builder, im.turms.server.common.access.client.dto.request.user.CreateSessionRequestOrBuilder> createSessionRequestBuilder_;
@@ -17311,6 +17933,362 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             kindCase_ = 1102;
             onChanged();
             return updateConversationSettingsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequestOrBuilder> createMessageReactionsRequestBuilder_;
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         *
+         * @return Whether the createMessageReactionsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasCreateMessageReactionsRequest() {
+            return kindCase_ == 1200;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         *
+         * @return The createMessageReactionsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest() {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1200) {
+                    return (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 1200) {
+                    return createMessageReactionsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder setCreateMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest value) {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                createMessageReactionsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 1200;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder setCreateMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest.Builder builderForValue) {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                createMessageReactionsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 1200;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder mergeCreateMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest value) {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1200
+                        && kind_ != im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 1200) {
+                    createMessageReactionsRequestBuilder_.mergeFrom(value);
+                } else {
+                    createMessageReactionsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 1200;
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder clearCreateMessageReactionsRequest() {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1200) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 1200) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                createMessageReactionsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest.Builder getCreateMessageReactionsRequestBuilder() {
+            return getCreateMessageReactionsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequestOrBuilder getCreateMessageReactionsRequestOrBuilder() {
+            if ((kindCase_ == 1200) && (createMessageReactionsRequestBuilder_ != null)) {
+                return createMessageReactionsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 1200) {
+                    return (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest, im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest.Builder, im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequestOrBuilder> getCreateMessageReactionsRequestFieldBuilder() {
+            if (createMessageReactionsRequestBuilder_ == null) {
+                if (!(kindCase_ == 1200)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest
+                            .getDefaultInstance();
+                }
+                createMessageReactionsRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 1200;
+            onChanged();
+            return createMessageReactionsRequestBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest, im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest.Builder, im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequestOrBuilder> deleteMessageReactionsRequestBuilder_;
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         *
+         * @return Whether the deleteMessageReactionsRequest field is set.
+         */
+        @java.lang.Override
+        public boolean hasDeleteMessageReactionsRequest() {
+            return kindCase_ == 1201;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         *
+         * @return The deleteMessageReactionsRequest.
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest() {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1201) {
+                    return (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                        .getDefaultInstance();
+            } else {
+                if (kindCase_ == 1201) {
+                    return deleteMessageReactionsRequestBuilder_.getMessage();
+                }
+                return im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder setDeleteMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest value) {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                kind_ = value;
+                onChanged();
+            } else {
+                deleteMessageReactionsRequestBuilder_.setMessage(value);
+            }
+            kindCase_ = 1201;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder setDeleteMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest.Builder builderForValue) {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                kind_ = builderForValue.build();
+                onChanged();
+            } else {
+                deleteMessageReactionsRequestBuilder_.setMessage(builderForValue.build());
+            }
+            kindCase_ = 1201;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder mergeDeleteMessageReactionsRequest(
+                im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest value) {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1201
+                        && kind_ != im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                                .getDefaultInstance()) {
+                    kind_ = im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                            .newBuilder(
+                                    (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_)
+                            .mergeFrom(value)
+                            .buildPartial();
+                } else {
+                    kind_ = value;
+                }
+                onChanged();
+            } else {
+                if (kindCase_ == 1201) {
+                    deleteMessageReactionsRequestBuilder_.mergeFrom(value);
+                } else {
+                    deleteMessageReactionsRequestBuilder_.setMessage(value);
+                }
+            }
+            kindCase_ = 1201;
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder clearDeleteMessageReactionsRequest() {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                if (kindCase_ == 1201) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                    onChanged();
+                }
+            } else {
+                if (kindCase_ == 1201) {
+                    kindCase_ = 0;
+                    kind_ = null;
+                }
+                deleteMessageReactionsRequestBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest.Builder getDeleteMessageReactionsRequestBuilder() {
+            return getDeleteMessageReactionsRequestFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        @java.lang.Override
+        public im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequestOrBuilder getDeleteMessageReactionsRequestOrBuilder() {
+            if ((kindCase_ == 1201) && (deleteMessageReactionsRequestBuilder_ != null)) {
+                return deleteMessageReactionsRequestBuilder_.getMessageOrBuilder();
+            } else {
+                if (kindCase_ == 1201) {
+                    return (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_;
+                }
+                return im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                        .getDefaultInstance();
+            }
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilder<im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest, im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest.Builder, im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequestOrBuilder> getDeleteMessageReactionsRequestFieldBuilder() {
+            if (deleteMessageReactionsRequestBuilder_ == null) {
+                if (!(kindCase_ == 1201)) {
+                    kind_ = im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest
+                            .getDefaultInstance();
+                }
+                deleteMessageReactionsRequestBuilder_ =
+                        new com.google.protobuf.SingleFieldBuilder<>(
+                                (im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest) kind_,
+                                getParentForChildren(),
+                                isClean());
+                kind_ = null;
+            }
+            kindCase_ = 1201;
+            onChanged();
+            return deleteMessageReactionsRequestBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsRequest)

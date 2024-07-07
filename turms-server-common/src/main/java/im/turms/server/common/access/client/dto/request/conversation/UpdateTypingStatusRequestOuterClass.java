@@ -26,7 +26,7 @@ public final class UpdateTypingStatusRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateTypingStatusRequestOuterClass.class.getName());
     }
@@ -48,22 +48,27 @@ public final class UpdateTypingStatusRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n7request/conversation/update_typing_sta"
-                + "tus_request.proto\022\016im.turms.proto\"D\n\031Upd"
-                + "ateTypingStatusRequest\022\030\n\020is_group_messa"
-                + "ge\030\001 \001(\010\022\r\n\005to_id\030\002 \001(\003BD\n=im.turms.serv"
-                + "er.common.access.client.dto.request.conv"
-                + "ersationP\001\272\002\000b\006proto3"};
+                + "tus_request.proto\022\016im.turms.proto\032\030model"
+                + "/common/value.proto\"v\n\031UpdateTypingStatu"
+                + "sRequest\022\030\n\020is_group_message\030\001 \001(\010\022\r\n\005to"
+                + "_id\030\002 \001(\003\0220\n\021custom_attributes\030\017 \003(\0132\025.i"
+                + "m.turms.proto.ValueBD\n=im.turms.server.c"
+                + "ommon.access.client.dto.request.conversa"
+                + "tionP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor,
-                        new java.lang.String[]{"IsGroupMessage", "ToId",});
+                        new java.lang.String[]{"IsGroupMessage", "ToId", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

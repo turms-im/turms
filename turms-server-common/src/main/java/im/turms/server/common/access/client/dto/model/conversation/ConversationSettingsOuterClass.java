@@ -26,7 +26,7 @@ public final class ConversationSettingsOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 ConversationSettingsOuterClass.class.getName());
     }
@@ -51,16 +51,17 @@ public final class ConversationSettingsOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n.model/conversation/conversation_settin"
                 + "gs.proto\022\016im.turms.proto\032\030model/common/v"
-                + "alue.proto\"\240\002\n\024ConversationSettings\022\024\n\007u"
+                + "alue.proto\"\322\002\n\024ConversationSettings\022\024\n\007u"
                 + "ser_id\030\001 \001(\003H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001"
                 + "\022D\n\010settings\030\003 \003(\01322.im.turms.proto.Conv"
                 + "ersationSettings.SettingsEntry\022\036\n\021last_u"
-                + "pdated_date\030\004 \001(\003H\002\210\001\001\032F\n\rSettingsEntry\022"
-                + "\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025.im.turms.p"
-                + "roto.Value:\0028\001B\n\n\010_user_idB\013\n\t_group_idB"
-                + "\024\n\022_last_updated_dateBB\n;im.turms.server"
-                + ".common.access.client.dto.model.conversa"
-                + "tionP\001\272\002\000b\006proto3"};
+                + "pdated_date\030\004 \001(\003H\002\210\001\001\0220\n\021custom_attribu"
+                + "tes\030\017 \003(\0132\025.im.turms.proto.Value\032F\n\rSett"
+                + "ingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025."
+                + "im.turms.proto.Value:\0028\001B\n\n\010_user_idB\013\n\t"
+                + "_group_idB\024\n\022_last_updated_dateBB\n;im.tu"
+                + "rms.server.common.access.client.dto.mode"
+                + "l.conversationP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -68,17 +69,18 @@ public final class ConversationSettingsOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_ConversationSettings_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_ConversationSettings_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_ConversationSettings_descriptor,
                         new java.lang.String[]{"UserId",
                                 "GroupId",
                                 "Settings",
-                                "LastUpdatedDate",});
+                                "LastUpdatedDate",
+                                "CustomAttributes",});
         internal_static_im_turms_proto_ConversationSettings_SettingsEntry_descriptor =
                 internal_static_im_turms_proto_ConversationSettings_descriptor.getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_ConversationSettings_SettingsEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_ConversationSettings_SettingsEntry_descriptor,

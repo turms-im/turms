@@ -29,7 +29,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserFriendRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_ = 0L;
+    private long id_;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -82,7 +82,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 2;
-    private long creationDate_ = 0L;
+    private long creationDate_;
 
     /**
      * <code>optional int64 creation_date = 2;</code>
@@ -155,7 +155,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int REQUEST_STATUS_FIELD_NUMBER = 4;
-    private int requestStatus_ = 0;
+    private int requestStatus_;
 
     /**
      * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>
@@ -243,7 +243,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int EXPIRATION_DATE_FIELD_NUMBER = 6;
-    private long expirationDate_ = 0L;
+    private long expirationDate_;
 
     /**
      * <code>optional int64 expiration_date = 6;</code>
@@ -266,7 +266,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 7;
-    private long requesterId_ = 0L;
+    private long requesterId_;
 
     /**
      * <code>optional int64 requester_id = 7;</code>
@@ -289,7 +289,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int RECIPIENT_ID_FIELD_NUMBER = 8;
-    private long recipientId_ = 0L;
+    private long recipientId_;
 
     /**
      * <code>optional int64 recipient_id = 8;</code>
@@ -1036,7 +1036,7 @@ public final class UserFriendRequest extends com.google.protobuf.GeneratedMessag
             return this;
         }
 
-        private int requestStatus_ = 0;
+        private int requestStatus_;
 
         /**
          * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>

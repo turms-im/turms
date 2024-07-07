@@ -26,7 +26,7 @@ public final class QueryUserSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 QueryUserSettingsRequestOuterClass.class.getName());
     }
@@ -48,23 +48,29 @@ public final class QueryUserSettingsRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n.request/user/query_user_settings_reque"
-                + "st.proto\022\016im.turms.proto\"k\n\030QueryUserSet"
-                + "tingsRequest\022\r\n\005names\030\001 \003(\t\022$\n\027last_upda"
-                + "ted_date_start\030\002 \001(\003H\000\210\001\001B\032\n\030_last_updat"
-                + "ed_date_startB<\n5im.turms.server.common."
-                + "access.client.dto.request.userP\001\272\002\000b\006pro"
-                + "to3"};
+                + "st.proto\022\016im.turms.proto\032\030model/common/v"
+                + "alue.proto\"\235\001\n\030QueryUserSettingsRequest\022"
+                + "\r\n\005names\030\001 \003(\t\022$\n\027last_updated_date_star"
+                + "t\030\002 \001(\003H\000\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132"
+                + "\025.im.turms.proto.ValueB\032\n\030_last_updated_"
+                + "date_startB<\n5im.turms.server.common.acc"
+                + "ess.client.dto.request.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_QueryUserSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_QueryUserSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryUserSettingsRequest_descriptor,
-                        new java.lang.String[]{"Names", "LastUpdatedDateStart",});
+                        new java.lang.String[]{"Names",
+                                "LastUpdatedDateStart",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

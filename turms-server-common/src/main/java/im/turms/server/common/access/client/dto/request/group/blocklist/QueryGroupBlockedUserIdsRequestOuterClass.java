@@ -26,7 +26,7 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 QueryGroupBlockedUserIdsRequestOuterClass.class.getName());
     }
@@ -49,22 +49,27 @@ public final class QueryGroupBlockedUserIdsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nBrequest/group/blocklist/query_group_bl"
                 + "ocked_user_ids_request.proto\022\016im.turms.p"
-                + "roto\"i\n\037QueryGroupBlockedUserIdsRequest\022"
-                + "\020\n\010group_id\030\001 \001(\003\022\036\n\021last_updated_date\030\002"
-                + " \001(\003H\000\210\001\001B\024\n\022_last_updated_dateBG\n@im.tu"
-                + "rms.server.common.access.client.dto.requ"
-                + "est.group.blocklistP\001\272\002\000b\006proto3"};
+                + "roto\032\030model/common/value.proto\"\233\001\n\037Query"
+                + "GroupBlockedUserIdsRequest\022\020\n\010group_id\030\001"
+                + " \001(\003\022\036\n\021last_updated_date\030\002 \001(\003H\000\210\001\001\0220\n\021"
+                + "custom_attributes\030\017 \003(\0132\025.im.turms.proto"
+                + ".ValueB\024\n\022_last_updated_dateBG\n@im.turms"
+                + ".server.common.access.client.dto.request"
+                + ".group.blocklistP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryGroupBlockedUserIdsRequest_descriptor,
-                        new java.lang.String[]{"GroupId", "LastUpdatedDate",});
+                        new java.lang.String[]{"GroupId", "LastUpdatedDate", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

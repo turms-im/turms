@@ -29,7 +29,7 @@ public final class Conversations extends com.google.protobuf.GeneratedMessage im
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 Conversations.class.getName());
     }
@@ -204,10 +204,8 @@ public final class Conversations extends com.google.protobuf.GeneratedMessage im
             return super.equals(obj);
         }
 
-        if (!getPrivateConversationsList().equals(other.getPrivateConversationsList())) {
-            return false;
-        }
-        return getGroupConversationsList().equals(other.getGroupConversationsList())
+        return getPrivateConversationsList().equals(other.getPrivateConversationsList())
+                && getGroupConversationsList().equals(other.getGroupConversationsList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

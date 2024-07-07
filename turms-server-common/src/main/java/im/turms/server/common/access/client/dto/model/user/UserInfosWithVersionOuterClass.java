@@ -26,7 +26,7 @@ public final class UserInfosWithVersionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserInfosWithVersionOuterClass.class.getName());
     }
@@ -61,7 +61,7 @@ public final class UserInfosWithVersionOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UserInfosWithVersion_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserInfosWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserInfosWithVersion_descriptor,
