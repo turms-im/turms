@@ -17,13 +17,14 @@
 
 package im.turms.server.common.infra.property.env.service.business.common.setting;
 
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.constant.CustomSettingType;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -35,28 +36,30 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CustomSettingValueOneOfProperties {
+public class CustomSettingArrayValueProperties extends CustomSettingEnumValueProperties<String> {
 
-    @Description("The setting value type")
+    @Description("The minimum allowed number of elements")
     @GlobalProperty
     @MutableProperty
-    private CustomSettingType type = CustomSettingType.STRING;
+    @Min(0)
+    private int minElementCount = 0;
+
+    @Description("The maximum allowed number of elements")
+    @GlobalProperty
+    @MutableProperty
+    private int maxElementCount = 10;
+
+    @Description("Whether the elements are unique. If true, the Turms server will deduplicate the elements")
+    @GlobalProperty
+    @MutableProperty
+    private boolean unique;
+
+    @Description("Whether the array element can be null")
+    @GlobalProperty
+    @MutableProperty
+    private boolean allowNullElement;
 
     @NestedConfigurationProperty
-    private CustomSettingIntValueProperties intValue = new CustomSettingIntValueProperties();
-
-    @NestedConfigurationProperty
-    private CustomSettingLongValueProperties longValue = new CustomSettingLongValueProperties();
-
-    @NestedConfigurationProperty
-    private CustomSettingDoubleValueProperties doubleValue =
-            new CustomSettingDoubleValueProperties();
-
-    @NestedConfigurationProperty
-    private CustomSettingStringValueProperties stringValue =
-            new CustomSettingStringValueProperties();
-
-    @NestedConfigurationProperty
-    private CustomSettingArrayValueProperties arrayValue = new CustomSettingArrayValueProperties();
+    private CustomSettingValueOneOfProperties element = new CustomSettingValueOneOfProperties();
 
 }
