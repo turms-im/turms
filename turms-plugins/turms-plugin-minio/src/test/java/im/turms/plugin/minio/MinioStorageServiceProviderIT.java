@@ -124,7 +124,7 @@ class MinioStorageServiceProviderIT extends BaseIntegrationTest {
                 .queryUserProfilePictureUploadInfo(USER_ID,
                         null,
                         MediaType.create(MediaTypeConst.IMAGE_PNG),
-                        Collections.emptyMap())
+                        Collections.emptyList())
                 .timeout(TIMEOUT_DURATION);
         StepVerifier.create(queryUploadInfo)
                 .expectNextMatches(uploadInfo -> {
@@ -181,7 +181,7 @@ class MinioStorageServiceProviderIT extends BaseIntegrationTest {
     @Test
     void test_queryUserProfilePictureDownloadInfo() {
         Mono<Map<String, String>> queryDownloadInfo = serviceProvider
-                .queryUserProfilePictureDownloadInfo(USER_ID, USER_ID, Collections.emptyMap())
+                .queryUserProfilePictureDownloadInfo(USER_ID, USER_ID, Collections.emptyList())
                 .timeout(TIMEOUT_DURATION);
         StepVerifier.create(queryDownloadInfo)
                 .expectNextMatches(downloadInfo -> {
@@ -232,13 +232,13 @@ class MinioStorageServiceProviderIT extends BaseIntegrationTest {
     @Test
     void test_deleteUserProfilePicture() {
         Mono<Void> deleteUserProfilePicture =
-                serviceProvider.deleteUserProfilePicture(USER_ID, Collections.emptyMap())
+                serviceProvider.deleteUserProfilePicture(USER_ID, Collections.emptyList())
                         .timeout(TIMEOUT_DURATION);
         StepVerifier.create(deleteUserProfilePicture)
                 .verifyComplete();
 
         Mono<Map<String, String>> queryDownloadInfo = serviceProvider
-                .queryUserProfilePictureDownloadInfo(USER_ID, USER_ID, Collections.emptyMap())
+                .queryUserProfilePictureDownloadInfo(USER_ID, USER_ID, Collections.emptyList())
                 .timeout(TIMEOUT_DURATION);
         StepVerifier.create(queryDownloadInfo)
                 .expectNextMatches(downloadInfo -> {

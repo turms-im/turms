@@ -230,7 +230,7 @@ public final class ProtoModelConvertor {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
             builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline))
-                    .addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+                    .addAllDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }

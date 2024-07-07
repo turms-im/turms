@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.request.storage.DeleteResourceRequest;
 import im.turms.server.common.access.client.dto.request.storage.QueryMessageAttachmentInfosRequest;
 import im.turms.server.common.access.client.dto.request.storage.QueryResourceDownloadInfoRequest;
@@ -72,10 +73,10 @@ public class StorageServiceController extends BaseServiceController {
             String resourceIdStr = request.hasIdStr()
                     ? request.getIdStr()
                     : null;
-            Map<String, String> extra = request.getExtraMap();
+            List<Value> customAttributes = request.getCustomAttributesList();
             return storageService
                     .deleteResource(clientRequest
-                            .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
+                            .userId(), resourceType, resourceIdNum, resourceIdStr, customAttributes)
                     .thenReturn(RequestHandlerResult.OK);
         };
     }
@@ -97,10 +98,9 @@ public class StorageServiceController extends BaseServiceController {
             String mediaType = request.hasMediaType()
                     ? request.getMediaType()
                     : null;
-            Map<String, String> extra = request.getExtraMap();
-            return storageService
-                    .queryResourceUploadInfo(clientRequest
-                            .userId(), resourceType, resourceIdNum, name, mediaType, extra)
+            List<Value> customAttributes = request.getCustomAttributesList();
+            return storageService.queryResourceUploadInfo(clientRequest
+                    .userId(), resourceType, resourceIdNum, name, mediaType, customAttributes)
                     .map(info -> RequestHandlerResult.of(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()
@@ -121,10 +121,10 @@ public class StorageServiceController extends BaseServiceController {
             String resourceIdStr = request.hasIdStr()
                     ? request.getIdStr()
                     : null;
-            Map<String, String> extra = request.getExtraMap();
+            List<Value> customAttributes = request.getCustomAttributesList();
             return storageService
                     .queryResourceDownloadInfo(clientRequest
-                            .userId(), resourceType, resourceIdNum, resourceIdStr, extra)
+                            .userId(), resourceType, resourceIdNum, resourceIdStr, customAttributes)
                     .map(info -> RequestHandlerResult.of(ClientMessagePool
                             .getTurmsNotificationDataBuilder()
                             .setStringsWithVersion(ClientMessagePool.getStringsWithVersionBuilder()

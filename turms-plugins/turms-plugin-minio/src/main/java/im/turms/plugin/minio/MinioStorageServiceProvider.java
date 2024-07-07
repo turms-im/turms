@@ -63,6 +63,7 @@ import im.turms.plugin.minio.properties.MinioStorageProperties;
 import im.turms.plugin.minio.repository.MessageAttachmentRepository;
 import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.service.idgen.ServiceType;
@@ -525,7 +526,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     @Override
     public Mono<Void> deleteUserProfilePicture(
             Long requesterId,
-            @NotNull Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -550,7 +551,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long requesterId,
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -570,7 +571,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     public Mono<Map<String, String>> queryUserProfilePictureDownloadInfo(
             Long requesterId,
             Long userId,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -587,7 +588,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     public Mono<Void> deleteGroupProfilePicture(
             Long requesterId,
             Long groupId,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -620,7 +621,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long groupId,
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -648,7 +649,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
     public Mono<Map<String, String>> queryGroupProfilePictureDownloadInfo(
             Long requesterId,
             Long groupId,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -666,11 +667,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long requesterId,
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
-            @NotNull Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         return StorageServiceProvider.super.deleteMessageAttachment(requesterId,
                 messageAttachmentIdNum,
                 messageAttachmentIdStr,
-                extra);
+                customAttributes);
     }
 
     @ExtensionPointMethod
@@ -751,11 +752,11 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long requesterId,
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         return StorageServiceProvider.super.queryMessageAttachmentUploadInfo(requesterId,
                 resourceName,
                 resourceMediaType,
-                extra);
+                customAttributes);
     }
 
     @ExtensionPointMethod
@@ -765,7 +766,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long userId,
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         return queryMessageAttachmentUploadInfo(requesterId,
                 userId,
                 null,
@@ -780,7 +781,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long groupId,
             @Nullable String resourceName,
             @Nullable MediaType resourceMediaType,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         return queryMessageAttachmentUploadInfo(requesterId,
                 null,
                 groupId,
@@ -860,7 +861,7 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
             Long requesterId,
             @Nullable Long messageAttachmentIdNum,
             @Nullable String messageAttachmentIdStr,
-            Map<String, String> extra) {
+            @NotNull List<Value> customAttributes) {
         if (!isServing) {
             return ResponseExceptionPublisherPool.serverUnavailable();
         }
@@ -974,4 +975,5 @@ public class MinioStorageServiceProvider extends TurmsExtension implements Stora
                                     creationDateRange));
                 });
     }
+
 }
