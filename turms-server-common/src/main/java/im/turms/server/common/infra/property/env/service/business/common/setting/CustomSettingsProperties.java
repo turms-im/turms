@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.conversation;
+package im.turms.server.common.infra.property.env.service.business.common.setting;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,10 +24,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import lombok.experimental.SuperBuilder;
 
-import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
-import im.turms.server.common.infra.property.env.service.business.message.TypingStatusProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -36,17 +34,27 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class ConversationProperties {
+@SuperBuilder(toBuilder = true)
+public class CustomSettingsProperties {
 
-    @NestedConfigurationProperty
-    private ReadReceiptProperties readReceipt = new ReadReceiptProperties();
+    @Description("The list of allowed settings")
+    @GlobalProperty
+    @MutableProperty
+    private List<CustomSettingProperties> allowedSettings = Collections.emptyList();
 
-    @NestedConfigurationProperty
-    private TypingStatusProperties typingStatus = new TypingStatusProperties();
+    @Description("Whether to ignore unknown settings on upsert. If false, the server will throw if the request "
+            + "specifies an unknown setting. If true, the server will ignore the unknown settings, "
+            + "and continue to process the request")
+    @GlobalProperty
+    @MutableProperty
+    private boolean ignoreUnknownSettingsOnUpsert;
 
-    @NestedConfigurationProperty
-    private ConversationSettingsProperties settings = new ConversationSettingsProperties();
+    @Description("Whether to ignore unknown settings on delete. If false, the server will throw if the request "
+            + "specifies an unknown setting. If true, the server will ignore the unknown settings, "
+            + "and continue to process the request")
+    @GlobalProperty
+    @MutableProperty
+    private boolean ignoreUnknownSettingsOnDelete;
 }

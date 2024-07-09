@@ -20,7 +20,6 @@ package im.turms.service.domain.common.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import im.turms.server.common.infra.property.env.service.business.common.setting
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingStringValueProperties;
 import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingValueOneOfProperties;
+import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingsProperties;
 import im.turms.service.infra.locale.LocaleUtil;
 
 /**
@@ -49,19 +49,23 @@ import im.turms.service.infra.locale.LocaleUtil;
  */
 public abstract class CustomSettingService extends BaseService {
 
-    protected List<CustomSettingProperties> settingPropertiesList;
-    protected Set<String> immutableSettings;
-    protected Set<String> deletableSettings;
+    protected Map<String, CustomSettingProperties> sourceNameToSettingProperties =
+            Collections.emptyMap();
+    protected Set<String> immutableSettings = Collections.emptySet();
+    protected Set<String> deletableSettings = Collections.emptySet();
+    protected Map<String, Boolean> settingToDeletable = Collections.emptyMap();
+    protected boolean ignoreUnknownSettingsOnUpsert;
+    protected boolean ignoreUnknownSettingsOnDelete;
 
-    protected void updateGlobalProperties(List<CustomSettingProperties> settingPropertiesList) {
+    protected void updateGlobalProperties(CustomSettingsProperties properties) {
+        List<CustomSettingProperties> settingPropertiesList = properties.getAllowedSettings();
         int size = settingPropertiesList.size();
         if (0 == size) {
-            this.settingPropertiesList = Collections.emptyList();
-            immutableSettings = Collections.emptySet();
-            deletableSettings = Collections.emptySet();
             return;
         }
-        List<CustomSettingProperties> newSettingsPropertiesList = null;
+        Map<String, CustomSettingProperties> newSourceNameToSettingProperties =
+                CollectionUtil.newMapWithExpectedSize(size);
+        Map<String, Boolean> newSettingToDeletable = CollectionUtil.newMapWithExpectedSize(size);
         Set<String> newImmutableSettings = null;
         Set<String> newDeletableSettings = null;
         for (int i = 0; i < size; i++) {
@@ -69,13 +73,19 @@ public abstract class CustomSettingService extends BaseService {
             String sourceName = settingProperties.getSourceName();
             String storedName = settingProperties.getStoredName();
             if (StringUtil.isEmpty(storedName)) {
-                if (newSettingsPropertiesList == null) {
-                    newSettingsPropertiesList = new ArrayList<>(settingPropertiesList);
-                }
-                newSettingsPropertiesList.set(i,
+                if (newSourceNameToSettingProperties.put(sourceName,
                         settingProperties.toBuilder()
                                 .storedName(sourceName)
-                                .build());
+                                .build()) != null) {
+                    throw new IllegalArgumentException(
+                            "Found a duplicate setting: "
+                                    + sourceName);
+                }
+            } else if (newSourceNameToSettingProperties.put(storedName,
+                    settingProperties) != null) {
+                throw new IllegalArgumentException(
+                        "Found a duplicate setting: "
+                                + storedName);
             }
             if (settingProperties.isImmutable()) {
                 if (newImmutableSettings == null) {
@@ -83,7 +93,9 @@ public abstract class CustomSettingService extends BaseService {
                 }
                 newImmutableSettings.add(sourceName);
             }
-            if (settingProperties.isDeletable()) {
+            boolean deletable = settingProperties.isDeletable();
+            newSettingToDeletable.put(sourceName, deletable);
+            if (deletable) {
                 if (newDeletableSettings == null) {
                     newDeletableSettings = new UnifiedSet<>(4);
                 }
@@ -91,37 +103,85 @@ public abstract class CustomSettingService extends BaseService {
             }
         }
 
-        this.settingPropertiesList = newSettingsPropertiesList == null
-                ? settingPropertiesList
-                : newSettingsPropertiesList;
+        this.sourceNameToSettingProperties = newSourceNameToSettingProperties;
         this.immutableSettings = newImmutableSettings == null
                 ? Collections.emptySet()
                 : newImmutableSettings;
         this.deletableSettings = newDeletableSettings == null
                 ? Collections.emptySet()
                 : newDeletableSettings;
+        this.settingToDeletable = newSettingToDeletable;
+        this.ignoreUnknownSettingsOnUpsert = properties.isIgnoreUnknownSettingsOnUpsert();
+        this.ignoreUnknownSettingsOnDelete = properties.isIgnoreUnknownSettingsOnDelete();
     }
 
-    /**
-     * @param propertiesList we assume the properties are valid (i.e. both source name and stored
-     *                       name are not blank).
-     */
-    protected Map<String, Object> parseSettings(
-            List<CustomSettingProperties> propertiesList,
-            Map<String, Value> inputSettings) {
-        if (propertiesList.isEmpty() || inputSettings.isEmpty()) {
+    protected Map<String, Object> parseSettings(Map<String, Value> inputSettings) {
+        if (inputSettings.isEmpty()) {
             return Collections.emptyMap();
         }
-        Map<String, Object> outputSettings =
-                CollectionUtil.newMapWithExpectedSize(propertiesList.size());
-        for (CustomSettingProperties properties : propertiesList) {
-            String sourceName = properties.getSourceName();
-            Value value = inputSettings.get(sourceName);
-            if (value == null) {
-                continue;
+        if (sourceNameToSettingProperties.isEmpty()) {
+            if (ignoreUnknownSettingsOnUpsert) {
+                return Collections.emptyMap();
             }
-            Object parsedValue = parseValue(properties.getValue(), sourceName, value);
-            outputSettings.put(properties.getStoredName(), parsedValue);
+            throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Unknown settings: "
+                            + inputSettings.keySet());
+        }
+        Map<String, Object> outputSettings =
+                CollectionUtil.newMapWithExpectedSize(inputSettings.size());
+        int inputSettingCount = inputSettings.size();
+        if (inputSettingCount <= sourceNameToSettingProperties.size()) {
+            if (ignoreUnknownSettingsOnUpsert) {
+                for (Map.Entry<String, Value> entry : inputSettings.entrySet()) {
+                    String sourceName = entry.getKey();
+                    CustomSettingProperties settingProperties =
+                            sourceNameToSettingProperties.get(sourceName);
+                    if (settingProperties == null) {
+                        continue;
+                    }
+                    outputSettings.put(sourceName,
+                            parseValue(settingProperties.getValue(), sourceName, entry.getValue()));
+                }
+            } else {
+                for (Map.Entry<String, Value> entry : inputSettings.entrySet()) {
+                    String sourceName = entry.getKey();
+                    CustomSettingProperties settingProperties =
+                            sourceNameToSettingProperties.get(sourceName);
+                    if (settingProperties == null) {
+                        throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "Unknown setting: "
+                                        + sourceName);
+                    }
+                    outputSettings.put(sourceName,
+                            parseValue(settingProperties.getValue(), sourceName, entry.getValue()));
+                }
+            }
+        } else {
+            if (ignoreUnknownSettingsOnUpsert) {
+                for (Map.Entry<String, CustomSettingProperties> sourceNameAndSettingProperties : sourceNameToSettingProperties
+                        .entrySet()) {
+                    String sourceName = sourceNameAndSettingProperties.getKey();
+                    Value value = inputSettings.get(sourceName);
+                    if (value == null) {
+                        continue;
+                    }
+                    outputSettings.put(sourceName,
+                            parseValue(sourceNameAndSettingProperties.getValue()
+                                    .getValue(), sourceName, value));
+                }
+            } else {
+                for (Map.Entry<String, CustomSettingProperties> sourceNameAndSettingProperties : sourceNameToSettingProperties
+                        .entrySet()) {
+                    String sourceName = sourceNameAndSettingProperties.getKey();
+                    Value value = inputSettings.get(sourceName);
+                    if (value == null) {
+                        throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                                "Missing setting: "
+                                        + sourceName);
+                    }
+                }
+                throw new IllegalStateException("Should not reach here");
+            }
         }
         return outputSettings;
     }

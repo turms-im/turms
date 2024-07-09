@@ -37,7 +37,6 @@ import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
-import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -63,10 +62,9 @@ public class UserSettingsService extends CustomSettingService {
     }
 
     private void updateGlobalProperties(TurmsProperties properties) {
-        List<CustomSettingProperties> settings = properties.getService()
+        super.updateGlobalProperties(properties.getService()
                 .getUser()
-                .getAllowedSettings();
-        super.updateGlobalProperties(settings);
+                .getSettings());
     }
 
     public Mono<Boolean> upsertSettings(Long userId, Map<String, Value> settings) {
@@ -81,8 +79,7 @@ public class UserSettingsService extends CustomSettingService {
         }
         Set<String> immutableSettingsForUpsert = null;
         if (!immutableSettings.isEmpty()) {
-            Set<String> settingsForUpsert = settings.keySet();
-            for (String settingName : settingsForUpsert) {
+            for (String settingName : settings.keySet()) {
                 if (immutableSettings.contains(settingName)) {
                     if (immutableSettingsForUpsert == null) {
                         immutableSettingsForUpsert = new UnifiedSet<>(4);
@@ -92,7 +89,7 @@ public class UserSettingsService extends CustomSettingService {
             }
         }
         if (immutableSettingsForUpsert == null) {
-            Map<String, Object> parsedSettings = parseSettings(settingPropertiesList, settings);
+            Map<String, Object> parsedSettings = parseSettings(settings);
             return userSettingsRepository.upsertSettings(userId, parsedSettings)
                     .map(updateResult -> updateResult.getModifiedCount() > 0
                             || updateResult.getUpsertedId() != null);
@@ -105,15 +102,13 @@ public class UserSettingsService extends CustomSettingService {
                 .collect(CollectorUtil.toSet(immutableSettingsForUpsert.size()))
                 .flatMap(existingSettings -> {
                     if (existingSettings.isEmpty()) {
-                        Map<String, Object> parsedSettings =
-                                parseSettings(settingPropertiesList, settings);
+                        Map<String, Object> parsedSettings = parseSettings(settings);
                         return userSettingsRepository.upsertSettings(userId, parsedSettings);
                     }
                     finalImmutableSettingsForUpsert
                             .removeIf(settingName -> !existingSettings.contains(settingName));
                     if (finalImmutableSettingsForUpsert.isEmpty()) {
-                        Map<String, Object> parsedSettings =
-                                parseSettings(settingPropertiesList, settings);
+                        Map<String, Object> parsedSettings = parseSettings(settings);
                         return userSettingsRepository.upsertSettings(userId, parsedSettings);
                     }
                     List<String> sortedConflictedSettings =
@@ -145,19 +140,68 @@ public class UserSettingsService extends CustomSettingService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (!deletableSettings.isEmpty()) {
-            if (settingNames == null) {
-                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                        "Cannot delete non-deletable settings: "
-                                + deletableSettings));
+        if (settingNames == null || settingNames.isEmpty()) {
+            if (deletableSettings.isEmpty()) {
+                return PublisherPool.FALSE;
             }
+            return userSettingsRepository.unsetSettings(userId, deletableSettings)
+                    .map(updateResult -> updateResult.getModifiedCount() > 0);
+        }
+        if (ignoreUnknownSettingsOnDelete) {
+            List<String> nonDeletableSettings = null;
             for (String settingName : settingNames) {
-                if (!deletableSettings.contains(settingName)) {
-                    return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                            "Cannot delete non-deletable settings: "
-                                    + deletableSettings));
+                Boolean deletable = settingToDeletable.get(settingName);
+                if (deletable != null && !deletable) {
+                    if (nonDeletableSettings == null) {
+                        nonDeletableSettings = new ArrayList<>(4);
+                    }
+                    nonDeletableSettings.add(settingName);
                 }
             }
+            if (nonDeletableSettings != null) {
+                nonDeletableSettings.sort(null);
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Cannot delete the non-deletable settings: "
+                                + nonDeletableSettings));
+            }
+            return userSettingsRepository.unsetSettings(userId, settingNames)
+                    .map(updateResult -> updateResult.getModifiedCount() > 0);
+        }
+        List<String> unknownSettings = null;
+        List<String> nonDeletableSettings = null;
+        for (String settingName : settingNames) {
+            Boolean deletable = settingToDeletable.get(settingName);
+            if (deletable == null) {
+                if (unknownSettings == null) {
+                    unknownSettings = new ArrayList<>(4);
+                }
+                unknownSettings.add(settingName);
+            } else if (!deletable) {
+                if (nonDeletableSettings == null) {
+                    nonDeletableSettings = new ArrayList<>(4);
+                }
+                nonDeletableSettings.add(settingName);
+            }
+        }
+        if (unknownSettings != null) {
+            unknownSettings.sort(null);
+            if (nonDeletableSettings != null) {
+                nonDeletableSettings.sort(null);
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Cannot delete unknown settings: "
+                                + unknownSettings
+                                + ", and the non-deletable settings: "
+                                + nonDeletableSettings));
+            } else {
+                return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                        "Cannot delete unknown settings: "
+                                + unknownSettings));
+            }
+        } else if (nonDeletableSettings != null) {
+            nonDeletableSettings.sort(null);
+            return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
+                    "Cannot delete the non-deletable settings: "
+                            + nonDeletableSettings));
         }
         return userSettingsRepository.unsetSettings(userId, settingNames)
                 .map(updateResult -> updateResult.getModifiedCount() > 0);
