@@ -60,7 +60,9 @@ import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REACTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_MESSAGE_REACTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
 
@@ -433,6 +435,20 @@ public class MessageServiceController extends BaseServiceController {
                                 clientRequest.turmsRequest()));
                     }));
         };
+    }
+
+    @ServiceRequestMapping(CREATE_MESSAGE_REACTIONS_REQUEST)
+    public ClientRequestHandler handleCreateMessageReactionsRequest() {
+        // The feature hasn't published yet, so the client has no API to use it.
+        return clientRequest -> Mono
+                .error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT));
+    }
+
+    @ServiceRequestMapping(DELETE_MESSAGE_REACTIONS_REQUEST)
+    public ClientRequestHandler handleDeleteMessageReactionsRequest() {
+        // The feature hasn't published yet, so the client has no API to use it.
+        return clientRequest -> Mono
+                .error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT));
     }
 
     /**
