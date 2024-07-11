@@ -259,12 +259,17 @@ public class HttpRequestParamParser {
                     // We don't use "collectList()" because we need to reject
                     // to receive buffers if it has exceeded the max size.
                     .doOnNext(buffer -> {
+
+                        // 2024-07-11 fix big payload http, io.netty.util.IllegalReferenceCountException: refCnt: 0, increment: 1
+                        // issue : https://github.com/turms-im/turms/issues/1509
+                        buffer.retain();
+
                         body.addComponent(true, buffer);
                         if (body.readableBytes() > maxBodySize) {
                             body.release();
                             throw bodyTooLargeException;
                         }
-                        buffer.retain();
+
                     })
                     .then(Mono.defer(() -> {
                         int length = body.readableBytes();
