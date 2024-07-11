@@ -254,22 +254,21 @@ public class HttpRequestParamParser {
      */
     private Mono<Object> parseBody(HttpServerRequest request, @Nullable JavaType parameterType) {
         return Mono.defer(() -> {
-            CompositeByteBuf body = Unpooled.compositeBuffer();
+            CompositeByteBuf body = Unpooled.compositeBuffer(
+                    // Used to avoid the unnecessary consolidation/copy of buffers.
+                    Integer.MAX_VALUE);
             return request.receive()
                     // We don't use "collectList()" because we need to reject
                     // to receive buffers if it has exceeded the max size.
                     .doOnNext(buffer -> {
-
-                        // 2024-07-11 fix big payload http, io.netty.util.IllegalReferenceCountException: refCnt: 0, increment: 1
-                        // issue : https://github.com/turms-im/turms/issues/1509
-                        buffer.retain();
-
-                        body.addComponent(true, buffer);
-                        if (body.readableBytes() > maxBodySize) {
-                            body.release();
+                        if (body.readableBytes() + buffer.readableBytes() > maxBodySize) {
                             throw bodyTooLargeException;
                         }
-
+                        // Retain once because the buffer will be released in
+                        // "reactor.netty.channel.FluxReceive.onInboundNext" once the callback
+                        // returns.
+                        buffer.retain();
+                        body.addComponent(true, buffer);
                     })
                     .then(Mono.defer(() -> {
                         int length = body.readableBytes();
