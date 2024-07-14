@@ -711,6 +711,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -821,6 +823,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3323,6 +3327,8 @@
           "DELETE_CONVERSATION_SETTINGS_REQUEST",
           "QUERY_CONVERSATION_SETTINGS_REQUEST",
           "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+          "CREATE_MESSAGE_REACTIONS_REQUEST",
+          "DELETE_MESSAGE_REACTIONS_REQUEST",
           "KIND_NOT_SET"
         ],
         "sensitive": false,
@@ -3434,6 +3440,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3544,6 +3552,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3738,16 +3748,6 @@
       }
     },
     "conversation": {
-      "allowedSettings": {
-        "deprecated": false,
-        "description": "The list of allowed conversation settings",
-        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "java.util.List",
-        "value": []
-      },
       "readReceipt": {
         "allowMoveReadDateForward": {
           "deprecated": false,
@@ -3793,6 +3793,36 @@
           "sensitive": false,
           "type": "boolean",
           "value": true
+        }
+      },
+      "settings": {
+        "allowedSettings": {
+          "deprecated": false,
+          "description": "The list of allowed settings",
+          "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List",
+          "value": []
+        },
+        "ignoreUnknownSettingsOnDelete": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
+        },
+        "ignoreUnknownSettingsOnUpsert": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
         }
       },
       "typingStatus": {
@@ -5409,7 +5439,7 @@
           "mutable": true,
           "sensitive": false,
           "type": "boolean",
-          "value": false
+          "value": true
         },
         "notifyRequesterOtherOnlineSessions": {
           "deprecated": false,
@@ -5418,7 +5448,7 @@
           "mutable": true,
           "sensitive": false,
           "type": "boolean",
-          "value": false
+          "value": true
         }
       },
       "meetingUpdated": {
@@ -5989,16 +6019,6 @@
         "type": "boolean",
         "value": true
       },
-      "allowedSettings": {
-        "deprecated": false,
-        "description": "The list of allowed user settings",
-        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "java.util.List",
-        "value": []
-      },
       "deleteTwoSidedRelationships": {
         "deprecated": false,
         "description": "Whether to delete the two-sided relationships when a user requests to delete a relationship",
@@ -6135,6 +6155,36 @@
         "sensitive": false,
         "type": "boolean",
         "value": false
+      },
+      "settings": {
+        "allowedSettings": {
+          "deprecated": false,
+          "description": "The list of allowed settings",
+          "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List",
+          "value": []
+        },
+        "ignoreUnknownSettingsOnDelete": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
+        },
+        "ignoreUnknownSettingsOnUpsert": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean",
+          "value": false
+        }
       }
     }
   },

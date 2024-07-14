@@ -641,6 +641,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -749,6 +751,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -2904,6 +2908,8 @@
           "DELETE_CONVERSATION_SETTINGS_REQUEST",
           "QUERY_CONVERSATION_SETTINGS_REQUEST",
           "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+          "CREATE_MESSAGE_REACTIONS_REQUEST",
+          "DELETE_MESSAGE_REACTIONS_REQUEST",
           "KIND_NOT_SET"
         ],
         "sensitive": false,
@@ -3013,6 +3019,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3121,6 +3129,8 @@
             "DELETE_CONVERSATION_SETTINGS_REQUEST",
             "QUERY_CONVERSATION_SETTINGS_REQUEST",
             "UPDATE_CONVERSATION_SETTINGS_REQUEST",
+            "CREATE_MESSAGE_REACTIONS_REQUEST",
+            "DELETE_MESSAGE_REACTIONS_REQUEST",
             "KIND_NOT_SET"
           ],
           "sensitive": false,
@@ -3293,15 +3303,6 @@
       }
     },
     "conversation": {
-      "allowedSettings": {
-        "deprecated": false,
-        "description": "The list of allowed conversation settings",
-        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "java.util.List"
-      },
       "readReceipt": {
         "allowMoveReadDateForward": {
           "deprecated": false,
@@ -3338,6 +3339,33 @@
         "useServerTime": {
           "deprecated": false,
           "description": "Whether to use the server time to set the last read date when updating",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
+      },
+      "settings": {
+        "allowedSettings": {
+          "deprecated": false,
+          "description": "The list of allowed settings",
+          "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List"
+        },
+        "ignoreUnknownSettingsOnDelete": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "ignoreUnknownSettingsOnUpsert": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
           "global": true,
           "mutable": true,
           "sensitive": false,
@@ -5255,15 +5283,6 @@
         "sensitive": false,
         "type": "boolean"
       },
-      "allowedSettings": {
-        "deprecated": false,
-        "description": "The list of allowed user settings",
-        "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "java.util.List"
-      },
       "deleteTwoSidedRelationships": {
         "deprecated": false,
         "description": "Whether to delete the two-sided relationships when a user requests to delete a relationship",
@@ -5385,6 +5404,33 @@
         "mutable": true,
         "sensitive": false,
         "type": "boolean"
+      },
+      "settings": {
+        "allowedSettings": {
+          "deprecated": false,
+          "description": "The list of allowed settings",
+          "elementType": "im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "java.util.List"
+        },
+        "ignoreUnknownSettingsOnDelete": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        },
+        "ignoreUnknownSettingsOnUpsert": {
+          "deprecated": false,
+          "description": "Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "boolean"
+        }
       }
     }
   },
