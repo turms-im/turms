@@ -97,6 +97,8 @@ public struct GroupMember {
 
     public var usingDeviceTypes: [DeviceType] = []
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -129,6 +131,7 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
         6: .standard(proto: "mute_end_date"),
         7: .standard(proto: "user_status"),
         8: .standard(proto: "using_device_types"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -145,6 +148,7 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
             case 6: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             case 7: try decoder.decodeSingularEnumField(value: &_userStatus)
             case 8: try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -179,6 +183,9 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
         if !usingDeviceTypes.isEmpty {
             try visitor.visitPackedEnumField(value: usingDeviceTypes, fieldNumber: 8)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -191,6 +198,7 @@ extension GroupMember: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs._userStatus != rhs._userStatus { return false }
         if lhs.usingDeviceTypes != rhs.usingDeviceTypes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

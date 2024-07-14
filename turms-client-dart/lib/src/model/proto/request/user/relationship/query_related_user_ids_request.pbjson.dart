@@ -36,6 +36,14 @@ const QueryRelatedUserIdsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_blocked'},
@@ -47,5 +55,6 @@ const QueryRelatedUserIdsRequest$json = {
 final $typed_data.Uint8List queryRelatedUserIdsRequestDescriptor = $convert.base64Decode(
     'ChpRdWVyeVJlbGF0ZWRVc2VySWRzUmVxdWVzdBIdCgdibG9ja2VkGAEgASgISABSB2Jsb2NrZW'
     'SIAQESIwoNZ3JvdXBfaW5kZXhlcxgCIAMoBVIMZ3JvdXBJbmRleGVzEi8KEWxhc3RfdXBkYXRl'
-    'ZF9kYXRlGAMgASgDSAFSD2xhc3RVcGRhdGVkRGF0ZYgBAUIKCghfYmxvY2tlZEIUChJfbGFzdF'
-    '91cGRhdGVkX2RhdGU=');
+    'ZF9kYXRlGAMgASgDSAFSD2xhc3RVcGRhdGVkRGF0ZYgBARJCChFjdXN0b21fYXR0cmlidXRlcx'
+    'gPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQgoKCF9ibG9j'
+    'a2VkQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');

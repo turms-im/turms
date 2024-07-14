@@ -27,6 +27,8 @@ public struct QueryUserOnlineStatusesRequest {
 
     public var userIds: [Int64] = []
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -44,6 +46,7 @@ extension QueryUserOnlineStatusesRequest: SwiftProtobuf.Message, SwiftProtobuf._
     public static let protoMessageName: String = _protobuf_package + ".QueryUserOnlineStatusesRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "user_ids"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -53,6 +56,7 @@ extension QueryUserOnlineStatusesRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeRepeatedInt64Field(value: &userIds)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -62,11 +66,15 @@ extension QueryUserOnlineStatusesRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if !userIds.isEmpty {
             try visitor.visitPackedInt64Field(value: userIds, fieldNumber: 1)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: QueryUserOnlineStatusesRequest, rhs: QueryUserOnlineStatusesRequest) -> Bool {
         if lhs.userIds != rhs.userIds { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

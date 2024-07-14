@@ -39,6 +39,14 @@ const CreateGroupMembersRequest$json = {
       '10': 'muteEndDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_name'},
@@ -52,5 +60,6 @@ final $typed_data.Uint8List createGroupMembersRequestDescriptor = $convert.base6
     'ChlDcmVhdGVHcm91cE1lbWJlcnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEh'
     'kKCHVzZXJfaWRzGAIgAygDUgd1c2VySWRzEhcKBG5hbWUYAyABKAlIAFIEbmFtZYgBARI4CgRy'
     'b2xlGAQgASgOMh8uaW0udHVybXMucHJvdG8uR3JvdXBNZW1iZXJSb2xlSAFSBHJvbGWIAQESJw'
-    'oNbXV0ZV9lbmRfZGF0ZRgFIAEoA0gCUgttdXRlRW5kRGF0ZYgBAUIHCgVfbmFtZUIHCgVfcm9s'
-    'ZUIQCg5fbXV0ZV9lbmRfZGF0ZQ==');
+    'oNbXV0ZV9lbmRfZGF0ZRgFIAEoA0gCUgttdXRlRW5kRGF0ZYgBARJCChFjdXN0b21fYXR0cmli'
+    'dXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQgcKBV'
+    '9uYW1lQgcKBV9yb2xlQhAKDl9tdXRlX2VuZF9kYXRl');

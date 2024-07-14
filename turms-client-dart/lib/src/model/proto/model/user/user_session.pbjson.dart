@@ -19,10 +19,19 @@ const UserSession$json = {
   '2': [
     {'1': 'session_id', '3': 1, '4': 1, '5': 9, '10': 'sessionId'},
     {'1': 'server_id', '3': 2, '4': 1, '5': 9, '10': 'serverId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `UserSession`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userSessionDescriptor = $convert.base64Decode(
     'CgtVc2VyU2Vzc2lvbhIdCgpzZXNzaW9uX2lkGAEgASgJUglzZXNzaW9uSWQSGwoJc2VydmVyX2'
-    'lkGAIgASgJUghzZXJ2ZXJJZA==');
+    'lkGAIgASgJUghzZXJ2ZXJJZBJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1z'
+    'LnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVz');

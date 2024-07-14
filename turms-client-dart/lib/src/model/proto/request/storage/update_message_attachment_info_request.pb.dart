@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
   factory UpdateMessageAttachmentInfoRequest({
     $fixnum.Int64? attachmentIdNum,
@@ -22,6 +24,7 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? userIdToUnshareWith,
     $fixnum.Int64? groupIdToShareWith,
     $fixnum.Int64? groupIdToUnshareWith,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (attachmentIdNum != null) {
@@ -41,6 +44,9 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
     }
     if (groupIdToUnshareWith != null) {
       $result.groupIdToUnshareWith = groupIdToUnshareWith;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -62,6 +68,9 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
     ..aInt64(4, _omitFieldNames ? '' : 'userIdToUnshareWith')
     ..aInt64(5, _omitFieldNames ? '' : 'groupIdToShareWith')
     ..aInt64(6, _omitFieldNames ? '' : 'groupIdToUnshareWith')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -165,6 +174,9 @@ class UpdateMessageAttachmentInfoRequest extends $pb.GeneratedMessage {
   $core.bool hasGroupIdToUnshareWith() => $_has(5);
   @$pb.TagNumber(6)
   void clearGroupIdToUnshareWith() => clearField(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(6);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

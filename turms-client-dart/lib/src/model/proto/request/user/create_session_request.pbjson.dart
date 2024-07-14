@@ -64,6 +64,14 @@ const CreateSessionRequest$json = {
       '10': 'location',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [CreateSessionRequest_DeviceDetailsEntry$json],
   '8': [
@@ -92,6 +100,7 @@ final $typed_data.Uint8List createSessionRequestDescriptor = $convert.base64Deco
     'CmRldmljZVR5cGUSXgoOZGV2aWNlX2RldGFpbHMYBiADKAsyNy5pbS50dXJtcy5wcm90by5Dcm'
     'VhdGVTZXNzaW9uUmVxdWVzdC5EZXZpY2VEZXRhaWxzRW50cnlSDWRldmljZURldGFpbHMSPQoI'
     'bG9jYXRpb24YByABKAsyHC5pbS50dXJtcy5wcm90by5Vc2VyTG9jYXRpb25IAlIIbG9jYXRpb2'
-    '6IAQEaQAoSRGV2aWNlRGV0YWlsc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIg'
-    'ASgJUgV2YWx1ZToCOAFCCwoJX3Bhc3N3b3JkQg4KDF91c2VyX3N0YXR1c0ILCglfbG9jYXRpb2'
-    '4=');
+    '6IAQESQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQ'
+    'Y3VzdG9tQXR0cmlidXRlcxpAChJEZXZpY2VEZXRhaWxzRW50cnkSEAoDa2V5GAEgASgJUgNrZX'
+    'kSFAoFdmFsdWUYAiABKAlSBXZhbHVlOgI4AUILCglfcGFzc3dvcmRCDgoMX3VzZXJfc3RhdHVz'
+    'QgsKCV9sb2NhdGlvbg==');

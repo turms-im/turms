@@ -39,6 +39,8 @@ public struct DeleteRelationshipGroupMemberRequest {
     /// Clears the value of `targetGroupIndex`. Subsequent reads from it will return its default value.
     public mutating func clearTargetGroupIndex() { _targetGroupIndex = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -60,6 +62,7 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
         1: .standard(proto: "user_id"),
         2: .standard(proto: "group_index"),
         3: .standard(proto: "target_group_index"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -71,6 +74,7 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
             case 1: try decoder.decodeSingularInt64Field(value: &userID)
             case 2: try decoder.decodeSingularInt32Field(value: &groupIndex)
             case 3: try decoder.decodeSingularInt32Field(value: &_targetGroupIndex)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -90,6 +94,9 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
         try { if let v = self._targetGroupIndex {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 3)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -97,6 +104,7 @@ extension DeleteRelationshipGroupMemberRequest: SwiftProtobuf.Message, SwiftProt
         if lhs.userID != rhs.userID { return false }
         if lhs.groupIndex != rhs.groupIndex { return false }
         if lhs._targetGroupIndex != rhs._targetGroupIndex { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -27,6 +27,14 @@ const QueryFriendRequestsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -34,8 +42,8 @@ const QueryFriendRequestsRequest$json = {
 };
 
 /// Descriptor for `QueryFriendRequestsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryFriendRequestsRequestDescriptor =
-    $convert.base64Decode(
-        'ChpRdWVyeUZyaWVuZFJlcXVlc3RzUmVxdWVzdBIjCg5hcmVfc2VudF9ieV9tZRgBIAEoCFILYX'
-        'JlU2VudEJ5TWUSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRl'
-        'iAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');
+final $typed_data.Uint8List queryFriendRequestsRequestDescriptor = $convert.base64Decode(
+    'ChpRdWVyeUZyaWVuZFJlcXVlc3RzUmVxdWVzdBIjCg5hcmVfc2VudF9ieV9tZRgBIAEoCFILYX'
+    'JlU2VudEJ5TWUSLwoRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRl'
+    'iAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEG'
+    'N1c3RvbUF0dHJpYnV0ZXNCFAoSX2xhc3RfdXBkYXRlZF9kYXRl');

@@ -37,12 +37,18 @@ const QueryRelationshipsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
-    {'1': 'name', '3': 5, '4': 1, '5': 9, '9': 2, '10': 'name', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_blocked'},
     {'1': '_last_updated_date'},
-    {'1': '_name'},
   ],
 };
 
@@ -51,5 +57,5 @@ final $typed_data.Uint8List queryRelationshipsRequestDescriptor = $convert.base6
     'ChlRdWVyeVJlbGF0aW9uc2hpcHNSZXF1ZXN0EhkKCHVzZXJfaWRzGAEgAygDUgd1c2VySWRzEh'
     '0KB2Jsb2NrZWQYAiABKAhIAFIHYmxvY2tlZIgBARIjCg1ncm91cF9pbmRleGVzGAMgAygFUgxn'
     'cm91cEluZGV4ZXMSLwoRbGFzdF91cGRhdGVkX2RhdGUYBCABKANIAVIPbGFzdFVwZGF0ZWREYX'
-    'RliAEBEhcKBG5hbWUYBSABKAlIAlIEbmFtZYgBAUIKCghfYmxvY2tlZEIUChJfbGFzdF91cGRh'
-    'dGVkX2RhdGVCBwoFX25hbWU=');
+    'RliAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVS'
+    'EGN1c3RvbUF0dHJpYnV0ZXNCCgoIX2Jsb2NrZWRCFAoSX2xhc3RfdXBkYXRlZF9kYXRl');

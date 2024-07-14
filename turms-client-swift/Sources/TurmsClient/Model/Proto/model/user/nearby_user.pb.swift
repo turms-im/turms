@@ -26,58 +26,63 @@ public struct NearbyUser {
     // methods supported on all messages.
 
     /// session info
-    public var userID: Int64 = 0
+    public var userID: Int64 {
+        get { return _storage._userID }
+        set { _uniqueStorage()._userID = newValue }
+    }
 
     public var deviceType: DeviceType {
-        get { return _deviceType ?? .desktop }
-        set { _deviceType = newValue }
+        get { return _storage._deviceType ?? .desktop }
+        set { _uniqueStorage()._deviceType = newValue }
     }
 
     /// Returns true if `deviceType` has been explicitly set.
-    public var hasDeviceType: Bool { return _deviceType != nil }
+    public var hasDeviceType: Bool { return _storage._deviceType != nil }
     /// Clears the value of `deviceType`. Subsequent reads from it will return its default value.
-    public mutating func clearDeviceType() { _deviceType = nil }
+    public mutating func clearDeviceType() { _uniqueStorage()._deviceType = nil }
 
     /// user info
     public var info: UserInfo {
-        get { return _info ?? UserInfo() }
-        set { _info = newValue }
+        get { return _storage._info ?? UserInfo() }
+        set { _uniqueStorage()._info = newValue }
     }
 
     /// Returns true if `info` has been explicitly set.
-    public var hasInfo: Bool { return _info != nil }
+    public var hasInfo: Bool { return _storage._info != nil }
     /// Clears the value of `info`. Subsequent reads from it will return its default value.
-    public mutating func clearInfo() { _info = nil }
+    public mutating func clearInfo() { _uniqueStorage()._info = nil }
 
     /// geo info
     public var distance: Int32 {
-        get { return _distance ?? 0 }
-        set { _distance = newValue }
+        get { return _storage._distance ?? 0 }
+        set { _uniqueStorage()._distance = newValue }
     }
 
     /// Returns true if `distance` has been explicitly set.
-    public var hasDistance: Bool { return _distance != nil }
+    public var hasDistance: Bool { return _storage._distance != nil }
     /// Clears the value of `distance`. Subsequent reads from it will return its default value.
-    public mutating func clearDistance() { _distance = nil }
+    public mutating func clearDistance() { _uniqueStorage()._distance = nil }
 
     public var location: UserLocation {
-        get { return _location ?? UserLocation() }
-        set { _location = newValue }
+        get { return _storage._location ?? UserLocation() }
+        set { _uniqueStorage()._location = newValue }
     }
 
     /// Returns true if `location` has been explicitly set.
-    public var hasLocation: Bool { return _location != nil }
+    public var hasLocation: Bool { return _storage._location != nil }
     /// Clears the value of `location`. Subsequent reads from it will return its default value.
-    public mutating func clearLocation() { _location = nil }
+    public mutating func clearLocation() { _uniqueStorage()._location = nil }
+
+    public var customAttributes: [Value] {
+        get { return _storage._customAttributes }
+        set { _uniqueStorage()._customAttributes = newValue }
+    }
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    fileprivate var _deviceType: DeviceType?
-    fileprivate var _info: UserInfo?
-    fileprivate var _distance: Int32?
-    fileprivate var _location: UserLocation?
+    fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -96,53 +101,101 @@ extension NearbyUser: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
         3: .same(proto: "info"),
         4: .same(proto: "distance"),
         5: .same(proto: "location"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
+    fileprivate class _StorageClass {
+        var _userID: Int64 = 0
+        var _deviceType: DeviceType?
+        var _info: UserInfo?
+        var _distance: Int32?
+        var _location: UserLocation?
+        var _customAttributes: [Value] = []
+
+        static let defaultInstance = _StorageClass()
+
+        private init() {}
+
+        init(copying source: _StorageClass) {
+            _userID = source._userID
+            _deviceType = source._deviceType
+            _info = source._info
+            _distance = source._distance
+            _location = source._location
+            _customAttributes = source._customAttributes
+        }
+    }
+
+    fileprivate mutating func _uniqueStorage() -> _StorageClass {
+        if !isKnownUniquelyReferenced(&_storage) {
+            _storage = _StorageClass(copying: _storage)
+        }
+        return _storage
+    }
+
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-        while let fieldNumber = try decoder.nextFieldNumber() {
-            // The use of inline closures is to circumvent an issue where the compiler
-            // allocates stack space for every case branch when no optimizations are
-            // enabled. https://github.com/apple/swift-protobuf/issues/1034
-            switch fieldNumber {
-            case 1: try decoder.decodeSingularInt64Field(value: &userID)
-            case 2: try decoder.decodeSingularEnumField(value: &_deviceType)
-            case 3: try decoder.decodeSingularMessageField(value: &_info)
-            case 4: try decoder.decodeSingularInt32Field(value: &_distance)
-            case 5: try decoder.decodeSingularMessageField(value: &_location)
-            default: break
+        _ = _uniqueStorage()
+        try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+            while let fieldNumber = try decoder.nextFieldNumber() {
+                // The use of inline closures is to circumvent an issue where the compiler
+                // allocates stack space for every case branch when no optimizations are
+                // enabled. https://github.com/apple/swift-protobuf/issues/1034
+                switch fieldNumber {
+                case 1: try decoder.decodeSingularInt64Field(value: &_storage._userID)
+                case 2: try decoder.decodeSingularEnumField(value: &_storage._deviceType)
+                case 3: try decoder.decodeSingularMessageField(value: &_storage._info)
+                case 4: try decoder.decodeSingularInt32Field(value: &_storage._distance)
+                case 5: try decoder.decodeSingularMessageField(value: &_storage._location)
+                case 15: try decoder.decodeRepeatedMessageField(value: &_storage._customAttributes)
+                default: break
+                }
             }
         }
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-        // The use of inline closures is to circumvent an issue where the compiler
-        // allocates stack space for every if/case branch local when no optimizations
-        // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-        // https://github.com/apple/swift-protobuf/issues/1182
-        if userID != 0 {
-            try visitor.visitSingularInt64Field(value: userID, fieldNumber: 1)
+        try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+            // The use of inline closures is to circumvent an issue where the compiler
+            // allocates stack space for every if/case branch local when no optimizations
+            // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+            // https://github.com/apple/swift-protobuf/issues/1182
+            if _storage._userID != 0 {
+                try visitor.visitSingularInt64Field(value: _storage._userID, fieldNumber: 1)
+            }
+            try { if let v = _storage._deviceType {
+                try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
+            } }()
+            try { if let v = _storage._info {
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+            } }()
+            try { if let v = _storage._distance {
+                try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
+            } }()
+            try { if let v = _storage._location {
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
+            } }()
+            if !_storage._customAttributes.isEmpty {
+                try visitor.visitRepeatedMessageField(value: _storage._customAttributes, fieldNumber: 15)
+            }
         }
-        try { if let v = self._deviceType {
-            try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
-        } }()
-        try { if let v = self._info {
-            try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-        } }()
-        try { if let v = self._distance {
-            try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
-        } }()
-        try { if let v = self._location {
-            try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-        } }()
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: NearbyUser, rhs: NearbyUser) -> Bool {
-        if lhs.userID != rhs.userID { return false }
-        if lhs._deviceType != rhs._deviceType { return false }
-        if lhs._info != rhs._info { return false }
-        if lhs._distance != rhs._distance { return false }
-        if lhs._location != rhs._location { return false }
+        if lhs._storage !== rhs._storage {
+            let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+                let _storage = _args.0
+                let rhs_storage = _args.1
+                if _storage._userID != rhs_storage._userID { return false }
+                if _storage._deviceType != rhs_storage._deviceType { return false }
+                if _storage._info != rhs_storage._info { return false }
+                if _storage._distance != rhs_storage._distance { return false }
+                if _storage._location != rhs_storage._location { return false }
+                if _storage._customAttributes != rhs_storage._customAttributes { return false }
+                return true
+            }
+            if !storagesAreEqual { return false }
+        }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

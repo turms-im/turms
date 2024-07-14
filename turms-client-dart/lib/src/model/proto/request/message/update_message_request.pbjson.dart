@@ -29,6 +29,14 @@ const UpdateMessageRequest$json = {
       '10': 'recallDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_text'},
@@ -40,5 +48,6 @@ const UpdateMessageRequest$json = {
 final $typed_data.Uint8List updateMessageRequestDescriptor = $convert.base64Decode(
     'ChRVcGRhdGVNZXNzYWdlUmVxdWVzdBIdCgptZXNzYWdlX2lkGAEgASgDUgltZXNzYWdlSWQSFw'
     'oEdGV4dBgCIAEoCUgAUgR0ZXh0iAEBEhgKB3JlY29yZHMYAyADKAxSB3JlY29yZHMSJAoLcmVj'
-    'YWxsX2RhdGUYBCABKANIAVIKcmVjYWxsRGF0ZYgBAUIHCgVfdGV4dEIOCgxfcmVjYWxsX2RhdG'
-    'U=');
+    'YWxsX2RhdGUYBCABKANIAVIKcmVjYWxsRGF0ZYgBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIA'
+    'MoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQgcKBV90ZXh0Qg4K'
+    'DF9yZWNhbGxfZGF0ZQ==');

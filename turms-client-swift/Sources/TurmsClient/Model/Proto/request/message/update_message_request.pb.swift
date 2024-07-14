@@ -51,6 +51,8 @@ public struct UpdateMessageRequest {
     /// Clears the value of `recallDate`. Subsequent reads from it will return its default value.
     public mutating func clearRecallDate() { _recallDate = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -74,6 +76,7 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         2: .same(proto: "text"),
         3: .same(proto: "records"),
         4: .standard(proto: "recall_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -86,6 +89,7 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 2: try decoder.decodeSingularStringField(value: &_text)
             case 3: try decoder.decodeRepeatedBytesField(value: &records)
             case 4: try decoder.decodeSingularInt64Field(value: &_recallDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -108,6 +112,9 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         try { if let v = self._recallDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -116,6 +123,7 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs._text != rhs._text { return false }
         if lhs.records != rhs.records { return false }
         if lhs._recallDate != rhs._recallDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

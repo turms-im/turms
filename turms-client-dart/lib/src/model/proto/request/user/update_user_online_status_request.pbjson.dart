@@ -33,12 +33,21 @@ const UpdateUserOnlineStatusRequest$json = {
       '6': '.im.turms.proto.UserStatus',
       '10': 'userStatus'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `UpdateUserOnlineStatusRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateUserOnlineStatusRequestDescriptor =
-    $convert.base64Decode(
-        'Ch1VcGRhdGVVc2VyT25saW5lU3RhdHVzUmVxdWVzdBI9CgxkZXZpY2VfdHlwZXMYASADKA4yGi'
-        '5pbS50dXJtcy5wcm90by5EZXZpY2VUeXBlUgtkZXZpY2VUeXBlcxI7Cgt1c2VyX3N0YXR1cxgC'
-        'IAEoDjIaLmltLnR1cm1zLnByb3RvLlVzZXJTdGF0dXNSCnVzZXJTdGF0dXM=');
+final $typed_data.Uint8List updateUserOnlineStatusRequestDescriptor = $convert.base64Decode(
+    'Ch1VcGRhdGVVc2VyT25saW5lU3RhdHVzUmVxdWVzdBI9CgxkZXZpY2VfdHlwZXMYASADKA4yGi'
+    '5pbS50dXJtcy5wcm90by5EZXZpY2VUeXBlUgtkZXZpY2VUeXBlcxI7Cgt1c2VyX3N0YXR1cxgC'
+    'IAEoDjIaLmltLnR1cm1zLnByb3RvLlVzZXJTdGF0dXNSCnVzZXJTdGF0dXMSQgoRY3VzdG9tX2'
+    'F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRl'
+    'cw==');

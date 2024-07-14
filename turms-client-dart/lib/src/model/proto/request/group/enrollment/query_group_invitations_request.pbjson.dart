@@ -44,6 +44,14 @@ const QueryGroupInvitationsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_group_id'},
@@ -56,5 +64,6 @@ const QueryGroupInvitationsRequest$json = {
 final $typed_data.Uint8List queryGroupInvitationsRequestDescriptor = $convert.base64Decode(
     'ChxRdWVyeUdyb3VwSW52aXRhdGlvbnNSZXF1ZXN0Eh4KCGdyb3VwX2lkGAEgASgDSABSB2dyb3'
     'VwSWSIAQESKAoOYXJlX3NlbnRfYnlfbWUYAiABKAhIAVILYXJlU2VudEJ5TWWIAQESLwoRbGFz'
-    'dF91cGRhdGVkX2RhdGUYAyABKANIAlIPbGFzdFVwZGF0ZWREYXRliAEBQgsKCV9ncm91cF9pZE'
-    'IRCg9fYXJlX3NlbnRfYnlfbWVCFAoSX2xhc3RfdXBkYXRlZF9kYXRl');
+    'dF91cGRhdGVkX2RhdGUYAyABKANIAlIPbGFzdFVwZGF0ZWREYXRliAEBEkIKEWN1c3RvbV9hdH'
+    'RyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNC'
+    'CwoJX2dyb3VwX2lkQhEKD19hcmVfc2VudF9ieV9tZUIUChJfbGFzdF91cGRhdGVkX2RhdGU=');

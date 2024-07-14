@@ -29,6 +29,8 @@ public struct UserSession {
 
     public var serverID: String = .init()
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -47,6 +49,7 @@ extension UserSession: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "session_id"),
         2: .standard(proto: "server_id"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,6 +60,7 @@ extension UserSession: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
             switch fieldNumber {
             case 1: try decoder.decodeSingularStringField(value: &sessionID)
             case 2: try decoder.decodeSingularStringField(value: &serverID)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -69,12 +73,16 @@ extension UserSession: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
         if !serverID.isEmpty {
             try visitor.visitSingularStringField(value: serverID, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UserSession, rhs: UserSession) -> Bool {
         if lhs.sessionID != rhs.sessionID { return false }
         if lhs.serverID != rhs.serverID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

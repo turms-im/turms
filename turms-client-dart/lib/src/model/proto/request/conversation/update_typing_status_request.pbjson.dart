@@ -19,11 +19,19 @@ const UpdateTypingStatusRequest$json = {
   '2': [
     {'1': 'is_group_message', '3': 1, '4': 1, '5': 8, '10': 'isGroupMessage'},
     {'1': 'to_id', '3': 2, '4': 1, '5': 3, '10': 'toId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `UpdateTypingStatusRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateTypingStatusRequestDescriptor =
-    $convert.base64Decode(
-        'ChlVcGRhdGVUeXBpbmdTdGF0dXNSZXF1ZXN0EigKEGlzX2dyb3VwX21lc3NhZ2UYASABKAhSDm'
-        'lzR3JvdXBNZXNzYWdlEhMKBXRvX2lkGAIgASgDUgR0b0lk');
+final $typed_data.Uint8List updateTypingStatusRequestDescriptor = $convert.base64Decode(
+    'ChlVcGRhdGVUeXBpbmdTdGF0dXNSZXF1ZXN0EigKEGlzX2dyb3VwX21lc3NhZ2UYASABKAhSDm'
+    'lzR3JvdXBNZXNzYWdlEhMKBXRvX2lkGAIgASgDUgR0b0lkEkIKEWN1c3RvbV9hdHRyaWJ1dGVz'
+    'GA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXM=');

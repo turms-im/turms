@@ -942,7 +942,7 @@ public final class UserFriendRequest extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -999,7 +999,6 @@ public final class UserFriendRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserFriendRequest)
     private static final im.turms.client.model.proto.model.user.UserFriendRequest DEFAULT_INSTANCE;
-
     static {
         UserFriendRequest defaultInstance = new UserFriendRequest();
         // New instances are implicitly immutable so no need to make

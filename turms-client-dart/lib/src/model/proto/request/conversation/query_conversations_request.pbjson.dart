@@ -17,13 +17,21 @@ import 'dart:typed_data' as $typed_data;
 const QueryConversationsRequest$json = {
   '1': 'QueryConversationsRequest',
   '2': [
-    {'1': 'target_ids', '3': 1, '4': 3, '5': 3, '10': 'targetIds'},
+    {'1': 'user_ids', '3': 1, '4': 3, '5': 3, '10': 'userIds'},
     {'1': 'group_ids', '3': 2, '4': 3, '5': 3, '10': 'groupIds'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `QueryConversationsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryConversationsRequestDescriptor =
-    $convert.base64Decode(
-        'ChlRdWVyeUNvbnZlcnNhdGlvbnNSZXF1ZXN0Eh0KCnRhcmdldF9pZHMYASADKANSCXRhcmdldE'
-        'lkcxIbCglncm91cF9pZHMYAiADKANSCGdyb3VwSWRz');
+final $typed_data.Uint8List queryConversationsRequestDescriptor = $convert.base64Decode(
+    'ChlRdWVyeUNvbnZlcnNhdGlvbnNSZXF1ZXN0EhkKCHVzZXJfaWRzGAEgAygDUgd1c2VySWRzEh'
+    'sKCWdyb3VwX2lkcxgCIAMoA1IIZ3JvdXBJZHMSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsy'
+    'FS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

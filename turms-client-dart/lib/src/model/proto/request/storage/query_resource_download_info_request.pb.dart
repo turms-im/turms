@@ -14,14 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/storage_resource_type.pbenum.dart' as $0;
+import '../../constant/storage_resource_type.pbenum.dart' as $1;
+import '../../model/common/value.pb.dart' as $0;
 
 class QueryResourceDownloadInfoRequest extends $pb.GeneratedMessage {
   factory QueryResourceDownloadInfoRequest({
-    $0.StorageResourceType? type,
+    $1.StorageResourceType? type,
     $fixnum.Int64? idNum,
     $core.String? idStr,
-    $core.Map<$core.String, $core.String>? extra,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (type != null) {
@@ -33,8 +34,8 @@ class QueryResourceDownloadInfoRequest extends $pb.GeneratedMessage {
     if (idStr != null) {
       $result.idStr = idStr;
     }
-    if (extra != null) {
-      $result.extra.addAll(extra);
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -50,18 +51,16 @@ class QueryResourceDownloadInfoRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'QueryResourceDownloadInfoRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..e<$0.StorageResourceType>(
+    ..e<$1.StorageResourceType>(
         1, _omitFieldNames ? '' : 'type', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.StorageResourceType.USER_PROFILE_PICTURE,
-        valueOf: $0.StorageResourceType.valueOf,
-        enumValues: $0.StorageResourceType.values)
+        defaultOrMaker: $1.StorageResourceType.USER_PROFILE_PICTURE,
+        valueOf: $1.StorageResourceType.valueOf,
+        enumValues: $1.StorageResourceType.values)
     ..aInt64(2, _omitFieldNames ? '' : 'idNum')
     ..aOS(3, _omitFieldNames ? '' : 'idStr')
-    ..m<$core.String, $core.String>(4, _omitFieldNames ? '' : 'extra',
-        entryClassName: 'QueryResourceDownloadInfoRequest.ExtraEntry',
-        keyFieldType: $pb.PbFieldType.OS,
-        valueFieldType: $pb.PbFieldType.OS,
-        packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -93,9 +92,9 @@ class QueryResourceDownloadInfoRequest extends $pb.GeneratedMessage {
   static QueryResourceDownloadInfoRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.StorageResourceType get type => $_getN(0);
+  $1.StorageResourceType get type => $_getN(0);
   @$pb.TagNumber(1)
-  set type($0.StorageResourceType v) {
+  set type($1.StorageResourceType v) {
     setField(1, v);
   }
 
@@ -128,8 +127,8 @@ class QueryResourceDownloadInfoRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearIdStr() => clearField(3);
 
-  @$pb.TagNumber(4)
-  $core.Map<$core.String, $core.String> get extra => $_getMap(3);
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(3);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

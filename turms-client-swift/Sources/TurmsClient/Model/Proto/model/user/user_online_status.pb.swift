@@ -29,7 +29,9 @@ public struct UserOnlineStatus {
 
     public var userStatus: UserStatus = .available
 
-    public var usingDeviceTypes: [DeviceType] = []
+    public var deviceTypes: [DeviceType] = []
+
+    public var customAttributes: [Value] = []
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -49,7 +51,8 @@ extension UserOnlineStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "user_id"),
         2: .standard(proto: "user_status"),
-        3: .standard(proto: "using_device_types"),
+        3: .standard(proto: "device_types"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -60,7 +63,8 @@ extension UserOnlineStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &userID)
             case 2: try decoder.decodeSingularEnumField(value: &userStatus)
-            case 3: try decoder.decodeRepeatedEnumField(value: &usingDeviceTypes)
+            case 3: try decoder.decodeRepeatedEnumField(value: &deviceTypes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -73,8 +77,11 @@ extension UserOnlineStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         if userStatus != .available {
             try visitor.visitSingularEnumField(value: userStatus, fieldNumber: 2)
         }
-        if !usingDeviceTypes.isEmpty {
-            try visitor.visitPackedEnumField(value: usingDeviceTypes, fieldNumber: 3)
+        if !deviceTypes.isEmpty {
+            try visitor.visitPackedEnumField(value: deviceTypes, fieldNumber: 3)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
         }
         try unknownFields.traverse(visitor: &visitor)
     }
@@ -82,7 +89,8 @@ extension UserOnlineStatus: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     public static func == (lhs: UserOnlineStatus, rhs: UserOnlineStatus) -> Bool {
         if lhs.userID != rhs.userID { return false }
         if lhs.userStatus != rhs.userStatus { return false }
-        if lhs.usingDeviceTypes != rhs.usingDeviceTypes { return false }
+        if lhs.deviceTypes != rhs.deviceTypes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

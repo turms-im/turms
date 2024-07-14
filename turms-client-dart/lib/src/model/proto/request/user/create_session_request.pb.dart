@@ -14,8 +14,9 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/device_type.pbenum.dart' as $2;
-import '../../constant/user_status.pbenum.dart' as $1;
+import '../../constant/device_type.pbenum.dart' as $3;
+import '../../constant/user_status.pbenum.dart' as $2;
+import '../../model/common/value.pb.dart' as $1;
 import '../../model/user/user_location.pb.dart' as $0;
 
 class CreateSessionRequest extends $pb.GeneratedMessage {
@@ -23,10 +24,11 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
     $core.int? version,
     $fixnum.Int64? userId,
     $core.String? password,
-    $1.UserStatus? userStatus,
-    $2.DeviceType? deviceType,
+    $2.UserStatus? userStatus,
+    $3.DeviceType? deviceType,
     $core.Map<$core.String, $core.String>? deviceDetails,
     $0.UserLocation? location,
+    $core.Iterable<$1.Value>? customAttributes,
   }) {
     final $result = create();
     if (version != null) {
@@ -50,6 +52,9 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
     if (location != null) {
       $result.location = location;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   CreateSessionRequest._() : super();
@@ -67,16 +72,16 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(1, _omitFieldNames ? '' : 'version', $pb.PbFieldType.O3)
     ..aInt64(2, _omitFieldNames ? '' : 'userId')
     ..aOS(3, _omitFieldNames ? '' : 'password')
-    ..e<$1.UserStatus>(
+    ..e<$2.UserStatus>(
         4, _omitFieldNames ? '' : 'userStatus', $pb.PbFieldType.OE,
-        defaultOrMaker: $1.UserStatus.AVAILABLE,
-        valueOf: $1.UserStatus.valueOf,
-        enumValues: $1.UserStatus.values)
-    ..e<$2.DeviceType>(
+        defaultOrMaker: $2.UserStatus.AVAILABLE,
+        valueOf: $2.UserStatus.valueOf,
+        enumValues: $2.UserStatus.values)
+    ..e<$3.DeviceType>(
         5, _omitFieldNames ? '' : 'deviceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.DeviceType.DESKTOP,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values)
+        defaultOrMaker: $3.DeviceType.DESKTOP,
+        valueOf: $3.DeviceType.valueOf,
+        enumValues: $3.DeviceType.values)
     ..m<$core.String, $core.String>(6, _omitFieldNames ? '' : 'deviceDetails',
         entryClassName: 'CreateSessionRequest.DeviceDetailsEntry',
         keyFieldType: $pb.PbFieldType.OS,
@@ -84,6 +89,9 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
         packageName: const $pb.PackageName('im.turms.proto'))
     ..aOM<$0.UserLocation>(7, _omitFieldNames ? '' : 'location',
         subBuilder: $0.UserLocation.create)
+    ..pc<$1.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $1.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -147,9 +155,9 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
   void clearPassword() => clearField(3);
 
   @$pb.TagNumber(4)
-  $1.UserStatus get userStatus => $_getN(3);
+  $2.UserStatus get userStatus => $_getN(3);
   @$pb.TagNumber(4)
-  set userStatus($1.UserStatus v) {
+  set userStatus($2.UserStatus v) {
     setField(4, v);
   }
 
@@ -159,9 +167,9 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
   void clearUserStatus() => clearField(4);
 
   @$pb.TagNumber(5)
-  $2.DeviceType get deviceType => $_getN(4);
+  $3.DeviceType get deviceType => $_getN(4);
   @$pb.TagNumber(5)
-  set deviceType($2.DeviceType v) {
+  set deviceType($3.DeviceType v) {
     setField(5, v);
   }
 
@@ -186,6 +194,9 @@ class CreateSessionRequest extends $pb.GeneratedMessage {
   void clearLocation() => clearField(7);
   @$pb.TagNumber(7)
   $0.UserLocation ensureLocation() => $_ensure(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$1.Value> get customAttributes => $_getList(7);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

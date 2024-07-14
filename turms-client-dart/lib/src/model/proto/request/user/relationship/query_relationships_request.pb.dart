@@ -14,13 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   factory QueryRelationshipsRequest({
     $core.Iterable<$fixnum.Int64>? userIds,
     $core.bool? blocked,
     $core.Iterable<$core.int>? groupIndexes,
     $fixnum.Int64? lastUpdatedDate,
-    $core.String? name,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (userIds != null) {
@@ -35,8 +37,8 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     if (lastUpdatedDate != null) {
       $result.lastUpdatedDate = lastUpdatedDate;
     }
-    if (name != null) {
-      $result.name = name;
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -56,7 +58,9 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
     ..aOB(2, _omitFieldNames ? '' : 'blocked')
     ..p<$core.int>(3, _omitFieldNames ? '' : 'groupIndexes', $pb.PbFieldType.K3)
     ..aInt64(4, _omitFieldNames ? '' : 'lastUpdatedDate')
-    ..aOS(5, _omitFieldNames ? '' : 'name')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -114,17 +118,8 @@ class QueryRelationshipsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearLastUpdatedDate() => clearField(4);
 
-  @$pb.TagNumber(5)
-  $core.String get name => $_getSZ(4);
-  @$pb.TagNumber(5)
-  set name($core.String v) {
-    $_setString(4, v);
-  }
-
-  @$pb.TagNumber(5)
-  $core.bool hasName() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearName() => clearField(5);
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(4);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

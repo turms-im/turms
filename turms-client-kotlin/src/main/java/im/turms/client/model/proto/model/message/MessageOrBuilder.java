@@ -189,4 +189,34 @@ public interface MessageOrBuilder extends
      * @return The preMessageId.
      */
     long getPreMessageId();
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.message.MessageReactionGroup> getReactionGroupsList();
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    im.turms.client.model.proto.model.message.MessageReactionGroup getReactionGroups(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    int getReactionGroupsCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
 }

@@ -29,6 +29,8 @@ public struct CreateFriendRequestRequest {
 
     public var content: String = .init()
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -47,6 +49,7 @@ extension CreateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "recipient_id"),
         2: .same(proto: "content"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,6 +60,7 @@ extension CreateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &recipientID)
             case 2: try decoder.decodeSingularStringField(value: &content)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -69,12 +73,16 @@ extension CreateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
         if !content.isEmpty {
             try visitor.visitSingularStringField(value: content, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: CreateFriendRequestRequest, rhs: CreateFriendRequestRequest) -> Bool {
         if lhs.recipientID != rhs.recipientID { return false }
         if lhs.content != rhs.content { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

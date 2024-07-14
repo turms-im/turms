@@ -28,6 +28,14 @@ const ImageFile$json = {
       '17': true
     },
     {'1': 'data', '3': 2, '4': 1, '5': 12, '9': 1, '10': 'data', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [ImageFile_Description$json],
   '8': [
@@ -80,7 +88,8 @@ const ImageFile_Description$json = {
 final $typed_data.Uint8List imageFileDescriptor = $convert.base64Decode(
     'CglJbWFnZUZpbGUSTAoLZGVzY3JpcHRpb24YASABKAsyJS5pbS50dXJtcy5wcm90by5JbWFnZU'
     'ZpbGUuRGVzY3JpcHRpb25IAFILZGVzY3JpcHRpb26IAQESFwoEZGF0YRgCIAEoDEgBUgRkYXRh'
-    'iAEBGrABCgtEZXNjcmlwdGlvbhIQCgN1cmwYASABKAlSA3VybBIfCghvcmlnaW5hbBgCIAEoCE'
-    'gAUghvcmlnaW5hbIgBARIiCgppbWFnZV9zaXplGAMgASgFSAFSCWltYWdlU2l6ZYgBARIgCglm'
-    'aWxlX3NpemUYBCABKAVIAlIIZmlsZVNpemWIAQFCCwoJX29yaWdpbmFsQg0KC19pbWFnZV9zaX'
-    'plQgwKCl9maWxlX3NpemVCDgoMX2Rlc2NyaXB0aW9uQgcKBV9kYXRh');
+    'iAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEG'
+    'N1c3RvbUF0dHJpYnV0ZXMasAEKC0Rlc2NyaXB0aW9uEhAKA3VybBgBIAEoCVIDdXJsEh8KCG9y'
+    'aWdpbmFsGAIgASgISABSCG9yaWdpbmFsiAEBEiIKCmltYWdlX3NpemUYAyABKAVIAVIJaW1hZ2'
+    'VTaXpliAEBEiAKCWZpbGVfc2l6ZRgEIAEoBUgCUghmaWxlU2l6ZYgBAUILCglfb3JpZ2luYWxC'
+    'DQoLX2ltYWdlX3NpemVCDAoKX2ZpbGVfc2l6ZUIOCgxfZGVzY3JpcHRpb25CBwoFX2RhdGE=');

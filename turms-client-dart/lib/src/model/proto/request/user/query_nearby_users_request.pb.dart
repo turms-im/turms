@@ -13,6 +13,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   factory QueryNearbyUsersRequest({
     $core.double? latitude,
@@ -22,6 +24,7 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
     $core.bool? withCoordinates,
     $core.bool? withDistance,
     $core.bool? withUserInfo,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (latitude != null) {
@@ -45,6 +48,9 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
     if (withUserInfo != null) {
       $result.withUserInfo = withUserInfo;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   QueryNearbyUsersRequest._() : super();
@@ -66,6 +72,9 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
     ..aOB(5, _omitFieldNames ? '' : 'withCoordinates')
     ..aOB(6, _omitFieldNames ? '' : 'withDistance')
     ..aOB(7, _omitFieldNames ? '' : 'withUserInfo')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -176,6 +185,9 @@ class QueryNearbyUsersRequest extends $pb.GeneratedMessage {
   $core.bool hasWithUserInfo() => $_has(6);
   @$pb.TagNumber(7)
   void clearWithUserInfo() => clearField(7);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(7);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

@@ -82,6 +82,14 @@ const CreateMessageRequest$json = {
       '10': 'preMessageId',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_message_id'},
@@ -103,6 +111,7 @@ final $typed_data.Uint8List createMessageRequestDescriptor = $convert.base64Deco
     'VjaXBpZW50SWSIAQESKAoNZGVsaXZlcnlfZGF0ZRgFIAEoA0gEUgxkZWxpdmVyeURhdGWIAQES'
     'FwoEdGV4dBgGIAEoCUgFUgR0ZXh0iAEBEhgKB3JlY29yZHMYByADKAxSB3JlY29yZHMSIgoKYn'
     'Vybl9hZnRlchgIIAEoBUgGUglidXJuQWZ0ZXKIAQESKQoOcHJlX21lc3NhZ2VfaWQYCSABKANI'
-    'B1IMcHJlTWVzc2FnZUlkiAEBQg0KC19tZXNzYWdlX2lkQhQKEl9pc19zeXN0ZW1fbWVzc2FnZU'
-    'ILCglfZ3JvdXBfaWRCDwoNX3JlY2lwaWVudF9pZEIQCg5fZGVsaXZlcnlfZGF0ZUIHCgVfdGV4'
-    'dEINCgtfYnVybl9hZnRlckIRCg9fcHJlX21lc3NhZ2VfaWQ=');
+    'B1IMcHJlTWVzc2FnZUlkiAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybX'
+    'MucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCDQoLX21lc3NhZ2VfaWRCFAoSX2lzX3N5'
+    'c3RlbV9tZXNzYWdlQgsKCV9ncm91cF9pZEIPCg1fcmVjaXBpZW50X2lkQhAKDl9kZWxpdmVyeV'
+    '9kYXRlQgcKBV90ZXh0Qg0KC19idXJuX2FmdGVyQhEKD19wcmVfbWVzc2FnZV9pZA==');

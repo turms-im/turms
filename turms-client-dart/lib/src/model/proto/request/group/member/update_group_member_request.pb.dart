@@ -14,15 +14,17 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../constant/group_member_role.pbenum.dart' as $0;
+import '../../../constant/group_member_role.pbenum.dart' as $1;
+import '../../../model/common/value.pb.dart' as $0;
 
 class UpdateGroupMemberRequest extends $pb.GeneratedMessage {
   factory UpdateGroupMemberRequest({
     $fixnum.Int64? groupId,
     $fixnum.Int64? memberId,
     $core.String? name,
-    $0.GroupMemberRole? role,
+    $1.GroupMemberRole? role,
     $fixnum.Int64? muteEndDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -39,6 +41,9 @@ class UpdateGroupMemberRequest extends $pb.GeneratedMessage {
     }
     if (muteEndDate != null) {
       $result.muteEndDate = muteEndDate;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -57,12 +62,15 @@ class UpdateGroupMemberRequest extends $pb.GeneratedMessage {
     ..aInt64(1, _omitFieldNames ? '' : 'groupId')
     ..aInt64(2, _omitFieldNames ? '' : 'memberId')
     ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..e<$0.GroupMemberRole>(
+    ..e<$1.GroupMemberRole>(
         4, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.GroupMemberRole.OWNER,
-        valueOf: $0.GroupMemberRole.valueOf,
-        enumValues: $0.GroupMemberRole.values)
+        defaultOrMaker: $1.GroupMemberRole.OWNER,
+        valueOf: $1.GroupMemberRole.valueOf,
+        enumValues: $1.GroupMemberRole.values)
     ..aInt64(5, _omitFieldNames ? '' : 'muteEndDate')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -129,9 +137,9 @@ class UpdateGroupMemberRequest extends $pb.GeneratedMessage {
   void clearName() => clearField(3);
 
   @$pb.TagNumber(4)
-  $0.GroupMemberRole get role => $_getN(3);
+  $1.GroupMemberRole get role => $_getN(3);
   @$pb.TagNumber(4)
-  set role($0.GroupMemberRole v) {
+  set role($1.GroupMemberRole v) {
     setField(4, v);
   }
 
@@ -151,6 +159,9 @@ class UpdateGroupMemberRequest extends $pb.GeneratedMessage {
   $core.bool hasMuteEndDate() => $_has(4);
   @$pb.TagNumber(5)
   void clearMuteEndDate() => clearField(5);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(5);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

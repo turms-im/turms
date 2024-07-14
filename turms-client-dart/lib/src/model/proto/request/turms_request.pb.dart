@@ -14,66 +14,80 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'conversation/query_conversations_request.pb.dart' as $2;
-import 'conversation/update_conversation_request.pb.dart' as $3;
-import 'conversation/update_typing_status_request.pb.dart' as $4;
-import 'group/blocklist/create_group_blocked_user_request.pb.dart' as $37;
-import 'group/blocklist/delete_group_blocked_user_request.pb.dart' as $38;
-import 'group/blocklist/query_group_blocked_user_ids_request.pb.dart' as $39;
-import 'group/blocklist/query_group_blocked_user_infos_request.pb.dart' as $40;
-import 'group/create_group_request.pb.dart' as $31;
-import 'group/delete_group_request.pb.dart' as $32;
+import '../model/common/value.pb.dart' as $0;
+import 'conference/create_meeting_request.pb.dart' as $58;
+import 'conference/delete_meeting_request.pb.dart' as $59;
+import 'conference/query_meetings_request.pb.dart' as $60;
+import 'conference/update_meeting_invitation_request.pb.dart' as $62;
+import 'conference/update_meeting_request.pb.dart' as $61;
+import 'conversation/delete_conversation_settings_request.pb.dart' as $68;
+import 'conversation/query_conversation_settings_request.pb.dart' as $69;
+import 'conversation/query_conversations_request.pb.dart' as $3;
+import 'conversation/update_conversation_request.pb.dart' as $4;
+import 'conversation/update_conversation_settings_request.pb.dart' as $70;
+import 'conversation/update_typing_status_request.pb.dart' as $5;
+import 'group/blocklist/create_group_blocked_user_request.pb.dart' as $41;
+import 'group/blocklist/delete_group_blocked_user_request.pb.dart' as $42;
+import 'group/blocklist/query_group_blocked_user_ids_request.pb.dart' as $43;
+import 'group/blocklist/query_group_blocked_user_infos_request.pb.dart' as $44;
+import 'group/create_group_request.pb.dart' as $35;
+import 'group/delete_group_request.pb.dart' as $36;
 import 'group/enrollment/check_group_join_questions_answers_request.pb.dart'
-    as $41;
-import 'group/enrollment/create_group_invitation_request.pb.dart' as $42;
-import 'group/enrollment/create_group_join_questions_request.pb.dart' as $44;
-import 'group/enrollment/create_group_join_request_request.pb.dart' as $43;
-import 'group/enrollment/delete_group_invitation_request.pb.dart' as $45;
-import 'group/enrollment/delete_group_join_questions_request.pb.dart' as $47;
-import 'group/enrollment/delete_group_join_request_request.pb.dart' as $46;
-import 'group/enrollment/query_group_invitations_request.pb.dart' as $48;
-import 'group/enrollment/query_group_join_questions_request.pb.dart' as $50;
-import 'group/enrollment/query_group_join_requests_request.pb.dart' as $49;
-import 'group/enrollment/update_group_invitation_request.pb.dart' as $51;
-import 'group/enrollment/update_group_join_question_request.pb.dart' as $52;
-import 'group/enrollment/update_group_join_request_request.pb.dart' as $53;
-import 'group/member/create_group_members_request.pb.dart' as $8;
-import 'group/member/delete_group_members_request.pb.dart' as $9;
-import 'group/member/query_group_members_request.pb.dart' as $10;
-import 'group/member/update_group_member_request.pb.dart' as $11;
-import 'group/query_groups_request.pb.dart' as $33;
-import 'group/query_joined_group_ids_request.pb.dart' as $34;
-import 'group/query_joined_group_infos_request.pb.dart' as $35;
-import 'group/update_group_request.pb.dart' as $36;
-import 'message/create_message_request.pb.dart' as $5;
-import 'message/query_messages_request.pb.dart' as $6;
-import 'message/update_message_request.pb.dart' as $7;
-import 'storage/delete_resource_request.pb.dart' as $54;
-import 'storage/query_message_attachment_infos_request.pb.dart' as $57;
-import 'storage/query_resource_download_info_request.pb.dart' as $55;
-import 'storage/query_resource_upload_info_request.pb.dart' as $56;
-import 'storage/update_message_attachment_info_request.pb.dart' as $58;
-import 'user/create_session_request.pb.dart' as $0;
-import 'user/delete_session_request.pb.dart' as $1;
-import 'user/query_nearby_users_request.pb.dart' as $13;
-import 'user/query_user_online_statuses_request.pb.dart' as $14;
-import 'user/query_user_profiles_request.pb.dart' as $12;
-import 'user/relationship/create_friend_request_request.pb.dart' as $18;
-import 'user/relationship/create_relationship_group_request.pb.dart' as $19;
-import 'user/relationship/create_relationship_request.pb.dart' as $20;
-import 'user/relationship/delete_friend_request_request.pb.dart' as $21;
-import 'user/relationship/delete_relationship_group_request.pb.dart' as $22;
-import 'user/relationship/delete_relationship_request.pb.dart' as $23;
-import 'user/relationship/query_friend_requests_request.pb.dart' as $24;
-import 'user/relationship/query_related_user_ids_request.pb.dart' as $25;
-import 'user/relationship/query_relationship_groups_request.pb.dart' as $26;
-import 'user/relationship/query_relationships_request.pb.dart' as $27;
-import 'user/relationship/update_friend_request_request.pb.dart' as $28;
-import 'user/relationship/update_relationship_group_request.pb.dart' as $29;
-import 'user/relationship/update_relationship_request.pb.dart' as $30;
-import 'user/update_user_location_request.pb.dart' as $15;
-import 'user/update_user_online_status_request.pb.dart' as $16;
-import 'user/update_user_request.pb.dart' as $17;
+    as $45;
+import 'group/enrollment/create_group_invitation_request.pb.dart' as $46;
+import 'group/enrollment/create_group_join_questions_request.pb.dart' as $48;
+import 'group/enrollment/create_group_join_request_request.pb.dart' as $47;
+import 'group/enrollment/delete_group_invitation_request.pb.dart' as $49;
+import 'group/enrollment/delete_group_join_questions_request.pb.dart' as $51;
+import 'group/enrollment/delete_group_join_request_request.pb.dart' as $50;
+import 'group/enrollment/query_group_invitations_request.pb.dart' as $52;
+import 'group/enrollment/query_group_join_questions_request.pb.dart' as $54;
+import 'group/enrollment/query_group_join_requests_request.pb.dart' as $53;
+import 'group/enrollment/update_group_invitation_request.pb.dart' as $55;
+import 'group/enrollment/update_group_join_question_request.pb.dart' as $56;
+import 'group/enrollment/update_group_join_request_request.pb.dart' as $57;
+import 'group/member/create_group_members_request.pb.dart' as $9;
+import 'group/member/delete_group_members_request.pb.dart' as $10;
+import 'group/member/query_group_members_request.pb.dart' as $11;
+import 'group/member/update_group_member_request.pb.dart' as $12;
+import 'group/query_groups_request.pb.dart' as $37;
+import 'group/query_joined_group_ids_request.pb.dart' as $38;
+import 'group/query_joined_group_infos_request.pb.dart' as $39;
+import 'group/update_group_request.pb.dart' as $40;
+import 'message/create_message_reactions_request.pb.dart' as $71;
+import 'message/create_message_request.pb.dart' as $6;
+import 'message/delete_message_reactions_request.pb.dart' as $72;
+import 'message/query_messages_request.pb.dart' as $7;
+import 'message/update_message_request.pb.dart' as $8;
+import 'storage/delete_resource_request.pb.dart' as $63;
+import 'storage/query_message_attachment_infos_request.pb.dart' as $66;
+import 'storage/query_resource_download_info_request.pb.dart' as $64;
+import 'storage/query_resource_upload_info_request.pb.dart' as $65;
+import 'storage/update_message_attachment_info_request.pb.dart' as $67;
+import 'user/create_session_request.pb.dart' as $1;
+import 'user/delete_session_request.pb.dart' as $2;
+import 'user/delete_user_settings_request.pb.dart' as $20;
+import 'user/query_nearby_users_request.pb.dart' as $14;
+import 'user/query_user_online_statuses_request.pb.dart' as $15;
+import 'user/query_user_profiles_request.pb.dart' as $13;
+import 'user/query_user_settings_request.pb.dart' as $21;
+import 'user/relationship/create_friend_request_request.pb.dart' as $22;
+import 'user/relationship/create_relationship_group_request.pb.dart' as $23;
+import 'user/relationship/create_relationship_request.pb.dart' as $24;
+import 'user/relationship/delete_friend_request_request.pb.dart' as $25;
+import 'user/relationship/delete_relationship_group_request.pb.dart' as $26;
+import 'user/relationship/delete_relationship_request.pb.dart' as $27;
+import 'user/relationship/query_friend_requests_request.pb.dart' as $28;
+import 'user/relationship/query_related_user_ids_request.pb.dart' as $29;
+import 'user/relationship/query_relationship_groups_request.pb.dart' as $30;
+import 'user/relationship/query_relationships_request.pb.dart' as $31;
+import 'user/relationship/update_friend_request_request.pb.dart' as $32;
+import 'user/relationship/update_relationship_group_request.pb.dart' as $33;
+import 'user/relationship/update_relationship_request.pb.dart' as $34;
+import 'user/update_user_location_request.pb.dart' as $16;
+import 'user/update_user_online_status_request.pb.dart' as $17;
+import 'user/update_user_request.pb.dart' as $18;
+import 'user/update_user_settings_request.pb.dart' as $19;
 
 enum TurmsRequest_Kind {
   createSessionRequest,
@@ -94,6 +108,9 @@ enum TurmsRequest_Kind {
   updateUserLocationRequest,
   updateUserOnlineStatusRequest,
   updateUserRequest,
+  updateUserSettingsRequest,
+  deleteUserSettingsRequest,
+  queryUserSettingsRequest,
   createFriendRequestRequest,
   createRelationshipGroupRequest,
   createRelationshipRequest,
@@ -130,11 +147,21 @@ enum TurmsRequest_Kind {
   updateGroupInvitationRequest,
   updateGroupJoinQuestionRequest,
   updateGroupJoinRequestRequest,
+  createMeetingRequest,
+  deleteMeetingRequest,
+  queryMeetingsRequest,
+  updateMeetingRequest,
+  updateMeetingInvitationRequest,
   deleteResourceRequest,
   queryResourceDownloadInfoRequest,
   queryResourceUploadInfoRequest,
   queryMessageAttachmentInfosRequest,
   updateMessageAttachmentInfoRequest,
+  deleteConversationSettingsRequest,
+  queryConversationSettingsRequest,
+  updateConversationSettingsRequest,
+  createMessageReactionsRequest,
+  deleteMessageReactionsRequest,
   notSet
 }
 
@@ -142,70 +169,87 @@ enum TurmsRequest_Kind {
 class TurmsRequest extends $pb.GeneratedMessage {
   factory TurmsRequest({
     $fixnum.Int64? requestId,
-    $0.CreateSessionRequest? createSessionRequest,
-    $1.DeleteSessionRequest? deleteSessionRequest,
-    $2.QueryConversationsRequest? queryConversationsRequest,
-    $3.UpdateConversationRequest? updateConversationRequest,
-    $4.UpdateTypingStatusRequest? updateTypingStatusRequest,
-    $5.CreateMessageRequest? createMessageRequest,
-    $6.QueryMessagesRequest? queryMessagesRequest,
-    $7.UpdateMessageRequest? updateMessageRequest,
-    $8.CreateGroupMembersRequest? createGroupMembersRequest,
-    $9.DeleteGroupMembersRequest? deleteGroupMembersRequest,
-    $10.QueryGroupMembersRequest? queryGroupMembersRequest,
-    $11.UpdateGroupMemberRequest? updateGroupMemberRequest,
-    $12.QueryUserProfilesRequest? queryUserProfilesRequest,
-    $13.QueryNearbyUsersRequest? queryNearbyUsersRequest,
-    $14.QueryUserOnlineStatusesRequest? queryUserOnlineStatusesRequest,
-    $15.UpdateUserLocationRequest? updateUserLocationRequest,
-    $16.UpdateUserOnlineStatusRequest? updateUserOnlineStatusRequest,
-    $17.UpdateUserRequest? updateUserRequest,
-    $18.CreateFriendRequestRequest? createFriendRequestRequest,
-    $19.CreateRelationshipGroupRequest? createRelationshipGroupRequest,
-    $20.CreateRelationshipRequest? createRelationshipRequest,
-    $21.DeleteFriendRequestRequest? deleteFriendRequestRequest,
-    $22.DeleteRelationshipGroupRequest? deleteRelationshipGroupRequest,
-    $23.DeleteRelationshipRequest? deleteRelationshipRequest,
-    $24.QueryFriendRequestsRequest? queryFriendRequestsRequest,
-    $25.QueryRelatedUserIdsRequest? queryRelatedUserIdsRequest,
-    $26.QueryRelationshipGroupsRequest? queryRelationshipGroupsRequest,
-    $27.QueryRelationshipsRequest? queryRelationshipsRequest,
-    $28.UpdateFriendRequestRequest? updateFriendRequestRequest,
-    $29.UpdateRelationshipGroupRequest? updateRelationshipGroupRequest,
-    $30.UpdateRelationshipRequest? updateRelationshipRequest,
-    $31.CreateGroupRequest? createGroupRequest,
-    $32.DeleteGroupRequest? deleteGroupRequest,
-    $33.QueryGroupsRequest? queryGroupsRequest,
-    $34.QueryJoinedGroupIdsRequest? queryJoinedGroupIdsRequest,
-    $35.QueryJoinedGroupInfosRequest? queryJoinedGroupInfosRequest,
-    $36.UpdateGroupRequest? updateGroupRequest,
-    $37.CreateGroupBlockedUserRequest? createGroupBlockedUserRequest,
-    $38.DeleteGroupBlockedUserRequest? deleteGroupBlockedUserRequest,
-    $39.QueryGroupBlockedUserIdsRequest? queryGroupBlockedUserIdsRequest,
-    $40.QueryGroupBlockedUserInfosRequest? queryGroupBlockedUserInfosRequest,
-    $41.CheckGroupJoinQuestionsAnswersRequest?
+    $core.Iterable<$0.Value>? customAttributes,
+    $1.CreateSessionRequest? createSessionRequest,
+    $2.DeleteSessionRequest? deleteSessionRequest,
+    $3.QueryConversationsRequest? queryConversationsRequest,
+    $4.UpdateConversationRequest? updateConversationRequest,
+    $5.UpdateTypingStatusRequest? updateTypingStatusRequest,
+    $6.CreateMessageRequest? createMessageRequest,
+    $7.QueryMessagesRequest? queryMessagesRequest,
+    $8.UpdateMessageRequest? updateMessageRequest,
+    $9.CreateGroupMembersRequest? createGroupMembersRequest,
+    $10.DeleteGroupMembersRequest? deleteGroupMembersRequest,
+    $11.QueryGroupMembersRequest? queryGroupMembersRequest,
+    $12.UpdateGroupMemberRequest? updateGroupMemberRequest,
+    $13.QueryUserProfilesRequest? queryUserProfilesRequest,
+    $14.QueryNearbyUsersRequest? queryNearbyUsersRequest,
+    $15.QueryUserOnlineStatusesRequest? queryUserOnlineStatusesRequest,
+    $16.UpdateUserLocationRequest? updateUserLocationRequest,
+    $17.UpdateUserOnlineStatusRequest? updateUserOnlineStatusRequest,
+    $18.UpdateUserRequest? updateUserRequest,
+    $19.UpdateUserSettingsRequest? updateUserSettingsRequest,
+    $20.DeleteUserSettingsRequest? deleteUserSettingsRequest,
+    $21.QueryUserSettingsRequest? queryUserSettingsRequest,
+    $22.CreateFriendRequestRequest? createFriendRequestRequest,
+    $23.CreateRelationshipGroupRequest? createRelationshipGroupRequest,
+    $24.CreateRelationshipRequest? createRelationshipRequest,
+    $25.DeleteFriendRequestRequest? deleteFriendRequestRequest,
+    $26.DeleteRelationshipGroupRequest? deleteRelationshipGroupRequest,
+    $27.DeleteRelationshipRequest? deleteRelationshipRequest,
+    $28.QueryFriendRequestsRequest? queryFriendRequestsRequest,
+    $29.QueryRelatedUserIdsRequest? queryRelatedUserIdsRequest,
+    $30.QueryRelationshipGroupsRequest? queryRelationshipGroupsRequest,
+    $31.QueryRelationshipsRequest? queryRelationshipsRequest,
+    $32.UpdateFriendRequestRequest? updateFriendRequestRequest,
+    $33.UpdateRelationshipGroupRequest? updateRelationshipGroupRequest,
+    $34.UpdateRelationshipRequest? updateRelationshipRequest,
+    $35.CreateGroupRequest? createGroupRequest,
+    $36.DeleteGroupRequest? deleteGroupRequest,
+    $37.QueryGroupsRequest? queryGroupsRequest,
+    $38.QueryJoinedGroupIdsRequest? queryJoinedGroupIdsRequest,
+    $39.QueryJoinedGroupInfosRequest? queryJoinedGroupInfosRequest,
+    $40.UpdateGroupRequest? updateGroupRequest,
+    $41.CreateGroupBlockedUserRequest? createGroupBlockedUserRequest,
+    $42.DeleteGroupBlockedUserRequest? deleteGroupBlockedUserRequest,
+    $43.QueryGroupBlockedUserIdsRequest? queryGroupBlockedUserIdsRequest,
+    $44.QueryGroupBlockedUserInfosRequest? queryGroupBlockedUserInfosRequest,
+    $45.CheckGroupJoinQuestionsAnswersRequest?
         checkGroupJoinQuestionsAnswersRequest,
-    $42.CreateGroupInvitationRequest? createGroupInvitationRequest,
-    $43.CreateGroupJoinRequestRequest? createGroupJoinRequestRequest,
-    $44.CreateGroupJoinQuestionsRequest? createGroupJoinQuestionsRequest,
-    $45.DeleteGroupInvitationRequest? deleteGroupInvitationRequest,
-    $46.DeleteGroupJoinRequestRequest? deleteGroupJoinRequestRequest,
-    $47.DeleteGroupJoinQuestionsRequest? deleteGroupJoinQuestionsRequest,
-    $48.QueryGroupInvitationsRequest? queryGroupInvitationsRequest,
-    $49.QueryGroupJoinRequestsRequest? queryGroupJoinRequestsRequest,
-    $50.QueryGroupJoinQuestionsRequest? queryGroupJoinQuestionsRequest,
-    $51.UpdateGroupInvitationRequest? updateGroupInvitationRequest,
-    $52.UpdateGroupJoinQuestionRequest? updateGroupJoinQuestionRequest,
-    $53.UpdateGroupJoinRequestRequest? updateGroupJoinRequestRequest,
-    $54.DeleteResourceRequest? deleteResourceRequest,
-    $55.QueryResourceDownloadInfoRequest? queryResourceDownloadInfoRequest,
-    $56.QueryResourceUploadInfoRequest? queryResourceUploadInfoRequest,
-    $57.QueryMessageAttachmentInfosRequest? queryMessageAttachmentInfosRequest,
-    $58.UpdateMessageAttachmentInfoRequest? updateMessageAttachmentInfoRequest,
+    $46.CreateGroupInvitationRequest? createGroupInvitationRequest,
+    $47.CreateGroupJoinRequestRequest? createGroupJoinRequestRequest,
+    $48.CreateGroupJoinQuestionsRequest? createGroupJoinQuestionsRequest,
+    $49.DeleteGroupInvitationRequest? deleteGroupInvitationRequest,
+    $50.DeleteGroupJoinRequestRequest? deleteGroupJoinRequestRequest,
+    $51.DeleteGroupJoinQuestionsRequest? deleteGroupJoinQuestionsRequest,
+    $52.QueryGroupInvitationsRequest? queryGroupInvitationsRequest,
+    $53.QueryGroupJoinRequestsRequest? queryGroupJoinRequestsRequest,
+    $54.QueryGroupJoinQuestionsRequest? queryGroupJoinQuestionsRequest,
+    $55.UpdateGroupInvitationRequest? updateGroupInvitationRequest,
+    $56.UpdateGroupJoinQuestionRequest? updateGroupJoinQuestionRequest,
+    $57.UpdateGroupJoinRequestRequest? updateGroupJoinRequestRequest,
+    $58.CreateMeetingRequest? createMeetingRequest,
+    $59.DeleteMeetingRequest? deleteMeetingRequest,
+    $60.QueryMeetingsRequest? queryMeetingsRequest,
+    $61.UpdateMeetingRequest? updateMeetingRequest,
+    $62.UpdateMeetingInvitationRequest? updateMeetingInvitationRequest,
+    $63.DeleteResourceRequest? deleteResourceRequest,
+    $64.QueryResourceDownloadInfoRequest? queryResourceDownloadInfoRequest,
+    $65.QueryResourceUploadInfoRequest? queryResourceUploadInfoRequest,
+    $66.QueryMessageAttachmentInfosRequest? queryMessageAttachmentInfosRequest,
+    $67.UpdateMessageAttachmentInfoRequest? updateMessageAttachmentInfoRequest,
+    $68.DeleteConversationSettingsRequest? deleteConversationSettingsRequest,
+    $69.QueryConversationSettingsRequest? queryConversationSettingsRequest,
+    $70.UpdateConversationSettingsRequest? updateConversationSettingsRequest,
+    $71.CreateMessageReactionsRequest? createMessageReactionsRequest,
+    $72.DeleteMessageReactionsRequest? deleteMessageReactionsRequest,
   }) {
     final $result = create();
     if (requestId != null) {
       $result.requestId = requestId;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     if (createSessionRequest != null) {
       $result.createSessionRequest = createSessionRequest;
@@ -260,6 +304,15 @@ class TurmsRequest extends $pb.GeneratedMessage {
     }
     if (updateUserRequest != null) {
       $result.updateUserRequest = updateUserRequest;
+    }
+    if (updateUserSettingsRequest != null) {
+      $result.updateUserSettingsRequest = updateUserSettingsRequest;
+    }
+    if (deleteUserSettingsRequest != null) {
+      $result.deleteUserSettingsRequest = deleteUserSettingsRequest;
+    }
+    if (queryUserSettingsRequest != null) {
+      $result.queryUserSettingsRequest = queryUserSettingsRequest;
     }
     if (createFriendRequestRequest != null) {
       $result.createFriendRequestRequest = createFriendRequestRequest;
@@ -371,6 +424,21 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (updateGroupJoinRequestRequest != null) {
       $result.updateGroupJoinRequestRequest = updateGroupJoinRequestRequest;
     }
+    if (createMeetingRequest != null) {
+      $result.createMeetingRequest = createMeetingRequest;
+    }
+    if (deleteMeetingRequest != null) {
+      $result.deleteMeetingRequest = deleteMeetingRequest;
+    }
+    if (queryMeetingsRequest != null) {
+      $result.queryMeetingsRequest = queryMeetingsRequest;
+    }
+    if (updateMeetingRequest != null) {
+      $result.updateMeetingRequest = updateMeetingRequest;
+    }
+    if (updateMeetingInvitationRequest != null) {
+      $result.updateMeetingInvitationRequest = updateMeetingInvitationRequest;
+    }
     if (deleteResourceRequest != null) {
       $result.deleteResourceRequest = deleteResourceRequest;
     }
@@ -388,6 +456,24 @@ class TurmsRequest extends $pb.GeneratedMessage {
     if (updateMessageAttachmentInfoRequest != null) {
       $result.updateMessageAttachmentInfoRequest =
           updateMessageAttachmentInfoRequest;
+    }
+    if (deleteConversationSettingsRequest != null) {
+      $result.deleteConversationSettingsRequest =
+          deleteConversationSettingsRequest;
+    }
+    if (queryConversationSettingsRequest != null) {
+      $result.queryConversationSettingsRequest =
+          queryConversationSettingsRequest;
+    }
+    if (updateConversationSettingsRequest != null) {
+      $result.updateConversationSettingsRequest =
+          updateConversationSettingsRequest;
+    }
+    if (createMessageReactionsRequest != null) {
+      $result.createMessageReactionsRequest = createMessageReactionsRequest;
+    }
+    if (deleteMessageReactionsRequest != null) {
+      $result.deleteMessageReactionsRequest = deleteMessageReactionsRequest;
     }
     return $result;
   }
@@ -419,6 +505,9 @@ class TurmsRequest extends $pb.GeneratedMessage {
     103: TurmsRequest_Kind.updateUserLocationRequest,
     104: TurmsRequest_Kind.updateUserOnlineStatusRequest,
     105: TurmsRequest_Kind.updateUserRequest,
+    106: TurmsRequest_Kind.updateUserSettingsRequest,
+    107: TurmsRequest_Kind.deleteUserSettingsRequest,
+    108: TurmsRequest_Kind.queryUserSettingsRequest,
     200: TurmsRequest_Kind.createFriendRequestRequest,
     201: TurmsRequest_Kind.createRelationshipGroupRequest,
     202: TurmsRequest_Kind.createRelationshipRequest,
@@ -455,11 +544,21 @@ class TurmsRequest extends $pb.GeneratedMessage {
     510: TurmsRequest_Kind.updateGroupInvitationRequest,
     511: TurmsRequest_Kind.updateGroupJoinQuestionRequest,
     512: TurmsRequest_Kind.updateGroupJoinRequestRequest,
+    900: TurmsRequest_Kind.createMeetingRequest,
+    901: TurmsRequest_Kind.deleteMeetingRequest,
+    902: TurmsRequest_Kind.queryMeetingsRequest,
+    903: TurmsRequest_Kind.updateMeetingRequest,
+    904: TurmsRequest_Kind.updateMeetingInvitationRequest,
     1000: TurmsRequest_Kind.deleteResourceRequest,
     1001: TurmsRequest_Kind.queryResourceDownloadInfoRequest,
     1002: TurmsRequest_Kind.queryResourceUploadInfoRequest,
     1003: TurmsRequest_Kind.queryMessageAttachmentInfosRequest,
     1004: TurmsRequest_Kind.updateMessageAttachmentInfoRequest,
+    1100: TurmsRequest_Kind.deleteConversationSettingsRequest,
+    1101: TurmsRequest_Kind.queryConversationSettingsRequest,
+    1102: TurmsRequest_Kind.updateConversationSettingsRequest,
+    1200: TurmsRequest_Kind.createMessageReactionsRequest,
+    1201: TurmsRequest_Kind.deleteMessageReactionsRequest,
     0: TurmsRequest_Kind.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -485,6 +584,9 @@ class TurmsRequest extends $pb.GeneratedMessage {
       103,
       104,
       105,
+      106,
+      107,
+      108,
       200,
       201,
       202,
@@ -521,190 +623,242 @@ class TurmsRequest extends $pb.GeneratedMessage {
       510,
       511,
       512,
+      900,
+      901,
+      902,
+      903,
+      904,
       1000,
       1001,
       1002,
       1003,
-      1004
+      1004,
+      1100,
+      1101,
+      1102,
+      1200,
+      1201
     ])
     ..aInt64(1, _omitFieldNames ? '' : 'requestId')
-    ..aOM<$0.CreateSessionRequest>(
+    ..pc<$0.Value>(
+        2, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
+    ..aOM<$1.CreateSessionRequest>(
         3, _omitFieldNames ? '' : 'createSessionRequest',
-        subBuilder: $0.CreateSessionRequest.create)
-    ..aOM<$1.DeleteSessionRequest>(
+        subBuilder: $1.CreateSessionRequest.create)
+    ..aOM<$2.DeleteSessionRequest>(
         4, _omitFieldNames ? '' : 'deleteSessionRequest',
-        subBuilder: $1.DeleteSessionRequest.create)
-    ..aOM<$2.QueryConversationsRequest>(
+        subBuilder: $2.DeleteSessionRequest.create)
+    ..aOM<$3.QueryConversationsRequest>(
         5, _omitFieldNames ? '' : 'queryConversationsRequest',
-        subBuilder: $2.QueryConversationsRequest.create)
-    ..aOM<$3.UpdateConversationRequest>(
+        subBuilder: $3.QueryConversationsRequest.create)
+    ..aOM<$4.UpdateConversationRequest>(
         6, _omitFieldNames ? '' : 'updateConversationRequest',
-        subBuilder: $3.UpdateConversationRequest.create)
-    ..aOM<$4.UpdateTypingStatusRequest>(
+        subBuilder: $4.UpdateConversationRequest.create)
+    ..aOM<$5.UpdateTypingStatusRequest>(
         7, _omitFieldNames ? '' : 'updateTypingStatusRequest',
-        subBuilder: $4.UpdateTypingStatusRequest.create)
-    ..aOM<$5.CreateMessageRequest>(
+        subBuilder: $5.UpdateTypingStatusRequest.create)
+    ..aOM<$6.CreateMessageRequest>(
         8, _omitFieldNames ? '' : 'createMessageRequest',
-        subBuilder: $5.CreateMessageRequest.create)
-    ..aOM<$6.QueryMessagesRequest>(
+        subBuilder: $6.CreateMessageRequest.create)
+    ..aOM<$7.QueryMessagesRequest>(
         9, _omitFieldNames ? '' : 'queryMessagesRequest',
-        subBuilder: $6.QueryMessagesRequest.create)
-    ..aOM<$7.UpdateMessageRequest>(
+        subBuilder: $7.QueryMessagesRequest.create)
+    ..aOM<$8.UpdateMessageRequest>(
         10, _omitFieldNames ? '' : 'updateMessageRequest',
-        subBuilder: $7.UpdateMessageRequest.create)
-    ..aOM<$8.CreateGroupMembersRequest>(
+        subBuilder: $8.UpdateMessageRequest.create)
+    ..aOM<$9.CreateGroupMembersRequest>(
         11, _omitFieldNames ? '' : 'createGroupMembersRequest',
-        subBuilder: $8.CreateGroupMembersRequest.create)
-    ..aOM<$9.DeleteGroupMembersRequest>(
+        subBuilder: $9.CreateGroupMembersRequest.create)
+    ..aOM<$10.DeleteGroupMembersRequest>(
         12, _omitFieldNames ? '' : 'deleteGroupMembersRequest',
-        subBuilder: $9.DeleteGroupMembersRequest.create)
-    ..aOM<$10.QueryGroupMembersRequest>(
+        subBuilder: $10.DeleteGroupMembersRequest.create)
+    ..aOM<$11.QueryGroupMembersRequest>(
         13, _omitFieldNames ? '' : 'queryGroupMembersRequest',
-        subBuilder: $10.QueryGroupMembersRequest.create)
-    ..aOM<$11.UpdateGroupMemberRequest>(
+        subBuilder: $11.QueryGroupMembersRequest.create)
+    ..aOM<$12.UpdateGroupMemberRequest>(
         14, _omitFieldNames ? '' : 'updateGroupMemberRequest',
-        subBuilder: $11.UpdateGroupMemberRequest.create)
-    ..aOM<$12.QueryUserProfilesRequest>(
+        subBuilder: $12.UpdateGroupMemberRequest.create)
+    ..aOM<$13.QueryUserProfilesRequest>(
         100, _omitFieldNames ? '' : 'queryUserProfilesRequest',
-        subBuilder: $12.QueryUserProfilesRequest.create)
-    ..aOM<$13.QueryNearbyUsersRequest>(
+        subBuilder: $13.QueryUserProfilesRequest.create)
+    ..aOM<$14.QueryNearbyUsersRequest>(
         101, _omitFieldNames ? '' : 'queryNearbyUsersRequest',
-        subBuilder: $13.QueryNearbyUsersRequest.create)
-    ..aOM<$14.QueryUserOnlineStatusesRequest>(
+        subBuilder: $14.QueryNearbyUsersRequest.create)
+    ..aOM<$15.QueryUserOnlineStatusesRequest>(
         102, _omitFieldNames ? '' : 'queryUserOnlineStatusesRequest',
-        subBuilder: $14.QueryUserOnlineStatusesRequest.create)
-    ..aOM<$15.UpdateUserLocationRequest>(
+        subBuilder: $15.QueryUserOnlineStatusesRequest.create)
+    ..aOM<$16.UpdateUserLocationRequest>(
         103, _omitFieldNames ? '' : 'updateUserLocationRequest',
-        subBuilder: $15.UpdateUserLocationRequest.create)
-    ..aOM<$16.UpdateUserOnlineStatusRequest>(
+        subBuilder: $16.UpdateUserLocationRequest.create)
+    ..aOM<$17.UpdateUserOnlineStatusRequest>(
         104, _omitFieldNames ? '' : 'updateUserOnlineStatusRequest',
-        subBuilder: $16.UpdateUserOnlineStatusRequest.create)
-    ..aOM<$17.UpdateUserRequest>(
+        subBuilder: $17.UpdateUserOnlineStatusRequest.create)
+    ..aOM<$18.UpdateUserRequest>(
         105, _omitFieldNames ? '' : 'updateUserRequest',
-        subBuilder: $17.UpdateUserRequest.create)
-    ..aOM<$18.CreateFriendRequestRequest>(
+        subBuilder: $18.UpdateUserRequest.create)
+    ..aOM<$19.UpdateUserSettingsRequest>(
+        106, _omitFieldNames ? '' : 'updateUserSettingsRequest',
+        subBuilder: $19.UpdateUserSettingsRequest.create)
+    ..aOM<$20.DeleteUserSettingsRequest>(
+        107, _omitFieldNames ? '' : 'deleteUserSettingsRequest',
+        subBuilder: $20.DeleteUserSettingsRequest.create)
+    ..aOM<$21.QueryUserSettingsRequest>(
+        108, _omitFieldNames ? '' : 'queryUserSettingsRequest',
+        subBuilder: $21.QueryUserSettingsRequest.create)
+    ..aOM<$22.CreateFriendRequestRequest>(
         200, _omitFieldNames ? '' : 'createFriendRequestRequest',
-        subBuilder: $18.CreateFriendRequestRequest.create)
-    ..aOM<$19.CreateRelationshipGroupRequest>(
+        subBuilder: $22.CreateFriendRequestRequest.create)
+    ..aOM<$23.CreateRelationshipGroupRequest>(
         201, _omitFieldNames ? '' : 'createRelationshipGroupRequest',
-        subBuilder: $19.CreateRelationshipGroupRequest.create)
-    ..aOM<$20.CreateRelationshipRequest>(
+        subBuilder: $23.CreateRelationshipGroupRequest.create)
+    ..aOM<$24.CreateRelationshipRequest>(
         202, _omitFieldNames ? '' : 'createRelationshipRequest',
-        subBuilder: $20.CreateRelationshipRequest.create)
-    ..aOM<$21.DeleteFriendRequestRequest>(
+        subBuilder: $24.CreateRelationshipRequest.create)
+    ..aOM<$25.DeleteFriendRequestRequest>(
         203, _omitFieldNames ? '' : 'deleteFriendRequestRequest',
-        subBuilder: $21.DeleteFriendRequestRequest.create)
-    ..aOM<$22.DeleteRelationshipGroupRequest>(
+        subBuilder: $25.DeleteFriendRequestRequest.create)
+    ..aOM<$26.DeleteRelationshipGroupRequest>(
         204, _omitFieldNames ? '' : 'deleteRelationshipGroupRequest',
-        subBuilder: $22.DeleteRelationshipGroupRequest.create)
-    ..aOM<$23.DeleteRelationshipRequest>(
+        subBuilder: $26.DeleteRelationshipGroupRequest.create)
+    ..aOM<$27.DeleteRelationshipRequest>(
         205, _omitFieldNames ? '' : 'deleteRelationshipRequest',
-        subBuilder: $23.DeleteRelationshipRequest.create)
-    ..aOM<$24.QueryFriendRequestsRequest>(
+        subBuilder: $27.DeleteRelationshipRequest.create)
+    ..aOM<$28.QueryFriendRequestsRequest>(
         206, _omitFieldNames ? '' : 'queryFriendRequestsRequest',
-        subBuilder: $24.QueryFriendRequestsRequest.create)
-    ..aOM<$25.QueryRelatedUserIdsRequest>(
+        subBuilder: $28.QueryFriendRequestsRequest.create)
+    ..aOM<$29.QueryRelatedUserIdsRequest>(
         207, _omitFieldNames ? '' : 'queryRelatedUserIdsRequest',
-        subBuilder: $25.QueryRelatedUserIdsRequest.create)
-    ..aOM<$26.QueryRelationshipGroupsRequest>(
+        subBuilder: $29.QueryRelatedUserIdsRequest.create)
+    ..aOM<$30.QueryRelationshipGroupsRequest>(
         208, _omitFieldNames ? '' : 'queryRelationshipGroupsRequest',
-        subBuilder: $26.QueryRelationshipGroupsRequest.create)
-    ..aOM<$27.QueryRelationshipsRequest>(
+        subBuilder: $30.QueryRelationshipGroupsRequest.create)
+    ..aOM<$31.QueryRelationshipsRequest>(
         209, _omitFieldNames ? '' : 'queryRelationshipsRequest',
-        subBuilder: $27.QueryRelationshipsRequest.create)
-    ..aOM<$28.UpdateFriendRequestRequest>(
+        subBuilder: $31.QueryRelationshipsRequest.create)
+    ..aOM<$32.UpdateFriendRequestRequest>(
         210, _omitFieldNames ? '' : 'updateFriendRequestRequest',
-        subBuilder: $28.UpdateFriendRequestRequest.create)
-    ..aOM<$29.UpdateRelationshipGroupRequest>(
+        subBuilder: $32.UpdateFriendRequestRequest.create)
+    ..aOM<$33.UpdateRelationshipGroupRequest>(
         211, _omitFieldNames ? '' : 'updateRelationshipGroupRequest',
-        subBuilder: $29.UpdateRelationshipGroupRequest.create)
-    ..aOM<$30.UpdateRelationshipRequest>(
+        subBuilder: $33.UpdateRelationshipGroupRequest.create)
+    ..aOM<$34.UpdateRelationshipRequest>(
         212, _omitFieldNames ? '' : 'updateRelationshipRequest',
-        subBuilder: $30.UpdateRelationshipRequest.create)
-    ..aOM<$31.CreateGroupRequest>(
+        subBuilder: $34.UpdateRelationshipRequest.create)
+    ..aOM<$35.CreateGroupRequest>(
         300, _omitFieldNames ? '' : 'createGroupRequest',
-        subBuilder: $31.CreateGroupRequest.create)
-    ..aOM<$32.DeleteGroupRequest>(
+        subBuilder: $35.CreateGroupRequest.create)
+    ..aOM<$36.DeleteGroupRequest>(
         301, _omitFieldNames ? '' : 'deleteGroupRequest',
-        subBuilder: $32.DeleteGroupRequest.create)
-    ..aOM<$33.QueryGroupsRequest>(
+        subBuilder: $36.DeleteGroupRequest.create)
+    ..aOM<$37.QueryGroupsRequest>(
         302, _omitFieldNames ? '' : 'queryGroupsRequest',
-        subBuilder: $33.QueryGroupsRequest.create)
-    ..aOM<$34.QueryJoinedGroupIdsRequest>(
+        subBuilder: $37.QueryGroupsRequest.create)
+    ..aOM<$38.QueryJoinedGroupIdsRequest>(
         303, _omitFieldNames ? '' : 'queryJoinedGroupIdsRequest',
-        subBuilder: $34.QueryJoinedGroupIdsRequest.create)
-    ..aOM<$35.QueryJoinedGroupInfosRequest>(
+        subBuilder: $38.QueryJoinedGroupIdsRequest.create)
+    ..aOM<$39.QueryJoinedGroupInfosRequest>(
         304, _omitFieldNames ? '' : 'queryJoinedGroupInfosRequest',
-        subBuilder: $35.QueryJoinedGroupInfosRequest.create)
-    ..aOM<$36.UpdateGroupRequest>(
+        subBuilder: $39.QueryJoinedGroupInfosRequest.create)
+    ..aOM<$40.UpdateGroupRequest>(
         305, _omitFieldNames ? '' : 'updateGroupRequest',
-        subBuilder: $36.UpdateGroupRequest.create)
-    ..aOM<$37.CreateGroupBlockedUserRequest>(
+        subBuilder: $40.UpdateGroupRequest.create)
+    ..aOM<$41.CreateGroupBlockedUserRequest>(
         400, _omitFieldNames ? '' : 'createGroupBlockedUserRequest',
-        subBuilder: $37.CreateGroupBlockedUserRequest.create)
-    ..aOM<$38.DeleteGroupBlockedUserRequest>(
+        subBuilder: $41.CreateGroupBlockedUserRequest.create)
+    ..aOM<$42.DeleteGroupBlockedUserRequest>(
         401, _omitFieldNames ? '' : 'deleteGroupBlockedUserRequest',
-        subBuilder: $38.DeleteGroupBlockedUserRequest.create)
-    ..aOM<$39.QueryGroupBlockedUserIdsRequest>(
+        subBuilder: $42.DeleteGroupBlockedUserRequest.create)
+    ..aOM<$43.QueryGroupBlockedUserIdsRequest>(
         402, _omitFieldNames ? '' : 'queryGroupBlockedUserIdsRequest',
-        subBuilder: $39.QueryGroupBlockedUserIdsRequest.create)
-    ..aOM<$40.QueryGroupBlockedUserInfosRequest>(
+        subBuilder: $43.QueryGroupBlockedUserIdsRequest.create)
+    ..aOM<$44.QueryGroupBlockedUserInfosRequest>(
         403, _omitFieldNames ? '' : 'queryGroupBlockedUserInfosRequest',
-        subBuilder: $40.QueryGroupBlockedUserInfosRequest.create)
-    ..aOM<$41.CheckGroupJoinQuestionsAnswersRequest>(
+        subBuilder: $44.QueryGroupBlockedUserInfosRequest.create)
+    ..aOM<$45.CheckGroupJoinQuestionsAnswersRequest>(
         500, _omitFieldNames ? '' : 'checkGroupJoinQuestionsAnswersRequest',
-        subBuilder: $41.CheckGroupJoinQuestionsAnswersRequest.create)
-    ..aOM<$42.CreateGroupInvitationRequest>(
+        subBuilder: $45.CheckGroupJoinQuestionsAnswersRequest.create)
+    ..aOM<$46.CreateGroupInvitationRequest>(
         501, _omitFieldNames ? '' : 'createGroupInvitationRequest',
-        subBuilder: $42.CreateGroupInvitationRequest.create)
-    ..aOM<$43.CreateGroupJoinRequestRequest>(
+        subBuilder: $46.CreateGroupInvitationRequest.create)
+    ..aOM<$47.CreateGroupJoinRequestRequest>(
         502, _omitFieldNames ? '' : 'createGroupJoinRequestRequest',
-        subBuilder: $43.CreateGroupJoinRequestRequest.create)
-    ..aOM<$44.CreateGroupJoinQuestionsRequest>(
+        subBuilder: $47.CreateGroupJoinRequestRequest.create)
+    ..aOM<$48.CreateGroupJoinQuestionsRequest>(
         503, _omitFieldNames ? '' : 'createGroupJoinQuestionsRequest',
-        subBuilder: $44.CreateGroupJoinQuestionsRequest.create)
-    ..aOM<$45.DeleteGroupInvitationRequest>(
+        subBuilder: $48.CreateGroupJoinQuestionsRequest.create)
+    ..aOM<$49.DeleteGroupInvitationRequest>(
         504, _omitFieldNames ? '' : 'deleteGroupInvitationRequest',
-        subBuilder: $45.DeleteGroupInvitationRequest.create)
-    ..aOM<$46.DeleteGroupJoinRequestRequest>(
+        subBuilder: $49.DeleteGroupInvitationRequest.create)
+    ..aOM<$50.DeleteGroupJoinRequestRequest>(
         505, _omitFieldNames ? '' : 'deleteGroupJoinRequestRequest',
-        subBuilder: $46.DeleteGroupJoinRequestRequest.create)
-    ..aOM<$47.DeleteGroupJoinQuestionsRequest>(
+        subBuilder: $50.DeleteGroupJoinRequestRequest.create)
+    ..aOM<$51.DeleteGroupJoinQuestionsRequest>(
         506, _omitFieldNames ? '' : 'deleteGroupJoinQuestionsRequest',
-        subBuilder: $47.DeleteGroupJoinQuestionsRequest.create)
-    ..aOM<$48.QueryGroupInvitationsRequest>(
+        subBuilder: $51.DeleteGroupJoinQuestionsRequest.create)
+    ..aOM<$52.QueryGroupInvitationsRequest>(
         507, _omitFieldNames ? '' : 'queryGroupInvitationsRequest',
-        subBuilder: $48.QueryGroupInvitationsRequest.create)
-    ..aOM<$49.QueryGroupJoinRequestsRequest>(
+        subBuilder: $52.QueryGroupInvitationsRequest.create)
+    ..aOM<$53.QueryGroupJoinRequestsRequest>(
         508, _omitFieldNames ? '' : 'queryGroupJoinRequestsRequest',
-        subBuilder: $49.QueryGroupJoinRequestsRequest.create)
-    ..aOM<$50.QueryGroupJoinQuestionsRequest>(
+        subBuilder: $53.QueryGroupJoinRequestsRequest.create)
+    ..aOM<$54.QueryGroupJoinQuestionsRequest>(
         509, _omitFieldNames ? '' : 'queryGroupJoinQuestionsRequest',
-        subBuilder: $50.QueryGroupJoinQuestionsRequest.create)
-    ..aOM<$51.UpdateGroupInvitationRequest>(
+        subBuilder: $54.QueryGroupJoinQuestionsRequest.create)
+    ..aOM<$55.UpdateGroupInvitationRequest>(
         510, _omitFieldNames ? '' : 'updateGroupInvitationRequest',
-        subBuilder: $51.UpdateGroupInvitationRequest.create)
-    ..aOM<$52.UpdateGroupJoinQuestionRequest>(
+        subBuilder: $55.UpdateGroupInvitationRequest.create)
+    ..aOM<$56.UpdateGroupJoinQuestionRequest>(
         511, _omitFieldNames ? '' : 'updateGroupJoinQuestionRequest',
-        subBuilder: $52.UpdateGroupJoinQuestionRequest.create)
-    ..aOM<$53.UpdateGroupJoinRequestRequest>(
+        subBuilder: $56.UpdateGroupJoinQuestionRequest.create)
+    ..aOM<$57.UpdateGroupJoinRequestRequest>(
         512, _omitFieldNames ? '' : 'updateGroupJoinRequestRequest',
-        subBuilder: $53.UpdateGroupJoinRequestRequest.create)
-    ..aOM<$54.DeleteResourceRequest>(
+        subBuilder: $57.UpdateGroupJoinRequestRequest.create)
+    ..aOM<$58.CreateMeetingRequest>(
+        900, _omitFieldNames ? '' : 'createMeetingRequest',
+        subBuilder: $58.CreateMeetingRequest.create)
+    ..aOM<$59.DeleteMeetingRequest>(
+        901, _omitFieldNames ? '' : 'deleteMeetingRequest',
+        subBuilder: $59.DeleteMeetingRequest.create)
+    ..aOM<$60.QueryMeetingsRequest>(
+        902, _omitFieldNames ? '' : 'queryMeetingsRequest',
+        subBuilder: $60.QueryMeetingsRequest.create)
+    ..aOM<$61.UpdateMeetingRequest>(
+        903, _omitFieldNames ? '' : 'updateMeetingRequest',
+        subBuilder: $61.UpdateMeetingRequest.create)
+    ..aOM<$62.UpdateMeetingInvitationRequest>(
+        904, _omitFieldNames ? '' : 'updateMeetingInvitationRequest',
+        subBuilder: $62.UpdateMeetingInvitationRequest.create)
+    ..aOM<$63.DeleteResourceRequest>(
         1000, _omitFieldNames ? '' : 'deleteResourceRequest',
-        subBuilder: $54.DeleteResourceRequest.create)
-    ..aOM<$55.QueryResourceDownloadInfoRequest>(
+        subBuilder: $63.DeleteResourceRequest.create)
+    ..aOM<$64.QueryResourceDownloadInfoRequest>(
         1001, _omitFieldNames ? '' : 'queryResourceDownloadInfoRequest',
-        subBuilder: $55.QueryResourceDownloadInfoRequest.create)
-    ..aOM<$56.QueryResourceUploadInfoRequest>(
+        subBuilder: $64.QueryResourceDownloadInfoRequest.create)
+    ..aOM<$65.QueryResourceUploadInfoRequest>(
         1002, _omitFieldNames ? '' : 'queryResourceUploadInfoRequest',
-        subBuilder: $56.QueryResourceUploadInfoRequest.create)
-    ..aOM<$57.QueryMessageAttachmentInfosRequest>(
+        subBuilder: $65.QueryResourceUploadInfoRequest.create)
+    ..aOM<$66.QueryMessageAttachmentInfosRequest>(
         1003, _omitFieldNames ? '' : 'queryMessageAttachmentInfosRequest',
-        subBuilder: $57.QueryMessageAttachmentInfosRequest.create)
-    ..aOM<$58.UpdateMessageAttachmentInfoRequest>(
+        subBuilder: $66.QueryMessageAttachmentInfosRequest.create)
+    ..aOM<$67.UpdateMessageAttachmentInfoRequest>(
         1004, _omitFieldNames ? '' : 'updateMessageAttachmentInfoRequest',
-        subBuilder: $58.UpdateMessageAttachmentInfoRequest.create)
+        subBuilder: $67.UpdateMessageAttachmentInfoRequest.create)
+    ..aOM<$68.DeleteConversationSettingsRequest>(
+        1100, _omitFieldNames ? '' : 'deleteConversationSettingsRequest',
+        subBuilder: $68.DeleteConversationSettingsRequest.create)
+    ..aOM<$69.QueryConversationSettingsRequest>(
+        1101, _omitFieldNames ? '' : 'queryConversationSettingsRequest',
+        subBuilder: $69.QueryConversationSettingsRequest.create)
+    ..aOM<$70.UpdateConversationSettingsRequest>(
+        1102, _omitFieldNames ? '' : 'updateConversationSettingsRequest',
+        subBuilder: $70.UpdateConversationSettingsRequest.create)
+    ..aOM<$71.CreateMessageReactionsRequest>(
+        1200, _omitFieldNames ? '' : 'createMessageReactionsRequest',
+        subBuilder: $71.CreateMessageReactionsRequest.create)
+    ..aOM<$72.DeleteMessageReactionsRequest>(
+        1201, _omitFieldNames ? '' : 'deleteMessageReactionsRequest',
+        subBuilder: $72.DeleteMessageReactionsRequest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -747,913 +901,1118 @@ class TurmsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRequestId() => clearField(1);
 
+  @$pb.TagNumber(2)
+  $core.List<$0.Value> get customAttributes => $_getList(1);
+
   /// User - Session
   @$pb.TagNumber(3)
-  $0.CreateSessionRequest get createSessionRequest => $_getN(1);
+  $1.CreateSessionRequest get createSessionRequest => $_getN(2);
   @$pb.TagNumber(3)
-  set createSessionRequest($0.CreateSessionRequest v) {
+  set createSessionRequest($1.CreateSessionRequest v) {
     setField(3, v);
   }
 
   @$pb.TagNumber(3)
-  $core.bool hasCreateSessionRequest() => $_has(1);
+  $core.bool hasCreateSessionRequest() => $_has(2);
   @$pb.TagNumber(3)
   void clearCreateSessionRequest() => clearField(3);
   @$pb.TagNumber(3)
-  $0.CreateSessionRequest ensureCreateSessionRequest() => $_ensure(1);
+  $1.CreateSessionRequest ensureCreateSessionRequest() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $1.DeleteSessionRequest get deleteSessionRequest => $_getN(2);
+  $2.DeleteSessionRequest get deleteSessionRequest => $_getN(3);
   @$pb.TagNumber(4)
-  set deleteSessionRequest($1.DeleteSessionRequest v) {
+  set deleteSessionRequest($2.DeleteSessionRequest v) {
     setField(4, v);
   }
 
   @$pb.TagNumber(4)
-  $core.bool hasDeleteSessionRequest() => $_has(2);
+  $core.bool hasDeleteSessionRequest() => $_has(3);
   @$pb.TagNumber(4)
   void clearDeleteSessionRequest() => clearField(4);
   @$pb.TagNumber(4)
-  $1.DeleteSessionRequest ensureDeleteSessionRequest() => $_ensure(2);
+  $2.DeleteSessionRequest ensureDeleteSessionRequest() => $_ensure(3);
 
   /// Conversation
   @$pb.TagNumber(5)
-  $2.QueryConversationsRequest get queryConversationsRequest => $_getN(3);
+  $3.QueryConversationsRequest get queryConversationsRequest => $_getN(4);
   @$pb.TagNumber(5)
-  set queryConversationsRequest($2.QueryConversationsRequest v) {
+  set queryConversationsRequest($3.QueryConversationsRequest v) {
     setField(5, v);
   }
 
   @$pb.TagNumber(5)
-  $core.bool hasQueryConversationsRequest() => $_has(3);
+  $core.bool hasQueryConversationsRequest() => $_has(4);
   @$pb.TagNumber(5)
   void clearQueryConversationsRequest() => clearField(5);
   @$pb.TagNumber(5)
-  $2.QueryConversationsRequest ensureQueryConversationsRequest() => $_ensure(3);
+  $3.QueryConversationsRequest ensureQueryConversationsRequest() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  $3.UpdateConversationRequest get updateConversationRequest => $_getN(4);
+  $4.UpdateConversationRequest get updateConversationRequest => $_getN(5);
   @$pb.TagNumber(6)
-  set updateConversationRequest($3.UpdateConversationRequest v) {
+  set updateConversationRequest($4.UpdateConversationRequest v) {
     setField(6, v);
   }
 
   @$pb.TagNumber(6)
-  $core.bool hasUpdateConversationRequest() => $_has(4);
+  $core.bool hasUpdateConversationRequest() => $_has(5);
   @$pb.TagNumber(6)
   void clearUpdateConversationRequest() => clearField(6);
   @$pb.TagNumber(6)
-  $3.UpdateConversationRequest ensureUpdateConversationRequest() => $_ensure(4);
+  $4.UpdateConversationRequest ensureUpdateConversationRequest() => $_ensure(5);
 
   @$pb.TagNumber(7)
-  $4.UpdateTypingStatusRequest get updateTypingStatusRequest => $_getN(5);
+  $5.UpdateTypingStatusRequest get updateTypingStatusRequest => $_getN(6);
   @$pb.TagNumber(7)
-  set updateTypingStatusRequest($4.UpdateTypingStatusRequest v) {
+  set updateTypingStatusRequest($5.UpdateTypingStatusRequest v) {
     setField(7, v);
   }
 
   @$pb.TagNumber(7)
-  $core.bool hasUpdateTypingStatusRequest() => $_has(5);
+  $core.bool hasUpdateTypingStatusRequest() => $_has(6);
   @$pb.TagNumber(7)
   void clearUpdateTypingStatusRequest() => clearField(7);
   @$pb.TagNumber(7)
-  $4.UpdateTypingStatusRequest ensureUpdateTypingStatusRequest() => $_ensure(5);
+  $5.UpdateTypingStatusRequest ensureUpdateTypingStatusRequest() => $_ensure(6);
 
   /// Message
   @$pb.TagNumber(8)
-  $5.CreateMessageRequest get createMessageRequest => $_getN(6);
+  $6.CreateMessageRequest get createMessageRequest => $_getN(7);
   @$pb.TagNumber(8)
-  set createMessageRequest($5.CreateMessageRequest v) {
+  set createMessageRequest($6.CreateMessageRequest v) {
     setField(8, v);
   }
 
   @$pb.TagNumber(8)
-  $core.bool hasCreateMessageRequest() => $_has(6);
+  $core.bool hasCreateMessageRequest() => $_has(7);
   @$pb.TagNumber(8)
   void clearCreateMessageRequest() => clearField(8);
   @$pb.TagNumber(8)
-  $5.CreateMessageRequest ensureCreateMessageRequest() => $_ensure(6);
+  $6.CreateMessageRequest ensureCreateMessageRequest() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $6.QueryMessagesRequest get queryMessagesRequest => $_getN(7);
+  $7.QueryMessagesRequest get queryMessagesRequest => $_getN(8);
   @$pb.TagNumber(9)
-  set queryMessagesRequest($6.QueryMessagesRequest v) {
+  set queryMessagesRequest($7.QueryMessagesRequest v) {
     setField(9, v);
   }
 
   @$pb.TagNumber(9)
-  $core.bool hasQueryMessagesRequest() => $_has(7);
+  $core.bool hasQueryMessagesRequest() => $_has(8);
   @$pb.TagNumber(9)
   void clearQueryMessagesRequest() => clearField(9);
   @$pb.TagNumber(9)
-  $6.QueryMessagesRequest ensureQueryMessagesRequest() => $_ensure(7);
+  $7.QueryMessagesRequest ensureQueryMessagesRequest() => $_ensure(8);
 
   @$pb.TagNumber(10)
-  $7.UpdateMessageRequest get updateMessageRequest => $_getN(8);
+  $8.UpdateMessageRequest get updateMessageRequest => $_getN(9);
   @$pb.TagNumber(10)
-  set updateMessageRequest($7.UpdateMessageRequest v) {
+  set updateMessageRequest($8.UpdateMessageRequest v) {
     setField(10, v);
   }
 
   @$pb.TagNumber(10)
-  $core.bool hasUpdateMessageRequest() => $_has(8);
+  $core.bool hasUpdateMessageRequest() => $_has(9);
   @$pb.TagNumber(10)
   void clearUpdateMessageRequest() => clearField(10);
   @$pb.TagNumber(10)
-  $7.UpdateMessageRequest ensureUpdateMessageRequest() => $_ensure(8);
+  $8.UpdateMessageRequest ensureUpdateMessageRequest() => $_ensure(9);
 
   /// Group Member
   @$pb.TagNumber(11)
-  $8.CreateGroupMembersRequest get createGroupMembersRequest => $_getN(9);
+  $9.CreateGroupMembersRequest get createGroupMembersRequest => $_getN(10);
   @$pb.TagNumber(11)
-  set createGroupMembersRequest($8.CreateGroupMembersRequest v) {
+  set createGroupMembersRequest($9.CreateGroupMembersRequest v) {
     setField(11, v);
   }
 
   @$pb.TagNumber(11)
-  $core.bool hasCreateGroupMembersRequest() => $_has(9);
+  $core.bool hasCreateGroupMembersRequest() => $_has(10);
   @$pb.TagNumber(11)
   void clearCreateGroupMembersRequest() => clearField(11);
   @$pb.TagNumber(11)
-  $8.CreateGroupMembersRequest ensureCreateGroupMembersRequest() => $_ensure(9);
+  $9.CreateGroupMembersRequest ensureCreateGroupMembersRequest() =>
+      $_ensure(10);
 
   @$pb.TagNumber(12)
-  $9.DeleteGroupMembersRequest get deleteGroupMembersRequest => $_getN(10);
+  $10.DeleteGroupMembersRequest get deleteGroupMembersRequest => $_getN(11);
   @$pb.TagNumber(12)
-  set deleteGroupMembersRequest($9.DeleteGroupMembersRequest v) {
+  set deleteGroupMembersRequest($10.DeleteGroupMembersRequest v) {
     setField(12, v);
   }
 
   @$pb.TagNumber(12)
-  $core.bool hasDeleteGroupMembersRequest() => $_has(10);
+  $core.bool hasDeleteGroupMembersRequest() => $_has(11);
   @$pb.TagNumber(12)
   void clearDeleteGroupMembersRequest() => clearField(12);
   @$pb.TagNumber(12)
-  $9.DeleteGroupMembersRequest ensureDeleteGroupMembersRequest() =>
-      $_ensure(10);
+  $10.DeleteGroupMembersRequest ensureDeleteGroupMembersRequest() =>
+      $_ensure(11);
 
   @$pb.TagNumber(13)
-  $10.QueryGroupMembersRequest get queryGroupMembersRequest => $_getN(11);
+  $11.QueryGroupMembersRequest get queryGroupMembersRequest => $_getN(12);
   @$pb.TagNumber(13)
-  set queryGroupMembersRequest($10.QueryGroupMembersRequest v) {
+  set queryGroupMembersRequest($11.QueryGroupMembersRequest v) {
     setField(13, v);
   }
 
   @$pb.TagNumber(13)
-  $core.bool hasQueryGroupMembersRequest() => $_has(11);
+  $core.bool hasQueryGroupMembersRequest() => $_has(12);
   @$pb.TagNumber(13)
   void clearQueryGroupMembersRequest() => clearField(13);
   @$pb.TagNumber(13)
-  $10.QueryGroupMembersRequest ensureQueryGroupMembersRequest() => $_ensure(11);
+  $11.QueryGroupMembersRequest ensureQueryGroupMembersRequest() => $_ensure(12);
 
   @$pb.TagNumber(14)
-  $11.UpdateGroupMemberRequest get updateGroupMemberRequest => $_getN(12);
+  $12.UpdateGroupMemberRequest get updateGroupMemberRequest => $_getN(13);
   @$pb.TagNumber(14)
-  set updateGroupMemberRequest($11.UpdateGroupMemberRequest v) {
+  set updateGroupMemberRequest($12.UpdateGroupMemberRequest v) {
     setField(14, v);
   }
 
   @$pb.TagNumber(14)
-  $core.bool hasUpdateGroupMemberRequest() => $_has(12);
+  $core.bool hasUpdateGroupMemberRequest() => $_has(13);
   @$pb.TagNumber(14)
   void clearUpdateGroupMemberRequest() => clearField(14);
   @$pb.TagNumber(14)
-  $11.UpdateGroupMemberRequest ensureUpdateGroupMemberRequest() => $_ensure(12);
+  $12.UpdateGroupMemberRequest ensureUpdateGroupMemberRequest() => $_ensure(13);
 
   /// User
   @$pb.TagNumber(100)
-  $12.QueryUserProfilesRequest get queryUserProfilesRequest => $_getN(13);
+  $13.QueryUserProfilesRequest get queryUserProfilesRequest => $_getN(14);
   @$pb.TagNumber(100)
-  set queryUserProfilesRequest($12.QueryUserProfilesRequest v) {
+  set queryUserProfilesRequest($13.QueryUserProfilesRequest v) {
     setField(100, v);
   }
 
   @$pb.TagNumber(100)
-  $core.bool hasQueryUserProfilesRequest() => $_has(13);
+  $core.bool hasQueryUserProfilesRequest() => $_has(14);
   @$pb.TagNumber(100)
   void clearQueryUserProfilesRequest() => clearField(100);
   @$pb.TagNumber(100)
-  $12.QueryUserProfilesRequest ensureQueryUserProfilesRequest() => $_ensure(13);
+  $13.QueryUserProfilesRequest ensureQueryUserProfilesRequest() => $_ensure(14);
 
   @$pb.TagNumber(101)
-  $13.QueryNearbyUsersRequest get queryNearbyUsersRequest => $_getN(14);
+  $14.QueryNearbyUsersRequest get queryNearbyUsersRequest => $_getN(15);
   @$pb.TagNumber(101)
-  set queryNearbyUsersRequest($13.QueryNearbyUsersRequest v) {
+  set queryNearbyUsersRequest($14.QueryNearbyUsersRequest v) {
     setField(101, v);
   }
 
   @$pb.TagNumber(101)
-  $core.bool hasQueryNearbyUsersRequest() => $_has(14);
+  $core.bool hasQueryNearbyUsersRequest() => $_has(15);
   @$pb.TagNumber(101)
   void clearQueryNearbyUsersRequest() => clearField(101);
   @$pb.TagNumber(101)
-  $13.QueryNearbyUsersRequest ensureQueryNearbyUsersRequest() => $_ensure(14);
+  $14.QueryNearbyUsersRequest ensureQueryNearbyUsersRequest() => $_ensure(15);
 
   @$pb.TagNumber(102)
-  $14.QueryUserOnlineStatusesRequest get queryUserOnlineStatusesRequest =>
-      $_getN(15);
+  $15.QueryUserOnlineStatusesRequest get queryUserOnlineStatusesRequest =>
+      $_getN(16);
   @$pb.TagNumber(102)
-  set queryUserOnlineStatusesRequest($14.QueryUserOnlineStatusesRequest v) {
+  set queryUserOnlineStatusesRequest($15.QueryUserOnlineStatusesRequest v) {
     setField(102, v);
   }
 
   @$pb.TagNumber(102)
-  $core.bool hasQueryUserOnlineStatusesRequest() => $_has(15);
+  $core.bool hasQueryUserOnlineStatusesRequest() => $_has(16);
   @$pb.TagNumber(102)
   void clearQueryUserOnlineStatusesRequest() => clearField(102);
   @$pb.TagNumber(102)
-  $14.QueryUserOnlineStatusesRequest ensureQueryUserOnlineStatusesRequest() =>
-      $_ensure(15);
+  $15.QueryUserOnlineStatusesRequest ensureQueryUserOnlineStatusesRequest() =>
+      $_ensure(16);
 
   @$pb.TagNumber(103)
-  $15.UpdateUserLocationRequest get updateUserLocationRequest => $_getN(16);
+  $16.UpdateUserLocationRequest get updateUserLocationRequest => $_getN(17);
   @$pb.TagNumber(103)
-  set updateUserLocationRequest($15.UpdateUserLocationRequest v) {
+  set updateUserLocationRequest($16.UpdateUserLocationRequest v) {
     setField(103, v);
   }
 
   @$pb.TagNumber(103)
-  $core.bool hasUpdateUserLocationRequest() => $_has(16);
+  $core.bool hasUpdateUserLocationRequest() => $_has(17);
   @$pb.TagNumber(103)
   void clearUpdateUserLocationRequest() => clearField(103);
   @$pb.TagNumber(103)
-  $15.UpdateUserLocationRequest ensureUpdateUserLocationRequest() =>
-      $_ensure(16);
+  $16.UpdateUserLocationRequest ensureUpdateUserLocationRequest() =>
+      $_ensure(17);
 
   @$pb.TagNumber(104)
-  $16.UpdateUserOnlineStatusRequest get updateUserOnlineStatusRequest =>
-      $_getN(17);
+  $17.UpdateUserOnlineStatusRequest get updateUserOnlineStatusRequest =>
+      $_getN(18);
   @$pb.TagNumber(104)
-  set updateUserOnlineStatusRequest($16.UpdateUserOnlineStatusRequest v) {
+  set updateUserOnlineStatusRequest($17.UpdateUserOnlineStatusRequest v) {
     setField(104, v);
   }
 
   @$pb.TagNumber(104)
-  $core.bool hasUpdateUserOnlineStatusRequest() => $_has(17);
+  $core.bool hasUpdateUserOnlineStatusRequest() => $_has(18);
   @$pb.TagNumber(104)
   void clearUpdateUserOnlineStatusRequest() => clearField(104);
   @$pb.TagNumber(104)
-  $16.UpdateUserOnlineStatusRequest ensureUpdateUserOnlineStatusRequest() =>
-      $_ensure(17);
+  $17.UpdateUserOnlineStatusRequest ensureUpdateUserOnlineStatusRequest() =>
+      $_ensure(18);
 
   @$pb.TagNumber(105)
-  $17.UpdateUserRequest get updateUserRequest => $_getN(18);
+  $18.UpdateUserRequest get updateUserRequest => $_getN(19);
   @$pb.TagNumber(105)
-  set updateUserRequest($17.UpdateUserRequest v) {
+  set updateUserRequest($18.UpdateUserRequest v) {
     setField(105, v);
   }
 
   @$pb.TagNumber(105)
-  $core.bool hasUpdateUserRequest() => $_has(18);
+  $core.bool hasUpdateUserRequest() => $_has(19);
   @$pb.TagNumber(105)
   void clearUpdateUserRequest() => clearField(105);
   @$pb.TagNumber(105)
-  $17.UpdateUserRequest ensureUpdateUserRequest() => $_ensure(18);
+  $18.UpdateUserRequest ensureUpdateUserRequest() => $_ensure(19);
+
+  @$pb.TagNumber(106)
+  $19.UpdateUserSettingsRequest get updateUserSettingsRequest => $_getN(20);
+  @$pb.TagNumber(106)
+  set updateUserSettingsRequest($19.UpdateUserSettingsRequest v) {
+    setField(106, v);
+  }
+
+  @$pb.TagNumber(106)
+  $core.bool hasUpdateUserSettingsRequest() => $_has(20);
+  @$pb.TagNumber(106)
+  void clearUpdateUserSettingsRequest() => clearField(106);
+  @$pb.TagNumber(106)
+  $19.UpdateUserSettingsRequest ensureUpdateUserSettingsRequest() =>
+      $_ensure(20);
+
+  @$pb.TagNumber(107)
+  $20.DeleteUserSettingsRequest get deleteUserSettingsRequest => $_getN(21);
+  @$pb.TagNumber(107)
+  set deleteUserSettingsRequest($20.DeleteUserSettingsRequest v) {
+    setField(107, v);
+  }
+
+  @$pb.TagNumber(107)
+  $core.bool hasDeleteUserSettingsRequest() => $_has(21);
+  @$pb.TagNumber(107)
+  void clearDeleteUserSettingsRequest() => clearField(107);
+  @$pb.TagNumber(107)
+  $20.DeleteUserSettingsRequest ensureDeleteUserSettingsRequest() =>
+      $_ensure(21);
+
+  @$pb.TagNumber(108)
+  $21.QueryUserSettingsRequest get queryUserSettingsRequest => $_getN(22);
+  @$pb.TagNumber(108)
+  set queryUserSettingsRequest($21.QueryUserSettingsRequest v) {
+    setField(108, v);
+  }
+
+  @$pb.TagNumber(108)
+  $core.bool hasQueryUserSettingsRequest() => $_has(22);
+  @$pb.TagNumber(108)
+  void clearQueryUserSettingsRequest() => clearField(108);
+  @$pb.TagNumber(108)
+  $21.QueryUserSettingsRequest ensureQueryUserSettingsRequest() => $_ensure(22);
 
   /// User Relationship
   @$pb.TagNumber(200)
-  $18.CreateFriendRequestRequest get createFriendRequestRequest => $_getN(19);
+  $22.CreateFriendRequestRequest get createFriendRequestRequest => $_getN(23);
   @$pb.TagNumber(200)
-  set createFriendRequestRequest($18.CreateFriendRequestRequest v) {
+  set createFriendRequestRequest($22.CreateFriendRequestRequest v) {
     setField(200, v);
   }
 
   @$pb.TagNumber(200)
-  $core.bool hasCreateFriendRequestRequest() => $_has(19);
+  $core.bool hasCreateFriendRequestRequest() => $_has(23);
   @$pb.TagNumber(200)
   void clearCreateFriendRequestRequest() => clearField(200);
   @$pb.TagNumber(200)
-  $18.CreateFriendRequestRequest ensureCreateFriendRequestRequest() =>
-      $_ensure(19);
+  $22.CreateFriendRequestRequest ensureCreateFriendRequestRequest() =>
+      $_ensure(23);
 
   @$pb.TagNumber(201)
-  $19.CreateRelationshipGroupRequest get createRelationshipGroupRequest =>
-      $_getN(20);
+  $23.CreateRelationshipGroupRequest get createRelationshipGroupRequest =>
+      $_getN(24);
   @$pb.TagNumber(201)
-  set createRelationshipGroupRequest($19.CreateRelationshipGroupRequest v) {
+  set createRelationshipGroupRequest($23.CreateRelationshipGroupRequest v) {
     setField(201, v);
   }
 
   @$pb.TagNumber(201)
-  $core.bool hasCreateRelationshipGroupRequest() => $_has(20);
+  $core.bool hasCreateRelationshipGroupRequest() => $_has(24);
   @$pb.TagNumber(201)
   void clearCreateRelationshipGroupRequest() => clearField(201);
   @$pb.TagNumber(201)
-  $19.CreateRelationshipGroupRequest ensureCreateRelationshipGroupRequest() =>
-      $_ensure(20);
+  $23.CreateRelationshipGroupRequest ensureCreateRelationshipGroupRequest() =>
+      $_ensure(24);
 
   @$pb.TagNumber(202)
-  $20.CreateRelationshipRequest get createRelationshipRequest => $_getN(21);
+  $24.CreateRelationshipRequest get createRelationshipRequest => $_getN(25);
   @$pb.TagNumber(202)
-  set createRelationshipRequest($20.CreateRelationshipRequest v) {
+  set createRelationshipRequest($24.CreateRelationshipRequest v) {
     setField(202, v);
   }
 
   @$pb.TagNumber(202)
-  $core.bool hasCreateRelationshipRequest() => $_has(21);
+  $core.bool hasCreateRelationshipRequest() => $_has(25);
   @$pb.TagNumber(202)
   void clearCreateRelationshipRequest() => clearField(202);
   @$pb.TagNumber(202)
-  $20.CreateRelationshipRequest ensureCreateRelationshipRequest() =>
-      $_ensure(21);
+  $24.CreateRelationshipRequest ensureCreateRelationshipRequest() =>
+      $_ensure(25);
 
   @$pb.TagNumber(203)
-  $21.DeleteFriendRequestRequest get deleteFriendRequestRequest => $_getN(22);
+  $25.DeleteFriendRequestRequest get deleteFriendRequestRequest => $_getN(26);
   @$pb.TagNumber(203)
-  set deleteFriendRequestRequest($21.DeleteFriendRequestRequest v) {
+  set deleteFriendRequestRequest($25.DeleteFriendRequestRequest v) {
     setField(203, v);
   }
 
   @$pb.TagNumber(203)
-  $core.bool hasDeleteFriendRequestRequest() => $_has(22);
+  $core.bool hasDeleteFriendRequestRequest() => $_has(26);
   @$pb.TagNumber(203)
   void clearDeleteFriendRequestRequest() => clearField(203);
   @$pb.TagNumber(203)
-  $21.DeleteFriendRequestRequest ensureDeleteFriendRequestRequest() =>
-      $_ensure(22);
+  $25.DeleteFriendRequestRequest ensureDeleteFriendRequestRequest() =>
+      $_ensure(26);
 
   @$pb.TagNumber(204)
-  $22.DeleteRelationshipGroupRequest get deleteRelationshipGroupRequest =>
-      $_getN(23);
+  $26.DeleteRelationshipGroupRequest get deleteRelationshipGroupRequest =>
+      $_getN(27);
   @$pb.TagNumber(204)
-  set deleteRelationshipGroupRequest($22.DeleteRelationshipGroupRequest v) {
+  set deleteRelationshipGroupRequest($26.DeleteRelationshipGroupRequest v) {
     setField(204, v);
   }
 
   @$pb.TagNumber(204)
-  $core.bool hasDeleteRelationshipGroupRequest() => $_has(23);
+  $core.bool hasDeleteRelationshipGroupRequest() => $_has(27);
   @$pb.TagNumber(204)
   void clearDeleteRelationshipGroupRequest() => clearField(204);
   @$pb.TagNumber(204)
-  $22.DeleteRelationshipGroupRequest ensureDeleteRelationshipGroupRequest() =>
-      $_ensure(23);
+  $26.DeleteRelationshipGroupRequest ensureDeleteRelationshipGroupRequest() =>
+      $_ensure(27);
 
   @$pb.TagNumber(205)
-  $23.DeleteRelationshipRequest get deleteRelationshipRequest => $_getN(24);
+  $27.DeleteRelationshipRequest get deleteRelationshipRequest => $_getN(28);
   @$pb.TagNumber(205)
-  set deleteRelationshipRequest($23.DeleteRelationshipRequest v) {
+  set deleteRelationshipRequest($27.DeleteRelationshipRequest v) {
     setField(205, v);
   }
 
   @$pb.TagNumber(205)
-  $core.bool hasDeleteRelationshipRequest() => $_has(24);
+  $core.bool hasDeleteRelationshipRequest() => $_has(28);
   @$pb.TagNumber(205)
   void clearDeleteRelationshipRequest() => clearField(205);
   @$pb.TagNumber(205)
-  $23.DeleteRelationshipRequest ensureDeleteRelationshipRequest() =>
-      $_ensure(24);
+  $27.DeleteRelationshipRequest ensureDeleteRelationshipRequest() =>
+      $_ensure(28);
 
   @$pb.TagNumber(206)
-  $24.QueryFriendRequestsRequest get queryFriendRequestsRequest => $_getN(25);
+  $28.QueryFriendRequestsRequest get queryFriendRequestsRequest => $_getN(29);
   @$pb.TagNumber(206)
-  set queryFriendRequestsRequest($24.QueryFriendRequestsRequest v) {
+  set queryFriendRequestsRequest($28.QueryFriendRequestsRequest v) {
     setField(206, v);
   }
 
   @$pb.TagNumber(206)
-  $core.bool hasQueryFriendRequestsRequest() => $_has(25);
+  $core.bool hasQueryFriendRequestsRequest() => $_has(29);
   @$pb.TagNumber(206)
   void clearQueryFriendRequestsRequest() => clearField(206);
   @$pb.TagNumber(206)
-  $24.QueryFriendRequestsRequest ensureQueryFriendRequestsRequest() =>
-      $_ensure(25);
+  $28.QueryFriendRequestsRequest ensureQueryFriendRequestsRequest() =>
+      $_ensure(29);
 
   @$pb.TagNumber(207)
-  $25.QueryRelatedUserIdsRequest get queryRelatedUserIdsRequest => $_getN(26);
+  $29.QueryRelatedUserIdsRequest get queryRelatedUserIdsRequest => $_getN(30);
   @$pb.TagNumber(207)
-  set queryRelatedUserIdsRequest($25.QueryRelatedUserIdsRequest v) {
+  set queryRelatedUserIdsRequest($29.QueryRelatedUserIdsRequest v) {
     setField(207, v);
   }
 
   @$pb.TagNumber(207)
-  $core.bool hasQueryRelatedUserIdsRequest() => $_has(26);
+  $core.bool hasQueryRelatedUserIdsRequest() => $_has(30);
   @$pb.TagNumber(207)
   void clearQueryRelatedUserIdsRequest() => clearField(207);
   @$pb.TagNumber(207)
-  $25.QueryRelatedUserIdsRequest ensureQueryRelatedUserIdsRequest() =>
-      $_ensure(26);
+  $29.QueryRelatedUserIdsRequest ensureQueryRelatedUserIdsRequest() =>
+      $_ensure(30);
 
   @$pb.TagNumber(208)
-  $26.QueryRelationshipGroupsRequest get queryRelationshipGroupsRequest =>
-      $_getN(27);
+  $30.QueryRelationshipGroupsRequest get queryRelationshipGroupsRequest =>
+      $_getN(31);
   @$pb.TagNumber(208)
-  set queryRelationshipGroupsRequest($26.QueryRelationshipGroupsRequest v) {
+  set queryRelationshipGroupsRequest($30.QueryRelationshipGroupsRequest v) {
     setField(208, v);
   }
 
   @$pb.TagNumber(208)
-  $core.bool hasQueryRelationshipGroupsRequest() => $_has(27);
+  $core.bool hasQueryRelationshipGroupsRequest() => $_has(31);
   @$pb.TagNumber(208)
   void clearQueryRelationshipGroupsRequest() => clearField(208);
   @$pb.TagNumber(208)
-  $26.QueryRelationshipGroupsRequest ensureQueryRelationshipGroupsRequest() =>
-      $_ensure(27);
+  $30.QueryRelationshipGroupsRequest ensureQueryRelationshipGroupsRequest() =>
+      $_ensure(31);
 
   @$pb.TagNumber(209)
-  $27.QueryRelationshipsRequest get queryRelationshipsRequest => $_getN(28);
+  $31.QueryRelationshipsRequest get queryRelationshipsRequest => $_getN(32);
   @$pb.TagNumber(209)
-  set queryRelationshipsRequest($27.QueryRelationshipsRequest v) {
+  set queryRelationshipsRequest($31.QueryRelationshipsRequest v) {
     setField(209, v);
   }
 
   @$pb.TagNumber(209)
-  $core.bool hasQueryRelationshipsRequest() => $_has(28);
+  $core.bool hasQueryRelationshipsRequest() => $_has(32);
   @$pb.TagNumber(209)
   void clearQueryRelationshipsRequest() => clearField(209);
   @$pb.TagNumber(209)
-  $27.QueryRelationshipsRequest ensureQueryRelationshipsRequest() =>
-      $_ensure(28);
+  $31.QueryRelationshipsRequest ensureQueryRelationshipsRequest() =>
+      $_ensure(32);
 
   @$pb.TagNumber(210)
-  $28.UpdateFriendRequestRequest get updateFriendRequestRequest => $_getN(29);
+  $32.UpdateFriendRequestRequest get updateFriendRequestRequest => $_getN(33);
   @$pb.TagNumber(210)
-  set updateFriendRequestRequest($28.UpdateFriendRequestRequest v) {
+  set updateFriendRequestRequest($32.UpdateFriendRequestRequest v) {
     setField(210, v);
   }
 
   @$pb.TagNumber(210)
-  $core.bool hasUpdateFriendRequestRequest() => $_has(29);
+  $core.bool hasUpdateFriendRequestRequest() => $_has(33);
   @$pb.TagNumber(210)
   void clearUpdateFriendRequestRequest() => clearField(210);
   @$pb.TagNumber(210)
-  $28.UpdateFriendRequestRequest ensureUpdateFriendRequestRequest() =>
-      $_ensure(29);
+  $32.UpdateFriendRequestRequest ensureUpdateFriendRequestRequest() =>
+      $_ensure(33);
 
   @$pb.TagNumber(211)
-  $29.UpdateRelationshipGroupRequest get updateRelationshipGroupRequest =>
-      $_getN(30);
+  $33.UpdateRelationshipGroupRequest get updateRelationshipGroupRequest =>
+      $_getN(34);
   @$pb.TagNumber(211)
-  set updateRelationshipGroupRequest($29.UpdateRelationshipGroupRequest v) {
+  set updateRelationshipGroupRequest($33.UpdateRelationshipGroupRequest v) {
     setField(211, v);
   }
 
   @$pb.TagNumber(211)
-  $core.bool hasUpdateRelationshipGroupRequest() => $_has(30);
+  $core.bool hasUpdateRelationshipGroupRequest() => $_has(34);
   @$pb.TagNumber(211)
   void clearUpdateRelationshipGroupRequest() => clearField(211);
   @$pb.TagNumber(211)
-  $29.UpdateRelationshipGroupRequest ensureUpdateRelationshipGroupRequest() =>
-      $_ensure(30);
+  $33.UpdateRelationshipGroupRequest ensureUpdateRelationshipGroupRequest() =>
+      $_ensure(34);
 
   @$pb.TagNumber(212)
-  $30.UpdateRelationshipRequest get updateRelationshipRequest => $_getN(31);
+  $34.UpdateRelationshipRequest get updateRelationshipRequest => $_getN(35);
   @$pb.TagNumber(212)
-  set updateRelationshipRequest($30.UpdateRelationshipRequest v) {
+  set updateRelationshipRequest($34.UpdateRelationshipRequest v) {
     setField(212, v);
   }
 
   @$pb.TagNumber(212)
-  $core.bool hasUpdateRelationshipRequest() => $_has(31);
+  $core.bool hasUpdateRelationshipRequest() => $_has(35);
   @$pb.TagNumber(212)
   void clearUpdateRelationshipRequest() => clearField(212);
   @$pb.TagNumber(212)
-  $30.UpdateRelationshipRequest ensureUpdateRelationshipRequest() =>
-      $_ensure(31);
+  $34.UpdateRelationshipRequest ensureUpdateRelationshipRequest() =>
+      $_ensure(35);
 
   /// Group
   @$pb.TagNumber(300)
-  $31.CreateGroupRequest get createGroupRequest => $_getN(32);
+  $35.CreateGroupRequest get createGroupRequest => $_getN(36);
   @$pb.TagNumber(300)
-  set createGroupRequest($31.CreateGroupRequest v) {
+  set createGroupRequest($35.CreateGroupRequest v) {
     setField(300, v);
   }
 
   @$pb.TagNumber(300)
-  $core.bool hasCreateGroupRequest() => $_has(32);
+  $core.bool hasCreateGroupRequest() => $_has(36);
   @$pb.TagNumber(300)
   void clearCreateGroupRequest() => clearField(300);
   @$pb.TagNumber(300)
-  $31.CreateGroupRequest ensureCreateGroupRequest() => $_ensure(32);
+  $35.CreateGroupRequest ensureCreateGroupRequest() => $_ensure(36);
 
   @$pb.TagNumber(301)
-  $32.DeleteGroupRequest get deleteGroupRequest => $_getN(33);
+  $36.DeleteGroupRequest get deleteGroupRequest => $_getN(37);
   @$pb.TagNumber(301)
-  set deleteGroupRequest($32.DeleteGroupRequest v) {
+  set deleteGroupRequest($36.DeleteGroupRequest v) {
     setField(301, v);
   }
 
   @$pb.TagNumber(301)
-  $core.bool hasDeleteGroupRequest() => $_has(33);
+  $core.bool hasDeleteGroupRequest() => $_has(37);
   @$pb.TagNumber(301)
   void clearDeleteGroupRequest() => clearField(301);
   @$pb.TagNumber(301)
-  $32.DeleteGroupRequest ensureDeleteGroupRequest() => $_ensure(33);
+  $36.DeleteGroupRequest ensureDeleteGroupRequest() => $_ensure(37);
 
   @$pb.TagNumber(302)
-  $33.QueryGroupsRequest get queryGroupsRequest => $_getN(34);
+  $37.QueryGroupsRequest get queryGroupsRequest => $_getN(38);
   @$pb.TagNumber(302)
-  set queryGroupsRequest($33.QueryGroupsRequest v) {
+  set queryGroupsRequest($37.QueryGroupsRequest v) {
     setField(302, v);
   }
 
   @$pb.TagNumber(302)
-  $core.bool hasQueryGroupsRequest() => $_has(34);
+  $core.bool hasQueryGroupsRequest() => $_has(38);
   @$pb.TagNumber(302)
   void clearQueryGroupsRequest() => clearField(302);
   @$pb.TagNumber(302)
-  $33.QueryGroupsRequest ensureQueryGroupsRequest() => $_ensure(34);
+  $37.QueryGroupsRequest ensureQueryGroupsRequest() => $_ensure(38);
 
   @$pb.TagNumber(303)
-  $34.QueryJoinedGroupIdsRequest get queryJoinedGroupIdsRequest => $_getN(35);
+  $38.QueryJoinedGroupIdsRequest get queryJoinedGroupIdsRequest => $_getN(39);
   @$pb.TagNumber(303)
-  set queryJoinedGroupIdsRequest($34.QueryJoinedGroupIdsRequest v) {
+  set queryJoinedGroupIdsRequest($38.QueryJoinedGroupIdsRequest v) {
     setField(303, v);
   }
 
   @$pb.TagNumber(303)
-  $core.bool hasQueryJoinedGroupIdsRequest() => $_has(35);
+  $core.bool hasQueryJoinedGroupIdsRequest() => $_has(39);
   @$pb.TagNumber(303)
   void clearQueryJoinedGroupIdsRequest() => clearField(303);
   @$pb.TagNumber(303)
-  $34.QueryJoinedGroupIdsRequest ensureQueryJoinedGroupIdsRequest() =>
-      $_ensure(35);
+  $38.QueryJoinedGroupIdsRequest ensureQueryJoinedGroupIdsRequest() =>
+      $_ensure(39);
 
   @$pb.TagNumber(304)
-  $35.QueryJoinedGroupInfosRequest get queryJoinedGroupInfosRequest =>
-      $_getN(36);
+  $39.QueryJoinedGroupInfosRequest get queryJoinedGroupInfosRequest =>
+      $_getN(40);
   @$pb.TagNumber(304)
-  set queryJoinedGroupInfosRequest($35.QueryJoinedGroupInfosRequest v) {
+  set queryJoinedGroupInfosRequest($39.QueryJoinedGroupInfosRequest v) {
     setField(304, v);
   }
 
   @$pb.TagNumber(304)
-  $core.bool hasQueryJoinedGroupInfosRequest() => $_has(36);
+  $core.bool hasQueryJoinedGroupInfosRequest() => $_has(40);
   @$pb.TagNumber(304)
   void clearQueryJoinedGroupInfosRequest() => clearField(304);
   @$pb.TagNumber(304)
-  $35.QueryJoinedGroupInfosRequest ensureQueryJoinedGroupInfosRequest() =>
-      $_ensure(36);
+  $39.QueryJoinedGroupInfosRequest ensureQueryJoinedGroupInfosRequest() =>
+      $_ensure(40);
 
   @$pb.TagNumber(305)
-  $36.UpdateGroupRequest get updateGroupRequest => $_getN(37);
+  $40.UpdateGroupRequest get updateGroupRequest => $_getN(41);
   @$pb.TagNumber(305)
-  set updateGroupRequest($36.UpdateGroupRequest v) {
+  set updateGroupRequest($40.UpdateGroupRequest v) {
     setField(305, v);
   }
 
   @$pb.TagNumber(305)
-  $core.bool hasUpdateGroupRequest() => $_has(37);
+  $core.bool hasUpdateGroupRequest() => $_has(41);
   @$pb.TagNumber(305)
   void clearUpdateGroupRequest() => clearField(305);
   @$pb.TagNumber(305)
-  $36.UpdateGroupRequest ensureUpdateGroupRequest() => $_ensure(37);
+  $40.UpdateGroupRequest ensureUpdateGroupRequest() => $_ensure(41);
 
   /// Group Blocklist
   @$pb.TagNumber(400)
-  $37.CreateGroupBlockedUserRequest get createGroupBlockedUserRequest =>
-      $_getN(38);
+  $41.CreateGroupBlockedUserRequest get createGroupBlockedUserRequest =>
+      $_getN(42);
   @$pb.TagNumber(400)
-  set createGroupBlockedUserRequest($37.CreateGroupBlockedUserRequest v) {
+  set createGroupBlockedUserRequest($41.CreateGroupBlockedUserRequest v) {
     setField(400, v);
   }
 
   @$pb.TagNumber(400)
-  $core.bool hasCreateGroupBlockedUserRequest() => $_has(38);
+  $core.bool hasCreateGroupBlockedUserRequest() => $_has(42);
   @$pb.TagNumber(400)
   void clearCreateGroupBlockedUserRequest() => clearField(400);
   @$pb.TagNumber(400)
-  $37.CreateGroupBlockedUserRequest ensureCreateGroupBlockedUserRequest() =>
-      $_ensure(38);
+  $41.CreateGroupBlockedUserRequest ensureCreateGroupBlockedUserRequest() =>
+      $_ensure(42);
 
   @$pb.TagNumber(401)
-  $38.DeleteGroupBlockedUserRequest get deleteGroupBlockedUserRequest =>
-      $_getN(39);
+  $42.DeleteGroupBlockedUserRequest get deleteGroupBlockedUserRequest =>
+      $_getN(43);
   @$pb.TagNumber(401)
-  set deleteGroupBlockedUserRequest($38.DeleteGroupBlockedUserRequest v) {
+  set deleteGroupBlockedUserRequest($42.DeleteGroupBlockedUserRequest v) {
     setField(401, v);
   }
 
   @$pb.TagNumber(401)
-  $core.bool hasDeleteGroupBlockedUserRequest() => $_has(39);
+  $core.bool hasDeleteGroupBlockedUserRequest() => $_has(43);
   @$pb.TagNumber(401)
   void clearDeleteGroupBlockedUserRequest() => clearField(401);
   @$pb.TagNumber(401)
-  $38.DeleteGroupBlockedUserRequest ensureDeleteGroupBlockedUserRequest() =>
-      $_ensure(39);
+  $42.DeleteGroupBlockedUserRequest ensureDeleteGroupBlockedUserRequest() =>
+      $_ensure(43);
 
   @$pb.TagNumber(402)
-  $39.QueryGroupBlockedUserIdsRequest get queryGroupBlockedUserIdsRequest =>
-      $_getN(40);
+  $43.QueryGroupBlockedUserIdsRequest get queryGroupBlockedUserIdsRequest =>
+      $_getN(44);
   @$pb.TagNumber(402)
-  set queryGroupBlockedUserIdsRequest($39.QueryGroupBlockedUserIdsRequest v) {
+  set queryGroupBlockedUserIdsRequest($43.QueryGroupBlockedUserIdsRequest v) {
     setField(402, v);
   }
 
   @$pb.TagNumber(402)
-  $core.bool hasQueryGroupBlockedUserIdsRequest() => $_has(40);
+  $core.bool hasQueryGroupBlockedUserIdsRequest() => $_has(44);
   @$pb.TagNumber(402)
   void clearQueryGroupBlockedUserIdsRequest() => clearField(402);
   @$pb.TagNumber(402)
-  $39.QueryGroupBlockedUserIdsRequest ensureQueryGroupBlockedUserIdsRequest() =>
-      $_ensure(40);
+  $43.QueryGroupBlockedUserIdsRequest ensureQueryGroupBlockedUserIdsRequest() =>
+      $_ensure(44);
 
   @$pb.TagNumber(403)
-  $40.QueryGroupBlockedUserInfosRequest get queryGroupBlockedUserInfosRequest =>
-      $_getN(41);
+  $44.QueryGroupBlockedUserInfosRequest get queryGroupBlockedUserInfosRequest =>
+      $_getN(45);
   @$pb.TagNumber(403)
   set queryGroupBlockedUserInfosRequest(
-      $40.QueryGroupBlockedUserInfosRequest v) {
+      $44.QueryGroupBlockedUserInfosRequest v) {
     setField(403, v);
   }
 
   @$pb.TagNumber(403)
-  $core.bool hasQueryGroupBlockedUserInfosRequest() => $_has(41);
+  $core.bool hasQueryGroupBlockedUserInfosRequest() => $_has(45);
   @$pb.TagNumber(403)
   void clearQueryGroupBlockedUserInfosRequest() => clearField(403);
   @$pb.TagNumber(403)
-  $40.QueryGroupBlockedUserInfosRequest
-      ensureQueryGroupBlockedUserInfosRequest() => $_ensure(41);
+  $44.QueryGroupBlockedUserInfosRequest
+      ensureQueryGroupBlockedUserInfosRequest() => $_ensure(45);
 
   /// Group Enrollment
   @$pb.TagNumber(500)
-  $41.CheckGroupJoinQuestionsAnswersRequest
-      get checkGroupJoinQuestionsAnswersRequest => $_getN(42);
+  $45.CheckGroupJoinQuestionsAnswersRequest
+      get checkGroupJoinQuestionsAnswersRequest => $_getN(46);
   @$pb.TagNumber(500)
   set checkGroupJoinQuestionsAnswersRequest(
-      $41.CheckGroupJoinQuestionsAnswersRequest v) {
+      $45.CheckGroupJoinQuestionsAnswersRequest v) {
     setField(500, v);
   }
 
   @$pb.TagNumber(500)
-  $core.bool hasCheckGroupJoinQuestionsAnswersRequest() => $_has(42);
+  $core.bool hasCheckGroupJoinQuestionsAnswersRequest() => $_has(46);
   @$pb.TagNumber(500)
   void clearCheckGroupJoinQuestionsAnswersRequest() => clearField(500);
   @$pb.TagNumber(500)
-  $41.CheckGroupJoinQuestionsAnswersRequest
-      ensureCheckGroupJoinQuestionsAnswersRequest() => $_ensure(42);
+  $45.CheckGroupJoinQuestionsAnswersRequest
+      ensureCheckGroupJoinQuestionsAnswersRequest() => $_ensure(46);
 
   @$pb.TagNumber(501)
-  $42.CreateGroupInvitationRequest get createGroupInvitationRequest =>
-      $_getN(43);
+  $46.CreateGroupInvitationRequest get createGroupInvitationRequest =>
+      $_getN(47);
   @$pb.TagNumber(501)
-  set createGroupInvitationRequest($42.CreateGroupInvitationRequest v) {
+  set createGroupInvitationRequest($46.CreateGroupInvitationRequest v) {
     setField(501, v);
   }
 
   @$pb.TagNumber(501)
-  $core.bool hasCreateGroupInvitationRequest() => $_has(43);
+  $core.bool hasCreateGroupInvitationRequest() => $_has(47);
   @$pb.TagNumber(501)
   void clearCreateGroupInvitationRequest() => clearField(501);
   @$pb.TagNumber(501)
-  $42.CreateGroupInvitationRequest ensureCreateGroupInvitationRequest() =>
-      $_ensure(43);
+  $46.CreateGroupInvitationRequest ensureCreateGroupInvitationRequest() =>
+      $_ensure(47);
 
   @$pb.TagNumber(502)
-  $43.CreateGroupJoinRequestRequest get createGroupJoinRequestRequest =>
-      $_getN(44);
+  $47.CreateGroupJoinRequestRequest get createGroupJoinRequestRequest =>
+      $_getN(48);
   @$pb.TagNumber(502)
-  set createGroupJoinRequestRequest($43.CreateGroupJoinRequestRequest v) {
+  set createGroupJoinRequestRequest($47.CreateGroupJoinRequestRequest v) {
     setField(502, v);
   }
 
   @$pb.TagNumber(502)
-  $core.bool hasCreateGroupJoinRequestRequest() => $_has(44);
+  $core.bool hasCreateGroupJoinRequestRequest() => $_has(48);
   @$pb.TagNumber(502)
   void clearCreateGroupJoinRequestRequest() => clearField(502);
   @$pb.TagNumber(502)
-  $43.CreateGroupJoinRequestRequest ensureCreateGroupJoinRequestRequest() =>
-      $_ensure(44);
+  $47.CreateGroupJoinRequestRequest ensureCreateGroupJoinRequestRequest() =>
+      $_ensure(48);
 
   @$pb.TagNumber(503)
-  $44.CreateGroupJoinQuestionsRequest get createGroupJoinQuestionsRequest =>
-      $_getN(45);
+  $48.CreateGroupJoinQuestionsRequest get createGroupJoinQuestionsRequest =>
+      $_getN(49);
   @$pb.TagNumber(503)
-  set createGroupJoinQuestionsRequest($44.CreateGroupJoinQuestionsRequest v) {
+  set createGroupJoinQuestionsRequest($48.CreateGroupJoinQuestionsRequest v) {
     setField(503, v);
   }
 
   @$pb.TagNumber(503)
-  $core.bool hasCreateGroupJoinQuestionsRequest() => $_has(45);
+  $core.bool hasCreateGroupJoinQuestionsRequest() => $_has(49);
   @$pb.TagNumber(503)
   void clearCreateGroupJoinQuestionsRequest() => clearField(503);
   @$pb.TagNumber(503)
-  $44.CreateGroupJoinQuestionsRequest ensureCreateGroupJoinQuestionsRequest() =>
-      $_ensure(45);
+  $48.CreateGroupJoinQuestionsRequest ensureCreateGroupJoinQuestionsRequest() =>
+      $_ensure(49);
 
   @$pb.TagNumber(504)
-  $45.DeleteGroupInvitationRequest get deleteGroupInvitationRequest =>
-      $_getN(46);
+  $49.DeleteGroupInvitationRequest get deleteGroupInvitationRequest =>
+      $_getN(50);
   @$pb.TagNumber(504)
-  set deleteGroupInvitationRequest($45.DeleteGroupInvitationRequest v) {
+  set deleteGroupInvitationRequest($49.DeleteGroupInvitationRequest v) {
     setField(504, v);
   }
 
   @$pb.TagNumber(504)
-  $core.bool hasDeleteGroupInvitationRequest() => $_has(46);
+  $core.bool hasDeleteGroupInvitationRequest() => $_has(50);
   @$pb.TagNumber(504)
   void clearDeleteGroupInvitationRequest() => clearField(504);
   @$pb.TagNumber(504)
-  $45.DeleteGroupInvitationRequest ensureDeleteGroupInvitationRequest() =>
-      $_ensure(46);
+  $49.DeleteGroupInvitationRequest ensureDeleteGroupInvitationRequest() =>
+      $_ensure(50);
 
   @$pb.TagNumber(505)
-  $46.DeleteGroupJoinRequestRequest get deleteGroupJoinRequestRequest =>
-      $_getN(47);
+  $50.DeleteGroupJoinRequestRequest get deleteGroupJoinRequestRequest =>
+      $_getN(51);
   @$pb.TagNumber(505)
-  set deleteGroupJoinRequestRequest($46.DeleteGroupJoinRequestRequest v) {
+  set deleteGroupJoinRequestRequest($50.DeleteGroupJoinRequestRequest v) {
     setField(505, v);
   }
 
   @$pb.TagNumber(505)
-  $core.bool hasDeleteGroupJoinRequestRequest() => $_has(47);
+  $core.bool hasDeleteGroupJoinRequestRequest() => $_has(51);
   @$pb.TagNumber(505)
   void clearDeleteGroupJoinRequestRequest() => clearField(505);
   @$pb.TagNumber(505)
-  $46.DeleteGroupJoinRequestRequest ensureDeleteGroupJoinRequestRequest() =>
-      $_ensure(47);
+  $50.DeleteGroupJoinRequestRequest ensureDeleteGroupJoinRequestRequest() =>
+      $_ensure(51);
 
   @$pb.TagNumber(506)
-  $47.DeleteGroupJoinQuestionsRequest get deleteGroupJoinQuestionsRequest =>
-      $_getN(48);
+  $51.DeleteGroupJoinQuestionsRequest get deleteGroupJoinQuestionsRequest =>
+      $_getN(52);
   @$pb.TagNumber(506)
-  set deleteGroupJoinQuestionsRequest($47.DeleteGroupJoinQuestionsRequest v) {
+  set deleteGroupJoinQuestionsRequest($51.DeleteGroupJoinQuestionsRequest v) {
     setField(506, v);
   }
 
   @$pb.TagNumber(506)
-  $core.bool hasDeleteGroupJoinQuestionsRequest() => $_has(48);
+  $core.bool hasDeleteGroupJoinQuestionsRequest() => $_has(52);
   @$pb.TagNumber(506)
   void clearDeleteGroupJoinQuestionsRequest() => clearField(506);
   @$pb.TagNumber(506)
-  $47.DeleteGroupJoinQuestionsRequest ensureDeleteGroupJoinQuestionsRequest() =>
-      $_ensure(48);
+  $51.DeleteGroupJoinQuestionsRequest ensureDeleteGroupJoinQuestionsRequest() =>
+      $_ensure(52);
 
   @$pb.TagNumber(507)
-  $48.QueryGroupInvitationsRequest get queryGroupInvitationsRequest =>
-      $_getN(49);
+  $52.QueryGroupInvitationsRequest get queryGroupInvitationsRequest =>
+      $_getN(53);
   @$pb.TagNumber(507)
-  set queryGroupInvitationsRequest($48.QueryGroupInvitationsRequest v) {
+  set queryGroupInvitationsRequest($52.QueryGroupInvitationsRequest v) {
     setField(507, v);
   }
 
   @$pb.TagNumber(507)
-  $core.bool hasQueryGroupInvitationsRequest() => $_has(49);
+  $core.bool hasQueryGroupInvitationsRequest() => $_has(53);
   @$pb.TagNumber(507)
   void clearQueryGroupInvitationsRequest() => clearField(507);
   @$pb.TagNumber(507)
-  $48.QueryGroupInvitationsRequest ensureQueryGroupInvitationsRequest() =>
-      $_ensure(49);
+  $52.QueryGroupInvitationsRequest ensureQueryGroupInvitationsRequest() =>
+      $_ensure(53);
 
   @$pb.TagNumber(508)
-  $49.QueryGroupJoinRequestsRequest get queryGroupJoinRequestsRequest =>
-      $_getN(50);
+  $53.QueryGroupJoinRequestsRequest get queryGroupJoinRequestsRequest =>
+      $_getN(54);
   @$pb.TagNumber(508)
-  set queryGroupJoinRequestsRequest($49.QueryGroupJoinRequestsRequest v) {
+  set queryGroupJoinRequestsRequest($53.QueryGroupJoinRequestsRequest v) {
     setField(508, v);
   }
 
   @$pb.TagNumber(508)
-  $core.bool hasQueryGroupJoinRequestsRequest() => $_has(50);
+  $core.bool hasQueryGroupJoinRequestsRequest() => $_has(54);
   @$pb.TagNumber(508)
   void clearQueryGroupJoinRequestsRequest() => clearField(508);
   @$pb.TagNumber(508)
-  $49.QueryGroupJoinRequestsRequest ensureQueryGroupJoinRequestsRequest() =>
-      $_ensure(50);
+  $53.QueryGroupJoinRequestsRequest ensureQueryGroupJoinRequestsRequest() =>
+      $_ensure(54);
 
   @$pb.TagNumber(509)
-  $50.QueryGroupJoinQuestionsRequest get queryGroupJoinQuestionsRequest =>
-      $_getN(51);
+  $54.QueryGroupJoinQuestionsRequest get queryGroupJoinQuestionsRequest =>
+      $_getN(55);
   @$pb.TagNumber(509)
-  set queryGroupJoinQuestionsRequest($50.QueryGroupJoinQuestionsRequest v) {
+  set queryGroupJoinQuestionsRequest($54.QueryGroupJoinQuestionsRequest v) {
     setField(509, v);
   }
 
   @$pb.TagNumber(509)
-  $core.bool hasQueryGroupJoinQuestionsRequest() => $_has(51);
+  $core.bool hasQueryGroupJoinQuestionsRequest() => $_has(55);
   @$pb.TagNumber(509)
   void clearQueryGroupJoinQuestionsRequest() => clearField(509);
   @$pb.TagNumber(509)
-  $50.QueryGroupJoinQuestionsRequest ensureQueryGroupJoinQuestionsRequest() =>
-      $_ensure(51);
+  $54.QueryGroupJoinQuestionsRequest ensureQueryGroupJoinQuestionsRequest() =>
+      $_ensure(55);
 
   @$pb.TagNumber(510)
-  $51.UpdateGroupInvitationRequest get updateGroupInvitationRequest =>
-      $_getN(52);
+  $55.UpdateGroupInvitationRequest get updateGroupInvitationRequest =>
+      $_getN(56);
   @$pb.TagNumber(510)
-  set updateGroupInvitationRequest($51.UpdateGroupInvitationRequest v) {
+  set updateGroupInvitationRequest($55.UpdateGroupInvitationRequest v) {
     setField(510, v);
   }
 
   @$pb.TagNumber(510)
-  $core.bool hasUpdateGroupInvitationRequest() => $_has(52);
+  $core.bool hasUpdateGroupInvitationRequest() => $_has(56);
   @$pb.TagNumber(510)
   void clearUpdateGroupInvitationRequest() => clearField(510);
   @$pb.TagNumber(510)
-  $51.UpdateGroupInvitationRequest ensureUpdateGroupInvitationRequest() =>
-      $_ensure(52);
+  $55.UpdateGroupInvitationRequest ensureUpdateGroupInvitationRequest() =>
+      $_ensure(56);
 
   @$pb.TagNumber(511)
-  $52.UpdateGroupJoinQuestionRequest get updateGroupJoinQuestionRequest =>
-      $_getN(53);
+  $56.UpdateGroupJoinQuestionRequest get updateGroupJoinQuestionRequest =>
+      $_getN(57);
   @$pb.TagNumber(511)
-  set updateGroupJoinQuestionRequest($52.UpdateGroupJoinQuestionRequest v) {
+  set updateGroupJoinQuestionRequest($56.UpdateGroupJoinQuestionRequest v) {
     setField(511, v);
   }
 
   @$pb.TagNumber(511)
-  $core.bool hasUpdateGroupJoinQuestionRequest() => $_has(53);
+  $core.bool hasUpdateGroupJoinQuestionRequest() => $_has(57);
   @$pb.TagNumber(511)
   void clearUpdateGroupJoinQuestionRequest() => clearField(511);
   @$pb.TagNumber(511)
-  $52.UpdateGroupJoinQuestionRequest ensureUpdateGroupJoinQuestionRequest() =>
-      $_ensure(53);
+  $56.UpdateGroupJoinQuestionRequest ensureUpdateGroupJoinQuestionRequest() =>
+      $_ensure(57);
 
   @$pb.TagNumber(512)
-  $53.UpdateGroupJoinRequestRequest get updateGroupJoinRequestRequest =>
-      $_getN(54);
+  $57.UpdateGroupJoinRequestRequest get updateGroupJoinRequestRequest =>
+      $_getN(58);
   @$pb.TagNumber(512)
-  set updateGroupJoinRequestRequest($53.UpdateGroupJoinRequestRequest v) {
+  set updateGroupJoinRequestRequest($57.UpdateGroupJoinRequestRequest v) {
     setField(512, v);
   }
 
   @$pb.TagNumber(512)
-  $core.bool hasUpdateGroupJoinRequestRequest() => $_has(54);
+  $core.bool hasUpdateGroupJoinRequestRequest() => $_has(58);
   @$pb.TagNumber(512)
   void clearUpdateGroupJoinRequestRequest() => clearField(512);
   @$pb.TagNumber(512)
-  $53.UpdateGroupJoinRequestRequest ensureUpdateGroupJoinRequestRequest() =>
-      $_ensure(54);
+  $57.UpdateGroupJoinRequestRequest ensureUpdateGroupJoinRequestRequest() =>
+      $_ensure(58);
+
+  /// Conference
+  @$pb.TagNumber(900)
+  $58.CreateMeetingRequest get createMeetingRequest => $_getN(59);
+  @$pb.TagNumber(900)
+  set createMeetingRequest($58.CreateMeetingRequest v) {
+    setField(900, v);
+  }
+
+  @$pb.TagNumber(900)
+  $core.bool hasCreateMeetingRequest() => $_has(59);
+  @$pb.TagNumber(900)
+  void clearCreateMeetingRequest() => clearField(900);
+  @$pb.TagNumber(900)
+  $58.CreateMeetingRequest ensureCreateMeetingRequest() => $_ensure(59);
+
+  @$pb.TagNumber(901)
+  $59.DeleteMeetingRequest get deleteMeetingRequest => $_getN(60);
+  @$pb.TagNumber(901)
+  set deleteMeetingRequest($59.DeleteMeetingRequest v) {
+    setField(901, v);
+  }
+
+  @$pb.TagNumber(901)
+  $core.bool hasDeleteMeetingRequest() => $_has(60);
+  @$pb.TagNumber(901)
+  void clearDeleteMeetingRequest() => clearField(901);
+  @$pb.TagNumber(901)
+  $59.DeleteMeetingRequest ensureDeleteMeetingRequest() => $_ensure(60);
+
+  @$pb.TagNumber(902)
+  $60.QueryMeetingsRequest get queryMeetingsRequest => $_getN(61);
+  @$pb.TagNumber(902)
+  set queryMeetingsRequest($60.QueryMeetingsRequest v) {
+    setField(902, v);
+  }
+
+  @$pb.TagNumber(902)
+  $core.bool hasQueryMeetingsRequest() => $_has(61);
+  @$pb.TagNumber(902)
+  void clearQueryMeetingsRequest() => clearField(902);
+  @$pb.TagNumber(902)
+  $60.QueryMeetingsRequest ensureQueryMeetingsRequest() => $_ensure(61);
+
+  @$pb.TagNumber(903)
+  $61.UpdateMeetingRequest get updateMeetingRequest => $_getN(62);
+  @$pb.TagNumber(903)
+  set updateMeetingRequest($61.UpdateMeetingRequest v) {
+    setField(903, v);
+  }
+
+  @$pb.TagNumber(903)
+  $core.bool hasUpdateMeetingRequest() => $_has(62);
+  @$pb.TagNumber(903)
+  void clearUpdateMeetingRequest() => clearField(903);
+  @$pb.TagNumber(903)
+  $61.UpdateMeetingRequest ensureUpdateMeetingRequest() => $_ensure(62);
+
+  @$pb.TagNumber(904)
+  $62.UpdateMeetingInvitationRequest get updateMeetingInvitationRequest =>
+      $_getN(63);
+  @$pb.TagNumber(904)
+  set updateMeetingInvitationRequest($62.UpdateMeetingInvitationRequest v) {
+    setField(904, v);
+  }
+
+  @$pb.TagNumber(904)
+  $core.bool hasUpdateMeetingInvitationRequest() => $_has(63);
+  @$pb.TagNumber(904)
+  void clearUpdateMeetingInvitationRequest() => clearField(904);
+  @$pb.TagNumber(904)
+  $62.UpdateMeetingInvitationRequest ensureUpdateMeetingInvitationRequest() =>
+      $_ensure(63);
 
   /// Storage
   @$pb.TagNumber(1000)
-  $54.DeleteResourceRequest get deleteResourceRequest => $_getN(55);
+  $63.DeleteResourceRequest get deleteResourceRequest => $_getN(64);
   @$pb.TagNumber(1000)
-  set deleteResourceRequest($54.DeleteResourceRequest v) {
+  set deleteResourceRequest($63.DeleteResourceRequest v) {
     setField(1000, v);
   }
 
   @$pb.TagNumber(1000)
-  $core.bool hasDeleteResourceRequest() => $_has(55);
+  $core.bool hasDeleteResourceRequest() => $_has(64);
   @$pb.TagNumber(1000)
   void clearDeleteResourceRequest() => clearField(1000);
   @$pb.TagNumber(1000)
-  $54.DeleteResourceRequest ensureDeleteResourceRequest() => $_ensure(55);
+  $63.DeleteResourceRequest ensureDeleteResourceRequest() => $_ensure(64);
 
   @$pb.TagNumber(1001)
-  $55.QueryResourceDownloadInfoRequest get queryResourceDownloadInfoRequest =>
-      $_getN(56);
+  $64.QueryResourceDownloadInfoRequest get queryResourceDownloadInfoRequest =>
+      $_getN(65);
   @$pb.TagNumber(1001)
-  set queryResourceDownloadInfoRequest($55.QueryResourceDownloadInfoRequest v) {
+  set queryResourceDownloadInfoRequest($64.QueryResourceDownloadInfoRequest v) {
     setField(1001, v);
   }
 
   @$pb.TagNumber(1001)
-  $core.bool hasQueryResourceDownloadInfoRequest() => $_has(56);
+  $core.bool hasQueryResourceDownloadInfoRequest() => $_has(65);
   @$pb.TagNumber(1001)
   void clearQueryResourceDownloadInfoRequest() => clearField(1001);
   @$pb.TagNumber(1001)
-  $55.QueryResourceDownloadInfoRequest
-      ensureQueryResourceDownloadInfoRequest() => $_ensure(56);
+  $64.QueryResourceDownloadInfoRequest
+      ensureQueryResourceDownloadInfoRequest() => $_ensure(65);
 
   @$pb.TagNumber(1002)
-  $56.QueryResourceUploadInfoRequest get queryResourceUploadInfoRequest =>
-      $_getN(57);
+  $65.QueryResourceUploadInfoRequest get queryResourceUploadInfoRequest =>
+      $_getN(66);
   @$pb.TagNumber(1002)
-  set queryResourceUploadInfoRequest($56.QueryResourceUploadInfoRequest v) {
+  set queryResourceUploadInfoRequest($65.QueryResourceUploadInfoRequest v) {
     setField(1002, v);
   }
 
   @$pb.TagNumber(1002)
-  $core.bool hasQueryResourceUploadInfoRequest() => $_has(57);
+  $core.bool hasQueryResourceUploadInfoRequest() => $_has(66);
   @$pb.TagNumber(1002)
   void clearQueryResourceUploadInfoRequest() => clearField(1002);
   @$pb.TagNumber(1002)
-  $56.QueryResourceUploadInfoRequest ensureQueryResourceUploadInfoRequest() =>
-      $_ensure(57);
+  $65.QueryResourceUploadInfoRequest ensureQueryResourceUploadInfoRequest() =>
+      $_ensure(66);
 
   @$pb.TagNumber(1003)
-  $57.QueryMessageAttachmentInfosRequest
-      get queryMessageAttachmentInfosRequest => $_getN(58);
+  $66.QueryMessageAttachmentInfosRequest
+      get queryMessageAttachmentInfosRequest => $_getN(67);
   @$pb.TagNumber(1003)
   set queryMessageAttachmentInfosRequest(
-      $57.QueryMessageAttachmentInfosRequest v) {
+      $66.QueryMessageAttachmentInfosRequest v) {
     setField(1003, v);
   }
 
   @$pb.TagNumber(1003)
-  $core.bool hasQueryMessageAttachmentInfosRequest() => $_has(58);
+  $core.bool hasQueryMessageAttachmentInfosRequest() => $_has(67);
   @$pb.TagNumber(1003)
   void clearQueryMessageAttachmentInfosRequest() => clearField(1003);
   @$pb.TagNumber(1003)
-  $57.QueryMessageAttachmentInfosRequest
-      ensureQueryMessageAttachmentInfosRequest() => $_ensure(58);
+  $66.QueryMessageAttachmentInfosRequest
+      ensureQueryMessageAttachmentInfosRequest() => $_ensure(67);
 
   @$pb.TagNumber(1004)
-  $58.UpdateMessageAttachmentInfoRequest
-      get updateMessageAttachmentInfoRequest => $_getN(59);
+  $67.UpdateMessageAttachmentInfoRequest
+      get updateMessageAttachmentInfoRequest => $_getN(68);
   @$pb.TagNumber(1004)
   set updateMessageAttachmentInfoRequest(
-      $58.UpdateMessageAttachmentInfoRequest v) {
+      $67.UpdateMessageAttachmentInfoRequest v) {
     setField(1004, v);
   }
 
   @$pb.TagNumber(1004)
-  $core.bool hasUpdateMessageAttachmentInfoRequest() => $_has(59);
+  $core.bool hasUpdateMessageAttachmentInfoRequest() => $_has(68);
   @$pb.TagNumber(1004)
   void clearUpdateMessageAttachmentInfoRequest() => clearField(1004);
   @$pb.TagNumber(1004)
-  $58.UpdateMessageAttachmentInfoRequest
-      ensureUpdateMessageAttachmentInfoRequest() => $_ensure(59);
+  $67.UpdateMessageAttachmentInfoRequest
+      ensureUpdateMessageAttachmentInfoRequest() => $_ensure(68);
+
+  /// Conversation - Supplement
+  @$pb.TagNumber(1100)
+  $68.DeleteConversationSettingsRequest get deleteConversationSettingsRequest =>
+      $_getN(69);
+  @$pb.TagNumber(1100)
+  set deleteConversationSettingsRequest(
+      $68.DeleteConversationSettingsRequest v) {
+    setField(1100, v);
+  }
+
+  @$pb.TagNumber(1100)
+  $core.bool hasDeleteConversationSettingsRequest() => $_has(69);
+  @$pb.TagNumber(1100)
+  void clearDeleteConversationSettingsRequest() => clearField(1100);
+  @$pb.TagNumber(1100)
+  $68.DeleteConversationSettingsRequest
+      ensureDeleteConversationSettingsRequest() => $_ensure(69);
+
+  @$pb.TagNumber(1101)
+  $69.QueryConversationSettingsRequest get queryConversationSettingsRequest =>
+      $_getN(70);
+  @$pb.TagNumber(1101)
+  set queryConversationSettingsRequest($69.QueryConversationSettingsRequest v) {
+    setField(1101, v);
+  }
+
+  @$pb.TagNumber(1101)
+  $core.bool hasQueryConversationSettingsRequest() => $_has(70);
+  @$pb.TagNumber(1101)
+  void clearQueryConversationSettingsRequest() => clearField(1101);
+  @$pb.TagNumber(1101)
+  $69.QueryConversationSettingsRequest
+      ensureQueryConversationSettingsRequest() => $_ensure(70);
+
+  @$pb.TagNumber(1102)
+  $70.UpdateConversationSettingsRequest get updateConversationSettingsRequest =>
+      $_getN(71);
+  @$pb.TagNumber(1102)
+  set updateConversationSettingsRequest(
+      $70.UpdateConversationSettingsRequest v) {
+    setField(1102, v);
+  }
+
+  @$pb.TagNumber(1102)
+  $core.bool hasUpdateConversationSettingsRequest() => $_has(71);
+  @$pb.TagNumber(1102)
+  void clearUpdateConversationSettingsRequest() => clearField(1102);
+  @$pb.TagNumber(1102)
+  $70.UpdateConversationSettingsRequest
+      ensureUpdateConversationSettingsRequest() => $_ensure(71);
+
+  /// Message - Supplement
+  @$pb.TagNumber(1200)
+  $71.CreateMessageReactionsRequest get createMessageReactionsRequest =>
+      $_getN(72);
+  @$pb.TagNumber(1200)
+  set createMessageReactionsRequest($71.CreateMessageReactionsRequest v) {
+    setField(1200, v);
+  }
+
+  @$pb.TagNumber(1200)
+  $core.bool hasCreateMessageReactionsRequest() => $_has(72);
+  @$pb.TagNumber(1200)
+  void clearCreateMessageReactionsRequest() => clearField(1200);
+  @$pb.TagNumber(1200)
+  $71.CreateMessageReactionsRequest ensureCreateMessageReactionsRequest() =>
+      $_ensure(72);
+
+  @$pb.TagNumber(1201)
+  $72.DeleteMessageReactionsRequest get deleteMessageReactionsRequest =>
+      $_getN(73);
+  @$pb.TagNumber(1201)
+  set deleteMessageReactionsRequest($72.DeleteMessageReactionsRequest v) {
+    setField(1201, v);
+  }
+
+  @$pb.TagNumber(1201)
+  $core.bool hasDeleteMessageReactionsRequest() => $_has(73);
+  @$pb.TagNumber(1201)
+  void clearDeleteMessageReactionsRequest() => clearField(1201);
+  @$pb.TagNumber(1201)
+  $72.DeleteMessageReactionsRequest ensureDeleteMessageReactionsRequest() =>
+      $_ensure(73);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

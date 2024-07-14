@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
   factory QueryMessageAttachmentInfosRequest({
     $core.Iterable<$fixnum.Int64>? userIds,
@@ -22,6 +24,7 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? creationDateEnd,
     $core.bool? inPrivateConversation,
     $core.bool? areSharedByMe,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (userIds != null) {
@@ -41,6 +44,9 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
     }
     if (areSharedByMe != null) {
       $result.areSharedByMe = areSharedByMe;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -62,6 +68,9 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
     ..aInt64(4, _omitFieldNames ? '' : 'creationDateEnd')
     ..aOB(5, _omitFieldNames ? '' : 'inPrivateConversation')
     ..aOB(6, _omitFieldNames ? '' : 'areSharedByMe')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -145,6 +154,9 @@ class QueryMessageAttachmentInfosRequest extends $pb.GeneratedMessage {
   $core.bool hasAreSharedByMe() => $_has(5);
   @$pb.TagNumber(6)
   void clearAreSharedByMe() => clearField(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(6);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

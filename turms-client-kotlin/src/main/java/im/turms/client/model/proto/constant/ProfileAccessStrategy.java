@@ -104,7 +104,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.Internal.EnumLi
 
     private final int value;
 
-    private ProfileAccessStrategy(int value) {
+    ProfileAccessStrategy(int value) {
         this.value = value;
     }
 

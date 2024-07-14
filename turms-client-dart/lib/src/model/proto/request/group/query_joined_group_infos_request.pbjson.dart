@@ -26,6 +26,14 @@ const QueryJoinedGroupInfosRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -33,7 +41,8 @@ const QueryJoinedGroupInfosRequest$json = {
 };
 
 /// Descriptor for `QueryJoinedGroupInfosRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryJoinedGroupInfosRequestDescriptor =
-    $convert.base64Decode(
-        'ChxRdWVyeUpvaW5lZEdyb3VwSW5mb3NSZXF1ZXN0Ei8KEWxhc3RfdXBkYXRlZF9kYXRlGAEgAS'
-        'gDSABSD2xhc3RVcGRhdGVkRGF0ZYgBAUIUChJfbGFzdF91cGRhdGVkX2RhdGU=');
+final $typed_data.Uint8List queryJoinedGroupInfosRequestDescriptor = $convert.base64Decode(
+    'ChxRdWVyeUpvaW5lZEdyb3VwSW5mb3NSZXF1ZXN0Ei8KEWxhc3RfdXBkYXRlZF9kYXRlGAEgAS'
+    'gDSABSD2xhc3RVcGRhdGVkRGF0ZYgBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmlt'
+    'LnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQhQKEl9sYXN0X3VwZGF0ZWRfZG'
+    'F0ZQ==');

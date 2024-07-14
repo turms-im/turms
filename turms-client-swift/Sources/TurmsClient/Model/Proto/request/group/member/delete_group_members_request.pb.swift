@@ -49,6 +49,8 @@ public struct DeleteGroupMembersRequest {
     /// Clears the value of `quitAfterTransfer`. Subsequent reads from it will return its default value.
     public mutating func clearQuitAfterTransfer() { _quitAfterTransfer = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -72,6 +74,7 @@ extension DeleteGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         2: .standard(proto: "member_ids"),
         3: .standard(proto: "successor_id"),
         4: .standard(proto: "quit_after_transfer"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -84,6 +87,7 @@ extension DeleteGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             case 2: try decoder.decodeRepeatedInt64Field(value: &memberIds)
             case 3: try decoder.decodeSingularInt64Field(value: &_successorID)
             case 4: try decoder.decodeSingularBoolField(value: &_quitAfterTransfer)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -106,6 +110,9 @@ extension DeleteGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         try { if let v = self._quitAfterTransfer {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -114,6 +121,7 @@ extension DeleteGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if lhs.memberIds != rhs.memberIds { return false }
         if lhs._successorID != rhs._successorID { return false }
         if lhs._quitAfterTransfer != rhs._quitAfterTransfer { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

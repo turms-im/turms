@@ -45,6 +45,8 @@ public struct VideoFile {
     /// Clears the value of `data`. Subsequent reads from it will return its default value.
     public mutating func clearData() { _data = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public struct Description {
@@ -113,6 +115,7 @@ extension VideoFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "description"),
         2: .same(proto: "data"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -123,6 +126,7 @@ extension VideoFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
             switch fieldNumber {
             case 1: try decoder.decodeSingularMessageField(value: &_description_p)
             case 2: try decoder.decodeSingularBytesField(value: &_data)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -139,12 +143,16 @@ extension VideoFile: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         try { if let v = self._data {
             try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: VideoFile, rhs: VideoFile) -> Bool {
         if lhs._description_p != rhs._description_p { return false }
         if lhs._data != rhs._data { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

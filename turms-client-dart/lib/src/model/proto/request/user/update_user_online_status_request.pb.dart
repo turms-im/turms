@@ -13,13 +13,15 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/device_type.pbenum.dart' as $0;
-import '../../constant/user_status.pbenum.dart' as $1;
+import '../../constant/device_type.pbenum.dart' as $1;
+import '../../constant/user_status.pbenum.dart' as $2;
+import '../../model/common/value.pb.dart' as $0;
 
 class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
   factory UpdateUserOnlineStatusRequest({
-    $core.Iterable<$0.DeviceType>? deviceTypes,
-    $1.UserStatus? userStatus,
+    $core.Iterable<$1.DeviceType>? deviceTypes,
+    $2.UserStatus? userStatus,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (deviceTypes != null) {
@@ -27,6 +29,9 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
     }
     if (userStatus != null) {
       $result.userStatus = userStatus;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -42,16 +47,19 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateUserOnlineStatusRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..pc<$0.DeviceType>(
+    ..pc<$1.DeviceType>(
         1, _omitFieldNames ? '' : 'deviceTypes', $pb.PbFieldType.KE,
-        valueOf: $0.DeviceType.valueOf,
-        enumValues: $0.DeviceType.values,
-        defaultEnumValue: $0.DeviceType.DESKTOP)
-    ..e<$1.UserStatus>(
+        valueOf: $1.DeviceType.valueOf,
+        enumValues: $1.DeviceType.values,
+        defaultEnumValue: $1.DeviceType.DESKTOP)
+    ..e<$2.UserStatus>(
         2, _omitFieldNames ? '' : 'userStatus', $pb.PbFieldType.OE,
-        defaultOrMaker: $1.UserStatus.AVAILABLE,
-        valueOf: $1.UserStatus.valueOf,
-        enumValues: $1.UserStatus.values)
+        defaultOrMaker: $2.UserStatus.AVAILABLE,
+        valueOf: $2.UserStatus.valueOf,
+        enumValues: $2.UserStatus.values)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -83,13 +91,13 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
 
   /// Query filter
   @$pb.TagNumber(1)
-  $core.List<$0.DeviceType> get deviceTypes => $_getList(0);
+  $core.List<$1.DeviceType> get deviceTypes => $_getList(0);
 
   /// Update
   @$pb.TagNumber(2)
-  $1.UserStatus get userStatus => $_getN(1);
+  $2.UserStatus get userStatus => $_getN(1);
   @$pb.TagNumber(2)
-  set userStatus($1.UserStatus v) {
+  set userStatus($2.UserStatus v) {
     setField(2, v);
   }
 
@@ -97,6 +105,9 @@ class UpdateUserOnlineStatusRequest extends $pb.GeneratedMessage {
   $core.bool hasUserStatus() => $_has(1);
   @$pb.TagNumber(2)
   void clearUserStatus() => clearField(2);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

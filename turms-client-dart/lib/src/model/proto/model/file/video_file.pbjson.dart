@@ -28,6 +28,14 @@ const VideoFile$json = {
       '17': true
     },
     {'1': 'data', '3': 2, '4': 1, '5': 12, '9': 1, '10': 'data', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [VideoFile_Description$json],
   '8': [
@@ -64,7 +72,8 @@ const VideoFile_Description$json = {
 final $typed_data.Uint8List videoFileDescriptor = $convert.base64Decode(
     'CglWaWRlb0ZpbGUSTAoLZGVzY3JpcHRpb24YASABKAsyJS5pbS50dXJtcy5wcm90by5WaWRlb0'
     'ZpbGUuRGVzY3JpcHRpb25IAFILZGVzY3JpcHRpb26IAQESFwoEZGF0YRgCIAEoDEgBUgRkYXRh'
-    'iAEBGpcBCgtEZXNjcmlwdGlvbhIQCgN1cmwYASABKAlSA3VybBIfCghkdXJhdGlvbhgCIAEoBU'
-    'gAUghkdXJhdGlvbogBARIXCgRzaXplGAMgASgFSAFSBHNpemWIAQESGwoGZm9ybWF0GAQgASgJ'
-    'SAJSBmZvcm1hdIgBAUILCglfZHVyYXRpb25CBwoFX3NpemVCCQoHX2Zvcm1hdEIOCgxfZGVzY3'
-    'JpcHRpb25CBwoFX2RhdGE=');
+    'iAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEG'
+    'N1c3RvbUF0dHJpYnV0ZXMalwEKC0Rlc2NyaXB0aW9uEhAKA3VybBgBIAEoCVIDdXJsEh8KCGR1'
+    'cmF0aW9uGAIgASgFSABSCGR1cmF0aW9uiAEBEhcKBHNpemUYAyABKAVIAVIEc2l6ZYgBARIbCg'
+    'Zmb3JtYXQYBCABKAlIAlIGZm9ybWF0iAEBQgsKCV9kdXJhdGlvbkIHCgVfc2l6ZUIJCgdfZm9y'
+    'bWF0Qg4KDF9kZXNjcmlwdGlvbkIHCgVfZGF0YQ==');

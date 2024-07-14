@@ -26,7 +26,8 @@ public final class UserOnlineStatus
         // @@protoc_insertion_point(message_implements:im.turms.proto.UserOnlineStatus)
         UserOnlineStatusOrBuilder {
     private UserOnlineStatus() {
-        usingDeviceTypes_ = emptyIntList();
+        deviceTypes_ = emptyIntList();
+        customAttributes_ = emptyProtobufList();
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
@@ -114,9 +115,9 @@ public final class UserOnlineStatus
         userStatus_ = 0;
     }
 
-    public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 3;
-    private com.google.protobuf.Internal.IntList usingDeviceTypes_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> usingDeviceTypes_converter_ =
+    public static final int DEVICE_TYPES_FIELD_NUMBER = 3;
+    private com.google.protobuf.Internal.IntList deviceTypes_;
+    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.client.model.proto.constant.DeviceType> deviceTypes_converter_ =
             from -> {
                 im.turms.client.model.proto.constant.DeviceType result =
                         im.turms.client.model.proto.constant.DeviceType.forNumber(from);
@@ -126,148 +127,249 @@ public final class UserOnlineStatus
             };
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the usingDeviceTypes.
+     * @return A list containing the deviceTypes.
      */
     @java.lang.Override
-    public java.util.List<im.turms.client.model.proto.constant.DeviceType> getUsingDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<>(
-                usingDeviceTypes_,
-                usingDeviceTypes_converter_);
+    public java.util.List<im.turms.client.model.proto.constant.DeviceType> getDeviceTypesList() {
+        return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return The count of usingDeviceTypes.
+     * @return The count of deviceTypes.
      */
     @java.lang.Override
-    public int getUsingDeviceTypesCount() {
-        return usingDeviceTypes_.size();
+    public int getDeviceTypesCount() {
+        return deviceTypes_.size();
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the element to return.
-     * @return The usingDeviceTypes at the given index.
+     * @return The deviceTypes at the given index.
      */
     @java.lang.Override
-    public im.turms.client.model.proto.constant.DeviceType getUsingDeviceTypes(int index) {
+    public im.turms.client.model.proto.constant.DeviceType getDeviceTypes(int index) {
         im.turms.client.model.proto.constant.DeviceType result =
                 im.turms.client.model.proto.constant.DeviceType
-                        .forNumber(usingDeviceTypes_.getInt(index));
+                        .forNumber(deviceTypes_.getInt(index));
         return result == null
                 ? im.turms.client.model.proto.constant.DeviceType.UNRECOGNIZED
                 : result;
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+     * @return A list containing the enum numeric values on the wire for deviceTypes.
      */
     @java.lang.Override
-    public java.util.List<java.lang.Integer> getUsingDeviceTypesValueList() {
-        return usingDeviceTypes_;
+    public java.util.List<java.lang.Integer> getDeviceTypesValueList() {
+        return deviceTypes_;
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the value to return.
-     * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
      */
     @java.lang.Override
-    public int getUsingDeviceTypesValue(int index) {
-        return usingDeviceTypes_.getInt(index);
+    public int getDeviceTypesValue(int index) {
+        return deviceTypes_.getInt(index);
     }
 
-    private int usingDeviceTypesMemoizedSerializedSize;
+    private int deviceTypesMemoizedSerializedSize;
 
-    private void ensureUsingDeviceTypesIsMutable() {
-        com.google.protobuf.Internal.IntList tmp = usingDeviceTypes_;
+    private void ensureDeviceTypesIsMutable() {
+        com.google.protobuf.Internal.IntList tmp = deviceTypes_;
         if (!tmp.isModifiable()) {
-            usingDeviceTypes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+            deviceTypes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
         }
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index to set the value at.
-     * @param value The usingDeviceTypes to set.
+     * @param value The deviceTypes to set.
      */
-    private void setUsingDeviceTypes(
-            int index,
-            im.turms.client.model.proto.constant.DeviceType value) {
+    private void setDeviceTypes(int index, im.turms.client.model.proto.constant.DeviceType value) {
         value.getClass();
-        ensureUsingDeviceTypesIsMutable();
-        usingDeviceTypes_.setInt(index, value.getNumber());
+        ensureDeviceTypesIsMutable();
+        deviceTypes_.setInt(index, value.getNumber());
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @param value The usingDeviceTypes to add.
+     * @param value The deviceTypes to add.
      */
-    private void addUsingDeviceTypes(im.turms.client.model.proto.constant.DeviceType value) {
+    private void addDeviceTypes(im.turms.client.model.proto.constant.DeviceType value) {
         value.getClass();
-        ensureUsingDeviceTypesIsMutable();
-        usingDeviceTypes_.addInt(value.getNumber());
+        ensureDeviceTypesIsMutable();
+        deviceTypes_.addInt(value.getNumber());
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @param values The usingDeviceTypes to add.
+     * @param values The deviceTypes to add.
      */
-    private void addAllUsingDeviceTypes(
+    private void addAllDeviceTypes(
             java.lang.Iterable<? extends im.turms.client.model.proto.constant.DeviceType> values) {
-        ensureUsingDeviceTypesIsMutable();
+        ensureDeviceTypesIsMutable();
         for (im.turms.client.model.proto.constant.DeviceType value : values) {
-            usingDeviceTypes_.addInt(value.getNumber());
+            deviceTypes_.addInt(value.getNumber());
         }
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      */
-    private void clearUsingDeviceTypes() {
-        usingDeviceTypes_ = emptyIntList();
+    private void clearDeviceTypes() {
+        deviceTypes_ = emptyIntList();
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @param value The enum numeric value on the wire for usingDeviceTypes to set.
+     * @param value The enum numeric value on the wire for deviceTypes to set.
      */
-    private void setUsingDeviceTypesValue(int index, int value) {
-        ensureUsingDeviceTypesIsMutable();
-        usingDeviceTypes_.setInt(index, value);
+    private void setDeviceTypesValue(int index, int value) {
+        ensureDeviceTypesIsMutable();
+        deviceTypes_.setInt(index, value);
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @param value The enum numeric value on the wire for usingDeviceTypes to add.
+     * @param value The enum numeric value on the wire for deviceTypes to add.
      */
-    private void addUsingDeviceTypesValue(int value) {
-        ensureUsingDeviceTypesIsMutable();
-        usingDeviceTypes_.addInt(value);
+    private void addDeviceTypesValue(int value) {
+        ensureDeviceTypesIsMutable();
+        deviceTypes_.addInt(value);
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @param values The enum numeric values on the wire for usingDeviceTypes to add.
+     * @param values The enum numeric values on the wire for deviceTypes to add.
      */
-    private void addAllUsingDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
-        ensureUsingDeviceTypesIsMutable();
+    private void addAllDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
+        ensureDeviceTypesIsMutable();
         for (int value : values) {
-            usingDeviceTypes_.addInt(value);
+            deviceTypes_.addInt(value);
         }
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.model.user.UserOnlineStatus parseFrom(
@@ -459,142 +561,257 @@ public final class UserOnlineStatus
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return A list containing the usingDeviceTypes.
+         * @return A list containing the deviceTypes.
          */
         @java.lang.Override
-        public java.util.List<im.turms.client.model.proto.constant.DeviceType> getUsingDeviceTypesList() {
-            return instance.getUsingDeviceTypesList();
+        public java.util.List<im.turms.client.model.proto.constant.DeviceType> getDeviceTypesList() {
+            return instance.getDeviceTypesList();
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return The count of usingDeviceTypes.
+         * @return The count of deviceTypes.
          */
         @java.lang.Override
-        public int getUsingDeviceTypesCount() {
-            return instance.getUsingDeviceTypesCount();
+        public int getDeviceTypesCount() {
+            return instance.getDeviceTypesCount();
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index of the element to return.
-         * @return The usingDeviceTypes at the given index.
+         * @return The deviceTypes at the given index.
          */
         @java.lang.Override
-        public im.turms.client.model.proto.constant.DeviceType getUsingDeviceTypes(int index) {
-            return instance.getUsingDeviceTypes(index);
+        public im.turms.client.model.proto.constant.DeviceType getDeviceTypes(int index) {
+            return instance.getDeviceTypes(index);
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index to set the value at.
-         * @param value The usingDeviceTypes to set.
+         * @param value The deviceTypes to set.
          * @return This builder for chaining.
          */
-        public Builder setUsingDeviceTypes(
+        public Builder setDeviceTypes(
                 int index,
                 im.turms.client.model.proto.constant.DeviceType value) {
             copyOnWrite();
-            instance.setUsingDeviceTypes(index, value);
+            instance.setDeviceTypes(index, value);
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param value The usingDeviceTypes to add.
+         * @param value The deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addUsingDeviceTypes(im.turms.client.model.proto.constant.DeviceType value) {
+        public Builder addDeviceTypes(im.turms.client.model.proto.constant.DeviceType value) {
             copyOnWrite();
-            instance.addUsingDeviceTypes(value);
+            instance.addDeviceTypes(value);
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param values The usingDeviceTypes to add.
+         * @param values The deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addAllUsingDeviceTypes(
+        public Builder addAllDeviceTypes(
                 java.lang.Iterable<? extends im.turms.client.model.proto.constant.DeviceType> values) {
             copyOnWrite();
-            instance.addAllUsingDeviceTypes(values);
+            instance.addAllDeviceTypes(values);
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearUsingDeviceTypes() {
+        public Builder clearDeviceTypes() {
             copyOnWrite();
-            instance.clearUsingDeviceTypes();
+            instance.clearDeviceTypes();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+         * @return A list containing the enum numeric values on the wire for deviceTypes.
          */
         @java.lang.Override
-        public java.util.List<java.lang.Integer> getUsingDeviceTypesValueList() {
-            return java.util.Collections.unmodifiableList(instance.getUsingDeviceTypesValueList());
+        public java.util.List<java.lang.Integer> getDeviceTypesValueList() {
+            return java.util.Collections.unmodifiableList(instance.getDeviceTypesValueList());
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index of the value to return.
-         * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+         * @return The enum numeric value on the wire of deviceTypes at the given index.
          */
         @java.lang.Override
-        public int getUsingDeviceTypesValue(int index) {
-            return instance.getUsingDeviceTypesValue(index);
+        public int getDeviceTypesValue(int index) {
+            return instance.getDeviceTypesValue(index);
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index to set the value at.
-         * @param value The enum numeric value on the wire for usingDeviceTypes to set.
+         * @param value The enum numeric value on the wire for deviceTypes to set.
          * @return This builder for chaining.
          */
-        public Builder setUsingDeviceTypesValue(int index, int value) {
+        public Builder setDeviceTypesValue(int index, int value) {
             copyOnWrite();
-            instance.setUsingDeviceTypesValue(index, value);
+            instance.setDeviceTypesValue(index, value);
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param value The enum numeric value on the wire for usingDeviceTypes to add.
+         * @param value The enum numeric value on the wire for deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addUsingDeviceTypesValue(int value) {
+        public Builder addDeviceTypesValue(int value) {
             copyOnWrite();
-            instance.addUsingDeviceTypesValue(value);
+            instance.addDeviceTypesValue(value);
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param values The enum numeric values on the wire for usingDeviceTypes to add.
+         * @param values The enum numeric values on the wire for deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addAllUsingDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
+        public Builder addAllDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
             copyOnWrite();
-            instance.addAllUsingDeviceTypesValue(values);
+            instance.addAllDeviceTypesValue(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
             return this;
         }
 
@@ -603,7 +820,7 @@ public final class UserOnlineStatus
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -615,11 +832,14 @@ public final class UserOnlineStatus
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects =
-                        new java.lang.Object[]{"userId_", "userStatus_", "usingDeviceTypes_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"userId_",
+                        "userStatus_",
+                        "deviceTypes_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0003\u0000\u0000\u0001\u0003\u0003\u0000\u0001\u0000\u0001\u0002\u0002\f"
-                                + "\u0003,";
+                        "\u0000\u0004\u0000\u0000\u0001\u000f\u0004\u0000\u0002\u0000\u0001\u0002\u0002\f"
+                                + "\u0003,\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -652,7 +872,6 @@ public final class UserOnlineStatus
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserOnlineStatus)
     private static final im.turms.client.model.proto.model.user.UserOnlineStatus DEFAULT_INSTANCE;
-
     static {
         UserOnlineStatus defaultInstance = new UserOnlineStatus();
         // New instances are implicitly immutable so no need to make

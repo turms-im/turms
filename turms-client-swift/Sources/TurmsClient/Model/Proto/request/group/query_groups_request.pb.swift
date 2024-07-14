@@ -69,6 +69,8 @@ public struct QueryGroupsRequest {
 
     public var fieldsToHighlight: [Int32] = []
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -96,6 +98,7 @@ extension QueryGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         10: .same(proto: "skip"),
         11: .same(proto: "limit"),
         12: .standard(proto: "fields_to_highlight"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -110,6 +113,7 @@ extension QueryGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             case 10: try decoder.decodeSingularInt32Field(value: &_skip)
             case 11: try decoder.decodeSingularInt32Field(value: &_limit)
             case 12: try decoder.decodeRepeatedInt32Field(value: &fieldsToHighlight)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -138,6 +142,9 @@ extension QueryGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if !fieldsToHighlight.isEmpty {
             try visitor.visitPackedInt32Field(value: fieldsToHighlight, fieldNumber: 12)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -148,6 +155,7 @@ extension QueryGroupsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if lhs._skip != rhs._skip { return false }
         if lhs._limit != rhs._limit { return false }
         if lhs.fieldsToHighlight != rhs.fieldsToHighlight { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

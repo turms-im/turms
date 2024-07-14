@@ -33,6 +33,21 @@ public interface TurmsNotificationOrBuilder extends
     long getTimestamp();
 
     /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
      * <pre>
      * Response =&gt; [4, 9]
      * "request_id" is used to tell the client that

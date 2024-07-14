@@ -14,6 +14,9 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $1;
+import 'message_reaction_group.pb.dart' as $0;
+
 class Message extends $pb.GeneratedMessage {
   factory Message({
     $fixnum.Int64? id,
@@ -27,6 +30,8 @@ class Message extends $pb.GeneratedMessage {
     $core.Iterable<$core.List<$core.int>>? records,
     $core.int? sequenceId,
     $fixnum.Int64? preMessageId,
+    $core.Iterable<$0.MessageReactionGroup>? reactionGroups,
+    $core.Iterable<$1.Value>? customAttributes,
   }) {
     final $result = create();
     if (id != null) {
@@ -62,6 +67,12 @@ class Message extends $pb.GeneratedMessage {
     if (preMessageId != null) {
       $result.preMessageId = preMessageId;
     }
+    if (reactionGroups != null) {
+      $result.reactionGroups.addAll(reactionGroups);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   Message._() : super();
@@ -88,6 +99,12 @@ class Message extends $pb.GeneratedMessage {
         9, _omitFieldNames ? '' : 'records', $pb.PbFieldType.PY)
     ..a<$core.int>(10, _omitFieldNames ? '' : 'sequenceId', $pb.PbFieldType.O3)
     ..aInt64(11, _omitFieldNames ? '' : 'preMessageId')
+    ..pc<$0.MessageReactionGroup>(
+        12, _omitFieldNames ? '' : 'reactionGroups', $pb.PbFieldType.PM,
+        subBuilder: $0.MessageReactionGroup.create)
+    ..pc<$1.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $1.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -233,6 +250,12 @@ class Message extends $pb.GeneratedMessage {
   $core.bool hasPreMessageId() => $_has(10);
   @$pb.TagNumber(11)
   void clearPreMessageId() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.List<$0.MessageReactionGroup> get reactionGroups => $_getList(11);
+
+  @$pb.TagNumber(15)
+  $core.List<$1.Value> get customAttributes => $_getList(12);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

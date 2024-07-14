@@ -13,8 +13,18 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class DeleteSessionRequest extends $pb.GeneratedMessage {
-  factory DeleteSessionRequest() => create();
+  factory DeleteSessionRequest({
+    $core.Iterable<$0.Value>? customAttributes,
+  }) {
+    final $result = create();
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
+    return $result;
+  }
   DeleteSessionRequest._() : super();
   factory DeleteSessionRequest.fromBuffer($core.List<$core.int> i,
           [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
@@ -27,6 +37,9 @@ class DeleteSessionRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'DeleteSessionRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -52,7 +65,11 @@ class DeleteSessionRequest extends $pb.GeneratedMessage {
   static DeleteSessionRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeleteSessionRequest>(create);
   static DeleteSessionRequest? _defaultInstance;
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(0);
 }
 
+const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
 const _omitMessageNames =
     $core.bool.fromEnvironment('protobuf.omit_message_names');

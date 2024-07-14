@@ -14,17 +14,23 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class QueryConversationsRequest extends $pb.GeneratedMessage {
   factory QueryConversationsRequest({
-    $core.Iterable<$fixnum.Int64>? targetIds,
+    $core.Iterable<$fixnum.Int64>? userIds,
     $core.Iterable<$fixnum.Int64>? groupIds,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
-    if (targetIds != null) {
-      $result.targetIds.addAll(targetIds);
+    if (userIds != null) {
+      $result.userIds.addAll(userIds);
     }
     if (groupIds != null) {
       $result.groupIds.addAll(groupIds);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -40,9 +46,11 @@ class QueryConversationsRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'QueryConversationsRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..p<$fixnum.Int64>(
-        1, _omitFieldNames ? '' : 'targetIds', $pb.PbFieldType.K6)
+    ..p<$fixnum.Int64>(1, _omitFieldNames ? '' : 'userIds', $pb.PbFieldType.K6)
     ..p<$fixnum.Int64>(2, _omitFieldNames ? '' : 'groupIds', $pb.PbFieldType.K6)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -72,11 +80,14 @@ class QueryConversationsRequest extends $pb.GeneratedMessage {
 
   /// Private conversations
   @$pb.TagNumber(1)
-  $core.List<$fixnum.Int64> get targetIds => $_getList(0);
+  $core.List<$fixnum.Int64> get userIds => $_getList(0);
 
   /// Group conversations
   @$pb.TagNumber(2)
   $core.List<$fixnum.Int64> get groupIds => $_getList(1);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

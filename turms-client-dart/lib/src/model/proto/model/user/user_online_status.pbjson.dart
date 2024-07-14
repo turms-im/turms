@@ -27,12 +27,20 @@ const UserOnlineStatus$json = {
       '10': 'userStatus'
     },
     {
-      '1': 'using_device_types',
+      '1': 'device_types',
       '3': 3,
       '4': 3,
       '5': 14,
       '6': '.im.turms.proto.DeviceType',
-      '10': 'usingDeviceTypes'
+      '10': 'deviceTypes'
+    },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
     },
   ],
 };
@@ -40,6 +48,7 @@ const UserOnlineStatus$json = {
 /// Descriptor for `UserOnlineStatus`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userOnlineStatusDescriptor = $convert.base64Decode(
     'ChBVc2VyT25saW5lU3RhdHVzEhcKB3VzZXJfaWQYASABKANSBnVzZXJJZBI7Cgt1c2VyX3N0YX'
-    'R1cxgCIAEoDjIaLmltLnR1cm1zLnByb3RvLlVzZXJTdGF0dXNSCnVzZXJTdGF0dXMSSAoSdXNp'
-    'bmdfZGV2aWNlX3R5cGVzGAMgAygOMhouaW0udHVybXMucHJvdG8uRGV2aWNlVHlwZVIQdXNpbm'
-    'dEZXZpY2VUeXBlcw==');
+    'R1cxgCIAEoDjIaLmltLnR1cm1zLnByb3RvLlVzZXJTdGF0dXNSCnVzZXJTdGF0dXMSPQoMZGV2'
+    'aWNlX3R5cGVzGAMgAygOMhouaW0udHVybXMucHJvdG8uRGV2aWNlVHlwZVILZGV2aWNlVHlwZX'
+    'MSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3Vz'
+    'dG9tQXR0cmlidXRlcw==');

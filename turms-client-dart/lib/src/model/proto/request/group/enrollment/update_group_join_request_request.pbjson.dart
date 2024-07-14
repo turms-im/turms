@@ -27,6 +27,14 @@ const UpdateGroupJoinRequestRequest$json = {
       '10': 'responseAction'
     },
     {'1': 'reason', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'reason', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_reason'},
@@ -37,5 +45,6 @@ const UpdateGroupJoinRequestRequest$json = {
 final $typed_data.Uint8List updateGroupJoinRequestRequestDescriptor = $convert.base64Decode(
     'Ch1VcGRhdGVHcm91cEpvaW5SZXF1ZXN0UmVxdWVzdBIdCgpyZXF1ZXN0X2lkGAEgASgDUglyZX'
     'F1ZXN0SWQSRwoPcmVzcG9uc2VfYWN0aW9uGAIgASgOMh4uaW0udHVybXMucHJvdG8uUmVzcG9u'
-    'c2VBY3Rpb25SDnJlc3BvbnNlQWN0aW9uEhsKBnJlYXNvbhgDIAEoCUgAUgZyZWFzb26IAQFCCQ'
-    'oHX3JlYXNvbg==');
+    'c2VBY3Rpb25SDnJlc3BvbnNlQWN0aW9uEhsKBnJlYXNvbhgDIAEoCUgAUgZyZWFzb26IAQESQg'
+    'oRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9t'
+    'QXR0cmlidXRlc0IJCgdfcmVhc29u');

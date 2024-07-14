@@ -37,6 +37,14 @@ const QueryGroupMembersRequest$json = {
       '10': 'withStatus',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -49,4 +57,6 @@ final $typed_data.Uint8List queryGroupMembersRequestDescriptor = $convert.base64
     'ChhRdWVyeUdyb3VwTWVtYmVyc1JlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSLw'
     'oRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEh0KCm1lbWJl'
     'cl9pZHMYAyADKANSCW1lbWJlcklkcxIkCgt3aXRoX3N0YXR1cxgEIAEoCEgBUgp3aXRoU3RhdH'
-    'VziAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZUIOCgxfd2l0aF9zdGF0dXM=');
+    'VziAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVS'
+    'EGN1c3RvbUF0dHJpYnV0ZXNCFAoSX2xhc3RfdXBkYXRlZF9kYXRlQg4KDF93aXRoX3N0YXR1cw'
+    '==');

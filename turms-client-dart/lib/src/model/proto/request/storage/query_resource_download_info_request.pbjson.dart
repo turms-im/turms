@@ -28,36 +28,24 @@ const QueryResourceDownloadInfoRequest$json = {
     {'1': 'id_num', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'idNum', '17': true},
     {'1': 'id_str', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'idStr', '17': true},
     {
-      '1': 'extra',
-      '3': 4,
+      '1': 'custom_attributes',
+      '3': 15,
       '4': 3,
       '5': 11,
-      '6': '.im.turms.proto.QueryResourceDownloadInfoRequest.ExtraEntry',
-      '10': 'extra'
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
     },
   ],
-  '3': [QueryResourceDownloadInfoRequest_ExtraEntry$json],
   '8': [
     {'1': '_id_num'},
     {'1': '_id_str'},
   ],
 };
 
-@$core.Deprecated('Use queryResourceDownloadInfoRequestDescriptor instead')
-const QueryResourceDownloadInfoRequest_ExtraEntry$json = {
-  '1': 'ExtraEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
-  ],
-  '7': {'7': true},
-};
-
 /// Descriptor for `QueryResourceDownloadInfoRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List queryResourceDownloadInfoRequestDescriptor = $convert.base64Decode(
     'CiBRdWVyeVJlc291cmNlRG93bmxvYWRJbmZvUmVxdWVzdBI3CgR0eXBlGAEgASgOMiMuaW0udH'
     'VybXMucHJvdG8uU3RvcmFnZVJlc291cmNlVHlwZVIEdHlwZRIaCgZpZF9udW0YAiABKANIAFIF'
-    'aWROdW2IAQESGgoGaWRfc3RyGAMgASgJSAFSBWlkU3RyiAEBElEKBWV4dHJhGAQgAygLMjsuaW'
-    '0udHVybXMucHJvdG8uUXVlcnlSZXNvdXJjZURvd25sb2FkSW5mb1JlcXVlc3QuRXh0cmFFbnRy'
-    'eVIFZXh0cmEaOAoKRXh0cmFFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEoCV'
-    'IFdmFsdWU6AjgBQgkKB19pZF9udW1CCQoHX2lkX3N0cg==');
+    'aWROdW2IAQESGgoGaWRfc3RyGAMgASgJSAFSBWlkU3RyiAEBEkIKEWN1c3RvbV9hdHRyaWJ1dG'
+    'VzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCCQoHX2lk'
+    'X251bUIJCgdfaWRfc3Ry');

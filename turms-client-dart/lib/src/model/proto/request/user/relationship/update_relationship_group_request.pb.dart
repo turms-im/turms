@@ -13,10 +13,13 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class UpdateRelationshipGroupRequest extends $pb.GeneratedMessage {
   factory UpdateRelationshipGroupRequest({
     $core.int? groupIndex,
     $core.String? newName,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupIndex != null) {
@@ -24,6 +27,9 @@ class UpdateRelationshipGroupRequest extends $pb.GeneratedMessage {
     }
     if (newName != null) {
       $result.newName = newName;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -41,6 +47,9 @@ class UpdateRelationshipGroupRequest extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'groupIndex', $pb.PbFieldType.O3)
     ..aOS(2, _omitFieldNames ? '' : 'newName')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -95,6 +104,9 @@ class UpdateRelationshipGroupRequest extends $pb.GeneratedMessage {
   $core.bool hasNewName() => $_has(1);
   @$pb.TagNumber(2)
   void clearNewName() => clearField(2);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

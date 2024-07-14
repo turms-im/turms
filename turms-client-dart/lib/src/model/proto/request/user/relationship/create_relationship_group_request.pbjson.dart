@@ -18,10 +18,20 @@ const CreateRelationshipGroupRequest$json = {
   '1': 'CreateRelationshipGroupRequest',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `CreateRelationshipGroupRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List createRelationshipGroupRequestDescriptor =
     $convert.base64Decode(
-        'Ch5DcmVhdGVSZWxhdGlvbnNoaXBHcm91cFJlcXVlc3QSEgoEbmFtZRgBIAEoCVIEbmFtZQ==');
+        'Ch5DcmVhdGVSZWxhdGlvbnNoaXBHcm91cFJlcXVlc3QSEgoEbmFtZRgBIAEoCVIEbmFtZRJCCh'
+        'FjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21B'
+        'dHRyaWJ1dGVz');

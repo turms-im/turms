@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class UpdateGroupRequest extends $pb.GeneratedMessage {
   factory UpdateGroupRequest({
     $fixnum.Int64? groupId,
@@ -25,6 +27,8 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
     $fixnum.Int64? typeId,
     $fixnum.Int64? muteEndDate,
     $fixnum.Int64? successorId,
+    $core.Map<$core.String, $0.Value>? userDefinedAttributes,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -54,6 +58,12 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
     if (successorId != null) {
       $result.successorId = successorId;
     }
+    if (userDefinedAttributes != null) {
+      $result.userDefinedAttributes.addAll(userDefinedAttributes);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   UpdateGroupRequest._() : super();
@@ -77,6 +87,17 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
     ..aInt64(7, _omitFieldNames ? '' : 'typeId')
     ..aInt64(8, _omitFieldNames ? '' : 'muteEndDate')
     ..aInt64(9, _omitFieldNames ? '' : 'successorId')
+    ..m<$core.String, $0.Value>(
+        10, _omitFieldNames ? '' : 'userDefinedAttributes',
+        entryClassName: 'UpdateGroupRequest.UserDefinedAttributesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $0.Value.create,
+        valueDefaultOrMaker: $0.Value.getDefault,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -212,6 +233,12 @@ class UpdateGroupRequest extends $pb.GeneratedMessage {
   $core.bool hasSuccessorId() => $_has(8);
   @$pb.TagNumber(9)
   void clearSuccessorId() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.Map<$core.String, $0.Value> get userDefinedAttributes => $_getMap(9);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(10);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

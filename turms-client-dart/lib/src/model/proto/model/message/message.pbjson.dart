@@ -92,6 +92,22 @@ const Message$json = {
       '10': 'preMessageId',
       '17': true
     },
+    {
+      '1': 'reaction_groups',
+      '3': 12,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.MessageReactionGroup',
+      '10': 'reactionGroups'
+    },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -116,7 +132,9 @@ final $typed_data.Uint8List messageDescriptor = $convert.base64Decode(
     'c3RlbV9tZXNzYWdlGAcgASgISAZSD2lzU3lzdGVtTWVzc2FnZYgBARImCgxyZWNpcGllbnRfaW'
     'QYCCABKANIB1ILcmVjaXBpZW50SWSIAQESGAoHcmVjb3JkcxgJIAMoDFIHcmVjb3JkcxIkCgtz'
     'ZXF1ZW5jZV9pZBgKIAEoBUgIUgpzZXF1ZW5jZUlkiAEBEikKDnByZV9tZXNzYWdlX2lkGAsgAS'
-    'gDSAlSDHByZU1lc3NhZ2VJZIgBAUIFCgNfaWRCEAoOX2RlbGl2ZXJ5X2RhdGVCFAoSX21vZGlm'
-    'aWNhdGlvbl9kYXRlQgcKBV90ZXh0QgwKCl9zZW5kZXJfaWRCCwoJX2dyb3VwX2lkQhQKEl9pc1'
-    '9zeXN0ZW1fbWVzc2FnZUIPCg1fcmVjaXBpZW50X2lkQg4KDF9zZXF1ZW5jZV9pZEIRCg9fcHJl'
-    'X21lc3NhZ2VfaWQ=');
+    'gDSAlSDHByZU1lc3NhZ2VJZIgBARJNCg9yZWFjdGlvbl9ncm91cHMYDCADKAsyJC5pbS50dXJt'
+    'cy5wcm90by5NZXNzYWdlUmVhY3Rpb25Hcm91cFIOcmVhY3Rpb25Hcm91cHMSQgoRY3VzdG9tX2'
+    'F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRl'
+    'c0IFCgNfaWRCEAoOX2RlbGl2ZXJ5X2RhdGVCFAoSX21vZGlmaWNhdGlvbl9kYXRlQgcKBV90ZX'
+    'h0QgwKCl9zZW5kZXJfaWRCCwoJX2dyb3VwX2lkQhQKEl9pc19zeXN0ZW1fbWVzc2FnZUIPCg1f'
+    'cmVjaXBpZW50X2lkQg4KDF9zZXF1ZW5jZV9pZEIRCg9fcHJlX21lc3NhZ2VfaWQ=');

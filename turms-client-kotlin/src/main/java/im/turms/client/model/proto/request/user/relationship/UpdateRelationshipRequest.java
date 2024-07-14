@@ -27,6 +27,7 @@ public final class UpdateRelationshipRequest extends
         UpdateRelationshipRequestOrBuilder {
     private UpdateRelationshipRequest() {
         name_ = "";
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
@@ -273,6 +274,111 @@ public final class UpdateRelationshipRequest extends
         checkByteStringIsUtf8(value);
         name_ = value.toStringUtf8();
         bitField0_ |= 0x00000008;
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest parseFrom(
@@ -631,12 +737,127 @@ public final class UpdateRelationshipRequest extends
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UpdateRelationshipRequest)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -653,10 +874,12 @@ public final class UpdateRelationshipRequest extends
                         "blocked_",
                         "newGroupIndex_",
                         "deleteGroupIndex_",
-                        "name_",};
+                        "name_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0005\u0000\u0001\u0001\u0005\u0005\u0000\u0000\u0000\u0001\u0002\u0002\u1007"
-                                + "\u0000\u0003\u1004\u0001\u0004\u1004\u0002\u0005\u1208\u0003";
+                        "\u0000\u0006\u0000\u0001\u0001\u000f\u0006\u0000\u0001\u0000\u0001\u0002\u0002\u1007"
+                                + "\u0000\u0003\u1004\u0001\u0004\u1004\u0002\u0005\u1208\u0003\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -689,7 +912,6 @@ public final class UpdateRelationshipRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateRelationshipRequest)
     private static final im.turms.client.model.proto.request.user.relationship.UpdateRelationshipRequest DEFAULT_INSTANCE;
-
     static {
         UpdateRelationshipRequest defaultInstance = new UpdateRelationshipRequest();
         // New instances are implicitly immutable so no need to make

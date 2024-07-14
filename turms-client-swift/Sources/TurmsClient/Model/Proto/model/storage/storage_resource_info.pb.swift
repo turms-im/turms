@@ -69,6 +69,8 @@ public struct StorageResourceInfo {
 
     public var creationDate: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -96,6 +98,7 @@ extension StorageResourceInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         4: .standard(proto: "media_type"),
         5: .standard(proto: "uploader_id"),
         6: .standard(proto: "creation_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -110,6 +113,7 @@ extension StorageResourceInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
             case 4: try decoder.decodeSingularStringField(value: &_mediaType)
             case 5: try decoder.decodeSingularInt64Field(value: &uploaderID)
             case 6: try decoder.decodeSingularInt64Field(value: &creationDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -138,6 +142,9 @@ extension StorageResourceInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         if creationDate != 0 {
             try visitor.visitSingularInt64Field(value: creationDate, fieldNumber: 6)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -148,6 +155,7 @@ extension StorageResourceInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         if lhs._mediaType != rhs._mediaType { return false }
         if lhs.uploaderID != rhs.uploaderID { return false }
         if lhs.creationDate != rhs.creationDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

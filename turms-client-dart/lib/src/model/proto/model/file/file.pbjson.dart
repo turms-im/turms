@@ -28,6 +28,14 @@ const File$json = {
       '17': true
     },
     {'1': 'data', '3': 2, '4': 1, '5': 12, '9': 1, '10': 'data', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [File_Description$json],
   '8': [
@@ -53,7 +61,8 @@ const File_Description$json = {
 /// Descriptor for `File`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List fileDescriptor = $convert.base64Decode(
     'CgRGaWxlEkcKC2Rlc2NyaXB0aW9uGAEgASgLMiAuaW0udHVybXMucHJvdG8uRmlsZS5EZXNjcm'
-    'lwdGlvbkgAUgtkZXNjcmlwdGlvbogBARIXCgRkYXRhGAIgASgMSAFSBGRhdGGIAQEaaQoLRGVz'
-    'Y3JpcHRpb24SEAoDdXJsGAEgASgJUgN1cmwSFwoEc2l6ZRgCIAEoBUgAUgRzaXpliAEBEhsKBm'
-    'Zvcm1hdBgDIAEoCUgBUgZmb3JtYXSIAQFCBwoFX3NpemVCCQoHX2Zvcm1hdEIOCgxfZGVzY3Jp'
-    'cHRpb25CBwoFX2RhdGE=');
+    'lwdGlvbkgAUgtkZXNjcmlwdGlvbogBARIXCgRkYXRhGAIgASgMSAFSBGRhdGGIAQESQgoRY3Vz'
+    'dG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cm'
+    'lidXRlcxppCgtEZXNjcmlwdGlvbhIQCgN1cmwYASABKAlSA3VybBIXCgRzaXplGAIgASgFSABS'
+    'BHNpemWIAQESGwoGZm9ybWF0GAMgASgJSAFSBmZvcm1hdIgBAUIHCgVfc2l6ZUIJCgdfZm9ybW'
+    'F0Qg4KDF9kZXNjcmlwdGlvbkIHCgVfZGF0YQ==');

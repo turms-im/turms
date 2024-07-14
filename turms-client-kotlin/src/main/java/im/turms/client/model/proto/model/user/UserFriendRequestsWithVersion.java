@@ -444,7 +444,7 @@ public final class UserFriendRequestsWithVersion extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -495,7 +495,6 @@ public final class UserFriendRequestsWithVersion extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserFriendRequestsWithVersion)
     private static final im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion DEFAULT_INSTANCE;
-
     static {
         UserFriendRequestsWithVersion defaultInstance = new UserFriendRequestsWithVersion();
         // New instances are implicitly immutable so no need to make

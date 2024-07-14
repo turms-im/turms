@@ -57,6 +57,14 @@ const NearbyUser$json = {
       '10': 'location',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_device_type'},
@@ -72,5 +80,6 @@ final $typed_data.Uint8List nearbyUserDescriptor = $convert.base64Decode(
     'EoDjIaLmltLnR1cm1zLnByb3RvLkRldmljZVR5cGVIAFIKZGV2aWNlVHlwZYgBARIxCgRpbmZv'
     'GAMgASgLMhguaW0udHVybXMucHJvdG8uVXNlckluZm9IAVIEaW5mb4gBARIfCghkaXN0YW5jZR'
     'gEIAEoBUgCUghkaXN0YW5jZYgBARI9Cghsb2NhdGlvbhgFIAEoCzIcLmltLnR1cm1zLnByb3Rv'
-    'LlVzZXJMb2NhdGlvbkgDUghsb2NhdGlvbogBAUIOCgxfZGV2aWNlX3R5cGVCBwoFX2luZm9CCw'
-    'oJX2Rpc3RhbmNlQgsKCV9sb2NhdGlvbg==');
+    'LlVzZXJMb2NhdGlvbkgDUghsb2NhdGlvbogBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCz'
+    'IVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQg4KDF9kZXZpY2VfdHlw'
+    'ZUIHCgVfaW5mb0ILCglfZGlzdGFuY2VCCwoJX2xvY2F0aW9u');

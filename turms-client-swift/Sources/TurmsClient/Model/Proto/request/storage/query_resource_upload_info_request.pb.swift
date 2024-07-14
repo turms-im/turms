@@ -67,7 +67,7 @@ public struct QueryResourceUploadInfoRequest {
     /// Clears the value of `mediaType`. Subsequent reads from it will return its default value.
     public mutating func clearMediaType() { _mediaType = nil }
 
-    public var extra: [String: String] = [:]
+    public var customAttributes: [Value] = []
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -95,7 +95,7 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
         3: .standard(proto: "id_str"),
         4: .same(proto: "name"),
         5: .standard(proto: "media_type"),
-        6: .same(proto: "extra"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -109,7 +109,7 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
             case 3: try decoder.decodeSingularStringField(value: &_idStr)
             case 4: try decoder.decodeSingularStringField(value: &_name)
             case 5: try decoder.decodeSingularStringField(value: &_mediaType)
-            case 6: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &extra)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -135,8 +135,8 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
         try { if let v = self._mediaType {
             try visitor.visitSingularStringField(value: v, fieldNumber: 5)
         } }()
-        if !extra.isEmpty {
-            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: extra, fieldNumber: 6)
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
         }
         try unknownFields.traverse(visitor: &visitor)
     }
@@ -147,7 +147,7 @@ extension QueryResourceUploadInfoRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if lhs._idStr != rhs._idStr { return false }
         if lhs._name != rhs._name { return false }
         if lhs._mediaType != rhs._mediaType { return false }
-        if lhs.extra != rhs.extra { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

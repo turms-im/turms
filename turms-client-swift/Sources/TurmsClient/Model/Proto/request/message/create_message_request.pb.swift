@@ -109,6 +109,8 @@ public struct CreateMessageRequest {
     /// Clears the value of `preMessageID`. Subsequent reads from it will return its default value.
     public mutating func clearPreMessageID() { _preMessageID = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -143,6 +145,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         7: .same(proto: "records"),
         8: .standard(proto: "burn_after"),
         9: .standard(proto: "pre_message_id"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -160,6 +163,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 7: try decoder.decodeRepeatedBytesField(value: &records)
             case 8: try decoder.decodeSingularInt32Field(value: &_burnAfter)
             case 9: try decoder.decodeSingularInt64Field(value: &_preMessageID)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -197,6 +201,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         try { if let v = self._preMessageID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -210,6 +217,7 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs.records != rhs.records { return false }
         if lhs._burnAfter != rhs._burnAfter { return false }
         if lhs._preMessageID != rhs._preMessageID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

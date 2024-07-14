@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class UserRelationship extends $pb.GeneratedMessage {
   factory UserRelationship({
     $fixnum.Int64? ownerId,
@@ -22,6 +24,7 @@ class UserRelationship extends $pb.GeneratedMessage {
     $fixnum.Int64? groupIndex,
     $fixnum.Int64? establishmentDate,
     $core.String? name,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (ownerId != null) {
@@ -41,6 +44,9 @@ class UserRelationship extends $pb.GeneratedMessage {
     }
     if (name != null) {
       $result.name = name;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -62,6 +68,9 @@ class UserRelationship extends $pb.GeneratedMessage {
     ..aInt64(4, _omitFieldNames ? '' : 'groupIndex')
     ..aInt64(5, _omitFieldNames ? '' : 'establishmentDate')
     ..aOS(6, _omitFieldNames ? '' : 'name')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -158,6 +167,9 @@ class UserRelationship extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(5);
   @$pb.TagNumber(6)
   void clearName() => clearField(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(6);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

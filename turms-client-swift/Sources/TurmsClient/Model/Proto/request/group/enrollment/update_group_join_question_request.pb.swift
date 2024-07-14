@@ -51,6 +51,8 @@ public struct UpdateGroupJoinQuestionRequest {
     /// Clears the value of `score`. Subsequent reads from it will return its default value.
     public mutating func clearScore() { _score = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -74,6 +76,7 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
         2: .same(proto: "question"),
         3: .same(proto: "answers"),
         4: .same(proto: "score"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -86,6 +89,7 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
             case 2: try decoder.decodeSingularStringField(value: &_question)
             case 3: try decoder.decodeRepeatedStringField(value: &answers)
             case 4: try decoder.decodeSingularInt32Field(value: &_score)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -108,6 +112,9 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
         try { if let v = self._score {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 4)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -116,6 +123,7 @@ extension UpdateGroupJoinQuestionRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if lhs._question != rhs._question { return false }
         if lhs.answers != rhs.answers { return false }
         if lhs._score != rhs._score { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

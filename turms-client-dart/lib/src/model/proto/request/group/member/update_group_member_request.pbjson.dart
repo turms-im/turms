@@ -39,6 +39,14 @@ const UpdateGroupMemberRequest$json = {
       '10': 'muteEndDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_name'},
@@ -52,5 +60,6 @@ final $typed_data.Uint8List updateGroupMemberRequestDescriptor = $convert.base64
     'ChhVcGRhdGVHcm91cE1lbWJlclJlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSGw'
     'oJbWVtYmVyX2lkGAIgASgDUghtZW1iZXJJZBIXCgRuYW1lGAMgASgJSABSBG5hbWWIAQESOAoE'
     'cm9sZRgEIAEoDjIfLmltLnR1cm1zLnByb3RvLkdyb3VwTWVtYmVyUm9sZUgBUgRyb2xliAEBEi'
-    'cKDW11dGVfZW5kX2RhdGUYBSABKANIAlILbXV0ZUVuZERhdGWIAQFCBwoFX25hbWVCBwoFX3Jv'
-    'bGVCEAoOX211dGVfZW5kX2RhdGU=');
+    'cKDW11dGVfZW5kX2RhdGUYBSABKANIAlILbXV0ZUVuZERhdGWIAQESQgoRY3VzdG9tX2F0dHJp'
+    'YnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlc0IHCg'
+    'VfbmFtZUIHCgVfcm9sZUIQCg5fbXV0ZV9lbmRfZGF0ZQ==');

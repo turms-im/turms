@@ -26,10 +26,12 @@ public struct QueryConversationsRequest {
     // methods supported on all messages.
 
     /// Private conversations
-    public var targetIds: [Int64] = []
+    public var userIds: [Int64] = []
 
     /// Group conversations
     public var groupIds: [Int64] = []
+
+    public var customAttributes: [Value] = []
 
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -47,8 +49,9 @@ private let _protobuf_package = "im.turms.proto"
 extension QueryConversationsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = _protobuf_package + ".QueryConversationsRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .standard(proto: "target_ids"),
+        1: .standard(proto: "user_ids"),
         2: .standard(proto: "group_ids"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,26 +60,31 @@ extension QueryConversationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try decoder.decodeRepeatedInt64Field(value: &targetIds)
+            case 1: try decoder.decodeRepeatedInt64Field(value: &userIds)
             case 2: try decoder.decodeRepeatedInt64Field(value: &groupIds)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
     }
 
     public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-        if !targetIds.isEmpty {
-            try visitor.visitPackedInt64Field(value: targetIds, fieldNumber: 1)
+        if !userIds.isEmpty {
+            try visitor.visitPackedInt64Field(value: userIds, fieldNumber: 1)
         }
         if !groupIds.isEmpty {
             try visitor.visitPackedInt64Field(value: groupIds, fieldNumber: 2)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
         }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: QueryConversationsRequest, rhs: QueryConversationsRequest) -> Bool {
-        if lhs.targetIds != rhs.targetIds { return false }
+        if lhs.userIds != rhs.userIds { return false }
         if lhs.groupIds != rhs.groupIds { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

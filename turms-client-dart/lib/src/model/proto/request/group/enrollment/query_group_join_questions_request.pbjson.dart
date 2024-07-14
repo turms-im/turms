@@ -28,6 +28,14 @@ const QueryGroupJoinQuestionsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -35,8 +43,9 @@ const QueryGroupJoinQuestionsRequest$json = {
 };
 
 /// Descriptor for `QueryGroupJoinQuestionsRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List queryGroupJoinQuestionsRequestDescriptor =
-    $convert.base64Decode(
-        'Ch5RdWVyeUdyb3VwSm9pblF1ZXN0aW9uc1JlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3'
-        'VwSWQSIQoMd2l0aF9hbnN3ZXJzGAIgASgIUgt3aXRoQW5zd2VycxIvChFsYXN0X3VwZGF0ZWRf'
-        'ZGF0ZRgDIAEoA0gAUg9sYXN0VXBkYXRlZERhdGWIAQFCFAoSX2xhc3RfdXBkYXRlZF9kYXRl');
+final $typed_data.Uint8List queryGroupJoinQuestionsRequestDescriptor = $convert.base64Decode(
+    'Ch5RdWVyeUdyb3VwSm9pblF1ZXN0aW9uc1JlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3'
+    'VwSWQSIQoMd2l0aF9hbnN3ZXJzGAIgASgIUgt3aXRoQW5zd2VycxIvChFsYXN0X3VwZGF0ZWRf'
+    'ZGF0ZRgDIAEoA0gAUg9sYXN0VXBkYXRlZERhdGWIAQESQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDy'
+    'ADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlc0IUChJfbGFzdF91'
+    'cGRhdGVkX2RhdGU=');

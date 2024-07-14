@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class Group extends $pb.GeneratedMessage {
   factory Group({
     $fixnum.Int64? id,
@@ -27,6 +29,8 @@ class Group extends $pb.GeneratedMessage {
     $fixnum.Int64? lastUpdatedDate,
     $fixnum.Int64? muteEndDate,
     $core.bool? active,
+    $core.Map<$core.String, $0.Value>? userDefinedAttributes,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (id != null) {
@@ -62,6 +66,12 @@ class Group extends $pb.GeneratedMessage {
     if (active != null) {
       $result.active = active;
     }
+    if (userDefinedAttributes != null) {
+      $result.userDefinedAttributes.addAll(userDefinedAttributes);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   Group._() : super();
@@ -87,6 +97,17 @@ class Group extends $pb.GeneratedMessage {
     ..aInt64(9, _omitFieldNames ? '' : 'lastUpdatedDate')
     ..aInt64(10, _omitFieldNames ? '' : 'muteEndDate')
     ..aOB(11, _omitFieldNames ? '' : 'active')
+    ..m<$core.String, $0.Value>(
+        12, _omitFieldNames ? '' : 'userDefinedAttributes',
+        entryClassName: 'Group.UserDefinedAttributesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $0.Value.create,
+        valueDefaultOrMaker: $0.Value.getDefault,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -241,6 +262,12 @@ class Group extends $pb.GeneratedMessage {
   $core.bool hasActive() => $_has(10);
   @$pb.TagNumber(11)
   void clearActive() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.Map<$core.String, $0.Value> get userDefinedAttributes => $_getMap(11);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(12);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

@@ -26,23 +26,24 @@ public final class UpdateConversationRequest extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateConversationRequest)
         UpdateConversationRequestOrBuilder {
     private UpdateConversationRequest() {
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private long userId_;
 
     /**
      * <pre>
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return Whether the targetId field is set.
+     * @return Whether the userId field is set.
      */
     @java.lang.Override
-    public boolean hasTargetId() {
+    public boolean hasUserId() {
         return ((bitField0_ & 0x00000001) != 0);
     }
 
@@ -51,13 +52,13 @@ public final class UpdateConversationRequest extends
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @return The targetId.
+     * @return The userId.
      */
     @java.lang.Override
-    public long getTargetId() {
-        return targetId_;
+    public long getUserId() {
+        return userId_;
     }
 
     /**
@@ -65,13 +66,13 @@ public final class UpdateConversationRequest extends
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      *
-     * @param value The targetId to set.
+     * @param value The userId to set.
      */
-    private void setTargetId(long value) {
+    private void setUserId(long value) {
         bitField0_ |= 0x00000001;
-        targetId_ = value;
+        userId_ = value;
     }
 
     /**
@@ -79,11 +80,11 @@ public final class UpdateConversationRequest extends
      * Query filter
      * </pre>
      *
-     * <code>optional int64 target_id = 1;</code>
+     * <code>optional int64 user_id = 1;</code>
      */
-    private void clearTargetId() {
+    private void clearUserId() {
         bitField0_ &= ~0x00000001;
-        targetId_ = 0L;
+        userId_ = 0L;
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 2;
@@ -168,6 +169,111 @@ public final class UpdateConversationRequest extends
     private void clearReadDate() {
 
         readDate_ = 0L;
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.request.conversation.UpdateConversationRequest parseFrom(
@@ -276,13 +382,13 @@ public final class UpdateConversationRequest extends
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @return Whether the targetId field is set.
+         * @return Whether the userId field is set.
          */
         @java.lang.Override
-        public boolean hasTargetId() {
-            return instance.hasTargetId();
+        public boolean hasUserId() {
+            return instance.hasUserId();
         }
 
         /**
@@ -290,13 +396,13 @@ public final class UpdateConversationRequest extends
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @return The targetId.
+         * @return The userId.
          */
         @java.lang.Override
-        public long getTargetId() {
-            return instance.getTargetId();
+        public long getUserId() {
+            return instance.getUserId();
         }
 
         /**
@@ -304,14 +410,14 @@ public final class UpdateConversationRequest extends
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
-         * @param value The targetId to set.
+         * @param value The userId to set.
          * @return This builder for chaining.
          */
-        public Builder setTargetId(long value) {
+        public Builder setUserId(long value) {
             copyOnWrite();
-            instance.setTargetId(value);
+            instance.setUserId(value);
             return this;
         }
 
@@ -320,13 +426,13 @@ public final class UpdateConversationRequest extends
          * Query filter
          * </pre>
          *
-         * <code>optional int64 target_id = 1;</code>
+         * <code>optional int64 user_id = 1;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearTargetId() {
+        public Builder clearUserId() {
             copyOnWrite();
-            instance.clearTargetId();
+            instance.clearUserId();
             return this;
         }
 
@@ -418,12 +524,127 @@ public final class UpdateConversationRequest extends
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UpdateConversationRequest)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -435,11 +656,15 @@ public final class UpdateConversationRequest extends
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects =
-                        new java.lang.Object[]{"bitField0_", "targetId_", "groupId_", "readDate_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"bitField0_",
+                        "userId_",
+                        "groupId_",
+                        "readDate_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0000\u0001\u1002\u0000\u0002"
-                                + "\u1002\u0001\u0003\u0002";
+                        "\u0000\u0004\u0000\u0001\u0001\u000f\u0004\u0000\u0001\u0000\u0001\u1002\u0000\u0002"
+                                + "\u1002\u0001\u0003\u0002\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -472,7 +697,6 @@ public final class UpdateConversationRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateConversationRequest)
     private static final im.turms.client.model.proto.request.conversation.UpdateConversationRequest DEFAULT_INSTANCE;
-
     static {
         UpdateConversationRequest defaultInstance = new UpdateConversationRequest();
         // New instances are implicitly immutable so no need to make

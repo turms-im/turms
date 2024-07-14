@@ -14,12 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class UpdateMessageRequest extends $pb.GeneratedMessage {
   factory UpdateMessageRequest({
     $fixnum.Int64? messageId,
     $core.String? text,
     $core.Iterable<$core.List<$core.int>>? records,
     $fixnum.Int64? recallDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (messageId != null) {
@@ -33,6 +36,9 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
     }
     if (recallDate != null) {
       $result.recallDate = recallDate;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -53,6 +59,9 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
     ..p<$core.List<$core.int>>(
         3, _omitFieldNames ? '' : 'records', $pb.PbFieldType.PY)
     ..aInt64(4, _omitFieldNames ? '' : 'recallDate')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -119,6 +128,9 @@ class UpdateMessageRequest extends $pb.GeneratedMessage {
   $core.bool hasRecallDate() => $_has(3);
   @$pb.TagNumber(4)
   void clearRecallDate() => clearField(4);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(4);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

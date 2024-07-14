@@ -14,11 +14,14 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class DeleteRelationshipGroupMemberRequest extends $pb.GeneratedMessage {
   factory DeleteRelationshipGroupMemberRequest({
     $fixnum.Int64? userId,
     $core.int? groupIndex,
     $core.int? targetGroupIndex,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (userId != null) {
@@ -29,6 +32,9 @@ class DeleteRelationshipGroupMemberRequest extends $pb.GeneratedMessage {
     }
     if (targetGroupIndex != null) {
       $result.targetGroupIndex = targetGroupIndex;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -49,6 +55,9 @@ class DeleteRelationshipGroupMemberRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(2, _omitFieldNames ? '' : 'groupIndex', $pb.PbFieldType.O3)
     ..a<$core.int>(
         3, _omitFieldNames ? '' : 'targetGroupIndex', $pb.PbFieldType.O3)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -114,6 +123,9 @@ class DeleteRelationshipGroupMemberRequest extends $pb.GeneratedMessage {
   $core.bool hasTargetGroupIndex() => $_has(2);
   @$pb.TagNumber(3)
   void clearTargetGroupIndex() => clearField(3);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(3);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

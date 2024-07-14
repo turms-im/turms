@@ -29,6 +29,8 @@ public struct DeleteGroupJoinQuestionsRequest {
 
     public var questionIds: [Int64] = []
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -47,6 +49,7 @@ extension DeleteGroupJoinQuestionsRequest: SwiftProtobuf.Message, SwiftProtobuf.
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_id"),
         2: .standard(proto: "question_ids"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,6 +60,7 @@ extension DeleteGroupJoinQuestionsRequest: SwiftProtobuf.Message, SwiftProtobuf.
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &groupID)
             case 2: try decoder.decodeRepeatedInt64Field(value: &questionIds)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -69,12 +73,16 @@ extension DeleteGroupJoinQuestionsRequest: SwiftProtobuf.Message, SwiftProtobuf.
         if !questionIds.isEmpty {
             try visitor.visitPackedInt64Field(value: questionIds, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: DeleteGroupJoinQuestionsRequest, rhs: DeleteGroupJoinQuestionsRequest) -> Bool {
         if lhs.groupID != rhs.groupID { return false }
         if lhs.questionIds != rhs.questionIds { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

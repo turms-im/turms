@@ -46,6 +46,21 @@ public interface TurmsRequestOrBuilder extends
     long getRequestId();
 
     /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
      * <pre>
      * User - Session
      * </pre>
@@ -336,6 +351,48 @@ public interface TurmsRequestOrBuilder extends
      * @return The updateUserRequest.
      */
     im.turms.client.model.proto.request.user.UpdateUserRequest getUpdateUserRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return Whether the updateUserSettingsRequest field is set.
+     */
+    boolean hasUpdateUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     *
+     * @return The updateUserSettingsRequest.
+     */
+    im.turms.client.model.proto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return Whether the deleteUserSettingsRequest field is set.
+     */
+    boolean hasDeleteUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     *
+     * @return The deleteUserSettingsRequest.
+     */
+    im.turms.client.model.proto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return Whether the queryUserSettingsRequest field is set.
+     */
+    boolean hasQueryUserSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     *
+     * @return The queryUserSettingsRequest.
+     */
+    im.turms.client.model.proto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest();
 
     /**
      * <pre>
@@ -875,6 +932,84 @@ public interface TurmsRequestOrBuilder extends
 
     /**
      * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return Whether the createMeetingRequest field is set.
+     */
+    boolean hasCreateMeetingRequest();
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     *
+     * @return The createMeetingRequest.
+     */
+    im.turms.client.model.proto.request.conference.CreateMeetingRequest getCreateMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return Whether the deleteMeetingRequest field is set.
+     */
+    boolean hasDeleteMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     *
+     * @return The deleteMeetingRequest.
+     */
+    im.turms.client.model.proto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return Whether the queryMeetingsRequest field is set.
+     */
+    boolean hasQueryMeetingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     *
+     * @return The queryMeetingsRequest.
+     */
+    im.turms.client.model.proto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return Whether the updateMeetingRequest field is set.
+     */
+    boolean hasUpdateMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     *
+     * @return The updateMeetingRequest.
+     */
+    im.turms.client.model.proto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return Whether the updateMeetingInvitationRequest field is set.
+     */
+    boolean hasUpdateMeetingInvitationRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     *
+     * @return The updateMeetingInvitationRequest.
+     */
+    im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest();
+
+    /**
+     * <pre>
      * Storage
      * </pre>
      *
@@ -951,5 +1086,91 @@ public interface TurmsRequestOrBuilder extends
      */
     im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest getUpdateMessageAttachmentInfoRequest();
 
-    public im.turms.client.model.proto.request.TurmsRequest.KindCase getKindCase();
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return Whether the deleteConversationSettingsRequest field is set.
+     */
+    boolean hasDeleteConversationSettingsRequest();
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     *
+     * @return The deleteConversationSettingsRequest.
+     */
+    im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return Whether the queryConversationSettingsRequest field is set.
+     */
+    boolean hasQueryConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     *
+     * @return The queryConversationSettingsRequest.
+     */
+    im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return Whether the updateConversationSettingsRequest field is set.
+     */
+    boolean hasUpdateConversationSettingsRequest();
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     *
+     * @return The updateConversationSettingsRequest.
+     */
+    im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest();
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return Whether the createMessageReactionsRequest field is set.
+     */
+    boolean hasCreateMessageReactionsRequest();
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return The createMessageReactionsRequest.
+     */
+    im.turms.client.model.proto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return Whether the deleteMessageReactionsRequest field is set.
+     */
+    boolean hasDeleteMessageReactionsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return The deleteMessageReactionsRequest.
+     */
+    im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest();
+
+    im.turms.client.model.proto.request.TurmsRequest.KindCase getKindCase();
 }

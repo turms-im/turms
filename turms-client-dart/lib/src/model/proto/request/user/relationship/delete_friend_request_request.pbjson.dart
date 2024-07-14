@@ -18,6 +18,14 @@ const DeleteFriendRequestRequest$json = {
   '1': 'DeleteFriendRequestRequest',
   '2': [
     {'1': 'request_id', '3': 1, '4': 1, '5': 3, '10': 'requestId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -25,4 +33,5 @@ const DeleteFriendRequestRequest$json = {
 final $typed_data.Uint8List deleteFriendRequestRequestDescriptor =
     $convert.base64Decode(
         'ChpEZWxldGVGcmllbmRSZXF1ZXN0UmVxdWVzdBIdCgpyZXF1ZXN0X2lkGAEgASgDUglyZXF1ZX'
-        'N0SWQ=');
+        'N0SWQSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQ'
+        'Y3VzdG9tQXR0cmlidXRlcw==');

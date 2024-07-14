@@ -76,6 +76,10 @@ public struct UpdateUserRequest {
     /// Clears the value of `profileAccessStrategy`. Subsequent reads from it will return its default value.
     public mutating func clearProfileAccessStrategy() { _profileAccessStrategy = nil }
 
+    public var userDefinedAttributes: [String: Value] = [:]
+
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -103,6 +107,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         3: .same(proto: "intro"),
         4: .standard(proto: "profile_picture"),
         5: .standard(proto: "profile_access_strategy"),
+        6: .standard(proto: "user_defined_attributes"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -116,6 +122,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             case 3: try decoder.decodeSingularStringField(value: &_intro)
             case 4: try decoder.decodeSingularStringField(value: &_profilePicture)
             case 5: try decoder.decodeSingularEnumField(value: &_profileAccessStrategy)
+            case 6: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: &userDefinedAttributes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -141,6 +149,12 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         try { if let v = self._profileAccessStrategy {
             try visitor.visitSingularEnumField(value: v, fieldNumber: 5)
         } }()
+        if !userDefinedAttributes.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: userDefinedAttributes, fieldNumber: 6)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -150,6 +164,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if lhs._intro != rhs._intro { return false }
         if lhs._profilePicture != rhs._profilePicture { return false }
         if lhs._profileAccessStrategy != rhs._profileAccessStrategy { return false }
+        if lhs.userDefinedAttributes != rhs.userDefinedAttributes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

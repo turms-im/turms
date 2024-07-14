@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class CreateMessageRequest extends $pb.GeneratedMessage {
   factory CreateMessageRequest({
     $fixnum.Int64? messageId,
@@ -25,6 +27,7 @@ class CreateMessageRequest extends $pb.GeneratedMessage {
     $core.Iterable<$core.List<$core.int>>? records,
     $core.int? burnAfter,
     $fixnum.Int64? preMessageId,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (messageId != null) {
@@ -54,6 +57,9 @@ class CreateMessageRequest extends $pb.GeneratedMessage {
     if (preMessageId != null) {
       $result.preMessageId = preMessageId;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   CreateMessageRequest._() : super();
@@ -78,6 +84,9 @@ class CreateMessageRequest extends $pb.GeneratedMessage {
         7, _omitFieldNames ? '' : 'records', $pb.PbFieldType.PY)
     ..a<$core.int>(8, _omitFieldNames ? '' : 'burnAfter', $pb.PbFieldType.O3)
     ..aInt64(9, _omitFieldNames ? '' : 'preMessageId')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -204,6 +213,9 @@ class CreateMessageRequest extends $pb.GeneratedMessage {
   $core.bool hasPreMessageId() => $_has(8);
   @$pb.TagNumber(9)
   void clearPreMessageId() => clearField(9);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(9);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

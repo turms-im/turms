@@ -31,6 +31,14 @@ const StorageResourceInfo$json = {
     },
     {'1': 'uploader_id', '3': 5, '4': 1, '5': 3, '10': 'uploaderId'},
     {'1': 'creation_date', '3': 6, '4': 1, '5': 3, '10': 'creationDate'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_id_num'},
@@ -45,5 +53,6 @@ final $typed_data.Uint8List storageResourceInfoDescriptor = $convert.base64Decod
     'ChNTdG9yYWdlUmVzb3VyY2VJbmZvEhoKBmlkX251bRgBIAEoA0gAUgVpZE51bYgBARIaCgZpZF'
     '9zdHIYAiABKAlIAVIFaWRTdHKIAQESFwoEbmFtZRgDIAEoCUgCUgRuYW1liAEBEiIKCm1lZGlh'
     'X3R5cGUYBCABKAlIA1IJbWVkaWFUeXBliAEBEh8KC3VwbG9hZGVyX2lkGAUgASgDUgp1cGxvYW'
-    'RlcklkEiMKDWNyZWF0aW9uX2RhdGUYBiABKANSDGNyZWF0aW9uRGF0ZUIJCgdfaWRfbnVtQgkK'
-    'B19pZF9zdHJCBwoFX25hbWVCDQoLX21lZGlhX3R5cGU=');
+    'RlcklkEiMKDWNyZWF0aW9uX2RhdGUYBiABKANSDGNyZWF0aW9uRGF0ZRJCChFjdXN0b21fYXR0'
+    'cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQg'
+    'kKB19pZF9udW1CCQoHX2lkX3N0ckIHCgVfbmFtZUINCgtfbWVkaWFfdHlwZQ==');

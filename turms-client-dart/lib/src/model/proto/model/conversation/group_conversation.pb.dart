@@ -14,10 +14,13 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class GroupConversation extends $pb.GeneratedMessage {
   factory GroupConversation({
     $fixnum.Int64? groupId,
     $core.Map<$fixnum.Int64, $fixnum.Int64>? memberIdToReadDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -25,6 +28,9 @@ class GroupConversation extends $pb.GeneratedMessage {
     }
     if (memberIdToReadDate != null) {
       $result.memberIdToReadDate.addAll(memberIdToReadDate);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -47,6 +53,9 @@ class GroupConversation extends $pb.GeneratedMessage {
         keyFieldType: $pb.PbFieldType.O6,
         valueFieldType: $pb.PbFieldType.O6,
         packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -86,6 +95,9 @@ class GroupConversation extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $core.Map<$fixnum.Int64, $fixnum.Int64> get memberIdToReadDate => $_getMap(1);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

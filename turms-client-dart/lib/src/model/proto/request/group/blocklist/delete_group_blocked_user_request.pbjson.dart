@@ -19,6 +19,14 @@ const DeleteGroupBlockedUserRequest$json = {
   '2': [
     {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
     {'1': 'user_id', '3': 2, '4': 1, '5': 3, '10': 'userId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -26,4 +34,5 @@ const DeleteGroupBlockedUserRequest$json = {
 final $typed_data.Uint8List deleteGroupBlockedUserRequestDescriptor =
     $convert.base64Decode(
         'Ch1EZWxldGVHcm91cEJsb2NrZWRVc2VyUmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdX'
-        'BJZBIXCgd1c2VyX2lkGAIgASgDUgZ1c2VySWQ=');
+        'BJZBIXCgd1c2VyX2lkGAIgASgDUgZ1c2VySWQSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsy'
+        'FS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

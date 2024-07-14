@@ -82,6 +82,14 @@ const GroupJoinRequest$json = {
       '10': 'responderId',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -102,7 +110,8 @@ final $typed_data.Uint8List groupJoinRequestDescriptor = $convert.base64Decode(
     'ARI6CgZzdGF0dXMYBCABKA4yHS5pbS50dXJtcy5wcm90by5SZXF1ZXN0U3RhdHVzSANSBnN0YX'
     'R1c4gBARIsCg9leHBpcmF0aW9uX2RhdGUYBSABKANIBFIOZXhwaXJhdGlvbkRhdGWIAQESHgoI'
     'Z3JvdXBfaWQYBiABKANIBVIHZ3JvdXBJZIgBARImCgxyZXF1ZXN0ZXJfaWQYByABKANIBlILcm'
-    'VxdWVzdGVySWSIAQESJgoMcmVzcG9uZGVyX2lkGAggASgDSAdSC3Jlc3BvbmRlcklkiAEBQgUK'
-    'A19pZEIQCg5fY3JlYXRpb25fZGF0ZUIKCghfY29udGVudEIJCgdfc3RhdHVzQhIKEF9leHBpcm'
-    'F0aW9uX2RhdGVCCwoJX2dyb3VwX2lkQg8KDV9yZXF1ZXN0ZXJfaWRCDwoNX3Jlc3BvbmRlcl9p'
-    'ZA==');
+    'VxdWVzdGVySWSIAQESJgoMcmVzcG9uZGVyX2lkGAggASgDSAdSC3Jlc3BvbmRlcklkiAEBEkIK'
+    'EWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbU'
+    'F0dHJpYnV0ZXNCBQoDX2lkQhAKDl9jcmVhdGlvbl9kYXRlQgoKCF9jb250ZW50QgkKB19zdGF0'
+    'dXNCEgoQX2V4cGlyYXRpb25fZGF0ZUILCglfZ3JvdXBfaWRCDwoNX3JlcXVlc3Rlcl9pZEIPCg'
+    '1fcmVzcG9uZGVyX2lk');

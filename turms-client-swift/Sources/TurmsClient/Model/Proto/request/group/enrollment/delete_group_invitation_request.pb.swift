@@ -27,6 +27,8 @@ public struct DeleteGroupInvitationRequest {
 
     public var invitationID: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -44,6 +46,7 @@ extension DeleteGroupInvitationRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
     public static let protoMessageName: String = _protobuf_package + ".DeleteGroupInvitationRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "invitation_id"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -53,6 +56,7 @@ extension DeleteGroupInvitationRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &invitationID)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -62,11 +66,15 @@ extension DeleteGroupInvitationRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
         if invitationID != 0 {
             try visitor.visitSingularInt64Field(value: invitationID, fieldNumber: 1)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: DeleteGroupInvitationRequest, rhs: DeleteGroupInvitationRequest) -> Bool {
         if lhs.invitationID != rhs.invitationID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -13,6 +13,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class File_Description extends $pb.GeneratedMessage {
   factory File_Description({
     $core.String? url,
@@ -112,6 +114,7 @@ class File extends $pb.GeneratedMessage {
   factory File({
     File_Description? description,
     $core.List<$core.int>? data,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (description != null) {
@@ -119,6 +122,9 @@ class File extends $pb.GeneratedMessage {
     }
     if (data != null) {
       $result.data = data;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -138,6 +144,9 @@ class File extends $pb.GeneratedMessage {
         subBuilder: File_Description.create)
     ..a<$core.List<$core.int>>(
         2, _omitFieldNames ? '' : 'data', $pb.PbFieldType.OY)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -186,6 +195,9 @@ class File extends $pb.GeneratedMessage {
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => clearField(2);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

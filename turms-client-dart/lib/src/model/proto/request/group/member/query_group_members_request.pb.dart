@@ -14,12 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class QueryGroupMembersRequest extends $pb.GeneratedMessage {
   factory QueryGroupMembersRequest({
     $fixnum.Int64? groupId,
     $fixnum.Int64? lastUpdatedDate,
     $core.Iterable<$fixnum.Int64>? memberIds,
     $core.bool? withStatus,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -33,6 +36,9 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
     }
     if (withStatus != null) {
       $result.withStatus = withStatus;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -53,6 +59,9 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
     ..p<$fixnum.Int64>(
         3, _omitFieldNames ? '' : 'memberIds', $pb.PbFieldType.K6)
     ..aOB(4, _omitFieldNames ? '' : 'withStatus')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -118,6 +127,9 @@ class QueryGroupMembersRequest extends $pb.GeneratedMessage {
   $core.bool hasWithStatus() => $_has(3);
   @$pb.TagNumber(4)
   void clearWithStatus() => clearField(4);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(4);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

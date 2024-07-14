@@ -14,13 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../constant/response_action.pbenum.dart' as $0;
+import '../../../constant/response_action.pbenum.dart' as $1;
+import '../../../model/common/value.pb.dart' as $0;
 
 class UpdateGroupInvitationRequest extends $pb.GeneratedMessage {
   factory UpdateGroupInvitationRequest({
     $fixnum.Int64? invitationId,
-    $0.ResponseAction? responseAction,
+    $1.ResponseAction? responseAction,
     $core.String? reason,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (invitationId != null) {
@@ -31,6 +33,9 @@ class UpdateGroupInvitationRequest extends $pb.GeneratedMessage {
     }
     if (reason != null) {
       $result.reason = reason;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -47,12 +52,15 @@ class UpdateGroupInvitationRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'invitationId')
-    ..e<$0.ResponseAction>(
+    ..e<$1.ResponseAction>(
         2, _omitFieldNames ? '' : 'responseAction', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.ResponseAction.ACCEPT,
-        valueOf: $0.ResponseAction.valueOf,
-        enumValues: $0.ResponseAction.values)
+        defaultOrMaker: $1.ResponseAction.ACCEPT,
+        valueOf: $1.ResponseAction.valueOf,
+        enumValues: $1.ResponseAction.values)
     ..aOS(3, _omitFieldNames ? '' : 'reason')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -97,9 +105,9 @@ class UpdateGroupInvitationRequest extends $pb.GeneratedMessage {
 
   /// Update
   @$pb.TagNumber(2)
-  $0.ResponseAction get responseAction => $_getN(1);
+  $1.ResponseAction get responseAction => $_getN(1);
   @$pb.TagNumber(2)
-  set responseAction($0.ResponseAction v) {
+  set responseAction($1.ResponseAction v) {
     setField(2, v);
   }
 
@@ -119,6 +127,9 @@ class UpdateGroupInvitationRequest extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(2);
   @$pb.TagNumber(3)
   void clearReason() => clearField(3);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(3);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

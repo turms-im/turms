@@ -19,6 +19,14 @@ const CreateFriendRequestRequest$json = {
   '2': [
     {'1': 'recipient_id', '3': 1, '4': 1, '5': 3, '10': 'recipientId'},
     {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -26,4 +34,5 @@ const CreateFriendRequestRequest$json = {
 final $typed_data.Uint8List createFriendRequestRequestDescriptor =
     $convert.base64Decode(
         'ChpDcmVhdGVGcmllbmRSZXF1ZXN0UmVxdWVzdBIhCgxyZWNpcGllbnRfaWQYASABKANSC3JlY2'
-        'lwaWVudElkEhgKB2NvbnRlbnQYAiABKAlSB2NvbnRlbnQ=');
+        'lwaWVudElkEhgKB2NvbnRlbnQYAiABKAlSB2NvbnRlbnQSQgoRY3VzdG9tX2F0dHJpYnV0ZXMY'
+        'DyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

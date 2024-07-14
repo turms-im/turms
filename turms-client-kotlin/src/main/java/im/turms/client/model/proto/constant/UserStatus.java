@@ -143,7 +143,7 @@ public enum UserStatus implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    private UserStatus(int value) {
+    UserStatus(int value) {
         this.value = value;
     }
 

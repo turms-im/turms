@@ -354,7 +354,7 @@ public final class UserOnlineStatuses extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -402,7 +402,6 @@ public final class UserOnlineStatuses extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserOnlineStatuses)
     private static final im.turms.client.model.proto.model.user.UserOnlineStatuses DEFAULT_INSTANCE;
-
     static {
         UserOnlineStatuses defaultInstance = new UserOnlineStatuses();
         // New instances are implicitly immutable so no need to make

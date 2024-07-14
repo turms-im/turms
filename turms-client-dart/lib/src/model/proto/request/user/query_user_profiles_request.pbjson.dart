@@ -37,6 +37,14 @@ const QueryUserProfilesRequest$json = {
       '5': 5,
       '10': 'fieldsToHighlight'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -52,5 +60,6 @@ final $typed_data.Uint8List queryUserProfilesRequestDescriptor = $convert.base64
     'oRbGFzdF91cGRhdGVkX2RhdGUYAiABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEhcKBG5hbWUY'
     'AyABKAlIAVIEbmFtZYgBARIXCgRza2lwGAogASgFSAJSBHNraXCIAQESGQoFbGltaXQYCyABKA'
     'VIA1IFbGltaXSIAQESLgoTZmllbGRzX3RvX2hpZ2hsaWdodBgMIAMoBVIRZmllbGRzVG9IaWdo'
-    'bGlnaHRCFAoSX2xhc3RfdXBkYXRlZF9kYXRlQgcKBV9uYW1lQgcKBV9za2lwQggKBl9saW1pdA'
-    '==');
+    'bGlnaHQSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZV'
+    'IQY3VzdG9tQXR0cmlidXRlc0IUChJfbGFzdF91cGRhdGVkX2RhdGVCBwoFX25hbWVCBwoFX3Nr'
+    'aXBCCAoGX2xpbWl0');

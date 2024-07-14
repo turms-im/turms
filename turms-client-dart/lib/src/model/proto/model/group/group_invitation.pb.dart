@@ -14,18 +14,20 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/request_status.pbenum.dart' as $0;
+import '../../constant/request_status.pbenum.dart' as $1;
+import '../common/value.pb.dart' as $0;
 
 class GroupInvitation extends $pb.GeneratedMessage {
   factory GroupInvitation({
     $fixnum.Int64? id,
     $fixnum.Int64? creationDate,
     $core.String? content,
-    $0.RequestStatus? status,
+    $1.RequestStatus? status,
     $fixnum.Int64? expirationDate,
     $fixnum.Int64? groupId,
     $fixnum.Int64? inviterId,
     $fixnum.Int64? inviteeId,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (id != null) {
@@ -52,6 +54,9 @@ class GroupInvitation extends $pb.GeneratedMessage {
     if (inviteeId != null) {
       $result.inviteeId = inviteeId;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   GroupInvitation._() : super();
@@ -69,15 +74,18 @@ class GroupInvitation extends $pb.GeneratedMessage {
     ..aInt64(1, _omitFieldNames ? '' : 'id')
     ..aInt64(2, _omitFieldNames ? '' : 'creationDate')
     ..aOS(3, _omitFieldNames ? '' : 'content')
-    ..e<$0.RequestStatus>(
+    ..e<$1.RequestStatus>(
         4, _omitFieldNames ? '' : 'status', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.RequestStatus.PENDING,
-        valueOf: $0.RequestStatus.valueOf,
-        enumValues: $0.RequestStatus.values)
+        defaultOrMaker: $1.RequestStatus.PENDING,
+        valueOf: $1.RequestStatus.valueOf,
+        enumValues: $1.RequestStatus.values)
     ..aInt64(5, _omitFieldNames ? '' : 'expirationDate')
     ..aInt64(6, _omitFieldNames ? '' : 'groupId')
     ..aInt64(7, _omitFieldNames ? '' : 'inviterId')
     ..aInt64(8, _omitFieldNames ? '' : 'inviteeId')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -140,9 +148,9 @@ class GroupInvitation extends $pb.GeneratedMessage {
   void clearContent() => clearField(3);
 
   @$pb.TagNumber(4)
-  $0.RequestStatus get status => $_getN(3);
+  $1.RequestStatus get status => $_getN(3);
   @$pb.TagNumber(4)
-  set status($0.RequestStatus v) {
+  set status($1.RequestStatus v) {
     setField(4, v);
   }
 
@@ -198,6 +206,9 @@ class GroupInvitation extends $pb.GeneratedMessage {
   $core.bool hasInviteeId() => $_has(7);
   @$pb.TagNumber(8)
   void clearInviteeId() => clearField(8);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(8);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

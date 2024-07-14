@@ -19,10 +19,19 @@ const UserRelationshipGroup$json = {
   '2': [
     {'1': 'index', '3': 1, '4': 1, '5': 5, '10': 'index'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `UserRelationshipGroup`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userRelationshipGroupDescriptor = $convert.base64Decode(
     'ChVVc2VyUmVsYXRpb25zaGlwR3JvdXASFAoFaW5kZXgYASABKAVSBWluZGV4EhIKBG5hbWUYAi'
-    'ABKAlSBG5hbWU=');
+    'ABKAlSBG5hbWUSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5W'
+    'YWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

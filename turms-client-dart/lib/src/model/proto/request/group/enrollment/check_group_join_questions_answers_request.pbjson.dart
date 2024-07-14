@@ -26,6 +26,14 @@ const CheckGroupJoinQuestionsAnswersRequest$json = {
           '.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.QuestionIdToAnswerEntry',
       '10': 'questionIdToAnswer'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json],
 };
@@ -41,10 +49,10 @@ const CheckGroupJoinQuestionsAnswersRequest_QuestionIdToAnswerEntry$json = {
 };
 
 /// Descriptor for `CheckGroupJoinQuestionsAnswersRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List checkGroupJoinQuestionsAnswersRequestDescriptor =
-    $convert.base64Decode(
-        'CiVDaGVja0dyb3VwSm9pblF1ZXN0aW9uc0Fuc3dlcnNSZXF1ZXN0EoABChVxdWVzdGlvbl9pZF'
-        '90b19hbnN3ZXIYASADKAsyTS5pbS50dXJtcy5wcm90by5DaGVja0dyb3VwSm9pblF1ZXN0aW9u'
-        'c0Fuc3dlcnNSZXF1ZXN0LlF1ZXN0aW9uSWRUb0Fuc3dlckVudHJ5UhJxdWVzdGlvbklkVG9Bbn'
-        'N3ZXIaRQoXUXVlc3Rpb25JZFRvQW5zd2VyRW50cnkSEAoDa2V5GAEgASgDUgNrZXkSFAoFdmFs'
-        'dWUYAiABKAlSBXZhbHVlOgI4AQ==');
+final $typed_data.Uint8List checkGroupJoinQuestionsAnswersRequestDescriptor = $convert.base64Decode(
+    'CiVDaGVja0dyb3VwSm9pblF1ZXN0aW9uc0Fuc3dlcnNSZXF1ZXN0EoABChVxdWVzdGlvbl9pZF'
+    '90b19hbnN3ZXIYASADKAsyTS5pbS50dXJtcy5wcm90by5DaGVja0dyb3VwSm9pblF1ZXN0aW9u'
+    'c0Fuc3dlcnNSZXF1ZXN0LlF1ZXN0aW9uSWRUb0Fuc3dlckVudHJ5UhJxdWVzdGlvbklkVG9Bbn'
+    'N3ZXISQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQ'
+    'Y3VzdG9tQXR0cmlidXRlcxpFChdRdWVzdGlvbklkVG9BbnN3ZXJFbnRyeRIQCgNrZXkYASABKA'
+    'NSA2tleRIUCgV2YWx1ZRgCIAEoCVIFdmFsdWU6AjgB');

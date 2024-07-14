@@ -94,7 +94,7 @@ public final class GroupJoinQuestionsAnswerResult extends
         return questionIds_.getLong(index);
     }
 
-    private int questionIdsMemoizedSerializedSize = -1;
+    private final int questionIdsMemoizedSerializedSize = -1;
 
     private void ensureQuestionIdsIsMutable() {
         com.google.protobuf.Internal.LongList tmp = questionIds_;
@@ -422,7 +422,7 @@ public final class GroupJoinQuestionsAnswerResult extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -471,7 +471,6 @@ public final class GroupJoinQuestionsAnswerResult extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.GroupJoinQuestionsAnswerResult)
     private static final im.turms.client.model.proto.model.group.GroupJoinQuestionsAnswerResult DEFAULT_INSTANCE;
-
     static {
         GroupJoinQuestionsAnswerResult defaultInstance = new GroupJoinQuestionsAnswerResult();
         // New instances are implicitly immutable so no need to make

@@ -38,6 +38,8 @@ public struct TurmsRequest {
     /// Clears the value of `requestID`. Subsequent reads from it will return its default value.
     public mutating func clearRequestID() { _requestID = nil }
 
+    public var customAttributes: [Value] = []
+
     public var kind: TurmsRequest.OneOf_Kind?
 
     /// User - Session
@@ -187,6 +189,30 @@ public struct TurmsRequest {
             return UpdateUserRequest()
         }
         set { kind = .updateUserRequest(newValue) }
+    }
+
+    public var updateUserSettingsRequest: UpdateUserSettingsRequest {
+        get {
+            if case let .updateUserSettingsRequest(v)? = kind { return v }
+            return UpdateUserSettingsRequest()
+        }
+        set { kind = .updateUserSettingsRequest(newValue) }
+    }
+
+    public var deleteUserSettingsRequest: DeleteUserSettingsRequest {
+        get {
+            if case let .deleteUserSettingsRequest(v)? = kind { return v }
+            return DeleteUserSettingsRequest()
+        }
+        set { kind = .deleteUserSettingsRequest(newValue) }
+    }
+
+    public var queryUserSettingsRequest: QueryUserSettingsRequest {
+        get {
+            if case let .queryUserSettingsRequest(v)? = kind { return v }
+            return QueryUserSettingsRequest()
+        }
+        set { kind = .queryUserSettingsRequest(newValue) }
     }
 
     /// User Relationship
@@ -481,6 +507,47 @@ public struct TurmsRequest {
         set { kind = .updateGroupJoinRequestRequest(newValue) }
     }
 
+    /// Conference
+    public var createMeetingRequest: CreateMeetingRequest {
+        get {
+            if case let .createMeetingRequest(v)? = kind { return v }
+            return CreateMeetingRequest()
+        }
+        set { kind = .createMeetingRequest(newValue) }
+    }
+
+    public var deleteMeetingRequest: DeleteMeetingRequest {
+        get {
+            if case let .deleteMeetingRequest(v)? = kind { return v }
+            return DeleteMeetingRequest()
+        }
+        set { kind = .deleteMeetingRequest(newValue) }
+    }
+
+    public var queryMeetingsRequest: QueryMeetingsRequest {
+        get {
+            if case let .queryMeetingsRequest(v)? = kind { return v }
+            return QueryMeetingsRequest()
+        }
+        set { kind = .queryMeetingsRequest(newValue) }
+    }
+
+    public var updateMeetingRequest: UpdateMeetingRequest {
+        get {
+            if case let .updateMeetingRequest(v)? = kind { return v }
+            return UpdateMeetingRequest()
+        }
+        set { kind = .updateMeetingRequest(newValue) }
+    }
+
+    public var updateMeetingInvitationRequest: UpdateMeetingInvitationRequest {
+        get {
+            if case let .updateMeetingInvitationRequest(v)? = kind { return v }
+            return UpdateMeetingInvitationRequest()
+        }
+        set { kind = .updateMeetingInvitationRequest(newValue) }
+    }
+
     /// Storage
     public var deleteResourceRequest: DeleteResourceRequest {
         get {
@@ -522,6 +589,48 @@ public struct TurmsRequest {
         set { kind = .updateMessageAttachmentInfoRequest(newValue) }
     }
 
+    /// Conversation - Supplement
+    public var deleteConversationSettingsRequest: DeleteConversationSettingsRequest {
+        get {
+            if case let .deleteConversationSettingsRequest(v)? = kind { return v }
+            return DeleteConversationSettingsRequest()
+        }
+        set { kind = .deleteConversationSettingsRequest(newValue) }
+    }
+
+    public var queryConversationSettingsRequest: QueryConversationSettingsRequest {
+        get {
+            if case let .queryConversationSettingsRequest(v)? = kind { return v }
+            return QueryConversationSettingsRequest()
+        }
+        set { kind = .queryConversationSettingsRequest(newValue) }
+    }
+
+    public var updateConversationSettingsRequest: UpdateConversationSettingsRequest {
+        get {
+            if case let .updateConversationSettingsRequest(v)? = kind { return v }
+            return UpdateConversationSettingsRequest()
+        }
+        set { kind = .updateConversationSettingsRequest(newValue) }
+    }
+
+    /// Message - Supplement
+    public var createMessageReactionsRequest: CreateMessageReactionsRequest {
+        get {
+            if case let .createMessageReactionsRequest(v)? = kind { return v }
+            return CreateMessageReactionsRequest()
+        }
+        set { kind = .createMessageReactionsRequest(newValue) }
+    }
+
+    public var deleteMessageReactionsRequest: DeleteMessageReactionsRequest {
+        get {
+            if case let .deleteMessageReactionsRequest(v)? = kind { return v }
+            return DeleteMessageReactionsRequest()
+        }
+        set { kind = .deleteMessageReactionsRequest(newValue) }
+    }
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public enum OneOf_Kind: Equatable {
@@ -548,6 +657,9 @@ public struct TurmsRequest {
         case updateUserLocationRequest(UpdateUserLocationRequest)
         case updateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest)
         case updateUserRequest(UpdateUserRequest)
+        case updateUserSettingsRequest(UpdateUserSettingsRequest)
+        case deleteUserSettingsRequest(DeleteUserSettingsRequest)
+        case queryUserSettingsRequest(QueryUserSettingsRequest)
         /// User Relationship
         case createFriendRequestRequest(CreateFriendRequestRequest)
         case createRelationshipGroupRequest(CreateRelationshipGroupRequest)
@@ -588,12 +700,25 @@ public struct TurmsRequest {
         case updateGroupInvitationRequest(UpdateGroupInvitationRequest)
         case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
         case updateGroupJoinRequestRequest(UpdateGroupJoinRequestRequest)
+        /// Conference
+        case createMeetingRequest(CreateMeetingRequest)
+        case deleteMeetingRequest(DeleteMeetingRequest)
+        case queryMeetingsRequest(QueryMeetingsRequest)
+        case updateMeetingRequest(UpdateMeetingRequest)
+        case updateMeetingInvitationRequest(UpdateMeetingInvitationRequest)
         /// Storage
         case deleteResourceRequest(DeleteResourceRequest)
         case queryResourceDownloadInfoRequest(QueryResourceDownloadInfoRequest)
         case queryResourceUploadInfoRequest(QueryResourceUploadInfoRequest)
         case queryMessageAttachmentInfosRequest(QueryMessageAttachmentInfosRequest)
         case updateMessageAttachmentInfoRequest(UpdateMessageAttachmentInfoRequest)
+        /// Conversation - Supplement
+        case deleteConversationSettingsRequest(DeleteConversationSettingsRequest)
+        case queryConversationSettingsRequest(QueryConversationSettingsRequest)
+        case updateConversationSettingsRequest(UpdateConversationSettingsRequest)
+        /// Message - Supplement
+        case createMessageReactionsRequest(CreateMessageReactionsRequest)
+        case deleteMessageReactionsRequest(DeleteMessageReactionsRequest)
 
         #if !swift(>=4.1)
             public static func == (lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
@@ -671,6 +796,18 @@ public struct TurmsRequest {
                     }()
                 case (.updateUserRequest, .updateUserRequest): return {
                         guard case let .updateUserRequest(l) = lhs, case let .updateUserRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateUserSettingsRequest, .updateUserSettingsRequest): return {
+                        guard case let .updateUserSettingsRequest(l) = lhs, case let .updateUserSettingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteUserSettingsRequest, .deleteUserSettingsRequest): return {
+                        guard case let .deleteUserSettingsRequest(l) = lhs, case let .deleteUserSettingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryUserSettingsRequest, .queryUserSettingsRequest): return {
+                        guard case let .queryUserSettingsRequest(l) = lhs, case let .queryUserSettingsRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
                 case (.createFriendRequestRequest, .createFriendRequestRequest): return {
@@ -817,6 +954,26 @@ public struct TurmsRequest {
                         guard case let .updateGroupJoinRequestRequest(l) = lhs, case let .updateGroupJoinRequestRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
+                case (.createMeetingRequest, .createMeetingRequest): return {
+                        guard case let .createMeetingRequest(l) = lhs, case let .createMeetingRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteMeetingRequest, .deleteMeetingRequest): return {
+                        guard case let .deleteMeetingRequest(l) = lhs, case let .deleteMeetingRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryMeetingsRequest, .queryMeetingsRequest): return {
+                        guard case let .queryMeetingsRequest(l) = lhs, case let .queryMeetingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateMeetingRequest, .updateMeetingRequest): return {
+                        guard case let .updateMeetingRequest(l) = lhs, case let .updateMeetingRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateMeetingInvitationRequest, .updateMeetingInvitationRequest): return {
+                        guard case let .updateMeetingInvitationRequest(l) = lhs, case let .updateMeetingInvitationRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
                 case (.deleteResourceRequest, .deleteResourceRequest): return {
                         guard case let .deleteResourceRequest(l) = lhs, case let .deleteResourceRequest(r) = rhs else { preconditionFailure() }
                         return l == r
@@ -835,6 +992,26 @@ public struct TurmsRequest {
                     }()
                 case (.updateMessageAttachmentInfoRequest, .updateMessageAttachmentInfoRequest): return {
                         guard case let .updateMessageAttachmentInfoRequest(l) = lhs, case let .updateMessageAttachmentInfoRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteConversationSettingsRequest, .deleteConversationSettingsRequest): return {
+                        guard case let .deleteConversationSettingsRequest(l) = lhs, case let .deleteConversationSettingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.queryConversationSettingsRequest, .queryConversationSettingsRequest): return {
+                        guard case let .queryConversationSettingsRequest(l) = lhs, case let .queryConversationSettingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.updateConversationSettingsRequest, .updateConversationSettingsRequest): return {
+                        guard case let .updateConversationSettingsRequest(l) = lhs, case let .updateConversationSettingsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.createMessageReactionsRequest, .createMessageReactionsRequest): return {
+                        guard case let .createMessageReactionsRequest(l) = lhs, case let .createMessageReactionsRequest(r) = rhs else { preconditionFailure() }
+                        return l == r
+                    }()
+                case (.deleteMessageReactionsRequest, .deleteMessageReactionsRequest): return {
+                        guard case let .deleteMessageReactionsRequest(l) = lhs, case let .deleteMessageReactionsRequest(r) = rhs else { preconditionFailure() }
                         return l == r
                     }()
                 default: return false
@@ -861,6 +1038,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     public static let protoMessageName: String = _protobuf_package + ".TurmsRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "request_id"),
+        2: .standard(proto: "custom_attributes"),
         3: .standard(proto: "create_session_request"),
         4: .standard(proto: "delete_session_request"),
         5: .standard(proto: "query_conversations_request"),
@@ -879,6 +1057,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         103: .standard(proto: "update_user_location_request"),
         104: .standard(proto: "update_user_online_status_request"),
         105: .standard(proto: "update_user_request"),
+        106: .standard(proto: "update_user_settings_request"),
+        107: .standard(proto: "delete_user_settings_request"),
+        108: .standard(proto: "query_user_settings_request"),
         200: .standard(proto: "create_friend_request_request"),
         201: .standard(proto: "create_relationship_group_request"),
         202: .standard(proto: "create_relationship_request"),
@@ -915,11 +1096,21 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         510: .standard(proto: "update_group_invitation_request"),
         511: .standard(proto: "update_group_join_question_request"),
         512: .standard(proto: "update_group_join_request_request"),
+        900: .standard(proto: "create_meeting_request"),
+        901: .standard(proto: "delete_meeting_request"),
+        902: .standard(proto: "query_meetings_request"),
+        903: .standard(proto: "update_meeting_request"),
+        904: .standard(proto: "update_meeting_invitation_request"),
         1000: .standard(proto: "delete_resource_request"),
         1001: .standard(proto: "query_resource_download_info_request"),
         1002: .standard(proto: "query_resource_upload_info_request"),
         1003: .standard(proto: "query_message_attachment_infos_request"),
         1004: .standard(proto: "update_message_attachment_info_request"),
+        1100: .standard(proto: "delete_conversation_settings_request"),
+        1101: .standard(proto: "query_conversation_settings_request"),
+        1102: .standard(proto: "update_conversation_settings_request"),
+        1200: .standard(proto: "create_message_reactions_request"),
+        1201: .standard(proto: "delete_message_reactions_request"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -929,6 +1120,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &_requestID)
+            case 2: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             case 3: try {
                     var v: CreateSessionRequest?
                     var hadOneofValue = false
@@ -1161,6 +1353,45 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                     if let v = v {
                         if hadOneofValue { try decoder.handleConflictingOneOf() }
                         self.kind = .updateUserRequest(v)
+                    }
+                }()
+            case 106: try {
+                    var v: UpdateUserSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateUserSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateUserSettingsRequest(v)
+                    }
+                }()
+            case 107: try {
+                    var v: DeleteUserSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteUserSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteUserSettingsRequest(v)
+                    }
+                }()
+            case 108: try {
+                    var v: QueryUserSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryUserSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryUserSettingsRequest(v)
                     }
                 }()
             case 200: try {
@@ -1631,6 +1862,71 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .updateGroupJoinRequestRequest(v)
                     }
                 }()
+            case 900: try {
+                    var v: CreateMeetingRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createMeetingRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createMeetingRequest(v)
+                    }
+                }()
+            case 901: try {
+                    var v: DeleteMeetingRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteMeetingRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteMeetingRequest(v)
+                    }
+                }()
+            case 902: try {
+                    var v: QueryMeetingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryMeetingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryMeetingsRequest(v)
+                    }
+                }()
+            case 903: try {
+                    var v: UpdateMeetingRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateMeetingRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateMeetingRequest(v)
+                    }
+                }()
+            case 904: try {
+                    var v: UpdateMeetingInvitationRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateMeetingInvitationRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateMeetingInvitationRequest(v)
+                    }
+                }()
             case 1000: try {
                     var v: DeleteResourceRequest?
                     var hadOneofValue = false
@@ -1696,6 +1992,71 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                         self.kind = .updateMessageAttachmentInfoRequest(v)
                     }
                 }()
+            case 1100: try {
+                    var v: DeleteConversationSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteConversationSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteConversationSettingsRequest(v)
+                    }
+                }()
+            case 1101: try {
+                    var v: QueryConversationSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .queryConversationSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .queryConversationSettingsRequest(v)
+                    }
+                }()
+            case 1102: try {
+                    var v: UpdateConversationSettingsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .updateConversationSettingsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .updateConversationSettingsRequest(v)
+                    }
+                }()
+            case 1200: try {
+                    var v: CreateMessageReactionsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .createMessageReactionsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .createMessageReactionsRequest(v)
+                    }
+                }()
+            case 1201: try {
+                    var v: DeleteMessageReactionsRequest?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .deleteMessageReactionsRequest(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .deleteMessageReactionsRequest(v)
+                    }
+                }()
             default: break
             }
         }
@@ -1709,6 +2070,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try { if let v = self._requestID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 2)
+        }
         switch kind {
         case .createSessionRequest?: try {
                 guard case let .createSessionRequest(v)? = self.kind else { preconditionFailure() }
@@ -1781,6 +2145,18 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         case .updateUserRequest?: try {
                 guard case let .updateUserRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
+            }()
+        case .updateUserSettingsRequest?: try {
+                guard case let .updateUserSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 106)
+            }()
+        case .deleteUserSettingsRequest?: try {
+                guard case let .deleteUserSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 107)
+            }()
+        case .queryUserSettingsRequest?: try {
+                guard case let .queryUserSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 108)
             }()
         case .createFriendRequestRequest?: try {
                 guard case let .createFriendRequestRequest(v)? = self.kind else { preconditionFailure() }
@@ -1926,6 +2302,26 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                 guard case let .updateGroupJoinRequestRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 512)
             }()
+        case .createMeetingRequest?: try {
+                guard case let .createMeetingRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 900)
+            }()
+        case .deleteMeetingRequest?: try {
+                guard case let .deleteMeetingRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 901)
+            }()
+        case .queryMeetingsRequest?: try {
+                guard case let .queryMeetingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 902)
+            }()
+        case .updateMeetingRequest?: try {
+                guard case let .updateMeetingRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 903)
+            }()
+        case .updateMeetingInvitationRequest?: try {
+                guard case let .updateMeetingInvitationRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 904)
+            }()
         case .deleteResourceRequest?: try {
                 guard case let .deleteResourceRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1000)
@@ -1946,6 +2342,26 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
                 guard case let .updateMessageAttachmentInfoRequest(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 1004)
             }()
+        case .deleteConversationSettingsRequest?: try {
+                guard case let .deleteConversationSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1100)
+            }()
+        case .queryConversationSettingsRequest?: try {
+                guard case let .queryConversationSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1101)
+            }()
+        case .updateConversationSettingsRequest?: try {
+                guard case let .updateConversationSettingsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1102)
+            }()
+        case .createMessageReactionsRequest?: try {
+                guard case let .createMessageReactionsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1200)
+            }()
+        case .deleteMessageReactionsRequest?: try {
+                guard case let .deleteMessageReactionsRequest(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 1201)
+            }()
         case nil: break
         }
         try unknownFields.traverse(visitor: &visitor)
@@ -1953,6 +2369,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
 
     public static func == (lhs: TurmsRequest, rhs: TurmsRequest) -> Bool {
         if lhs._requestID != rhs._requestID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.kind != rhs.kind { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true

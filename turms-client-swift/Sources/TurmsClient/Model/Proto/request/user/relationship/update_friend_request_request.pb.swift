@@ -41,6 +41,8 @@ public struct UpdateFriendRequestRequest {
     /// Clears the value of `reason`. Subsequent reads from it will return its default value.
     public mutating func clearReason() { _reason = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -62,6 +64,7 @@ extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
         1: .standard(proto: "request_id"),
         2: .standard(proto: "response_action"),
         3: .same(proto: "reason"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -73,6 +76,7 @@ extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
             case 1: try decoder.decodeSingularInt64Field(value: &requestID)
             case 2: try decoder.decodeSingularEnumField(value: &responseAction)
             case 3: try decoder.decodeSingularStringField(value: &_reason)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -92,6 +96,9 @@ extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
         try { if let v = self._reason {
             try visitor.visitSingularStringField(value: v, fieldNumber: 3)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -99,6 +106,7 @@ extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
         if lhs.requestID != rhs.requestID { return false }
         if lhs.responseAction != rhs.responseAction { return false }
         if lhs._reason != rhs._reason { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

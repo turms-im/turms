@@ -14,17 +14,19 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/device_type.pbenum.dart' as $2;
+import '../../constant/device_type.pbenum.dart' as $3;
+import '../common/value.pb.dart' as $2;
 import 'user_info.pb.dart' as $0;
 import 'user_location.pb.dart' as $1;
 
 class NearbyUser extends $pb.GeneratedMessage {
   factory NearbyUser({
     $fixnum.Int64? userId,
-    $2.DeviceType? deviceType,
+    $3.DeviceType? deviceType,
     $0.UserInfo? info,
     $core.int? distance,
     $1.UserLocation? location,
+    $core.Iterable<$2.Value>? customAttributes,
   }) {
     final $result = create();
     if (userId != null) {
@@ -42,6 +44,9 @@ class NearbyUser extends $pb.GeneratedMessage {
     if (location != null) {
       $result.location = location;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   NearbyUser._() : super();
@@ -57,16 +62,19 @@ class NearbyUser extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'userId')
-    ..e<$2.DeviceType>(
+    ..e<$3.DeviceType>(
         2, _omitFieldNames ? '' : 'deviceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.DeviceType.DESKTOP,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values)
+        defaultOrMaker: $3.DeviceType.DESKTOP,
+        valueOf: $3.DeviceType.valueOf,
+        enumValues: $3.DeviceType.values)
     ..aOM<$0.UserInfo>(3, _omitFieldNames ? '' : 'info',
         subBuilder: $0.UserInfo.create)
     ..a<$core.int>(4, _omitFieldNames ? '' : 'distance', $pb.PbFieldType.O3)
     ..aOM<$1.UserLocation>(5, _omitFieldNames ? '' : 'location',
         subBuilder: $1.UserLocation.create)
+    ..pc<$2.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $2.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -104,9 +112,9 @@ class NearbyUser extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $2.DeviceType get deviceType => $_getN(1);
+  $3.DeviceType get deviceType => $_getN(1);
   @$pb.TagNumber(2)
-  set deviceType($2.DeviceType v) {
+  set deviceType($3.DeviceType v) {
     setField(2, v);
   }
 
@@ -156,6 +164,9 @@ class NearbyUser extends $pb.GeneratedMessage {
   void clearLocation() => clearField(5);
   @$pb.TagNumber(5)
   $1.UserLocation ensureLocation() => $_ensure(4);
+
+  @$pb.TagNumber(15)
+  $core.List<$2.Value> get customAttributes => $_getList(5);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

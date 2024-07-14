@@ -104,7 +104,7 @@ public enum StorageResourceType implements com.google.protobuf.Internal.EnumLite
 
     private final int value;
 
-    private StorageResourceType(int value) {
+    StorageResourceType(int value) {
         this.value = value;
     }
 

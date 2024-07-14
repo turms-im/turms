@@ -67,6 +67,8 @@ public struct GroupJoinQuestion {
     /// Clears the value of `score`. Subsequent reads from it will return its default value.
     public mutating func clearScore() { _score = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -93,6 +95,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         3: .same(proto: "question"),
         4: .same(proto: "answers"),
         5: .same(proto: "score"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -106,6 +109,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             case 3: try decoder.decodeSingularStringField(value: &_question)
             case 4: try decoder.decodeRepeatedStringField(value: &answers)
             case 5: try decoder.decodeSingularInt32Field(value: &_score)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -131,6 +135,9 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         try { if let v = self._score {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 5)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -140,6 +147,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if lhs._question != rhs._question { return false }
         if lhs.answers != rhs.answers { return false }
         if lhs._score != rhs._score { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

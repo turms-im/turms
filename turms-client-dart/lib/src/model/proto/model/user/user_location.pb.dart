@@ -14,12 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class UserLocation extends $pb.GeneratedMessage {
   factory UserLocation({
     $core.double? latitude,
     $core.double? longitude,
     $fixnum.Int64? timestamp,
     $core.Map<$core.String, $core.String>? details,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (latitude != null) {
@@ -33,6 +36,9 @@ class UserLocation extends $pb.GeneratedMessage {
     }
     if (details != null) {
       $result.details.addAll(details);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -56,6 +62,9 @@ class UserLocation extends $pb.GeneratedMessage {
         keyFieldType: $pb.PbFieldType.OS,
         valueFieldType: $pb.PbFieldType.OS,
         packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -120,6 +129,9 @@ class UserLocation extends $pb.GeneratedMessage {
   /// e.g. street address, city, state, country, etc.
   @$pb.TagNumber(4)
   $core.Map<$core.String, $core.String> get details => $_getMap(3);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(4);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
