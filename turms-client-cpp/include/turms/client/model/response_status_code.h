@@ -233,6 +233,10 @@ const int kUpdatingTypingStatusIsDisabled = 4100;
 const int kNotGroupMemberToSendTypingStatus = 4101;
 const int kNotFriendToSendTypingStatus = 4102;
 
+// Conversation - Setting
+const int kNotRelatedUserToUpdatePrivateConversationSetting = 4200;
+const int kNotGroupMemberToUpdateGroupConversationSetting = 4201;
+
 // Message
 
 // Message - Send
@@ -281,6 +285,28 @@ const int kNotUploaderOrSharedWithUserToDownloadMessageAttachment = 6107;
 // Storage - Message attachment info
 const int kNotFriendToQueryMessageAttachmentInfoInPrivateConversation = 6130;
 const int kNotGroupMemberToQueryMessageAttachmentInfoInGroupConversation = 6131;
+
+// Search
+const int kSearchingUserIsDisabled = 7100;
+const int kSearchingGroupIsDisabled = 7200;
+
+// Conference
+const int kConferenceNotImplemented = 8000;
+
+// Conference - Meeting
+const int kCreateMeetingExceedingMaxActiveMeetingCount = 8100;
+const int kNotCreatorToCancelMeeting = 8101;
+const int kCancelingMeetingIsDisabled = 8102;
+const int kCancelNonexistentMeeting = 8103;
+const int kNotCreatorToUpdateMeetingPassword = 8104;
+const int kUpdateInfoOfNonexistentMeeting = 8105;
+
+const int kAcceptMeetingInvitationWithWrongPassword = 8200;
+const int kAcceptMeetingInvitationOfCanceledMeeting = 8201;
+const int kAcceptMeetingInvitationOfEndedMeeting = 8202;
+const int kAcceptMeetingInvitationOfExpiredMeeting = 8203;
+const int kAcceptMeetingInvitationOfPendingMeeting = 8204;
+const int kAcceptNonexistentMeetingInvitation = 8205;
 
 auto isSuccessCode(int businessCode) -> bool;
 

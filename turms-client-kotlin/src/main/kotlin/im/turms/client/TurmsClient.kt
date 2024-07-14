@@ -17,6 +17,7 @@
 package im.turms.client
 
 import im.turms.client.driver.TurmsDriver
+import im.turms.client.service.ConferenceService
 import im.turms.client.service.ConversationService
 import im.turms.client.service.GroupService
 import im.turms.client.service.MessageService
@@ -53,6 +54,7 @@ class TurmsClient constructor(
     val conversationService: ConversationService = ConversationService(this)
     val messageService: MessageService = MessageService(this)
     val storageService: StorageService = StorageService(this, storageServerUrl)
+    val conferenceService: ConferenceService = ConferenceService(this)
     val notificationService: NotificationService = NotificationService(this)
 
     suspend fun close() {

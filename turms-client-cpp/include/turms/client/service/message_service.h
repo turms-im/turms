@@ -72,7 +72,8 @@ class MessageService : private boost::noncopyable,
      * For private messages,
      * * If the server property `turms.service.message.allow-send-messages-to-oneself`
      *   is true (false by default), the logged-in user can send messages to itself.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kSendingMessagesToOneselfIsDisabled.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kSendingMessagesToOneselfIsDisabled.
      * * If the server property `turms.service.message.allow-send-messages-to-stranger`
      *   is true (true by default), the logged-in user can send messages to strangers
      *   (has no relationship with the logged-in user).
@@ -82,8 +83,9 @@ class MessageService : private boost::noncopyable,
      * For group messages,
      * * If the logged-in user has blocked the target group,
      *   throws ResponseException with the code ResponseStatusCode::kBlockedUserSendGroupMessage.
-     * * If the logged-in user is not a group member, and the group does NOT allow non-members to send messages,
-     *   throws ResponseException with the code ResponseStatusCode::kNotSpeakableGroupGuestToSendMessage.
+     * * If the logged-in user is not a group member, and the group does NOT allow non-members to
+     * send messages, throws ResponseException with the code
+     * ResponseStatusCode::kNotSpeakableGroupGuestToSendMessage.
      * * If the logged-in user has been muted,
      *   throws ResponseException with the code ResponseStatusCode::kMutedGroupMemberSendMessage.
      * * If the target group has been deleted,
@@ -92,10 +94,13 @@ class MessageService : private boost::noncopyable,
      *   throws ResponseException with the code ResponseStatusCode::kSendMessageToMutedGroup.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
-     *   is true (true by default), a new message notification will be sent to the message recipients actively.
-     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
-     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.message-created.notify-message-recipients` is true (true by
+     * default), a new message notification will be sent to the message recipients actively.
+     * * If the server property
+     * `turms.service.notification.message-created.notify-requester-other-online-sessions` is true
+     * (true by default), a new message notification will be sent to all other online sessions of
+     * the logged-in user actively.
      *
      * @param isGroupMessage whether the message is a group message.
      * @param targetId The target ID.
@@ -137,13 +142,17 @@ class MessageService : private boost::noncopyable,
      *
      * Authorization:
      * * If the logged-in user is not allowed to view the message with messageId,
-     *   throws ResponseException with the code ResponseStatusCode::kNotMessageRecipientOrSenderToForwardMessage.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotMessageRecipientOrSenderToForwardMessage.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.message-created.notify-message-recipients`
-     *   is true (true by default), a new message notification will be sent to the message recipients actively.
-     * * If the server property `turms.service.notification.message-created.notify-requester-other-online-sessions`
-     *   is true (true by default), a new message notification will be sent to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.message-created.notify-message-recipients` is true (true by
+     * default), a new message notification will be sent to the message recipients actively.
+     * * If the server property
+     * `turms.service.notification.message-created.notify-requester-other-online-sessions` is true
+     * (true by default), a new message notification will be sent to all other online sessions of
+     * the logged-in user actively.
      *
      * @param messageId the message ID for copying.
      * @param isGroupMessage whether the message is a group message.
@@ -162,20 +171,26 @@ class MessageService : private boost::noncopyable,
      * Authorization:
      * * If the server property `turms.service.message.allow-send-messages-to-oneself`
      *   is true (true by default), the logged-in user can update sent messages.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kUpdatingMessageBySenderIsDisabled.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kUpdatingMessageBySenderIsDisabled.
      * * If the message is not sent by the logged-in user,
      *   throws ResponseException with the code ResponseStatusCode::kNotSenderToUpdateMessage.
      * * If the message is group message, and is sent by the logged-in user but the group
      *   has been deleted,
-     *   throws ResponseException with the code ResponseStatusCode::kUpdateMessageOfNonexistentGroup.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kUpdateMessageOfNonexistentGroup.
      * * If the message is group message, and the group type has disabled updating messages,
-     *   throws ResponseException with the code ResponseStatusCode::kUpdatingGroupMessageBySenderIsDisabled.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kUpdatingGroupMessageBySenderIsDisabled.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.message-updated.notify-message-recipients`
-     *   is true (true by default), a message update notification will be sent to the message recipients actively.
-     * * If the server property `turms.service.notification.message-updated.notify-requester-other-online-sessions`
-     *   is true (true by default), a message update notification will be sent to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.message-updated.notify-message-recipients` is true (true by
+     * default), a message update notification will be sent to the message recipients actively.
+     * * If the server property
+     * `turms.service.notification.message-updated.notify-requester-other-online-sessions` is true
+     * (true by default), a message update notification will be sent to all other online sessions of
+     * the logged-in user actively.
      *
      * @param messageId The sent message ID.
      * @param text The new message text.
@@ -195,7 +210,8 @@ class MessageService : private boost::noncopyable,
      * @param ids the message IDs for querying.
      * @param areGroupMessages whether the messages are group messages.
      * If the logged-in user is not a group member,
-     * throws ResponseException with the code ResponseStatusCode::kNotGroupMemberToQueryGroupMessages.
+     * throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToQueryGroupMessages.
      * TODO: guest users of some group types should be able to query messages.
      * @param areSystemMessages whether the messages are system messages.
      * @param fromIds the from IDs.
@@ -230,7 +246,8 @@ class MessageService : private boost::noncopyable,
      * @param areGroupMessages whether the messages are group messages.
      * @param areSystemMessages whether the messages are system messages.
      * If the logged-in user is not a group member,
-     * throws ResponseException with the code ResponseStatusCode::kNotGroupMemberToQueryGroupMessages.
+     * throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToQueryGroupMessages.
      * TODO: guest users of some group types should be able to query messages.
      * @param fromIds The from IDs.
      * If areGroupMessages is true, the from ID is the group ID.
@@ -263,15 +280,18 @@ class MessageService : private boost::noncopyable,
      * Authorization:
      * * If the server property `turms.service.message.allow-recall-message`
      *   is true (true by default), the logged-in user can recall sent messages.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kRecallingMessageIsDisabled.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kRecallingMessageIsDisabled.
      * * If the message does not exist,
      *   throws ResponseException with the code ResponseStatusCode::kRecallNonexistentMessage.
      * * If the message is group message, but the group has been deleted,
-     *   throws ResponseException with the code ResponseStatusCode::kRecallMessageOfNonexistentGroup.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kRecallMessageOfNonexistentGroup.
      *
      * Common Scenarios:
      * * A client can call addMessageListener() to listen to recalled messages.
-     *   The listener will receive a non-empty MessageAddition::recalledMessageIds() when a message is recalled.
+     *   The listener will receive a non-empty MessageAddition::recalledMessageIds() when a message
+     * is recalled.
      *
      * @param messageId the message ID.
      * @param recallDate the recall date.

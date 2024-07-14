@@ -1,5 +1,7 @@
 #include "turms/client/random/random_util.h"
 
+#include <algorithm>
+
 namespace turms {
 namespace client {
 namespace random {

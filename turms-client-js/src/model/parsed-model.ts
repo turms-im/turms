@@ -4,6 +4,7 @@ import { ProfileAccessStrategy } from './proto/constant/profile_access_strategy'
 import { RequestStatus } from './proto/constant/request_status';
 import { UserLocation } from './proto/model/user/user_location';
 import { UserStatus } from './proto/constant/user_status';
+import { Value } from './proto/model/common/value';
 
 export declare namespace ParsedModel {
 
@@ -24,6 +25,7 @@ export declare namespace ParsedModel {
     interface UserRelationshipGroup {
         index?: number;
         name?: string;
+        customAttributes: Value[];
     }
 
     interface UserFriendRequestsWithVersion {
@@ -40,6 +42,8 @@ export declare namespace ParsedModel {
         expirationDate?: Date;
         requesterId?: string;
         recipientId?: string;
+        // TODO: missing
+        // customAttributes: Value[];
     }
 
     interface UserInfosWithVersion {
@@ -53,17 +57,34 @@ export declare namespace ParsedModel {
         info?: UserInfo;
         distance?: number;
         location?: UserLocation;
+        customAttributes: Value[];
+    }
+
+    interface UserSettings {
+        settings: { [key: string]: Value };
+        lastUpdatedDate?: Date;
+        customAttributes: Value[];
     }
 
     interface PrivateConversation {
         ownerId: string;
         targetId: string;
         readDate: Date;
+        customAttributes: Value[];
     }
 
     interface GroupConversation {
         groupId: string;
         memberIdToReadDate: { [k: string]: Date };
+        customAttributes: Value[];
+    }
+
+    interface ConversationSettings {
+        userId?: string | undefined;
+        groupId?: string | undefined;
+        settings: { [key: string]: Value };
+        lastUpdatedDate?: Date;
+        customAttributes: Value[];
     }
 
     interface Message {
@@ -77,6 +98,7 @@ export declare namespace ParsedModel {
         records?: Uint8Array[];
         sequenceId?: number;
         preMessageId?: string;
+        customAttributes: Value[];
     }
 
     interface MessagesWithTotal {
@@ -92,6 +114,7 @@ export declare namespace ParsedModel {
         blockDate?: Date;
         groupIndex?: number;
         establishmentDate?: Date;
+        customAttributes: Value[];
     }
 
     interface UserRelationshipsWithVersion {
@@ -108,12 +131,14 @@ export declare namespace ParsedModel {
         registrationDate?: Date;
         lastUpdatedDate?: string;
         active?: boolean;
+        customAttributes: Value[];
     }
 
     interface UserOnlineStatus {
         userId?: string;
         userStatus?: UserStatus;
-        usingDeviceTypes?: DeviceType[];
+        deviceTypes?: DeviceType[];
+        customAttributes: Value[];
     }
 
     interface GroupInvitationsWithVersion {
@@ -130,6 +155,7 @@ export declare namespace ParsedModel {
         groupId?: string;
         inviterId?: string;
         inviteeId?: string;
+        customAttributes: Value[];
     }
 
     interface GroupMember {
@@ -140,7 +166,9 @@ export declare namespace ParsedModel {
         joinDate?: Date;
         muteEndDate?: Date;
         userStatus?: UserStatus;
+        // TODO: rename
         usingDeviceTypes?: DeviceType[];
+        customAttributes: Value[];
     }
 
     interface GroupMembersWithVersion {
@@ -154,6 +182,7 @@ export declare namespace ParsedModel {
         question?: string;
         answers?: string;
         score?: number;
+        customAttributes: Value[];
     }
 
     interface GroupJoinQuestionsWithVersion {
@@ -170,6 +199,7 @@ export declare namespace ParsedModel {
         groupId?: string;
         requesterId?: string;
         responderId?: string;
+        customAttributes: Value[];
     }
 
     interface GroupJoinRequestsWithVersion {
@@ -194,6 +224,7 @@ export declare namespace ParsedModel {
         lastUpdatedDate?: Date;
         muteEndDate?: Date;
         active?: boolean;
+        customAttributes: Value[];
     }
 
     interface StorageResourceInfo {
@@ -203,5 +234,21 @@ export declare namespace ParsedModel {
         mediaType?: string;
         uploaderId: string;
         creationDate: Data;
+        customAttributes: Value[];
+    }
+
+    interface Meeting {
+        id: string;
+        userId?: string | undefined;
+        groupId?: string | undefined;
+        creatorId: string;
+        accessToken?: string | undefined;
+        name?: string | undefined;
+        intro?: string | undefined;
+        password?: string | undefined;
+        startDate: Date;
+        endDate?: Date;
+        cancelDate?: Date;
+        customAttributes: Value[];
     }
 }

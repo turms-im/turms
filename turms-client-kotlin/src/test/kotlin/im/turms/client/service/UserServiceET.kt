@@ -292,7 +292,7 @@ internal class UserServiceET {
         runBlocking {
             val set = setOf(1L)
             val result =
-                turmsClient.userService.queryOnlineStatusesRequest(set)
+                turmsClient.userService.queryOnlineStatuses(set)
                     .data
             assertEquals(userStatus, result[0].userStatus)
         }

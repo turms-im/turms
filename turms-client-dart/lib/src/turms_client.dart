@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'driver/turms_driver.dart';
+import 'service/conference_service.dart';
 import 'service/conversation_service.dart';
 import 'service/group_service.dart';
 import 'service/message_service.dart';
@@ -15,6 +16,7 @@ class TurmsClient {
   late final ConversationService _conversationService;
   late final MessageService _messageService;
   late final StorageService _storageService;
+  late final ConferenceService _conferenceService;
   late final NotificationService _notificationService;
 
   TurmsClient(
@@ -37,6 +39,7 @@ class TurmsClient {
     _conversationService = ConversationService(this);
     _messageService = MessageService(this);
     _storageService = StorageService(this, storageServerUrl);
+    _conferenceService = ConferenceService(this);
     _notificationService = NotificationService(this);
   }
 
@@ -44,15 +47,17 @@ class TurmsClient {
 
   TurmsDriver get driver => _driver;
 
-  NotificationService get notificationService => _notificationService;
-
-  StorageService get storageService => _storageService;
-
-  MessageService get messageService => _messageService;
-
-  ConversationService get conversationService => _conversationService;
+  UserService get userService => _userService;
 
   GroupService get groupService => _groupService;
 
-  UserService get userService => _userService;
+  ConversationService get conversationService => _conversationService;
+
+  MessageService get messageService => _messageService;
+
+  StorageService get storageService => _storageService;
+
+  ConferenceService get conferenceService => _conferenceService;
+
+  NotificationService get notificationService => _notificationService;
 }

@@ -346,6 +346,87 @@ public class UserService {
             }
     }
 
+    /// Upsert user settings, such as "preferred language", "new message alert", etc.
+    /// Note that only the settings specified in `turms.service.user.settings.allowed-settings` can be upserted.
+    ///
+    /// Notifications:
+    /// * If the server property `turms.service.notification.user-setting-updated.notify-requester-other-online-sessions` is true (true by default),
+    ///   the server will send a user settings updated notification to all other online sessions of the logged-in user actively.
+    ///
+    /// - Parameters:
+    ///   - settings: The user settings to upsert.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
+    /// * If trying to update any existing immutable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``
+    /// * If trying to upsert an unknown setting and the server property `turms.service.user.settings.ignore-unknown-settings-on-upsert` is
+    ///   false (false by default), throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
+    public func upsertUserSettings(_ settings: [String: Value]) -> Promise<Response<Void>> {
+        if settings.isEmpty {
+            return Promise.value(Response<Void>.empty())
+        }
+        return turmsClient.driver
+            .send {
+                $0.updateUserSettingsRequest = .with {
+                    $0.settings = settings
+                }
+            }
+            .map {
+                try $0.toResponse()
+            }
+    }
+
+    /// Delete user settings.
+    ///
+    /// Notifications:
+    /// * If the server property `turms.service.notification.user-setting-deleted.notify-requester-other-online-sessions` is true (true by default),
+    ///   the server will send a user settings deleted notification to all other online sessions of the logged-in user actively.
+    ///
+    /// - Parameters:
+    ///   - names: The names of the user settings to delete. If null, all deletable user settings will be deleted.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
+    /// * If trying to delete any non-deletable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
+    public func deleteUserSettings(names: [String]? = nil) -> Promise<Response<Void>> {
+        return turmsClient.driver
+            .send {
+                $0.deleteUserSettingsRequest = .with {
+                    if let v = names {
+                        $0.names = v
+                    }
+                }
+            }
+            .map {
+                try $0.toResponse()
+            }
+    }
+
+    /// Find user settings.
+    ///
+    /// - Parameters:
+    ///   - names: The names of the user settings to query. If null, all user settings will be returned.
+    ///   - lastUpdatedDate: The last updated date of user settings stored locally.
+    ///     The server will only return user settings if a setting has been updated after `lastUpdatedDate`.
+    ///
+    /// - Throws: ``ResponseError`` if an error occurs.
+    public func queryUserSettings(names: [String]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserSettings?>> {
+        return turmsClient.driver
+            .send {
+                $0.queryUserSettingsRequest = .with {
+                    if let v = names {
+                        $0.names = v
+                    }
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDateStart = v.toMillis()
+                    }
+                }
+            }
+            .map {
+                try $0.toResponse {
+                    try $0.kind?.getKindData(UserSettings.self)
+                }
+            }
+    }
+
     /// Find nearby users.
     ///
     /// - Parameters:

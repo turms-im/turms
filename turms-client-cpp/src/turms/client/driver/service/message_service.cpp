@@ -36,7 +36,8 @@ auto MessageService::sendRequest(model::proto::TurmsRequest& request)
 
     while (true) {
         auto requestId = generateRandomId();
-        auto result = idToRequest_.try_emplace(
+        // Use "try_emplace" when upgrading to C++17
+        auto result = idToRequest_.emplace(
             requestId, TurmsRequestContext{boost::promise<TurmsNotification>(), boost::none});
         if (!result.second) {
             continue;

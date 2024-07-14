@@ -5,6 +5,7 @@
 #include <boost/thread/future.hpp>
 
 #include "turms/client/driver/turms_driver.h"
+#include "turms/client/service/conference_service.h"
 #include "turms/client/service/conversation_service.h"
 #include "turms/client/service/group_service.h"
 #include "turms/client/service/message_service.h"
@@ -24,6 +25,7 @@ class TurmsClient {
     using GroupService = service::GroupService;
     using ConversationService = service::ConversationService;
     using MessageService = service::MessageService;
+    using ConferenceService = service::ConferenceService;
     using NotificationService = service::NotificationService;
 
    public:
@@ -54,6 +56,8 @@ class TurmsClient {
     auto conversationService() noexcept -> ConversationService&;
 
     auto messageService() noexcept -> MessageService&;
+
+    auto conferenceService() noexcept -> ConferenceService&;
 
     auto notificationService() noexcept -> NotificationService&;
 

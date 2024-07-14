@@ -169,8 +169,8 @@ describe('Query', () => {
         const users = response.data;
         expect(users).toBeTruthy();
     });
-    it('queryOnlineStatusesRequest_shouldUsersOnlineStatus', async () => {
-        const response = await turmsClient.userService.queryOnlineStatusesRequest({
+    it('queryOnlineStatuses_shouldUsersOnlineStatus', async () => {
+        const response = await turmsClient.userService.queryOnlineStatuses({
             userIds: ['1']
         });
         const userStatuses = response.data;

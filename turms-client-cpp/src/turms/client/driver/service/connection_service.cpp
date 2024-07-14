@@ -87,7 +87,7 @@ auto ConnectionService::connect(const boost::optional<std::string>& host,
                   port.get_value_or(initialPort_),
                   connectTimeoutMillis.get_value_or(initialConnectTimeout_))
         .then([weakThis = std::weak_ptr<ConnectionService>(shared_from_this())](
-                  boost::future<void> response) {
+                  const boost::future<void>& response) {
             auto sharedThis = weakThis.lock();
             if (sharedThis == nullptr) {
                 return;
@@ -126,8 +126,8 @@ auto ConnectionService::onDisconnected(const boost::optional<std::exception>& ex
 }
 
 template <typename T>
-auto ConnectionService::decodeMessages(boost::asio::streambuf& readBuffer,
-                                       T&& messageHandler) -> void {
+auto ConnectionService::decodeMessages(boost::asio::streambuf& readBuffer, T&& messageHandler)
+    -> void {
     if (payloadLength_ == -1) {
         payloadLength_ = tryReadVarInt(readBuffer);
         if (payloadLength_ == -1) {

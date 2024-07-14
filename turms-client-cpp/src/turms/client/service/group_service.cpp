@@ -102,9 +102,8 @@ auto GroupService::updateGroup(int64_t groupId,
         });
 }
 
-auto GroupService::transferOwnership(int64_t groupId,
-                                     int64_t successorId,
-                                     bool quitAfterTransfer) -> boost::future<Response<void>> {
+auto GroupService::transferOwnership(int64_t groupId, int64_t successorId, bool quitAfterTransfer)
+    -> boost::future<Response<void>> {
     return updateGroup(groupId,
                        boost::none,
                        boost::none,
@@ -149,9 +148,9 @@ auto GroupService::queryGroups(const std::unordered_set<int64_t>& groupIds,
 }
 
 auto GroupService::searchGroups(const std::string& name,
-                                bool highlight = false,
-                                const boost::optional<int>& skip = boost::none,
-                                const boost::optional<int>& limit = boost::none)
+                                bool highlight,
+                                const boost::optional<int>& skip,
+                                const boost::optional<int>& limit)
     -> boost::future<Response<std::vector<Group>>> {
     if (name.empty()) {
         return boost::make_ready_future<>(Response<Group>::emptyList());
@@ -706,8 +705,8 @@ auto GroupService::muteGroupMember(int64_t groupId,
     return updateGroupMemberInfo(groupId, memberId, boost::none, boost::none, muteEndDate);
 }
 
-auto GroupService::unmuteGroupMember(int64_t groupId,
-                                     int64_t memberId) -> boost::future<Response<void>> {
+auto GroupService::unmuteGroupMember(int64_t groupId, int64_t memberId)
+    -> boost::future<Response<void>> {
     return muteGroupMember(groupId, memberId, time::kEpoch);
 }
 

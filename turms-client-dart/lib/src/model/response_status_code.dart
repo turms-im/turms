@@ -121,12 +121,14 @@ class ResponseStatusCode {
   static const notGroupOwnerToUpdateGroupInfo = 3001;
   static const notGroupOwnerOrManagerToUpdateGroupInfo = 3002;
   static const notGroupMemberToUpdateGroupInfo = 3003;
-  static const notGroupOwnerToUpdateGroupType = 3004;
-  static const updatingGroupTypeIsDisabled = 3005;
 
   // Group - Type
   static const noPermissionToCreateGroupWithGroupType = 3100;
   static const createGroupWithNonexistentGroupType = 3101;
+  static const updatingGroupTypeIsDisabled = 3102;
+  static const notGroupOwnerToUpdateGroupType = 3103;
+  static const noPermissionToUpdateGroupToGroupType = 3104;
+  static const updateGroupToNonexistentGroupType = 3105;
 
   // Group - Ownership
   static const notActiveUserToCreateGroup = 3200;
@@ -225,6 +227,10 @@ class ResponseStatusCode {
   static const notGroupMemberToSendTypingStatus = 4101;
   static const notFriendToSendTypingStatus = 4102;
 
+  // Conversation - Setting
+  static const notRelatedUserToUpdatePrivateConversationSetting = 4200;
+  static const notGroupMemberToUpdateGroupConversationSetting = 4201;
+
   // Message
 
   // Message - Send
@@ -279,6 +285,28 @@ class ResponseStatusCode {
       6130;
   static const notGroupMemberToQueryMessageAttachmentInfoInGroupConversation =
       6131;
+
+  // Search
+  static const searchingUserIsDisabled = 7100;
+  static const searchingGroupIsDisabled = 7200;
+
+  // Conference
+  static const conferenceNotImplemented = 8000;
+
+  // Conference - Meeting
+  static const createMeetingExceedingMaxActiveMeetingCount = 8100;
+  static const notCreatorToCancelMeeting = 8101;
+  static const cancelingMeetingIsDisabled = 8102;
+  static const cancelNonexistentMeeting = 8103;
+  static const notCreatorToUpdateMeetingPassword = 8104;
+  static const updateInfoOfNonexistentMeeting = 8105;
+
+  static const acceptMeetingInvitationWithWrongPassword = 8200;
+  static const acceptMeetingInvitationOfCanceledMeeting = 8201;
+  static const acceptMeetingInvitationOfEndedMeeting = 8202;
+  static const acceptMeetingInvitationOfExpiredMeeting = 8203;
+  static const acceptMeetingInvitationOfPendingMeeting = 8204;
+  static const acceptNonexistentMeetingInvitation = 8205;
 
   static bool isSuccessCode(int code) => 1000 <= code && code < 1100;
 

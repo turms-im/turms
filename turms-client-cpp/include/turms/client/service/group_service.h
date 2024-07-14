@@ -1,6 +1,8 @@
 #ifndef TURMS_CLIENT_SERVICE_GROUP_SERVICE_H
 #define TURMS_CLIENT_SERVICE_GROUP_SERVICE_H
 
+#include <absl/strings/string_view.h>
+
 #include <boost/noncopyable.hpp>
 #include <boost/thread/future.hpp>
 #include <chrono>
@@ -62,8 +64,10 @@ class GroupService : private boost::noncopyable {
      *   throws ResponseException with the code ResponseStatusCode::kMaxOwnedGroupsReached.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-created.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a create group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-created.notify-requester-other-online-sessions` is true
+     * (true by default), the server will send a create group notification to all other online
+     * sessions of the logged-in user actively.
      *
      * @param name the group name.
      * @param intro the group introduction.
@@ -75,9 +79,11 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the group type ID does not exist,
-     *   throws ResponseException with the code ResponseStatusCode::kCreateGroupWithNonexistentGroupType.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kCreateGroupWithNonexistentGroupType.
      * * If the logged-in user does not have the permission to create the group with typeId,
-     *   throws ResponseException with the code ResponseStatusCode::kNoPermissionToCreateGroupWithGroupType.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNoPermissionToCreateGroupWithGroupType.
      * @return the group ID.
      * @throws ResponseException if an error occurs.
      */
@@ -97,9 +103,10 @@ class GroupService : private boost::noncopyable {
      *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerToDeleteGroup.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-deleted.notify-requester-other-online-sessions`
-     *   is true (true by default),
-     *   the server will send a delete group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-deleted.notify-requester-other-online-sessions` is true
+     * (true by default), the server will send a delete group notification to all other online
+     * sessions of the logged-in user actively.
      * * If the server property `turms.service.notification.group-deleted.notify-group-members`
      *   is true (true by default),
      *   the server will send a delete group notification to all group members of the target group.
@@ -112,11 +119,14 @@ class GroupService : private boost::noncopyable {
      * Update the target group.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-updated.notify-requester-other-online-sessions`
-     *   the server will send an update group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-updated.notify-requester-other-online-sessions` the server
+     * will send an update group notification to all other online sessions of the logged-in user
+     * actively.
      * * If the server property `turms.service.notification.group-updated.notify-group-members`
      *   is true (true by default),
-     *   the server will send an update group notification to all group members of the target group actively.
+     *   the server will send an update group notification to all group members of the target group
+     * actively.
      *
      * @param groupId the target group ID to find the group for updating.
      * @param name the new group name.
@@ -133,41 +143,47 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * Whether the logged-in user can change the group introduction depends on the group type.
-     *   If not null and the logged-in user does NOT have the permission to change the group introduction,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
+     *   If not null and the logged-in user does NOT have the permission to change the group
+     * introduction, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
      * @param announcement the new group announcement.
      * If null, the group announcement will not be changed.
      *
      * Authorization:
      * * Whether the logged-in user can change the group announcement depends on the group type.
-     *   If not null and the logged-in user does NOT have the permission to change the group announcement,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
+     *   If not null and the logged-in user does NOT have the permission to change the group
+     * announcement, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
      * @param minScore the new group minimum score that a non-member user needs to acquire
      * to join the group when answering group questions.
      * If null, the group minimum score will not be changed.
      *
      * Authorization:
      * * Whether the logged-in user can change the group minimum score depends on the group type.
-     *   If not null and the logged-in user does NOT have the permission to change the group minimum score,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo
-     *   or ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
+     *   If not null and the logged-in user does NOT have the permission to change the group minimum
+     * score, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
      * @param typeId the new group type ID.
      * If null, the group type ID will not be changed.
      *
      * Authorization:
      * * If the server property `turms.service.group.allow-group-owner-change-group-type`
      *   is true (false by default), the logged-in user can change the group type.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kUpdatingGroupTypeIsDisabled.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kUpdatingGroupTypeIsDisabled.
      * * If the logged-in user is not the group owner,
      *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerToUpdateGroupType.
      * * If the logged-in user is not allowed to use the group type,
-     *   throws ResponseException with the code ResponseStatusCode::kNoPermissionToUpdateGroupToGroupType.
-     * * If typeId doesn't exist, throws ResponseException with the code ResponseStatusCode::kUpdateGroupToNonexistentGroupType.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNoPermissionToUpdateGroupToGroupType.
+     * * If typeId doesn't exist, throws ResponseException with the code
+     * ResponseStatusCode::kUpdateGroupToNonexistentGroupType.
      * @param muteEndDate the new group mute end date.
      * Before the group mute end date, the group members will not be able
      * to send messages.
@@ -175,14 +191,14 @@ class GroupService : private boost::noncopyable {
      * Authorization:
      * * Only the group owner or group managers can mute or unmute the group.
      *   If the logged-in user is not the owner or manager of the group,
-     *   ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
-     *   will be thrown.
+     *   ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember will be thrown.
      * @param successorId the new successor ID.
-     * If the logged-in user is the owner of the group, they must transfer the group ownership to the successorId,
-     * throws ResponseException with the code ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise.
-     * And the successor will become the group owner.
-     * The successor must already be a member of the group, throws ResponseException with the code
-     * ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
+     * If the logged-in user is the owner of the group, they must transfer the group ownership to
+     * the successorId, throws ResponseException with the code
+     * ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise. And the successor
+     * will become the group owner. The successor must already be a member of the group, throws
+     * ResponseException with the code ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
      * @param quitAfterTransfer whether to quit the group after transfer the group ownership.
      * If false, the logged-in user will become a normal group member (not the group admin).
      * If null, the value will not be changed.
@@ -207,19 +223,22 @@ class GroupService : private boost::noncopyable {
      * Transfer the group ownership.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-updated.notify-requester-other-online-sessions`
-     *   the server will send a update group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-updated.notify-requester-other-online-sessions` the server
+     * will send a update group notification to all other online sessions of the logged-in user
+     * actively.
      * * If the server property `turms.service.notification.group-updated.notify-group-members`
      *   is true (true by default),
-     *   the server will send a update group notification to all group members of the target group actively.
+     *   the server will send a update group notification to all group members of the target group
+     * actively.
      *
      * @param groupId the target group ID to find the group for updating.
      * @param successorId the new successor ID.
-     * If the logged-in user is the owner of the group, they must transfer the group ownership to the successorId,
-     * throws ResponseException with the code ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise.
-     * And the successor will become the group owner.
-     * The successor must already be a member of the group, throws ResponseException with the code
-     * ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
+     * If the logged-in user is the owner of the group, they must transfer the group ownership to
+     * the successorId, throws ResponseException with the code
+     * ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise. And the successor
+     * will become the group owner. The successor must already be a member of the group, throws
+     * ResponseException with the code ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
      * @param quitAfterTransfer whether to quit the group after transfer the group ownership.
      * If false, the logged-in user will become a normal group member (not the group admin).
      * If null, the value will not be changed.
@@ -234,11 +253,14 @@ class GroupService : private boost::noncopyable {
      * Mute the target group.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-updated.notify-requester-other-online-sessions`
-     *   the server will send a update group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-updated.notify-requester-other-online-sessions` the server
+     * will send a update group notification to all other online sessions of the logged-in user
+     * actively.
      * * If the server property `turms.service.notification.group-updated.notify-group-members`
      *   is true (true by default),
-     *   the server will send a update group notification to all group members of the target group actively.
+     *   the server will send a update group notification to all group members of the target group
+     * actively.
      *
      * @param groupId the target group ID to find the group for updating.
      * @param muteEndDate the new group mute end date.
@@ -248,7 +270,8 @@ class GroupService : private boost::noncopyable {
      * Authorization:
      * * Only the group owner or group managers can mute or unmute the group.
      *   If the logged-in user is not the owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember.
      * @throws ResponseException if an error occurs.
      */
     auto muteGroup(int64_t groupId, const time_point& muteEndDate) -> boost::future<Response<void>>;
@@ -259,14 +282,18 @@ class GroupService : private boost::noncopyable {
      * Authorization:
      * * Only the group owner or group managers can mute or unmute the group.
      *   If the logged-in user is not the owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-updated.notify-requester-other-online-sessions`
-     *   the server will send a update group notification to all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-updated.notify-requester-other-online-sessions` the server
+     * will send a update group notification to all other online sessions of the logged-in user
+     * actively.
      * * If the server property `turms.service.notification.group-updated.notify-group-members`
      *   is true (true by default),
-     *   the server will send a update group notification to all group members of the target group actively.
+     *   the server will send a update group notification to all group members of the target group
+     * actively.
      *
      * @param groupId the target group ID to find the group for updating.
      * @throws ResponseException if an error occurs.
@@ -307,8 +334,8 @@ class GroupService : private boost::noncopyable {
     /**
      * Find group IDs that the logged-in user has joined.
      *
-     * @param lastUpdatedDate the last updated date of group IDs that the logged-in user has joined stored locally.
-     * The server will only return group IDs that are updated after lastUpdatedDate.
+     * @param lastUpdatedDate the last updated date of group IDs that the logged-in user has joined
+     * stored locally. The server will only return group IDs that are updated after lastUpdatedDate.
      * If null, all group IDs will be returned.
      * @return a list of group IDs and the version.
      * Note: The version can be used to update the last updated date on local.
@@ -320,9 +347,9 @@ class GroupService : private boost::noncopyable {
     /**
      * Find groups that the logged-in user has joined.
      *
-     * @param lastUpdatedDate the last updated date of groups that the logged-in user has joined stored locally.
-     * The server will only return groups that are updated after lastUpdatedDate.
-     * If null, all groups will be returned.
+     * @param lastUpdatedDate the last updated date of groups that the logged-in user has joined
+     * stored locally. The server will only return groups that are updated after lastUpdatedDate. If
+     * null, all groups will be returned.
      * @throws ResponseException if an error occurs.
      */
     auto queryJoinedGroupInfos(const boost::optional<time_point>& lastUpdatedDate = boost::none)
@@ -333,14 +360,16 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * Only the group owner or group managers can add group membership questions.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToCreateGroupQuestion.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToCreateGroupQuestion.
      * * Only the group that use `question` as the join strategy can add group membership questions.
      *   Otherwise, throws ResponseException with the code
      *   ResponseStatusCode::kCreateGroupQuestionForGroupUsingJoinRequest
      *   or ResponseStatusCode::kCreateGroupQuestionForGroupUsingInvitation
      *   or ResponseStatusCode::kCreateGroupQuestionForGroupUsingMembershipRequest.
      * * If the group has been deleted,
-     *   throws ResponseException with the code ResponseStatusCode::kCreateGroupQuestionForInactiveGroup.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kCreateGroupQuestionForInactiveGroup.
      *
      * @param groupId the target group ID.
      * @param questions the group membership questions.
@@ -356,7 +385,8 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * Only the group owner or group managers can delete group membership questions.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToDeleteGroupQuestion.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToDeleteGroupQuestion.
      *
      * @param groupId the target group ID.
      * @param questionIds the group membership question IDs.
@@ -370,7 +400,8 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * Only the group owner or group managers can update group membership questions.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupQuestion.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupQuestion.
      *
      * @param questionId the target question ID.
      * @param question the question.
@@ -389,21 +420,28 @@ class GroupService : private boost::noncopyable {
 
     /**
      * Block a user in the group.
-     * If the logged-in user is a group member, the server will delete the group member automatically.
+     * If the logged-in user is a group member, the server will delete the group member
+     * automatically.
      *
      * Authorization:
      * * Only the group owner or group managers can block users.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToAddBlockedUser.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToAddBlockedUser.
      * * If the logged-in user trys to block themselves,
      *   throws ResponseException with the code ResponseStatusCode::kCannotBlockOneself.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-blocked-user-added.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a block user notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-blocked-user-added.notify-blocked-user`,
-     *   is true (false by default), the server will send a block user notification to the target user actively.
-     * * If the server property `turms.service.notification.group-blocked-user-added.notify-group-members`
-     *   is true (false by default), the server will send a block user notification to all group members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-added.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a block user notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-added.notify-blocked-user`, is true (false by
+     * default), the server will send a block user notification to the target user actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-added.notify-group-members` is true (false by
+     * default), the server will send a block user notification to all group members of the target
+     * group actively.
      *
      * @param groupId the target group ID.
      * @param userId the target user ID.
@@ -416,15 +454,21 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * Only the group owner or group managers can unblock users.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToRemoveBlockedUser.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToRemoveBlockedUser.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-blocked-user-removed.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a unblock user notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-blocked-user-removed.notify-blocked-user`,
-     *   is true (false by default), the server will send a unblock user notification to the target user actively.
-     * * If the server property `turms.service.notification.group-blocked-user-removed.notify-group-members`
-     *   is true (false by default), the server will send a unblock user notification to all group members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-removed.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a unblock user notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-removed.notify-blocked-user`, is true (false
+     * by default), the server will send a unblock user notification to the target user actively.
+     * * If the server property
+     * `turms.service.notification.group-blocked-user-removed.notify-group-members` is true (false
+     * by default), the server will send a unblock user notification to all group members of the
+     * target group actively.
      *
      * @param groupId the target group ID.
      * @param userId the target user ID.
@@ -465,26 +509,35 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If inviteeId is already a group member,
-     *   throws ResponseException with the code ResponseStatusCode::kSendGroupInvitationToGroupMember.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kSendGroupInvitationToGroupMember.
      * * Depending on the group join strategy, if the group do not use the invitation strategy
      *   throws ResponseException with the code
      *   ResponseStatusCode::kNotGroupOwnerToSendGroupInvitation,
      *   ResponseStatusCode::kNotGroupOwnerOrManagerToSendGroupInvitation,
      *   or ResponseStatusCode::kNotGroupMemberToSendGroupInvitation.
      * * If the group allows adding users as new group members without users' approval,
-     *   throws ResponseException with the code ResponseStatusCode::kSendGroupInvitationToGroupNotRequiringUsersApproval.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kSendGroupInvitationToGroupNotRequiringUsersApproval.
      * * If the group does not exist,
      *   throws ResponseException with the code ResponseStatusCode::kAddUserToInactiveGroup.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-invitation-added.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a new invitation notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-invitation-added.notify-group-owner-and-managers`
-     *   is true (true by default), the server will send a new invitation notification to the group owner and managers actively.
-     * * If the server property `turms.service.notification.group-invitation-added.notify-group-members`,
-     *   is true (false by default), the server will send a new invitation notification to all group members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-added.notify-requester-other-online-sessions` is
+     * true (true by default), the server will send a new invitation notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-added.notify-group-owner-and-managers` is true
+     * (true by default), the server will send a new invitation notification to the group owner and
+     * managers actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-added.notify-group-members`, is true (false by
+     * default), the server will send a new invitation notification to all group members of the
+     * target group actively.
      * * If the server property `turms.service.notification.group-invitation-added.notify-invitee`,
-     *   is true (true by default), the server will send a new invitation notification to the target user actively.
+     *   is true (true by default), the server will send a new invitation notification to the target
+     * user actively.
      *
      * @param groupId the target group ID.
      * @param inviteeId the target user ID.
@@ -499,28 +552,38 @@ class GroupService : private boost::noncopyable {
      * Delete/Recall an invitation.
      *
      * Authorization:
-     * * If the server property `turms.service.group.invitation.allow-recall-pending-invitation-by-sender`
-     *   is true (false by default), the logged-in user can recall pending invitations sent by themselves.
-     *   Otherwise, throws ResponseException.
-     * * If the server property `turms.service.group.invitation.allow-recall-pending-invitation-by-owner-and-manager`
-     *   is true (false by default), the logged-in user can recall pending invitations only if they are the group owner or manager of the invitation.
-     *   Otherwise, throws ResponseException.
-     * * For the above two cases, the following codes will be thrown according to different properties:
-     *   ResponseStatusCode::kRecallingGroupInvitationIsDisabled if the above two properties are false.
-     *   ResponseStatusCode::kNotGroupOwnerOrManagerToRecallGroupInvitation,
+     * * If the server property
+     * `turms.service.group.invitation.allow-recall-pending-invitation-by-sender` is true (false by
+     * default), the logged-in user can recall pending invitations sent by themselves. Otherwise,
+     * throws ResponseException.
+     * * If the server property
+     * `turms.service.group.invitation.allow-recall-pending-invitation-by-owner-and-manager` is true
+     * (false by default), the logged-in user can recall pending invitations only if they are the
+     * group owner or manager of the invitation. Otherwise, throws ResponseException.
+     * * For the above two cases, the following codes will be thrown according to different
+     * properties: ResponseStatusCode::kRecallingGroupInvitationIsDisabled if the above two
+     * properties are false. ResponseStatusCode::kNotGroupOwnerOrManagerToRecallGroupInvitation,
      *   ResponseStatusCode::kNotGroupOwnerOrManagerOrSenderToRecallGroupInvitation
      * * If the group invitation is not pending (e.g. expired, accepted, deleted, etc),
-     *   throws ResponseException with the code ResponseStatusCode::kRecallNonPendingGroupInvitation.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kRecallNonPendingGroupInvitation.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-invitation-recalled.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a delete invitation notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-invitation-recalled.notify-group-owner-and-managers`
-     *   is true (true by default), the server will send a delete invitation notification to the group owner and managers actively.
-     * * If the server property `turms.service.notification.group-invitation-recalled.notify-group-members`,
-     *   is true (false by default), the server will send a delete invitation notification to all group members of the target group actively.
-     * * If the server property `turms.service.notification.group-invitation-recalled.notify-invitee`,
-     *   is true (true by default), the server will send a delete invitation notification to the target user actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-recalled.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a delete invitation notification to all
+     * other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-recalled.notify-group-owner-and-managers` is
+     * true (true by default), the server will send a delete invitation notification to the group
+     * owner and managers actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-recalled.notify-group-members`, is true (false
+     * by default), the server will send a delete invitation notification to all group members of
+     * the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-recalled.notify-invitee`, is true (true by
+     * default), the server will send a delete invitation notification to the target user actively.
      *
      * @throws ResponseException if an error occurs.
      */
@@ -534,19 +597,29 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user is not the invitee of the group invitation,
-     *   throws ResponseException with the code ResponseStatusCode::kNotInviteeToUpdateGroupInvitation.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotInviteeToUpdateGroupInvitation.
      * * If the group invitation is not pending (e.g. expired, accepted, deleted, etc),
-     *   throws ResponseException with the code ResponseStatusCode::kUpdateNonPendingGroupInvitation.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kUpdateNonPendingGroupInvitation.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-invitation-replied.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a reply group invitation notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-invitation-replied.notify-group-invitation-inviter`,
-     *   is true (true by default), the server will send a reply group invitation notification to the group join request sender actively.
-     * * If the server property `turms.service.notification.group-invitation-replied.notify-group-members`,
-     *   is true (false by default), the server will send a reply group invitation notification to all group members of the target group actively.
-     * * If the server property `turms.service.notification.group-invitation-replied.notify-group-owner-and-managers`,
-     *   is true (true by default), the server will send a reply group invitation notification to the group owner and managers actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-replied.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a reply group invitation notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-replied.notify-group-invitation-inviter`, is
+     * true (true by default), the server will send a reply group invitation notification to the
+     * group join request sender actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-replied.notify-group-members`, is true (false by
+     * default), the server will send a reply group invitation notification to all group members of
+     * the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-invitation-replied.notify-group-owner-and-managers`, is
+     * true (true by default), the server will send a reply group invitation notification to the
+     * group owner and managers actively.
      *
      * @param invitationId the invitation ID.
      * @param responseAction the response action.
@@ -591,10 +664,12 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user has been blocked by the group,
-     *   throws ResponseException with the code ResponseStatusCode::kBlockedUserSendGroupJoinRequest.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kBlockedUserSendGroupJoinRequest.
      * * If the logged-in user trys to send a join request to the group
      *   in which they are already a member,
-     *   throws ResponseException with the code ResponseStatusCode::kGroupMemberSendGroupJoinRequest.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kGroupMemberSendGroupJoinRequest.
      * * If the group does not allow group join requests,
      *   throws ResponseException with the code:
      *   ResponseStatusCode::kSendGroupJoinRequestToGroupUsingInvitation,
@@ -602,12 +677,18 @@ class GroupService : private boost::noncopyable {
      *   or ResponseStatusCode::kSendGroupJoinRequestToGroupUsingQuestion.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-join-request-created.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a group membership request notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-join-request-created.notify-group-owner-and-managers`,
-     *   is true (true by default), the server will send a group membership request notification to the group owner and managers actively.
-     * * If the server property `turms.service.notification.group-join-request-created.notify-group-members`
-     *   is true (false by default), the server will send a group membership request notification to all group members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-created.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a group membership request notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-created.notify-group-owner-and-managers`, is
+     * true (true by default), the server will send a group membership request notification to the
+     * group owner and managers actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-created.notify-group-members` is true (false
+     * by default), the server will send a group membership request notification to all group
+     * members of the target group actively.
      *
      * @param groupId the target group ID.
      * @param content the request content.
@@ -621,21 +702,31 @@ class GroupService : private boost::noncopyable {
      * Delete/Recall a group join/membership request.
      *
      * Authorization:
-     * * If the server property `turms.service.group.join-request.allow-recall-pending-join-request-by-sender`
-     *   is true (false by default), the logged-in user can recall pending join requests sent by themselves.
-     *   Otherwise, throws ResponseException with the code ResponseStatusCode::kRecallingGroupJoinRequestIsDisabled.
+     * * If the server property
+     * `turms.service.group.join-request.allow-recall-pending-join-request-by-sender` is true (false
+     * by default), the logged-in user can recall pending join requests sent by themselves.
+     *   Otherwise, throws ResponseException with the code
+     * ResponseStatusCode::kRecallingGroupJoinRequestIsDisabled.
      * * If the logged-in user is not the sender of the group join request,
-     *   throws ResponseException with the code ResponseStatusCode::kNotSenderToRecallGroupJoinRequest.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotSenderToRecallGroupJoinRequest.
      * * If the group join request is not pending (e.g. expired, accepted, deleted, etc),
-     *   throws ResponseException with the code ResponseStatusCode::kRecallNonPendingGroupJoinRequest.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kRecallNonPendingGroupJoinRequest.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-join-request-recalled.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a delete join request notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-join-request-recalled.notify-group-owner-and-managers`
-     *   is true (true by default), the server will send a delete join request notification to the group owner and managers actively.
-     * * If the server property `turms.service.notification.group-join-request-recalled.notify-group-members`,
-     *   is true (false by default), the server will send a delete join request notification to all group members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-recalled.notify-requester-other-online-sessions`
+     *   is true (true by default), the server will send a delete join request notification to all
+     * other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-recalled.notify-group-owner-and-managers` is
+     * true (true by default), the server will send a delete join request notification to the group
+     * owner and managers actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-recalled.notify-group-members`, is true (false
+     * by default), the server will send a delete join request notification to all group members of
+     * the target group actively.
      *
      * @throws ResponseException if an error occurs.
      */
@@ -649,19 +740,28 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * 1. If the logged-in user is not the group owner or manager of the group,
-     * throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupJoinRequest.
+     * throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupJoinRequest.
      * 2. If the group join request is not pending (e.g. expired, accepted, deleted, etc),
      * throws ResponseException with the code ResponseStatusCode::kUpdateNonPendingGroupJoinRequest.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-join-request-replied.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a reply group join request notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-join-request-replied.notify-group-join-request-sender`,
-     *   is true (true by default), the server will send a reply group join request notification to the group join request sender actively.
-     * * If the server property `turms.service.notification.group-join-request-replied.notify-group-members`,
-     *   is true (false by default), the server will send a reply group join request notification to all group members of the target group actively.
-     * * If the server property `turms.service.notification.group-join-request-replied.notify-group-owner-and-managers`,
-     *   is true (true by default), the server will send a reply group join request notification to the group owner and managers actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-replied.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a reply group join request notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-replied.notify-group-join-request-sender`, is
+     * true (true by default), the server will send a reply group join request notification to the
+     * group join request sender actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-replied.notify-group-members`, is true (false
+     * by default), the server will send a reply group join request notification to all group
+     * members of the target group actively.
+     * * If the server property
+     * `turms.service.notification.group-join-request-replied.notify-group-owner-and-managers`, is
+     * true (true by default), the server will send a reply group join request notification to the
+     * group owner and managers actively.
      *
      * @param requestId the target group join request ID.
      * @param responseAction the response action.
@@ -739,9 +839,11 @@ class GroupService : private boost::noncopyable {
      * * If the group is inactive,
      *   throws ResponseException with the code ResponseStatusCode::kAddUserToInactiveGroup.
      * * If the group has reached the maximum number of group members,
-     *   throws ResponseException with the code ResponseStatusCode::kAddUserToGroupWithSizeLimitReached.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kAddUserToGroupWithSizeLimitReached.
      * * If the group doesn't allow add users as group members directly,
-     *   throws ResponseException with the code ResponseStatusCode::kAddUserToGroupRequiringUsersApproval.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kAddUserToGroupRequiringUsersApproval.
      * * When the logged-in user tries to add themselves as a group member,
      *   they will become a group member if the group uses member requests as the join strategy.
      *   Otherwise, throws the following codes according to different join strategies:
@@ -758,12 +860,18 @@ class GroupService : private boost::noncopyable {
      *   throws ResponseException with the code ResponseStatusCode::kAddBlockedUserToGroup.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-added.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-added.notify-added-group-member`,
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the added group member.
-     * * If the server property `turms.service.notification.group-member-added.notify-other-group-members`,
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the other group members.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-requester-other-online-sessions` is
+     * true (true by default), the server will send a add group member notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-added-group-member`, is true (true by
+     * default), the server will send a add group member notification to all other online sessions
+     * of the added group member.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-other-group-members`, is true (true by
+     * default), the server will send a add group member notification to all other online sessions
+     * of the other group members.
      *
      * @param groupId the target group ID.
      * @param userIds the target user IDs.
@@ -791,12 +899,18 @@ class GroupService : private boost::noncopyable {
      *   ResponseStatusCode::kUserJoinGroupWithoutSendingGroupJoinRequest.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-added.notify-requester-other-online-sessions`
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-added.notify-added-group-member`,
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the added group member.
-     * * If the server property `turms.service.notification.group-member-added.notify-other-group-members`,
-     *   is true (true by default), the server will send a add group member notification to all other online sessions of the other group members.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-requester-other-online-sessions` is
+     * true (true by default), the server will send a add group member notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-added-group-member`, is true (true by
+     * default), the server will send a add group member notification to all other online sessions
+     * of the added group member.
+     * * If the server property
+     * `turms.service.notification.group-member-added.notify-other-group-members`, is true (true by
+     * default), the server will send a add group member notification to all other online sessions
+     * of the other group members.
      *
      * @param groupId the target group ID.
      * @param name the name as the group member.
@@ -809,25 +923,30 @@ class GroupService : private boost::noncopyable {
      * Quit a group.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-removed.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a delete group member notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-removed.notify-other-group-members`,
-     *   is true (true by default), the server will send a delete group member notification to all other group members of the group actively.
+     * * If the server property
+     * `turms.service.notification.group-member-removed.notify-requester-other-online-sessions`, is
+     * true (true by default), the server will send a delete group member notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-removed.notify-other-group-members`, is true (true
+     * by default), the server will send a delete group member notification to all other group
+     * members of the group actively.
      *
      * @param groupId the target group ID.
      * @param successorId the new successor ID.
-     * If the logged-in user is the owner of the group, they must transfer the group ownership to the successorId,
-     * throws ResponseException with the code ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise.
-     * And the successor will become the group owner.
-     * The successor must already be a member of the group, throws ResponseException with the code
-     * ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
+     * If the logged-in user is the owner of the group, they must transfer the group ownership to
+     * the successorId, throws ResponseException with the code
+     * ResponseStatusCode::kGroupOwnerQuitWithoutSpecifyingSuccessor otherwise. And the successor
+     * will become the group owner. The successor must already be a member of the group, throws
+     * ResponseException with the code ResponseStatusCode::kGroupSuccessorNotGroupMember otherwise.
      * @param quitAfterTransfer whether to quit the group after transfer the group ownership.
      * If false, the logged-in user will become a normal group member (not the group admin).
      * If null, the value will not be changed.
      *
      * Authorization:
      * * If the logged-in user is not the owner of the group,
-     *   ResponseException with the code ResponseStatusCode::kNotGroupOwnerToTransferGroup will be thrown.
+     *   ResponseException with the code ResponseStatusCode::kNotGroupOwnerToTransferGroup will be
+     * thrown.
      * @throws ResponseException if an error occurs.
      */
     auto quitGroup(int64_t groupId,
@@ -840,15 +959,22 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user is not the group owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToRemoveGroupMember.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToRemoveGroupMember.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-removed.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a delete group member notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-removed.notify-removed-group-member`,
-     *   is true (true by default), the server will send a delete group member notification to the removed group member actively.
-     * * If the server property `turms.service.notification.group-member-removed.notify-other-group-members`,
-     *   is true (true by default), the server will send a delete group member notification to all other group members of the group actively.
+     * * If the server property
+     * `turms.service.notification.group-member-removed.notify-requester-other-online-sessions`, is
+     * true (true by default), the server will send a delete group member notification to all other
+     * online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-removed.notify-removed-group-member`, is true (true
+     * by default), the server will send a delete group member notification to the removed group
+     * member actively.
+     * * If the server property
+     * `turms.service.notification.group-member-removed.notify-other-group-members`, is true (true
+     * by default), the server will send a delete group member notification to all other group
+     * members of the group actively.
      *
      * @param groupId the target group ID.
      * @param memberIds the target member IDs.
@@ -862,15 +988,22 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user is not the group owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a update group member info notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-updated-group-member`,
-     *   is true (false by default), the server will send a update group member info notification to the updated group member actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-other-group-members`,
-     *   is true (false by default), the server will send a update group member info notification to all other group members of the group actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a update group member info notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-updated-group-member`, is true
+     * (false by default), the server will send a update group member info notification to the
+     * updated group member actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-other-group-members`, is true
+     * (false by default), the server will send a update group member info notification to all other
+     * group members of the group actively.
      *
      * @param groupId the target group ID.
      * @param memberId the target member ID.
@@ -883,9 +1016,11 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user is not the group owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
      * * If the logged-in user is not the group owner,
-     *   throws ResponseException with the code ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
      * @throws ResponseException if an error occurs.
      */
     auto updateGroupMemberInfo(int64_t groupId,
@@ -900,43 +1035,58 @@ class GroupService : private boost::noncopyable {
      *
      * Authorization:
      * * If the logged-in user is not the group owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
      * * If the logged-in user is not the group owner,
-     *   throws ResponseException with the code ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a update group member info notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-updated-group-member`,
-     *   is true (false by default), the server will send a update group member info notification to the updated group member actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-other-group-members`,
-     *   is true (false by default), the server will send a update group member info notification to all other group members of the group actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a update group member info notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-updated-group-member`, is true
+     * (false by default), the server will send a update group member info notification to the
+     * updated group member actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-other-group-members`, is true
+     * (false by default), the server will send a update group member info notification to all other
+     * group members of the group actively.
      *
      * @param groupId the target group ID.
      * @param memberId the target member ID.
      * @param muteEndDate the new mute end date of the group member.
      * @throws ResponseException if an error occurs.
      */
-    auto muteGroupMember(int64_t groupId,
-                         int64_t memberId,
-                         const time_point& muteEndDate) -> boost::future<Response<void>>;
+    auto muteGroupMember(int64_t groupId, int64_t memberId, const time_point& muteEndDate)
+        -> boost::future<Response<void>>;
 
     /**
      * Unmute group member.
      *
      * Authorization:
      * * If the logged-in user is not the group owner or manager of the group,
-     *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember
      * * If the logged-in user is not the group owner,
-     *   throws ResponseException with the code ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
+     *   throws ResponseException with the code
+     * ResponseStatusCode::kMuteGroupMemberWithRoleEqualToOrHigherThanRequester.
      *
      * Notifications:
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
-     *   is true (true by default), the server will send a update group member info notification to all other online sessions of the logged-in user actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-updated-group-member`,
-     *   is true (false by default), the server will send a update group member info notification to the updated group member actively.
-     * * If the server property `turms.service.notification.group-member-info-updated.notify-other-group-members`,
-     *   is true (false by default), the server will send a update group member info notification to all other group members of the group actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-requester-other-online-sessions`,
+     *   is true (true by default), the server will send a update group member info notification to
+     * all other online sessions of the logged-in user actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-updated-group-member`, is true
+     * (false by default), the server will send a update group member info notification to the
+     * updated group member actively.
+     * * If the server property
+     * `turms.service.notification.group-member-info-updated.notify-other-group-members`, is true
+     * (false by default), the server will send a update group member info notification to all other
+     * group members of the group actively.
      *
      * @param groupId the target group ID.
      * @param memberId the target member ID.

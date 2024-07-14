@@ -29,9 +29,8 @@ class TcpClient : private std::enable_shared_from_this<TcpClient> {
           onBytesReceived_(std::forward<OnBytesReceived>(onBytesReceived)) {
     }
 
-    auto connect(const std::string& host,
-                 int port,
-                 int connectTimeoutMillis) -> boost::future<void>;
+    auto connect(const std::string& host, int port, int connectTimeoutMillis)
+        -> boost::future<void>;
 
     auto close(const boost::optional<std::exception>& e = boost::none) -> boost::future<void>;
 

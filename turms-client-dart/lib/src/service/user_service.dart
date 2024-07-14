@@ -2,7 +2,12 @@ import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
 import '../extension/notification_extensions.dart';
+import '../model/proto/model/common/value.pb.dart';
+import '../model/proto/model/user/user_settings.pb.dart';
+import '../model/proto/request/user/delete_user_settings_request.pb.dart';
+import '../model/proto/request/user/query_user_settings_request.pb.dart';
 import '../model/proto/request/user/relationship/delete_friend_request_request.pb.dart';
+import '../model/proto/request/user/update_user_settings_request.pb.dart';
 import '../util/system.dart';
 
 class Location {
@@ -296,6 +301,65 @@ class UserService {
     return n.toResponse((data) => data.userInfosWithVersion.userInfos);
   }
 
+  /// Upsert user settings, such as "preferred language", "new message alert", etc.
+  /// Note that only the settings specified in `turms.service.user.settings.allowed-settings` can be upserted.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.user-setting-updated.notify-requester-other-online-sessions` is true (true by default),
+  ///   the server will send a user settings updated notification to all other online sessions of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `settings`: The user settings to upsert.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  /// * If trying to update any existing immutable setting, throws [ResponseException] with the code [ResponseStatusCode.illegalArgument]
+  /// * If trying to upsert an unknown setting and the server property `turms.service.user.settings.ignore-unknown-settings-on-upsert` is
+  ///   false (false by default), throws [ResponseException] with the code [ResponseStatusCode.illegalArgument].
+  Future<Response<void>> upsertUserSettings(Map<String, Value> settings) async {
+    if (settings.isEmpty) {
+      return Response.nullValue();
+    }
+    final n = await _turmsClient.driver
+        .send(UpdateUserSettingsRequest(settings: settings));
+    return n.toNullResponse();
+  }
+
+  /// Delete user settings.
+  ///
+  /// Notifications:
+  /// * If the server property `turms.service.notification.user-setting-deleted.notify-requester-other-online-sessions` is true (true by default),
+  ///   the server will send a user settings deleted notification to all other online sessions of the logged-in user actively.
+  ///
+  /// **Params**:
+  /// * `names`: The names of the user settings to delete. If null, all deletable user settings will be deleted.
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  /// * If trying to delete any non-deletable setting, throws [ResponseException] with the code [ResponseStatusCode.illegalArgument].
+  Future<Response<void>> deleteUserSettings(Set<String> names) async {
+    if (names.isEmpty) {
+      return Response.nullValue();
+    }
+    final n =
+        await _turmsClient.driver.send(DeleteUserSettingsRequest(names: names));
+    return n.toNullResponse();
+  }
+
+  /// Find user settings.
+  ///
+  /// **Params**:
+  /// * `names`: The names of the user settings to query. If null, all user settings will be returned.
+  /// * `lastUpdatedDate`: The last updated date of user settings stored locally.
+  /// The server will only return user settings if a setting has been updated after [lastUpdatedDate].
+  ///
+  /// **Throws**: [ResponseException] if an error occurs.
+  Future<Response<UserSettings?>> queryUserSettings(
+      {Set<String>? names, DateTime? lastUpdatedDate}) async {
+    final n = await _turmsClient.driver.send(QueryUserSettingsRequest(
+        names: names, lastUpdatedDateStart: lastUpdatedDate?.toInt64()));
+    return n.toResponse(
+        (data) => data.hasUserSettings() ? data.userSettings : null);
+  }
+
   /// Find nearby users.
   ///
   /// **Params**:
@@ -336,7 +400,7 @@ class UserService {
   /// **Returns**: A list of online status of users.
   ///
   /// **Throws**: [ResponseException] if an error occurs.
-  Future<Response<List<UserOnlineStatus>>> queryOnlineStatusesRequest(
+  Future<Response<List<UserOnlineStatus>>> queryOnlineStatuses(
       Set<Int64> userIds) async {
     final n = await _turmsClient.driver
         .send(QueryUserOnlineStatusesRequest(userIds: userIds));

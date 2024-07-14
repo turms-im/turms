@@ -32,6 +32,13 @@ export 'src/model/proto/model/common/longs_with_version.pb.dart'
     show LongsWithVersion;
 export 'src/model/proto/model/common/strings_with_version.pb.dart'
     show StringsWithVersion;
+export 'src/model/proto/model/common/value.pb.dart' show Value;
+export 'src/model/proto/model/conference/meeting.pb.dart' show Meeting;
+export 'src/model/proto/model/conference/meetings.pb.dart' show Meetings;
+export 'src/model/proto/model/conversation/conversation_settings.pb.dart'
+    show ConversationSettings;
+export 'src/model/proto/model/conversation/conversation_settings_list.pb.dart'
+    show ConversationSettingsList;
 export 'src/model/proto/model/conversation/conversations.pb.dart'
     show Conversations;
 export 'src/model/proto/model/conversation/group_conversation.pb.dart'
@@ -66,6 +73,8 @@ export 'src/model/proto/model/group/group_members_with_version.pb.dart'
 export 'src/model/proto/model/group/groups_with_version.pb.dart'
     show GroupsWithVersion;
 export 'src/model/proto/model/message/message.pb.dart' show Message;
+export 'src/model/proto/model/message/message_reaction_group.pb.dart'
+    show MessageReactionGroup;
 export 'src/model/proto/model/message/messages.pb.dart' show Messages;
 export 'src/model/proto/model/message/messages_with_total.pb.dart'
     show MessagesWithTotal;
@@ -98,12 +107,29 @@ export 'src/model/proto/model/user/user_relationship_groups_with_version.pb.dart
 export 'src/model/proto/model/user/user_relationships_with_version.pb.dart'
     show UserRelationshipsWithVersion;
 export 'src/model/proto/model/user/user_session.pb.dart' show UserSession;
+export 'src/model/proto/model/user/user_settings.pb.dart' show UserSettings;
 export 'src/model/proto/notification/turms_notification.pb.dart'
     show TurmsNotification;
+export 'src/model/proto/request/conference/create_meeting_request.pb.dart'
+    show CreateMeetingRequest;
+export 'src/model/proto/request/conference/delete_meeting_request.pb.dart'
+    show DeleteMeetingRequest;
+export 'src/model/proto/request/conference/query_meetings_request.pb.dart'
+    show QueryMeetingsRequest;
+export 'src/model/proto/request/conference/update_meeting_invitation_request.pb.dart'
+    show UpdateMeetingInvitationRequest;
+export 'src/model/proto/request/conference/update_meeting_request.pb.dart'
+    show UpdateMeetingRequest;
+export 'src/model/proto/request/conversation/delete_conversation_settings_request.pb.dart'
+    show DeleteConversationSettingsRequest;
+export 'src/model/proto/request/conversation/query_conversation_settings_request.pb.dart'
+    show QueryConversationSettingsRequest;
 export 'src/model/proto/request/conversation/query_conversations_request.pb.dart'
     show QueryConversationsRequest;
 export 'src/model/proto/request/conversation/update_conversation_request.pb.dart'
     show UpdateConversationRequest;
+export 'src/model/proto/request/conversation/update_conversation_settings_request.pb.dart'
+    show UpdateConversationSettingsRequest;
 export 'src/model/proto/request/conversation/update_typing_status_request.pb.dart'
     show UpdateTypingStatusRequest;
 export 'src/model/proto/request/group/blocklist/create_group_blocked_user_request.pb.dart'
@@ -138,8 +164,12 @@ export 'src/model/proto/request/group/enrollment/query_group_join_questions_requ
     show QueryGroupJoinQuestionsRequest;
 export 'src/model/proto/request/group/enrollment/query_group_join_requests_request.pb.dart'
     show QueryGroupJoinRequestsRequest;
+export 'src/model/proto/request/group/enrollment/update_group_invitation_request.pb.dart'
+    show UpdateGroupInvitationRequest;
 export 'src/model/proto/request/group/enrollment/update_group_join_question_request.pb.dart'
     show UpdateGroupJoinQuestionRequest;
+export 'src/model/proto/request/group/enrollment/update_group_join_request_request.pb.dart'
+    show UpdateGroupJoinRequestRequest;
 export 'src/model/proto/request/group/member/create_group_members_request.pb.dart'
     show CreateGroupMembersRequest;
 export 'src/model/proto/request/group/member/delete_group_members_request.pb.dart'
@@ -156,8 +186,12 @@ export 'src/model/proto/request/group/query_joined_group_infos_request.pb.dart'
     show QueryJoinedGroupInfosRequest;
 export 'src/model/proto/request/group/update_group_request.pb.dart'
     show UpdateGroupRequest;
+export 'src/model/proto/request/message/create_message_reactions_request.pb.dart'
+    show CreateMessageReactionsRequest;
 export 'src/model/proto/request/message/create_message_request.pb.dart'
     show CreateMessageRequest;
+export 'src/model/proto/request/message/delete_message_reactions_request.pb.dart'
+    show DeleteMessageReactionsRequest;
 export 'src/model/proto/request/message/query_messages_request.pb.dart'
     show QueryMessagesRequest;
 export 'src/model/proto/request/message/update_message_request.pb.dart'
@@ -177,18 +211,24 @@ export 'src/model/proto/request/user/create_session_request.pb.dart'
     show CreateSessionRequest;
 export 'src/model/proto/request/user/delete_session_request.pb.dart'
     show DeleteSessionRequest;
+export 'src/model/proto/request/user/delete_user_settings_request.pb.dart'
+    show DeleteUserSettingsRequest;
 export 'src/model/proto/request/user/query_nearby_users_request.pb.dart'
     show QueryNearbyUsersRequest;
 export 'src/model/proto/request/user/query_user_online_statuses_request.pb.dart'
     show QueryUserOnlineStatusesRequest;
 export 'src/model/proto/request/user/query_user_profiles_request.pb.dart'
     show QueryUserProfilesRequest;
+export 'src/model/proto/request/user/query_user_settings_request.pb.dart'
+    show QueryUserSettingsRequest;
 export 'src/model/proto/request/user/relationship/create_friend_request_request.pb.dart'
     show CreateFriendRequestRequest;
 export 'src/model/proto/request/user/relationship/create_relationship_group_request.pb.dart'
     show CreateRelationshipGroupRequest;
 export 'src/model/proto/request/user/relationship/create_relationship_request.pb.dart'
     show CreateRelationshipRequest;
+export 'src/model/proto/request/user/relationship/delete_friend_request_request.pb.dart'
+    show DeleteFriendRequestRequest;
 export 'src/model/proto/request/user/relationship/delete_relationship_group_member_request.pb.dart'
     show DeleteRelationshipGroupMemberRequest;
 export 'src/model/proto/request/user/relationship/delete_relationship_group_request.pb.dart'
@@ -215,12 +255,15 @@ export 'src/model/proto/request/user/update_user_online_status_request.pb.dart'
     show UpdateUserOnlineStatusRequest;
 export 'src/model/proto/request/user/update_user_request.pb.dart'
     show UpdateUserRequest;
+export 'src/model/proto/request/user/update_user_settings_request.pb.dart'
+    show UpdateUserSettingsRequest;
 export 'src/model/response.dart' show Response;
 export 'src/model/response_status_code.dart' show ResponseStatusCode;
 export 'src/model/session_close_info.dart' show SessionCloseInfo;
 export 'src/model/session_close_status.dart' show SessionCloseStatus;
 export 'src/model/storage_resource.dart' show StorageResource;
 export 'src/model/storage_upload_result.dart' show StorageUploadResult;
+export 'src/service/conference_service.dart' show ConferenceService;
 export 'src/service/conversation_service.dart' show ConversationService;
 export 'src/service/group_service.dart' show GroupService;
 export 'src/service/message_service.dart' show MessageService;

@@ -9,14 +9,14 @@ ConversationService::ConversationService(TurmsClient& turmsClient)
     : turmsClient_(turmsClient) {
 }
 
-auto ConversationService::queryPrivateConversations(const std::unordered_set<int64_t>& targetIds)
+auto ConversationService::queryPrivateConversations(const std::unordered_set<int64_t>& userIds)
     -> boost::future<Response<std::vector<PrivateConversation>>> {
-    if (targetIds.empty()) {
+    if (userIds.empty()) {
         return boost::make_ready_future<>(Response<PrivateConversation>::emptyList());
     }
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_conversations_request();
-    request->mutable_target_ids()->Add(targetIds.cbegin(), targetIds.cend());
+    request->mutable_user_ids()->Add(userIds.cbegin(), userIds.cend());
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
@@ -49,12 +49,12 @@ auto ConversationService::queryGroupConversations(const std::unordered_set<int64
         });
 }
 
-auto ConversationService::updatePrivateConversationReadDate(
-    int64_t targetId,
-    const ConversationService::time_point& readDate) -> boost::future<Response<void>> {
+auto ConversationService::updatePrivateConversationReadDate(int64_t userId,
+                                                            const time_point& readDate)
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
-    request->set_target_id(targetId);
+    request->set_user_id(userId);
     request->set_read_date(time::toInt64(readDate));
     return turmsClient_.driver()
         .send(turmsRequest)
@@ -63,9 +63,9 @@ auto ConversationService::updatePrivateConversationReadDate(
         });
 }
 
-auto ConversationService::updateGroupConversationReadDate(
-    int64_t groupId,
-    const ConversationService::time_point& readDate) -> boost::future<Response<void>> {
+auto ConversationService::updateGroupConversationReadDate(int64_t groupId,
+                                                          const time_point& readDate)
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
     request->set_group_id(groupId);
@@ -77,11 +77,88 @@ auto ConversationService::updateGroupConversationReadDate(
         });
 }
 
-auto ConversationService::updatePrivateConversationTypingStatus(int64_t targetId)
+auto ConversationService::upsertPrivateConversationSettings(
+    int64_t userId, const std::unordered_map<std::string, Value>& settings)
+    -> boost::future<Response<void>> {
+    if (settings.empty()) {
+        return boost::make_ready_future<>(Response<void>{});
+    }
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_conversation_settings_request();
+    request->set_user_id(userId);
+    request->mutable_settings()->insert(settings.cbegin(), settings.cend());
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto ConversationService::upsertGroupConversationSettings(
+    int64_t groupId, const std::unordered_map<std::string, Value>& settings)
+    -> boost::future<Response<void>> {
+    if (settings.empty()) {
+        return boost::make_ready_future<>(Response<void>{});
+    }
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_conversation_settings_request();
+    request->set_group_id(groupId);
+    request->mutable_settings()->insert(settings.cbegin(), settings.cend());
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto ConversationService::deleteConversationSettings(const std::unordered_set<int64_t>& userIds,
+                                                     const std::unordered_set<int64_t>& groupIds,
+                                                     const std::unordered_set<std::string>& names)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_delete_conversation_settings_request();
+    request->mutable_user_ids()->Add(userIds.cbegin(), userIds.cend());
+    request->mutable_group_ids()->Add(groupIds.cbegin(), groupIds.cend());
+    request->mutable_names()->Add(names.cbegin(), names.cend());
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto ConversationService::queryConversationSettings(
+    const std::unordered_set<int64_t>& userIds,
+    const std::unordered_set<int64_t>& groupIds,
+    const std::unordered_set<std::string>& names,
+    const boost::optional<time_point>& lastUpdatedDate)
+    -> boost::future<Response<std::vector<ConversationSettings>>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_query_conversation_settings_request();
+    request->mutable_user_ids()->Add(userIds.cbegin(), userIds.cend());
+    request->mutable_group_ids()->Add(groupIds.cbegin(), groupIds.cend());
+    request->mutable_names()->Add(names.cbegin(), names.cend());
+    if (lastUpdatedDate) {
+        request->set_last_updated_date_start(time::toInt64(*lastUpdatedDate));
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<std::vector<ConversationSettings>>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    const auto& conversationSettings =
+                        data.conversation_settings_list().conversation_settings_list();
+                    return std::vector<ConversationSettings>{conversationSettings.cbegin(),
+                                                             conversationSettings.cend()};
+                }};
+        });
+}
+
+auto ConversationService::updatePrivateConversationTypingStatus(int64_t userId)
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_typing_status_request();
-    request->set_to_id(targetId);
+    request->set_to_id(userId);
     request->set_is_group_message(false);
     return turmsClient_.driver()
         .send(turmsRequest)

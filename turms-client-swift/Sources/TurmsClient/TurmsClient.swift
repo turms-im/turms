@@ -8,6 +8,7 @@ public class TurmsClient {
     public private(set) var conversationService: ConversationService!
     public private(set) var messageService: MessageService!
     public private(set) var storageService: StorageService!
+    public private(set) var conferenceService: ConferenceService!
     public private(set) var notificationService: NotificationService!
 
     public init(_ host: String? = nil, _ port: UInt16? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
@@ -24,6 +25,7 @@ public class TurmsClient {
         conversationService = ConversationService(self)
         messageService = MessageService(self)
         storageService = StorageService(self, storageServerUrl: storageServerUrl)
+        conferenceService = ConferenceService(self)
         notificationService = NotificationService(self)
     }
 
