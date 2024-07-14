@@ -414,17 +414,29 @@ public enum ResponseStatusCode {
             501),
 
     // Conference - Meeting
-    CANCELING_MEETING_IS_DISABLED(8100, "Cancelling meetings is disabled", 510),
-    CREATE_MEETING_EXCEEDING_MAX_ACTIVE_MEETING_COUNT(8101,
+    CREATE_MEETING_EXCEEDING_MAX_ACTIVE_MEETING_COUNT(8100,
             "The user cannot create a new meeting because the user has created too many active meetings",
             403),
-    NOT_CREATOR_TO_CANCEL_MEETING(8102, "Only the meeting creator can cancel the meeting", 403),
-    WRONG_PASSWORD_TO_UPDATE_MEETING_INVITATION(8103,
-            "Wrong password to update the meeting invitation", 403),
-    JOIN_PENDING_MEETING(8104, "Cannot join the pending meeting", 403),
-    JOIN_ENDED_MEETING(8105, "Cannot join the ended meeting", 403),
-    JOIN_EXPIRED_MEETING(8106, "Cannot join the expired meeting", 403),
-    JOIN_CANCELED_MEETING(8107, "Cannot join the canceled meeting", 403);
+    NOT_CREATOR_TO_CANCEL_MEETING(8101, "Only the meeting creator can cancel the meeting", 403),
+    CANCELING_MEETING_IS_DISABLED(8102, "Cancelling meetings is disabled", 510),
+    CANCEL_NONEXISTENT_MEETING(8103, "Cannot cancel a nonexistent meeting", 403),
+    NOT_CREATOR_TO_UPDATE_MEETING_PASSWORD(8104,
+            "Only the meeting creator can update the meeting password", 403),
+    UPDATE_INFO_OF_NONEXISTENT_MEETING(8105, "Cannot update the info of a nonexistent meeting",
+            403),
+
+    ACCEPT_MEETING_INVITATION_WITH_WRONG_PASSWORD(8200,
+            "Cannot accept the meeting invitation with the wrong password", 403),
+    ACCEPT_MEETING_INVITATION_OF_CANCELED_MEETING(8201,
+            "Cannot accept the meeting invitation of a canceled meeting", 403),
+    ACCEPT_MEETING_INVITATION_OF_ENDED_MEETING(8202,
+            "Cannot accept the meeting invitation of an ended meeting", 403),
+    ACCEPT_MEETING_INVITATION_OF_EXPIRED_MEETING(8203,
+            "Cannot accept the meeting invitation of an expired meeting", 403),
+    ACCEPT_MEETING_INVITATION_OF_PENDING_MEETING(8204,
+            "Cannot accept the meeting invitation of a pending meeting", 403),
+    ACCEPT_NONEXISTENT_MEETING_INVITATION(8205, "Cannot accept a nonexistent meeting invitation",
+            403);
 
     public static final int STATUS_CODE_LENGTH = 4;
     public static final ResponseStatusCode[] VALUES = values();

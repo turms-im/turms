@@ -25,8 +25,8 @@ import im.turms.service.domain.conference.po.Meeting;
  * @author James Chen
  */
 public record UpdateMeetingInvitationResult(
-        boolean success,
+        boolean updated,
         @Nullable String accessToken,
-        Meeting meeting
+        @Nullable Meeting meeting
 ) {
 }
