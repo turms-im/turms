@@ -18,14 +18,14 @@ public class StorageService {
 
     // User profile picture
 
-    public func uploadUserProfilePicture(data: Data, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    public func uploadUserProfilePicture(data: Data, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         if data.isEmpty {
             return Promise(error: ResponseError(
                 code: .illegalArgument,
                 reason: "The data of user profile picture must not be empty"
             ))
         }
-        return queryUserProfilePictureUploadInfo(name: name, mediaType: mediaType, extra: extra)
+        return queryUserProfilePictureUploadInfo(name: name, mediaType: mediaType, customAttributes: customAttributes)
             .then { uploadInfo -> Promise<Response<StorageUploadResult>> in
                 var infoData = uploadInfo.data
                 let url = try self.getAndRemoveResourceUrl(&infoData, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
@@ -40,25 +40,25 @@ public class StorageService {
             }
     }
 
-    public func deleteUserProfilePicture(extra: [String: String]? = nil) -> Promise<Response<Void>> {
-        return deleteResource(type: .userProfilePicture, extra: extra)
+    public func deleteUserProfilePicture(customAttributes: [Value]? = nil) -> Promise<Response<Void>> {
+        return deleteResource(type: .userProfilePicture, customAttributes: customAttributes)
     }
 
-    public func queryUserProfilePicture(userId: Int64, extra: [String: String]? = nil, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
-        return queryUserProfilePictureDownloadInfo(userId: userId, extra: extra, fetch: fetchDownloadInfo, urlKeyName: urlKeyName)
+    public func queryUserProfilePicture(userId: Int64, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageResource>> {
+        return queryUserProfilePictureDownloadInfo(userId: userId, fetch: fetchDownloadInfo, urlKeyName: urlKeyName, customAttributes: customAttributes)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
             }
     }
 
-    public func queryUserProfilePictureUploadInfo(name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceUploadInfo(type: .userProfilePicture, name: name, mediaType: mediaType, extra: extra)
+    public func queryUserProfilePictureUploadInfo(name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceUploadInfo(type: .userProfilePicture, name: name, mediaType: mediaType, customAttributes: customAttributes)
     }
 
-    public func queryUserProfilePictureDownloadInfo(userId: Int64, extra: [String: String]? = nil, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+    public func queryUserProfilePictureDownloadInfo(userId: Int64, fetch: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
         if fetch {
-            return queryResourceDownloadInfo(type: .userProfilePicture, idNum: userId, extra: extra)
+            return queryResourceDownloadInfo(type: .userProfilePicture, idNum: userId, customAttributes: customAttributes)
         }
         let url = "\(serverUrl)/\(getBucketName(.userProfilePicture))/\(userId)"
         return Promise.value(Response.value([
@@ -68,7 +68,7 @@ public class StorageService {
 
     // Group profile picture
 
-    public func uploadGroupProfilePicture(groupId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, extra _: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    public func uploadGroupProfilePicture(groupId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes _: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         if data.isEmpty {
             return Promise(error: ResponseError(
                 code: .illegalArgument,
@@ -90,25 +90,25 @@ public class StorageService {
             }
     }
 
-    public func deleteGroupProfilePicture(groupId: Int64, extra: [String: String]? = nil) -> Promise<Response<Void>> {
-        return deleteResource(type: .groupProfilePicture, idNum: groupId, extra: extra)
+    public func deleteGroupProfilePicture(groupId: Int64, customAttributes: [Value]? = nil) -> Promise<Response<Void>> {
+        return deleteResource(type: .groupProfilePicture, idNum: groupId, customAttributes: customAttributes)
     }
 
-    public func queryGroupProfilePicture(groupId: Int64, extra: [String: String]? = nil, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
-        return queryGroupProfilePictureDownloadInfo(groupId: groupId, extra: extra, fetch: fetchDownloadInfo, urlKeyName: urlKeyName)
+    public func queryGroupProfilePicture(groupId: Int64, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageResource>> {
+        return queryGroupProfilePictureDownloadInfo(groupId: groupId, fetch: fetchDownloadInfo, urlKeyName: urlKeyName, customAttributes: customAttributes)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
             }
     }
 
-    public func queryGroupProfilePictureUploadInfo(groupId: Int64, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceUploadInfo(type: .groupProfilePicture, idNum: groupId, name: name, mediaType: mediaType, extra: extra)
+    public func queryGroupProfilePictureUploadInfo(groupId: Int64, name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceUploadInfo(type: .groupProfilePicture, idNum: groupId, name: name, mediaType: mediaType, customAttributes: customAttributes)
     }
 
-    public func queryGroupProfilePictureDownloadInfo(groupId: Int64, extra: [String: String]? = nil, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+    public func queryGroupProfilePictureDownloadInfo(groupId: Int64, fetch: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
         if fetch {
-            return queryResourceDownloadInfo(type: .groupProfilePicture, idNum: groupId, extra: extra)
+            return queryResourceDownloadInfo(type: .groupProfilePicture, idNum: groupId, customAttributes: customAttributes)
         }
         let url = "\(serverUrl)/\(getBucketName(.groupProfilePicture))/\(groupId)"
         return Promise.value(Response.value([
@@ -118,33 +118,33 @@ public class StorageService {
 
     // Message attachment
 
-    public func uploadMessageAttachment(data: Data, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    public func uploadMessageAttachment(data: Data, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         return uploadMessageAttachment0(data: data,
                                         name: name,
                                         mediaType: mediaType,
-                                        extra: extra,
-                                        urlKeyName: urlKeyName)
+                                        urlKeyName: urlKeyName,
+                                        customAttributes: customAttributes)
     }
 
-    public func uploadMessageAttachmentInPrivateConversation(userId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    public func uploadMessageAttachmentInPrivateConversation(userId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         return uploadMessageAttachment0(data: data,
                                         userId: userId,
                                         name: name,
                                         mediaType: mediaType,
-                                        extra: extra,
-                                        urlKeyName: urlKeyName)
+                                        urlKeyName: urlKeyName,
+                                        customAttributes: customAttributes)
     }
 
-    public func uploadMessageAttachmentInGroupConversation(groupId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    public func uploadMessageAttachmentInGroupConversation(groupId: Int64, data: Data, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         return uploadMessageAttachment0(data: data,
                                         groupId: groupId,
                                         name: name,
                                         mediaType: mediaType,
-                                        extra: extra,
-                                        urlKeyName: urlKeyName)
+                                        urlKeyName: urlKeyName,
+                                        customAttributes: customAttributes)
     }
 
-    private func uploadMessageAttachment0(data: Data, userId: Int64? = nil, groupId: Int64? = nil, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil, urlKeyName: String? = nil) -> Promise<Response<StorageUploadResult>> {
+    private func uploadMessageAttachment0(data: Data, userId: Int64? = nil, groupId: Int64? = nil, name: String? = nil, mediaType: String? = nil, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageUploadResult>> {
         if data.isEmpty {
             return Promise(error: ResponseError(
                 code: .illegalArgument,
@@ -154,7 +154,7 @@ public class StorageService {
         let queryUploadInfo: Promise<Response<[String: String]>>
         if userId == nil, groupId == nil {
             queryUploadInfo = queryMessageAttachmentUploadInfo(
-                name: name, mediaType: mediaType, extra: extra
+                name: name, mediaType: mediaType, customAttributes: customAttributes
             )
         } else if userId != nil {
             if groupId != nil {
@@ -167,14 +167,14 @@ public class StorageService {
                 userId: userId!,
                 name: name,
                 mediaType: mediaType,
-                extra: extra
+                customAttributes: customAttributes
             )
         } else {
             queryUploadInfo = queryMessageAttachmentUploadInfoInGroupConversation(
                 groupId: groupId!,
                 name: name,
                 mediaType: mediaType,
-                extra: extra
+                customAttributes: customAttributes
             )
         }
         return queryUploadInfo
@@ -192,14 +192,14 @@ public class StorageService {
             }
     }
 
-    public func deleteMessageAttachment(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, extra: [String: String]? = nil) -> Promise<Response<Void>> {
+    public func deleteMessageAttachment(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<Void>> {
         if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
             return Promise(error: ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
             ))
         }
-        return deleteResource(type: .messageAttachment, idNum: attachmentIdNum, idStr: attachmentIdStr, extra: extra)
+        return deleteResource(type: .messageAttachment, idNum: attachmentIdNum, idStr: attachmentIdStr, customAttributes: customAttributes)
     }
 
     public func shareMessageAttachmentWithUser(userId: Int64, attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil) -> Promise<Response<Void>> {
@@ -295,31 +295,31 @@ public class StorageService {
         }
     }
 
-    public func queryMessageAttachment(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, extra: [String: String]? = nil, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil) -> Promise<Response<StorageResource>> {
+    public func queryMessageAttachment(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, fetchDownloadInfo: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<StorageResource>> {
         return queryMessageAttachmentDownloadInfo(attachmentIdNum: attachmentIdNum,
                                                   attachmentIdStr: attachmentIdStr,
-                                                  extra: extra,
                                                   fetch: fetchDownloadInfo,
-                                                  urlKeyName: urlKeyName)
+                                                  urlKeyName: urlKeyName,
+                                                  customAttributes: customAttributes)
             .then { downloadInfo -> Promise<Response<StorageResource>> in
                 let url = try self.getResourceUrl(downloadInfo.data, urlKeyName ?? StorageService.DEFAULT_URL_KEY_NAME)
                 return self.getResource(url)
             }
     }
 
-    public func queryMessageAttachmentUploadInfo(name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceUploadInfo(type: .messageAttachment, name: name, mediaType: mediaType, extra: extra)
+    public func queryMessageAttachmentUploadInfo(name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceUploadInfo(type: .messageAttachment, name: name, mediaType: mediaType, customAttributes: customAttributes)
     }
 
-    public func queryMessageAttachmentUploadInfoInPrivateConversation(userId: Int64, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceUploadInfo(type: .messageAttachment, idNum: userId, name: name, mediaType: mediaType, extra: extra)
+    public func queryMessageAttachmentUploadInfoInPrivateConversation(userId: Int64, name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceUploadInfo(type: .messageAttachment, idNum: userId, name: name, mediaType: mediaType, customAttributes: customAttributes)
     }
 
-    public func queryMessageAttachmentUploadInfoInGroupConversation(groupId: Int64, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
-        return queryResourceUploadInfo(type: .messageAttachment, idNum: -groupId, name: name, mediaType: mediaType, extra: extra)
+    public func queryMessageAttachmentUploadInfoInGroupConversation(groupId: Int64, name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
+        return queryResourceUploadInfo(type: .messageAttachment, idNum: -groupId, name: name, mediaType: mediaType, customAttributes: customAttributes)
     }
 
-    public func queryMessageAttachmentDownloadInfo(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, extra: [String: String]? = nil, fetch: Bool = false, urlKeyName: String? = nil) -> Promise<Response<[String: String]>> {
+    public func queryMessageAttachmentDownloadInfo(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, fetch: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
         if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
             return Promise(error: ResponseError(
                 code: ResponseStatusCode.illegalArgument,
@@ -327,7 +327,7 @@ public class StorageService {
             ))
         }
         if fetch {
-            return queryResourceDownloadInfo(type: .messageAttachment, idNum: attachmentIdNum, idStr: attachmentIdStr, extra: extra)
+            return queryResourceDownloadInfo(type: .messageAttachment, idNum: attachmentIdNum, idStr: attachmentIdStr, customAttributes: customAttributes)
         }
         let url = "\(serverUrl)/\(getBucketName(.messageAttachment))/\(attachmentIdNum?.description ?? attachmentIdStr!)"
         return Promise.value(Response.value([
@@ -457,7 +457,7 @@ public class StorageService {
         }
     }
 
-    private func deleteResource(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, extra: [String: String]? = nil) -> Promise<Response<Void>> {
+    private func deleteResource(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<Void>> {
         return turmsClient.driver
             .send {
                 $0.deleteResourceRequest = .with {
@@ -468,8 +468,8 @@ public class StorageService {
                     if let v = idStr {
                         $0.idStr = v
                     }
-                    if let v = extra {
-                        $0.extra = v
+                    if let v = customAttributes {
+                        $0.customAttributes = v
                     }
                 }
             }
@@ -527,7 +527,7 @@ public class StorageService {
         }
     }
 
-    private func queryResourceUploadInfo(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, name: String? = nil, mediaType: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
+    private func queryResourceUploadInfo(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, name: String? = nil, mediaType: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
         return turmsClient.driver
             .send {
                 $0.queryResourceUploadInfoRequest = .with {
@@ -544,8 +544,8 @@ public class StorageService {
                     if let v = mediaType {
                         $0.mediaType = v
                     }
-                    if let v = extra {
-                        $0.extra = v
+                    if let v = customAttributes {
+                        $0.customAttributes = v
                     }
                 }
             }
@@ -556,7 +556,7 @@ public class StorageService {
             }
     }
 
-    private func queryResourceDownloadInfo(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, extra: [String: String]? = nil) -> Promise<Response<[String: String]>> {
+    private func queryResourceDownloadInfo(type: StorageResourceType, idNum: Int64? = nil, idStr: String? = nil, customAttributes: [Value]? = nil) -> Promise<Response<[String: String]>> {
         return turmsClient.driver
             .send {
                 $0.queryResourceDownloadInfoRequest = .with {
@@ -567,8 +567,8 @@ public class StorageService {
                     if let v = idStr {
                         $0.idStr = v
                     }
-                    if let v = extra {
-                        $0.extra = v
+                    if let v = customAttributes {
+                        $0.customAttributes = v
                     }
                 }
             }

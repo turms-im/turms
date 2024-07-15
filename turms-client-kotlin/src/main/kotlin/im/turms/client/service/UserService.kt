@@ -32,20 +32,25 @@ import im.turms.client.model.proto.constant.ProfileAccessStrategy
 import im.turms.client.model.proto.constant.ResponseAction
 import im.turms.client.model.proto.constant.UserStatus
 import im.turms.client.model.proto.model.common.LongsWithVersion
+import im.turms.client.model.proto.model.common.Value
 import im.turms.client.model.proto.model.user.NearbyUser
 import im.turms.client.model.proto.model.user.UserFriendRequestsWithVersion
 import im.turms.client.model.proto.model.user.UserInfo
 import im.turms.client.model.proto.model.user.UserOnlineStatus
 import im.turms.client.model.proto.model.user.UserRelationshipGroupsWithVersion
 import im.turms.client.model.proto.model.user.UserRelationshipsWithVersion
+import im.turms.client.model.proto.model.user.UserSettings
 import im.turms.client.model.proto.request.user.CreateSessionRequest
 import im.turms.client.model.proto.request.user.DeleteSessionRequest
+import im.turms.client.model.proto.request.user.DeleteUserSettingsRequest
 import im.turms.client.model.proto.request.user.QueryNearbyUsersRequest
 import im.turms.client.model.proto.request.user.QueryUserOnlineStatusesRequest
 import im.turms.client.model.proto.request.user.QueryUserProfilesRequest
+import im.turms.client.model.proto.request.user.QueryUserSettingsRequest
 import im.turms.client.model.proto.request.user.UpdateUserLocationRequest
 import im.turms.client.model.proto.request.user.UpdateUserOnlineStatusRequest
 import im.turms.client.model.proto.request.user.UpdateUserRequest
+import im.turms.client.model.proto.request.user.UpdateUserSettingsRequest
 import im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest
 import im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest
 import im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest
@@ -148,12 +153,12 @@ class UserService(private val turmsClient: TurmsClient) {
      * @param location the location of the user.
      * @param storePassword whether to store the password in [userInfo].
      * @throws ResponseException if an error occurs.
-     * 1. If the client is not compatible with the server, throws
+     * * If the client is not compatible with the server, throws
      * with the code [ResponseStatusCode.UNSUPPORTED_CLIENT_VERSION].
-     * 2. Depending on the server property `turms.gateway.simultaneous-login.strategy`,
+     * * Depending on the server property `turms.gateway.simultaneous-login.strategy`,
      * throws with the code [ResponseStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE]
      * if the specified device type is forbidden.
-     * 3. If provided credentials are invalid,
+     * * If provided credentials are invalid,
      * throws with the code [ResponseStatusCode.LOGIN_AUTHENTICATION_FAILED].
      */
     suspend fun login(
@@ -270,7 +275,10 @@ class UserService(private val turmsClient: TurmsClient) {
         @NotEmpty deviceTypes: Set<DeviceType>,
     ): Response<Unit> =
         if (deviceTypes.isEmpty()) {
-            throw ResponseException.from(ResponseStatusCode.ILLEGAL_ARGUMENT, "\"deviceTypes\" must not be null or empty")
+            throw ResponseException.from(
+                ResponseStatusCode.ILLEGAL_ARGUMENT,
+                "\"deviceTypes\" must not be null or empty",
+            )
         } else {
             turmsClient.driver
                 .send(
@@ -402,6 +410,79 @@ class UserService(private val turmsClient: TurmsClient) {
         }
 
     /**
+     * Upsert user settings, such as "preferred language", "new message alert", etc.
+     * Note that only the settings specified in `turms.service.user.settings.allowed-settings` can be upserted.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.user-setting-updated.notify-requester-other-online-sessions` is true (true by default),
+     *   the server will send a user settings updated notification to all other online sessions of the logged-in user actively.
+     *
+     * @param settings the user settings to upsert.
+     * @throws ResponseException if an error occurs.
+     * * If trying to update any existing immutable setting, throws [ResponseException] with the code [ResponseStatusCode.ILLEGAL_ARGUMENT]
+     * * If trying to upsert an unknown setting and the server property `turms.service.user.settings.ignore-unknown-settings-on-upsert` is
+     *   false (false by default), throws [ResponseException] with the code [ResponseStatusCode.ILLEGAL_ARGUMENT].
+     */
+    suspend fun upsertUserSettings(settings: Map<String, Value>): Response<Unit> {
+        if (settings.isEmpty()) {
+            return Response.unitValue()
+        }
+        return turmsClient.driver
+            .send(
+                UpdateUserSettingsRequest.newBuilder().apply {
+                    putAllSettings(settings)
+                },
+            ).toResponse()
+    }
+
+    /**
+     * Delete user settings.
+     *
+     * Notifications:
+     * * If the server property `turms.service.notification.user-setting-deleted.notify-requester-other-online-sessions` is true (true by default),
+     *   the server will send a user settings deleted notification to all other online sessions of the logged-in user actively.
+     *
+     * @param names the names of the user settings to delete. If null, all deletable user settings will be deleted.
+     * @throws ResponseException if an error occurs.
+     * * If trying to delete any non-deletable setting, throws [ResponseException] with the code [ResponseStatusCode.ILLEGAL_ARGUMENT].
+     */
+    suspend fun deleteUserSettings(names: Set<String>? = null): Response<Unit> {
+        return turmsClient.driver
+            .send(
+                DeleteUserSettingsRequest.newBuilder().apply {
+                    names?.let { addAllNames(it) }
+                },
+            ).toResponse()
+    }
+
+    /**
+     * Find user settings.
+     *
+     * @param names the names of the user settings to query. If null, all user settings will be returned.
+     * @param lastUpdatedDate the last updated date of user settings stored locally.
+     * The server will only return user settings if a setting has been updated after [lastUpdatedDate].
+     * @throws ResponseException if an error occurs.
+     */
+    suspend fun queryUserSettings(
+        names: Set<String>? = null,
+        lastUpdatedDate: Date? = null,
+    ): Response<UserSettings?> {
+        return turmsClient.driver
+            .send(
+                QueryUserSettingsRequest.newBuilder().apply {
+                    names?.let { addAllNames(it) }
+                    lastUpdatedDate?.let { this.lastUpdatedDateStart = it.time }
+                },
+            ).toResponse {
+                if (it.hasUserSettings()) {
+                    it.userSettings
+                } else {
+                    null
+                }
+            }
+    }
+
+    /**
      * Find nearby users.
      *
      * @param latitude the latitude.
@@ -445,7 +526,7 @@ class UserService(private val turmsClient: TurmsClient) {
      * @return a list of online status of users.
      * @throws ResponseException if an error occurs.
      */
-    suspend fun queryOnlineStatusesRequest(
+    suspend fun queryOnlineStatuses(
         @NotEmpty userIds: Set<Long>,
     ): Response<List<UserOnlineStatus>> =
         if (userIds.isEmpty()) {

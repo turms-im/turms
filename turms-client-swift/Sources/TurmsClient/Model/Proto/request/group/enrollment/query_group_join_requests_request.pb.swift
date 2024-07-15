@@ -45,6 +45,8 @@ public struct QueryGroupJoinRequestsRequest {
     /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
     public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -66,6 +68,7 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_id"),
         2: .standard(proto: "last_updated_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -76,6 +79,7 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &_groupID)
             case 2: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -92,12 +96,16 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
         try { if let v = self._lastUpdatedDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: QueryGroupJoinRequestsRequest, rhs: QueryGroupJoinRequestsRequest) -> Bool {
         if lhs._groupID != rhs._groupID { return false }
         if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

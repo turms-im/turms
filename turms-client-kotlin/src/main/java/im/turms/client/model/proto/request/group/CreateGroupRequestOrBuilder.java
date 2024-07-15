@@ -118,4 +118,57 @@ public interface CreateGroupRequestOrBuilder extends
      * @return The muteEndDate.
      */
     long getMuteEndDate();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 7;</code>
+     */
+    int getUserDefinedAttributesCount();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 7;</code>
+     */
+    boolean containsUserDefinedAttributes(java.lang.String key);
+
+    /**
+     * Use {@link #getUserDefinedAttributesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributes();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 7;</code>
+     */
+    java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributesMap();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 7;</code>
+     */
+
+    /* nullable */
+    im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrDefault(
+            java.lang.String key,
+            /* nullable */
+            im.turms.client.model.proto.model.common.Value defaultValue);
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 7;</code>
+     */
+
+    im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrThrow(
+            java.lang.String key);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
 }

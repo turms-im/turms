@@ -18,9 +18,10 @@
 package im.turms.server.common.infra.property.env.service.business.common.setting;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
@@ -30,10 +31,11 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class CustomSettingLongValueProperties {
+@SuperBuilder(toBuilder = true)
+public class CustomSettingLongValueProperties extends CustomSettingEnumValueProperties<Long> {
 
     @Description("The minimum allowed value")
     @GlobalProperty

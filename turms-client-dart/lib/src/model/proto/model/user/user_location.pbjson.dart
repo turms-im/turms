@@ -36,6 +36,14 @@ const UserLocation$json = {
       '6': '.im.turms.proto.UserLocation.DetailsEntry',
       '10': 'details'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [UserLocation_DetailsEntry$json],
   '8': [
@@ -58,5 +66,6 @@ final $typed_data.Uint8List userLocationDescriptor = $convert.base64Decode(
     'CgxVc2VyTG9jYXRpb24SGgoIbGF0aXR1ZGUYASABKAJSCGxhdGl0dWRlEhwKCWxvbmdpdHVkZR'
     'gCIAEoAlIJbG9uZ2l0dWRlEiEKCXRpbWVzdGFtcBgDIAEoA0gAUgl0aW1lc3RhbXCIAQESQwoH'
     'ZGV0YWlscxgEIAMoCzIpLmltLnR1cm1zLnByb3RvLlVzZXJMb2NhdGlvbi5EZXRhaWxzRW50cn'
-    'lSB2RldGFpbHMaOgoMRGV0YWlsc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIg'
-    'ASgJUgV2YWx1ZToCOAFCDAoKX3RpbWVzdGFtcA==');
+    'lSB2RldGFpbHMSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5W'
+    'YWx1ZVIQY3VzdG9tQXR0cmlidXRlcxo6CgxEZXRhaWxzRW50cnkSEAoDa2V5GAEgASgJUgNrZX'
+    'kSFAoFdmFsdWUYAiABKAlSBXZhbHVlOgI4AUIMCgpfdGltZXN0YW1w');

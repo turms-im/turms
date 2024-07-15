@@ -26,7 +26,7 @@ public final class DeleteRelationshipRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteRelationshipRequestOuterClass.class.getName());
     }
@@ -48,24 +48,32 @@ public final class DeleteRelationshipRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n;request/user/relationship/delete_relat"
-                + "ionship_request.proto\022\016im.turms.proto\"\216\001"
-                + "\n\031DeleteRelationshipRequest\022\017\n\007user_id\030\001"
-                + " \001(\003\022\030\n\013group_index\030\002 \001(\005H\000\210\001\001\022\037\n\022target"
-                + "_group_index\030\003 \001(\005H\001\210\001\001B\016\n\014_group_indexB"
-                + "\025\n\023_target_group_indexBI\nBim.turms.serve"
-                + "r.common.access.client.dto.request.user."
-                + "relationshipP\001\272\002\000b\006proto3"};
+                + "ionship_request.proto\022\016im.turms.proto\032\030m"
+                + "odel/common/value.proto\"\300\001\n\031DeleteRelati"
+                + "onshipRequest\022\017\n\007user_id\030\001 \001(\003\022\030\n\013group_"
+                + "index\030\002 \001(\005H\000\210\001\001\022\037\n\022target_group_index\030\003"
+                + " \001(\005H\001\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132\025.i"
+                + "m.turms.proto.ValueB\016\n\014_group_indexB\025\n\023_"
+                + "target_group_indexBI\nBim.turms.server.co"
+                + "mmon.access.client.dto.request.user.rela"
+                + "tionshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor,
-                        new java.lang.String[]{"UserId", "GroupIndex", "TargetGroupIndex",});
+                        new java.lang.String[]{"UserId",
+                                "GroupIndex",
+                                "TargetGroupIndex",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

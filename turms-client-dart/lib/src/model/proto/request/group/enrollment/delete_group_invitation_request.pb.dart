@@ -14,13 +14,19 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class DeleteGroupInvitationRequest extends $pb.GeneratedMessage {
   factory DeleteGroupInvitationRequest({
     $fixnum.Int64? invitationId,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (invitationId != null) {
       $result.invitationId = invitationId;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -37,6 +43,9 @@ class DeleteGroupInvitationRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
     ..aInt64(1, _omitFieldNames ? '' : 'invitationId')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -77,6 +86,9 @@ class DeleteGroupInvitationRequest extends $pb.GeneratedMessage {
   $core.bool hasInvitationId() => $_has(0);
   @$pb.TagNumber(1)
   void clearInvitationId() => clearField(1);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(1);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

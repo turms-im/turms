@@ -26,7 +26,7 @@ public final class UserRelationshipOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserRelationshipOuterClass.class.getName());
     }
@@ -48,21 +48,25 @@ public final class UserRelationshipOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\"model/user/user_relationship.proto\022\016im"
-                + ".turms.proto\"\216\002\n\020UserRelationship\022\025\n\010own"
-                + "er_id\030\001 \001(\003H\000\210\001\001\022\034\n\017related_user_id\030\002 \001("
-                + "\003H\001\210\001\001\022\027\n\nblock_date\030\003 \001(\003H\002\210\001\001\022\030\n\013group"
-                + "_index\030\004 \001(\003H\003\210\001\001\022\037\n\022establishment_date\030"
-                + "\005 \001(\003H\004\210\001\001\022\021\n\004name\030\006 \001(\tH\005\210\001\001B\013\n\t_owner_"
-                + "idB\022\n\020_related_user_idB\r\n\013_block_dateB\016\n"
-                + "\014_group_indexB\025\n\023_establishment_dateB\007\n\005"
-                + "_nameB:\n3im.turms.server.common.access.c"
-                + "lient.dto.model.userP\001\272\002\000b\006proto3"};
+                + ".turms.proto\032\030model/common/value.proto\"\300"
+                + "\002\n\020UserRelationship\022\025\n\010owner_id\030\001 \001(\003H\000\210"
+                + "\001\001\022\034\n\017related_user_id\030\002 \001(\003H\001\210\001\001\022\027\n\nbloc"
+                + "k_date\030\003 \001(\003H\002\210\001\001\022\030\n\013group_index\030\004 \001(\003H\003"
+                + "\210\001\001\022\037\n\022establishment_date\030\005 \001(\003H\004\210\001\001\022\021\n\004"
+                + "name\030\006 \001(\tH\005\210\001\001\0220\n\021custom_attributes\030\017 \003"
+                + "(\0132\025.im.turms.proto.ValueB\013\n\t_owner_idB\022"
+                + "\n\020_related_user_idB\r\n\013_block_dateB\016\n\014_gr"
+                + "oup_indexB\025\n\023_establishment_dateB\007\n\005_nam"
+                + "eB:\n3im.turms.server.common.access.clien"
+                + "t.dto.model.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UserRelationship_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserRelationship_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserRelationship_descriptor,
@@ -71,8 +75,10 @@ public final class UserRelationshipOuterClass {
                                 "BlockDate",
                                 "GroupIndex",
                                 "EstablishmentDate",
-                                "Name",});
+                                "Name",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

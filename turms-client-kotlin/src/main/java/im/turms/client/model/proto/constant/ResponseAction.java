@@ -104,7 +104,7 @@ public enum ResponseAction implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    private ResponseAction(int value) {
+    ResponseAction(int value) {
         this.value = value;
     }
 

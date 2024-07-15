@@ -26,7 +26,7 @@ public final class ConversationsOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 ConversationsOuterClass.class.getName());
     }
@@ -48,9 +48,9 @@ public final class ConversationsOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n&model/conversation/conversations.proto"
-                + "\022\016im.turms.proto\032-model/conversation/pri"
-                + "vate_conversation.proto\032+model/conversat"
-                + "ion/group_conversation.proto\"\223\001\n\rConvers"
+                + "\022\016im.turms.proto\032+model/conversation/gro"
+                + "up_conversation.proto\032-model/conversatio"
+                + "n/private_conversation.proto\"\223\001\n\rConvers"
                 + "ations\022B\n\025private_conversations\030\001 \003(\0132#."
                 + "im.turms.proto.PrivateConversation\022>\n\023gr"
                 + "oup_conversations\030\002 \003(\0132!.im.turms.proto"
@@ -60,20 +60,20 @@ public final class ConversationsOuterClass {
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
-                        im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass
-                                .getDescriptor(),
                         im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_Conversations_descriptor = getDescriptor().getMessageTypes()
-                .get(0);
+                .getFirst();
         internal_static_im_turms_proto_Conversations_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_Conversations_descriptor,
                         new java.lang.String[]{"PrivateConversations", "GroupConversations",});
         descriptor.resolveAllFeaturesImmutable();
-        im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass
-                .getDescriptor();
         im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass
+                .getDescriptor();
+        im.turms.server.common.access.client.dto.model.conversation.PrivateConversationOuterClass
                 .getDescriptor();
     }
 

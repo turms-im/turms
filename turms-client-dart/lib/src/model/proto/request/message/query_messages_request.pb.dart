@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class QueryMessagesRequest extends $pb.GeneratedMessage {
   factory QueryMessagesRequest({
     $core.Iterable<$fixnum.Int64>? ids,
@@ -25,6 +27,7 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     $core.int? maxCount,
     $core.bool? withTotal,
     $core.bool? descending,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (ids != null) {
@@ -54,6 +57,9 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     if (descending != null) {
       $result.descending = descending;
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   QueryMessagesRequest._() : super();
@@ -77,6 +83,9 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(7, _omitFieldNames ? '' : 'maxCount', $pb.PbFieldType.O3)
     ..aOB(8, _omitFieldNames ? '' : 'withTotal')
     ..aOB(9, _omitFieldNames ? '' : 'descending')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -197,6 +206,9 @@ class QueryMessagesRequest extends $pb.GeneratedMessage {
   $core.bool hasDescending() => $_has(8);
   @$pb.TagNumber(9)
   void clearDescending() => clearField(9);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(9);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

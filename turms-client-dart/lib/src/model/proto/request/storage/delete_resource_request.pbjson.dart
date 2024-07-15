@@ -28,36 +28,24 @@ const DeleteResourceRequest$json = {
     {'1': 'id_num', '3': 2, '4': 1, '5': 3, '9': 0, '10': 'idNum', '17': true},
     {'1': 'id_str', '3': 3, '4': 1, '5': 9, '9': 1, '10': 'idStr', '17': true},
     {
-      '1': 'extra',
-      '3': 4,
+      '1': 'custom_attributes',
+      '3': 15,
       '4': 3,
       '5': 11,
-      '6': '.im.turms.proto.DeleteResourceRequest.ExtraEntry',
-      '10': 'extra'
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
     },
   ],
-  '3': [DeleteResourceRequest_ExtraEntry$json],
   '8': [
     {'1': '_id_num'},
     {'1': '_id_str'},
   ],
 };
 
-@$core.Deprecated('Use deleteResourceRequestDescriptor instead')
-const DeleteResourceRequest_ExtraEntry$json = {
-  '1': 'ExtraEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
-  ],
-  '7': {'7': true},
-};
-
 /// Descriptor for `DeleteResourceRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteResourceRequestDescriptor = $convert.base64Decode(
     'ChVEZWxldGVSZXNvdXJjZVJlcXVlc3QSNwoEdHlwZRgBIAEoDjIjLmltLnR1cm1zLnByb3RvLl'
     'N0b3JhZ2VSZXNvdXJjZVR5cGVSBHR5cGUSGgoGaWRfbnVtGAIgASgDSABSBWlkTnVtiAEBEhoK'
-    'BmlkX3N0chgDIAEoCUgBUgVpZFN0cogBARJGCgVleHRyYRgEIAMoCzIwLmltLnR1cm1zLnByb3'
-    'RvLkRlbGV0ZVJlc291cmNlUmVxdWVzdC5FeHRyYUVudHJ5UgVleHRyYRo4CgpFeHRyYUVudHJ5'
-    'EhAKA2tleRgBIAEoCVIDa2V5EhQKBXZhbHVlGAIgASgJUgV2YWx1ZToCOAFCCQoHX2lkX251bU'
-    'IJCgdfaWRfc3Ry');
+    'BmlkX3N0chgDIAEoCUgBUgVpZFN0cogBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLm'
+    'ltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQgkKB19pZF9udW1CCQoHX2lk'
+    'X3N0cg==');

@@ -71,6 +71,14 @@ const UpdateMessageAttachmentInfoRequest$json = {
       '10': 'groupIdToUnshareWith',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_attachment_id_num'},
@@ -90,7 +98,8 @@ final $typed_data.Uint8List updateMessageAttachmentInfoRequestDescriptor = $conv
     'JSEXVzZXJJZFRvU2hhcmVXaXRoiAEBEjkKF3VzZXJfaWRfdG9fdW5zaGFyZV93aXRoGAQgASgD'
     'SANSE3VzZXJJZFRvVW5zaGFyZVdpdGiIAQESNwoWZ3JvdXBfaWRfdG9fc2hhcmVfd2l0aBgFIA'
     'EoA0gEUhJncm91cElkVG9TaGFyZVdpdGiIAQESOwoYZ3JvdXBfaWRfdG9fdW5zaGFyZV93aXRo'
-    'GAYgASgDSAVSFGdyb3VwSWRUb1Vuc2hhcmVXaXRoiAEBQhQKEl9hdHRhY2htZW50X2lkX251bU'
-    'IUChJfYXR0YWNobWVudF9pZF9zdHJCGAoWX3VzZXJfaWRfdG9fc2hhcmVfd2l0aEIaChhfdXNl'
-    'cl9pZF90b191bnNoYXJlX3dpdGhCGQoXX2dyb3VwX2lkX3RvX3NoYXJlX3dpdGhCGwoZX2dyb3'
-    'VwX2lkX3RvX3Vuc2hhcmVfd2l0aA==');
+    'GAYgASgDSAVSFGdyb3VwSWRUb1Vuc2hhcmVXaXRoiAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA'
+    '8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCFAoSX2F0dGFj'
+    'aG1lbnRfaWRfbnVtQhQKEl9hdHRhY2htZW50X2lkX3N0ckIYChZfdXNlcl9pZF90b19zaGFyZV'
+    '93aXRoQhoKGF91c2VyX2lkX3RvX3Vuc2hhcmVfd2l0aEIZChdfZ3JvdXBfaWRfdG9fc2hhcmVf'
+    'd2l0aEIbChlfZ3JvdXBfaWRfdG9fdW5zaGFyZV93aXRo');

@@ -26,7 +26,7 @@ public final class DeleteUserSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteUserSettingsRequestOuterClass.class.getName());
     }
@@ -48,21 +48,26 @@ public final class DeleteUserSettingsRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n/request/user/delete_user_settings_requ"
-                + "est.proto\022\016im.turms.proto\"*\n\031DeleteUserS"
-                + "ettingsRequest\022\r\n\005names\030\001 \003(\tB<\n5im.turm"
-                + "s.server.common.access.client.dto.reques"
-                + "t.userP\001\272\002\000b\006proto3"};
+                + "est.proto\022\016im.turms.proto\032\030model/common/"
+                + "value.proto\"\\\n\031DeleteUserSettingsRequest"
+                + "\022\r\n\005names\030\001 \003(\t\0220\n\021custom_attributes\030\017 \003"
+                + "(\0132\025.im.turms.proto.ValueB<\n5im.turms.se"
+                + "rver.common.access.client.dto.request.us"
+                + "erP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteUserSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteUserSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteUserSettingsRequest_descriptor,
-                        new java.lang.String[]{"Names",});
+                        new java.lang.String[]{"Names", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -55,6 +55,14 @@ const QueryMessageAttachmentInfosRequest$json = {
       '10': 'areSharedByMe',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_creation_date_start'},
@@ -71,6 +79,7 @@ final $typed_data.Uint8List queryMessageAttachmentInfosRequestDescriptor = $conv
     'dGFydBgDIAEoA0gAUhFjcmVhdGlvbkRhdGVTdGFydIgBARIvChFjcmVhdGlvbl9kYXRlX2VuZB'
     'gEIAEoA0gBUg9jcmVhdGlvbkRhdGVFbmSIAQESOwoXaW5fcHJpdmF0ZV9jb252ZXJzYXRpb24Y'
     'BSABKAhIAlIVaW5Qcml2YXRlQ29udmVyc2F0aW9uiAEBEiwKEGFyZV9zaGFyZWRfYnlfbWUYBi'
-    'ABKAhIA1INYXJlU2hhcmVkQnlNZYgBAUIWChRfY3JlYXRpb25fZGF0ZV9zdGFydEIUChJfY3Jl'
-    'YXRpb25fZGF0ZV9lbmRCGgoYX2luX3ByaXZhdGVfY29udmVyc2F0aW9uQhMKEV9hcmVfc2hhcm'
-    'VkX2J5X21l');
+    'ABKAhIA1INYXJlU2hhcmVkQnlNZYgBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmlt'
+    'LnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQhYKFF9jcmVhdGlvbl9kYXRlX3'
+    'N0YXJ0QhQKEl9jcmVhdGlvbl9kYXRlX2VuZEIaChhfaW5fcHJpdmF0ZV9jb252ZXJzYXRpb25C'
+    'EwoRX2FyZV9zaGFyZWRfYnlfbWU=');

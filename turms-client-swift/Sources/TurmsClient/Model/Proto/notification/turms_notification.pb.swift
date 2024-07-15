@@ -31,6 +31,11 @@ public struct TurmsNotification {
         set { _uniqueStorage()._timestamp = newValue }
     }
 
+    public var customAttributes: [Value] {
+        get { return _storage._customAttributes }
+        set { _uniqueStorage()._customAttributes = newValue }
+    }
+
     /// Response => [4, 9]
     /// "request_id" is used to tell the client that
     /// this notification is a response to the specific request
@@ -282,6 +287,15 @@ public struct TurmsNotification {
             set { kind = .groupsWithVersion(newValue) }
         }
 
+        /// Conference
+        public var meetings: Meetings {
+            get {
+                if case let .meetings(v)? = kind { return v }
+                return Meetings()
+            }
+            set { kind = .meetings(newValue) }
+        }
+
         /// Storage
         public var storageResourceInfos: StorageResourceInfos {
             get {
@@ -289,6 +303,24 @@ public struct TurmsNotification {
                 return StorageResourceInfos()
             }
             set { kind = .storageResourceInfos(newValue) }
+        }
+
+        /// Conversation - Supplement
+        public var conversationSettingsList: ConversationSettingsList {
+            get {
+                if case let .conversationSettingsList(v)? = kind { return v }
+                return ConversationSettingsList()
+            }
+            set { kind = .conversationSettingsList(newValue) }
+        }
+
+        /// User - Supplement
+        public var userSettings: UserSettings {
+            get {
+                if case let .userSettings(v)? = kind { return v }
+                return UserSettings()
+            }
+            set { kind = .userSettings(newValue) }
         }
 
         public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -319,8 +351,14 @@ public struct TurmsNotification {
             case groupJoinQuestionsWithVersion(GroupJoinQuestionsWithVersion)
             case groupMembersWithVersion(GroupMembersWithVersion)
             case groupsWithVersion(GroupsWithVersion)
+            /// Conference
+            case meetings(Meetings)
             /// Storage
             case storageResourceInfos(StorageResourceInfos)
+            /// Conversation - Supplement
+            case conversationSettingsList(ConversationSettingsList)
+            /// User - Supplement
+            case userSettings(UserSettings)
 
             #if !swift(>=4.1)
                 public static func == (lhs: TurmsNotification.DataMessage.OneOf_Kind, rhs: TurmsNotification.DataMessage.OneOf_Kind) -> Bool {
@@ -408,8 +446,20 @@ public struct TurmsNotification {
                             guard case let .groupsWithVersion(l) = lhs, case let .groupsWithVersion(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
+                    case (.meetings, .meetings): return {
+                            guard case let .meetings(l) = lhs, case let .meetings(r) = rhs else { preconditionFailure() }
+                            return l == r
+                        }()
                     case (.storageResourceInfos, .storageResourceInfos): return {
                             guard case let .storageResourceInfos(l) = lhs, case let .storageResourceInfos(r) = rhs else { preconditionFailure() }
+                            return l == r
+                        }()
+                    case (.conversationSettingsList, .conversationSettingsList): return {
+                            guard case let .conversationSettingsList(l) = lhs, case let .conversationSettingsList(r) = rhs else { preconditionFailure() }
+                            return l == r
+                        }()
+                    case (.userSettings, .userSettings): return {
+                            guard case let .userSettings(l) = lhs, case let .userSettings(r) = rhs else { preconditionFailure() }
                             return l == r
                         }()
                     default: return false
@@ -440,6 +490,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     public static let protoMessageName: String = _protobuf_package + ".TurmsNotification"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "timestamp"),
+        2: .standard(proto: "custom_attributes"),
         4: .standard(proto: "request_id"),
         5: .same(proto: "code"),
         6: .same(proto: "reason"),
@@ -451,6 +502,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 
     fileprivate class _StorageClass {
         var _timestamp: Int64 = 0
+        var _customAttributes: [Value] = []
         var _requestID: Int64?
         var _code: Int32?
         var _reason: String?
@@ -465,6 +517,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 
         init(copying source: _StorageClass) {
             _timestamp = source._timestamp
+            _customAttributes = source._customAttributes
             _requestID = source._requestID
             _code = source._code
             _reason = source._reason
@@ -491,6 +544,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
                 // enabled. https://github.com/apple/swift-protobuf/issues/1034
                 switch fieldNumber {
                 case 1: try decoder.decodeSingularInt64Field(value: &_storage._timestamp)
+                case 2: try decoder.decodeRepeatedMessageField(value: &_storage._customAttributes)
                 case 4: try decoder.decodeSingularInt64Field(value: &_storage._requestID)
                 case 5: try decoder.decodeSingularInt32Field(value: &_storage._code)
                 case 6: try decoder.decodeSingularStringField(value: &_storage._reason)
@@ -512,6 +566,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             // https://github.com/apple/swift-protobuf/issues/1182
             if _storage._timestamp != 0 {
                 try visitor.visitSingularInt64Field(value: _storage._timestamp, fieldNumber: 1)
+            }
+            if !_storage._customAttributes.isEmpty {
+                try visitor.visitRepeatedMessageField(value: _storage._customAttributes, fieldNumber: 2)
             }
             try { if let v = _storage._requestID {
                 try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
@@ -544,6 +601,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
                 let _storage = _args.0
                 let rhs_storage = _args.1
                 if _storage._timestamp != rhs_storage._timestamp { return false }
+                if _storage._customAttributes != rhs_storage._customAttributes { return false }
                 if _storage._requestID != rhs_storage._requestID { return false }
                 if _storage._code != rhs_storage._code { return false }
                 if _storage._reason != rhs_storage._reason { return false }
@@ -583,7 +641,10 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         18: .standard(proto: "group_join_questions_with_version"),
         19: .standard(proto: "group_members_with_version"),
         20: .standard(proto: "groups_with_version"),
+        40: .same(proto: "meetings"),
         50: .standard(proto: "storage_resource_infos"),
+        200: .standard(proto: "conversation_settings_list"),
+        400: .standard(proto: "user_settings"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -842,6 +903,19 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                         self.kind = .groupsWithVersion(v)
                     }
                 }()
+            case 40: try {
+                    var v: Meetings?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .meetings(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .meetings(v)
+                    }
+                }()
             case 50: try {
                     var v: StorageResourceInfos?
                     var hadOneofValue = false
@@ -853,6 +927,32 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                     if let v = v {
                         if hadOneofValue { try decoder.handleConflictingOneOf() }
                         self.kind = .storageResourceInfos(v)
+                    }
+                }()
+            case 200: try {
+                    var v: ConversationSettingsList?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .conversationSettingsList(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .conversationSettingsList(v)
+                    }
+                }()
+            case 400: try {
+                    var v: UserSettings?
+                    var hadOneofValue = false
+                    if let current = self.kind {
+                        hadOneofValue = true
+                        if case let .userSettings(m) = current { v = m }
+                    }
+                    try decoder.decodeSingularMessageField(value: &v)
+                    if let v = v {
+                        if hadOneofValue { try decoder.handleConflictingOneOf() }
+                        self.kind = .userSettings(v)
                     }
                 }()
             default: break
@@ -946,9 +1046,21 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
                 guard case let .groupsWithVersion(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
             }()
+        case .meetings?: try {
+                guard case let .meetings(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 40)
+            }()
         case .storageResourceInfos?: try {
                 guard case let .storageResourceInfos(v)? = self.kind else { preconditionFailure() }
                 try visitor.visitSingularMessageField(value: v, fieldNumber: 50)
+            }()
+        case .conversationSettingsList?: try {
+                guard case let .conversationSettingsList(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 200)
+            }()
+        case .userSettings?: try {
+                guard case let .userSettings(v)? = self.kind else { preconditionFailure() }
+                try visitor.visitSingularMessageField(value: v, fieldNumber: 400)
             }()
         case nil: break
         }

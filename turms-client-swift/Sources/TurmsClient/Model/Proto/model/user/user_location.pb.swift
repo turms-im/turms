@@ -42,6 +42,8 @@ public struct UserLocation {
     /// e.g. street address, city, state, country, etc.
     public var details: [String: String] = [:]
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -64,6 +66,7 @@ extension UserLocation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         2: .same(proto: "longitude"),
         3: .same(proto: "timestamp"),
         4: .same(proto: "details"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -76,6 +79,7 @@ extension UserLocation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
             case 2: try decoder.decodeSingularFloatField(value: &longitude)
             case 3: try decoder.decodeSingularInt64Field(value: &_timestamp)
             case 4: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &details)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -98,6 +102,9 @@ extension UserLocation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         if !details.isEmpty {
             try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: details, fieldNumber: 4)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -106,6 +113,7 @@ extension UserLocation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         if lhs.longitude != rhs.longitude { return false }
         if lhs._timestamp != rhs._timestamp { return false }
         if lhs.details != rhs.details { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

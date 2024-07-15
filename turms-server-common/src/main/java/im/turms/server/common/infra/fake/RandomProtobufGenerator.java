@@ -76,17 +76,27 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
     public T generate(GeneratorOptions options) {
         Message.Builder builder = instance.newBuilderForType();
         float possibility = options.possibilityToFillOptionalFields;
-        for (FieldDescriptor field : fieldDescriptors) {
-            if (field.isOptional() && possibility < 1 && random.nextFloat() > possibility) {
+        for (FieldDescriptor fieldDescriptor : fieldDescriptors) {
+            if (fieldDescriptor.isOptional()
+                    && possibility < 1
+                    && random.nextFloat() > possibility) {
                 continue;
             }
-            Object value = getRandomValue(builder, field, options);
+            if (fieldDescriptor.getJavaType() == FieldDescriptor.JavaType.MESSAGE
+                    && fieldDescriptor.getMessageType()
+                            .equals(builder.getDescriptorForType())) {
+                // This is a simple way to avoid generating data of the same type recursively.
+                // Note that we only check the direct parent because it is enough for our use cases.
+                // e.g. "im.turms.server.common.access.client.dto.model.common.Value#listValue_".
+                continue;
+            }
+            Object value = getRandomValue(builder, fieldDescriptor, options);
             try {
-                builder.setField(field, value);
+                builder.setField(fieldDescriptor, value);
             } catch (Exception e) {
                 throw new RuntimeException(
                         "Failed to set the field ("
-                                + field.getFullName()
+                                + fieldDescriptor.getFullName()
                                 + ") to the value: "
                                 + value);
             }
@@ -128,9 +138,6 @@ public class RandomProtobufGenerator<T extends AbstractMessage> {
             case LONG -> getRandomNumberFromRange(numberRange);
             case MESSAGE -> getRandomMessage(builder, field, options);
             case STRING -> RandomStringUtils.randomAlphabetic(8, 64);
-            default -> new IllegalArgumentException(
-                    "Failed to generate random single value for the unknown type: "
-                            + field.getJavaType());
         };
     }
 

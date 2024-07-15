@@ -14,13 +14,19 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class CheckGroupJoinQuestionsAnswersRequest extends $pb.GeneratedMessage {
   factory CheckGroupJoinQuestionsAnswersRequest({
     $core.Map<$fixnum.Int64, $core.String>? questionIdToAnswer,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (questionIdToAnswer != null) {
       $result.questionIdToAnswer.addAll(questionIdToAnswer);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -44,6 +50,9 @@ class CheckGroupJoinQuestionsAnswersRequest extends $pb.GeneratedMessage {
         keyFieldType: $pb.PbFieldType.O6,
         valueFieldType: $pb.PbFieldType.OS,
         packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -76,6 +85,9 @@ class CheckGroupJoinQuestionsAnswersRequest extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.Map<$fixnum.Int64, $core.String> get questionIdToAnswer => $_getMap(0);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(1);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

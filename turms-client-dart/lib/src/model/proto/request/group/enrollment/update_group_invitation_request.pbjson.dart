@@ -27,6 +27,14 @@ const UpdateGroupInvitationRequest$json = {
       '10': 'responseAction'
     },
     {'1': 'reason', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'reason', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_reason'},
@@ -38,4 +46,5 @@ final $typed_data.Uint8List updateGroupInvitationRequestDescriptor = $convert.ba
     'ChxVcGRhdGVHcm91cEludml0YXRpb25SZXF1ZXN0EiMKDWludml0YXRpb25faWQYASABKANSDG'
     'ludml0YXRpb25JZBJHCg9yZXNwb25zZV9hY3Rpb24YAiABKA4yHi5pbS50dXJtcy5wcm90by5S'
     'ZXNwb25zZUFjdGlvblIOcmVzcG9uc2VBY3Rpb24SGwoGcmVhc29uGAMgASgJSABSBnJlYXNvbo'
-    'gBAUIJCgdfcmVhc29u');
+    'gBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBj'
+    'dXN0b21BdHRyaWJ1dGVzQgkKB19yZWFzb24=');

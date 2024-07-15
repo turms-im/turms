@@ -29,6 +29,14 @@ const UpdateGroupJoinQuestionRequest$json = {
     },
     {'1': 'answers', '3': 3, '4': 3, '5': 9, '10': 'answers'},
     {'1': 'score', '3': 4, '4': 1, '5': 5, '9': 1, '10': 'score', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_question'},
@@ -37,9 +45,9 @@ const UpdateGroupJoinQuestionRequest$json = {
 };
 
 /// Descriptor for `UpdateGroupJoinQuestionRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateGroupJoinQuestionRequestDescriptor =
-    $convert.base64Decode(
-        'Ch5VcGRhdGVHcm91cEpvaW5RdWVzdGlvblJlcXVlc3QSHwoLcXVlc3Rpb25faWQYASABKANSCn'
-        'F1ZXN0aW9uSWQSHwoIcXVlc3Rpb24YAiABKAlIAFIIcXVlc3Rpb26IAQESGAoHYW5zd2VycxgD'
-        'IAMoCVIHYW5zd2VycxIZCgVzY29yZRgEIAEoBUgBUgVzY29yZYgBAUILCglfcXVlc3Rpb25CCA'
-        'oGX3Njb3Jl');
+final $typed_data.Uint8List updateGroupJoinQuestionRequestDescriptor = $convert.base64Decode(
+    'Ch5VcGRhdGVHcm91cEpvaW5RdWVzdGlvblJlcXVlc3QSHwoLcXVlc3Rpb25faWQYASABKANSCn'
+    'F1ZXN0aW9uSWQSHwoIcXVlc3Rpb24YAiABKAlIAFIIcXVlc3Rpb26IAQESGAoHYW5zd2VycxgD'
+    'IAMoCVIHYW5zd2VycxIZCgVzY29yZRgEIAEoBUgBUgVzY29yZYgBARJCChFjdXN0b21fYXR0cm'
+    'lidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQgsK'
+    'CV9xdWVzdGlvbkIICgZfc2NvcmU=');

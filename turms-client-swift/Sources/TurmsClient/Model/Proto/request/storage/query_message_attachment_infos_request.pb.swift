@@ -69,6 +69,8 @@ public struct QueryMessageAttachmentInfosRequest {
     /// Clears the value of `areSharedByMe`. Subsequent reads from it will return its default value.
     public mutating func clearAreSharedByMe() { _areSharedByMe = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -96,6 +98,7 @@ extension QueryMessageAttachmentInfosRequest: SwiftProtobuf.Message, SwiftProtob
         4: .standard(proto: "creation_date_end"),
         5: .standard(proto: "in_private_conversation"),
         6: .standard(proto: "are_shared_by_me"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -110,6 +113,7 @@ extension QueryMessageAttachmentInfosRequest: SwiftProtobuf.Message, SwiftProtob
             case 4: try decoder.decodeSingularInt64Field(value: &_creationDateEnd)
             case 5: try decoder.decodeSingularBoolField(value: &_inPrivateConversation)
             case 6: try decoder.decodeSingularBoolField(value: &_areSharedByMe)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -138,6 +142,9 @@ extension QueryMessageAttachmentInfosRequest: SwiftProtobuf.Message, SwiftProtob
         try { if let v = self._areSharedByMe {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 6)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -148,6 +155,7 @@ extension QueryMessageAttachmentInfosRequest: SwiftProtobuf.Message, SwiftProtob
         if lhs._creationDateEnd != rhs._creationDateEnd { return false }
         if lhs._inPrivateConversation != rhs._inPrivateConversation { return false }
         if lhs._areSharedByMe != rhs._areSharedByMe { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

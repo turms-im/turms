@@ -26,6 +26,7 @@ public final class AudioFile
         AudioFileOrBuilder {
     private AudioFile() {
         data_ = com.google.protobuf.ByteString.EMPTY;
+        customAttributes_ = emptyProtobufList();
     }
 
     public interface DescriptionOrBuilder extends
@@ -620,7 +621,7 @@ public final class AudioFile
 
         @java.lang.Override
         @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-        protected final java.lang.Object dynamicMethod(
+        protected java.lang.Object dynamicMethod(
                 com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
                 java.lang.Object arg0,
                 java.lang.Object arg1) {
@@ -792,6 +793,111 @@ public final class AudioFile
     private void clearData() {
         bitField0_ &= ~0x00000002;
         data_ = getDefaultInstance().getData();
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.model.file.AudioFile parseFrom(
@@ -991,12 +1097,127 @@ public final class AudioFile
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.AudioFile)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -1008,11 +1229,14 @@ public final class AudioFile
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects =
-                        new java.lang.Object[]{"bitField0_", "description_", "data_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"bitField0_",
+                        "description_",
+                        "data_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0001\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u1009\u0000\u0002"
-                                + "\u100a\u0001";
+                        "\u0000\u0003\u0000\u0001\u0001\u000f\u0003\u0000\u0001\u0000\u0001\u1009\u0000\u0002"
+                                + "\u100a\u0001\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -1045,7 +1269,6 @@ public final class AudioFile
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.AudioFile)
     private static final im.turms.client.model.proto.model.file.AudioFile DEFAULT_INSTANCE;
-
     static {
         AudioFile defaultInstance = new AudioFile();
         // New instances are implicitly immutable so no need to make

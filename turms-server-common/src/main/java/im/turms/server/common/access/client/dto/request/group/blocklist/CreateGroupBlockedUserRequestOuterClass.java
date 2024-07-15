@@ -26,7 +26,7 @@ public final class CreateGroupBlockedUserRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateGroupBlockedUserRequestOuterClass.class.getName());
     }
@@ -49,21 +49,26 @@ public final class CreateGroupBlockedUserRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n?request/group/blocklist/create_group_b"
                 + "locked_user_request.proto\022\016im.turms.prot"
-                + "o\"B\n\035CreateGroupBlockedUserRequest\022\020\n\010gr"
-                + "oup_id\030\001 \001(\003\022\017\n\007user_id\030\002 \001(\003BG\n@im.turm"
-                + "s.server.common.access.client.dto.reques"
-                + "t.group.blocklistP\001\272\002\000b\006proto3"};
+                + "o\032\030model/common/value.proto\"t\n\035CreateGro"
+                + "upBlockedUserRequest\022\020\n\010group_id\030\001 \001(\003\022\017"
+                + "\n\007user_id\030\002 \001(\003\0220\n\021custom_attributes\030\017 \003"
+                + "(\0132\025.im.turms.proto.ValueBG\n@im.turms.se"
+                + "rver.common.access.client.dto.request.gr"
+                + "oup.blocklistP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_CreateGroupBlockedUserRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_CreateGroupBlockedUserRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateGroupBlockedUserRequest_descriptor,
-                        new java.lang.String[]{"GroupId", "UserId",});
+                        new java.lang.String[]{"GroupId", "UserId", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

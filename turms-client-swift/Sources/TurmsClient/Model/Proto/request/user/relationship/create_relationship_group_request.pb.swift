@@ -27,6 +27,8 @@ public struct CreateRelationshipGroupRequest {
 
     public var name: String = .init()
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -44,6 +46,7 @@ extension CreateRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
     public static let protoMessageName: String = _protobuf_package + ".CreateRelationshipGroupRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "name"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -53,6 +56,7 @@ extension CreateRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeSingularStringField(value: &name)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -62,11 +66,15 @@ extension CreateRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
         if !name.isEmpty {
             try visitor.visitSingularStringField(value: name, fieldNumber: 1)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: CreateRelationshipGroupRequest, rhs: CreateRelationshipGroupRequest) -> Bool {
         if lhs.name != rhs.name { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -261,9 +261,9 @@ auto UserService::queryUserProfiles(const std::unordered_set<int64_t>& userIds,
 }
 
 auto UserService::searchUserProfiles(const std::string& name,
-                                     bool highlight = false,
-                                     const boost::optional<int>& skip = boost::none,
-                                     const boost::optional<int>& limit = boost::none)
+                                     bool highlight,
+                                     const boost::optional<int>& skip,
+                                     const boost::optional<int>& limit)
     -> boost::future<Response<std::vector<UserInfo>>> {
     if (name.empty()) {
         return boost::make_ready_future<>(Response<UserInfo>::emptyList());
@@ -287,6 +287,50 @@ auto UserService::searchUserProfiles(const std::string& name,
                 response.get(), [](const TurmsNotification::Data& data) {
                     const auto& userInfos = data.user_infos_with_version().user_infos();
                     return std::vector<UserInfo>{userInfos.cbegin(), userInfos.cend()};
+                }};
+        });
+}
+
+auto UserService::upsertUserSettings(const std::unordered_map<std::string, Value>& settings)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_update_user_settings_request();
+    request->mutable_settings()->insert(settings.cbegin(), settings.cend());
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+}
+
+auto UserService::deleteUserSettings(const std::unordered_set<std::string>& names)
+    -> boost::future<Response<void>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_delete_user_settings_request();
+    request->mutable_names()->Add(names.cbegin(), names.cend());
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<void>{response.get()};
+        });
+};
+
+auto UserService::queryUserSettings(const std::unordered_set<std::string>& names,
+                                    const boost::optional<time_point>& lastUpdatedDate)
+    -> boost::future<Response<boost::optional<UserSettings>>> {
+    TurmsRequest turmsRequest;
+    auto* request = turmsRequest.mutable_query_user_settings_request();
+    request->mutable_names()->Add(names.cbegin(), names.cend());
+    if (lastUpdatedDate) {
+        request->set_last_updated_date_start(time::toInt64(*lastUpdatedDate));
+    }
+    return turmsClient_.driver()
+        .send(turmsRequest)
+        .then([](boost::future<TurmsNotification> response) {
+            return Response<boost::optional<UserSettings>>{
+                response.get(), [](const TurmsNotification::Data& data) {
+                    return data.has_user_settings()() ? boost::make_optional(data.user_settings())
+                                                      : boost::none;
                 }};
         });
 }
@@ -329,7 +373,7 @@ auto UserService::queryNearbyUsers(float latitude,
         });
 }
 
-auto UserService::queryOnlineStatusesRequest(const std::unordered_set<int64_t>& userIds)
+auto UserService::queryOnlineStatuses(const std::unordered_set<int64_t>& userIds)
     -> boost::future<Response<std::vector<UserOnlineStatus>>> {
     if (userIds.empty()) {
         return boost::make_ready_future<>(Response<UserOnlineStatus>::emptyList());
@@ -443,8 +487,9 @@ auto UserService::createFriendRelationship(int64_t userId, const boost::optional
     return createRelationship(userId, false, groupIndex);
 }
 
-auto UserService::createBlockedUserRelationship(
-    int64_t userId, const boost::optional<int>& groupIndex) -> boost::future<Response<void>> {
+auto UserService::createBlockedUserRelationship(int64_t userId,
+                                                const boost::optional<int>& groupIndex)
+    -> boost::future<Response<void>> {
     return createRelationship(userId, true, groupIndex);
 }
 
@@ -620,8 +665,8 @@ auto UserService::queryRelationshipGroups(const boost::optional<time_point>& las
         });
 }
 
-auto UserService::moveRelatedUserToGroup(int64_t relatedUserId,
-                                         int groupIndex) -> boost::future<Response<void>> {
+auto UserService::moveRelatedUserToGroup(int64_t relatedUserId, int groupIndex)
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_relationship_request();
     request->set_user_id(relatedUserId);
@@ -652,7 +697,7 @@ auto UserService::updateLocation(float latitude,
 auto UserService::changeToOnline() -> void {
     if (!isLoggedIn()) {
         turmsClient_.driver().stateStore().isSessionOpen = true;
-        for (auto& listener : onOnlineListeners_) {
+        for (const auto& listener : onOnlineListeners_) {
             listener();
         }
     }
@@ -664,7 +709,7 @@ auto UserService::changeToOffline(const SessionCloseInfo& sessionCloseInfo) -> v
             userInfo_->onlineStatus = UserStatus::OFFLINE;
         }
         turmsClient_.driver().stateStore().isSessionOpen = false;
-        for (auto& listener : onOfflineListeners_) {
+        for (const auto& listener : onOfflineListeners_) {
             listener(sessionCloseInfo);
         }
     }

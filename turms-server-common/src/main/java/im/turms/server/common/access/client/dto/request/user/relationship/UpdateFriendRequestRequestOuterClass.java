@@ -26,7 +26,7 @@ public final class UpdateFriendRequestRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateFriendRequestRequestOuterClass.class.getName());
     }
@@ -49,17 +49,21 @@ public final class UpdateFriendRequestRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n=request/user/relationship/update_frien"
                 + "d_request_request.proto\022\016im.turms.proto\032"
-                + "\036constant/response_action.proto\"\211\001\n\032Upda"
-                + "teFriendRequestRequest\022\022\n\nrequest_id\030\001 \001"
-                + "(\003\0227\n\017response_action\030\002 \001(\0162\036.im.turms.p"
-                + "roto.ResponseAction\022\023\n\006reason\030\003 \001(\tH\000\210\001\001"
-                + "B\t\n\007_reasonBI\nBim.turms.server.common.ac"
-                + "cess.client.dto.request.user.relationshi"
-                + "pP\001\272\002\000b\006proto3"};
+                + "\036constant/response_action.proto\032\030model/c"
+                + "ommon/value.proto\"\273\001\n\032UpdateFriendReques"
+                + "tRequest\022\022\n\nrequest_id\030\001 \001(\003\0227\n\017response"
+                + "_action\030\002 \001(\0162\036.im.turms.proto.ResponseA"
+                + "ction\022\023\n\006reason\030\003 \001(\tH\000\210\001\001\0220\n\021custom_att"
+                + "ributes\030\017 \003(\0132\025.im.turms.proto.ValueB\t\n\007"
+                + "_reasonBI\nBim.turms.server.common.access"
+                + ".client.dto.request.user.relationshipP\001\272"
+                + "\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
                         im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor =
                 getDescriptor().getMessageTypes()
@@ -67,9 +71,13 @@ public final class UpdateFriendRequestRequestOuterClass {
         internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor,
-                        new java.lang.String[]{"RequestId", "ResponseAction", "Reason",});
+                        new java.lang.String[]{"RequestId",
+                                "ResponseAction",
+                                "Reason",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.ResponseActionOuterClass.getDescriptor();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

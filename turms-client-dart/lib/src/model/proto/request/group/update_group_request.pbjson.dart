@@ -74,7 +74,24 @@ const UpdateGroupRequest$json = {
       '10': 'successorId',
       '17': true
     },
+    {
+      '1': 'user_defined_attributes',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.UpdateGroupRequest.UserDefinedAttributesEntry',
+      '10': 'userDefinedAttributes'
+    },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
+  '3': [UpdateGroupRequest_UserDefinedAttributesEntry$json],
   '8': [
     {'1': '_quit_after_transfer'},
     {'1': '_name'},
@@ -87,6 +104,23 @@ const UpdateGroupRequest$json = {
   ],
 };
 
+@$core.Deprecated('Use updateGroupRequestDescriptor instead')
+const UpdateGroupRequest_UserDefinedAttributesEntry$json = {
+  '1': 'UserDefinedAttributesEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
 /// Descriptor for `UpdateGroupRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateGroupRequestDescriptor = $convert.base64Decode(
     'ChJVcGRhdGVHcm91cFJlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSMwoTcXVpdF'
@@ -95,6 +129,11 @@ final $typed_data.Uint8List updateGroupRequestDescriptor = $convert.base64Decode
     '50GAUgASgJSANSDGFubm91bmNlbWVudIgBARIgCgltaW5fc2NvcmUYBiABKAVIBFIIbWluU2Nv'
     'cmWIAQESHAoHdHlwZV9pZBgHIAEoA0gFUgZ0eXBlSWSIAQESJwoNbXV0ZV9lbmRfZGF0ZRgIIA'
     'EoA0gGUgttdXRlRW5kRGF0ZYgBARImCgxzdWNjZXNzb3JfaWQYCSABKANIB1ILc3VjY2Vzc29y'
-    'SWSIAQFCFgoUX3F1aXRfYWZ0ZXJfdHJhbnNmZXJCBwoFX25hbWVCCAoGX2ludHJvQg8KDV9hbm'
-    '5vdW5jZW1lbnRCDAoKX21pbl9zY29yZUIKCghfdHlwZV9pZEIQCg5fbXV0ZV9lbmRfZGF0ZUIP'
-    'Cg1fc3VjY2Vzc29yX2lk');
+    'SWSIAQESdQoXdXNlcl9kZWZpbmVkX2F0dHJpYnV0ZXMYCiADKAsyPS5pbS50dXJtcy5wcm90by'
+    '5VcGRhdGVHcm91cFJlcXVlc3QuVXNlckRlZmluZWRBdHRyaWJ1dGVzRW50cnlSFXVzZXJEZWZp'
+    'bmVkQXR0cmlidXRlcxJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3'
+    'RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzGl8KGlVzZXJEZWZpbmVkQXR0cmlidXRlc0VudHJ5'
+    'EhAKA2tleRgBIAEoCVIDa2V5EisKBXZhbHVlGAIgASgLMhUuaW0udHVybXMucHJvdG8uVmFsdW'
+    'VSBXZhbHVlOgI4AUIWChRfcXVpdF9hZnRlcl90cmFuc2ZlckIHCgVfbmFtZUIICgZfaW50cm9C'
+    'DwoNX2Fubm91bmNlbWVudEIMCgpfbWluX3Njb3JlQgoKCF90eXBlX2lkQhAKDl9tdXRlX2VuZF'
+    '9kYXRlQg8KDV9zdWNjZXNzb3JfaWQ=');

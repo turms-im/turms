@@ -27,7 +27,9 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
+import im.turms.server.common.access.client.dto.constant.ResponseAction;
 import im.turms.server.common.access.client.dto.model.conference.Meeting;
+import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.conference.CreateMeetingRequest;
 import im.turms.server.common.access.client.dto.request.conference.DeleteMeetingRequest;
 import im.turms.server.common.access.client.dto.request.conference.QueryMeetingsRequest;
@@ -257,7 +259,7 @@ public class ConferenceServiceController extends BaseServiceController {
 
             Recyclable<List<Meeting>> recyclableList = ListRecycler.obtain();
             return conferenceService
-                    .queryMeetings(clientRequest.userId(),
+                    .authAndQueryMeetings(clientRequest.userId(),
                             ids,
                             creatorIds,
                             userIds,
@@ -278,21 +280,27 @@ public class ConferenceServiceController extends BaseServiceController {
         };
     }
 
+    /**
+     * @implNote We name it "update meeting invitation" instead of something like "query meeting
+     *           access token", because the operation MAY have side effects according to different
+     *           scenarios.
+     */
     @ServiceRequestMapping(UPDATE_MEETING_INVITATION_REQUEST)
     public ClientRequestHandler handleUpdateMeetingInvitationRequest() {
         return clientRequest -> {
             UpdateMeetingInvitationRequest request = clientRequest.turmsRequest()
                     .getUpdateMeetingInvitationRequest();
+            ResponseAction responseAction = request.getResponseAction();
             Mono<UpdateMeetingInvitationResult> updateMeetingInvitation =
                     conferenceService.authAndUpdateMeetingInvitation(clientRequest.userId(),
                             request.getMeetingId(),
                             request.hasPassword()
                                     ? request.getPassword()
                                     : null,
-                            request.getResponseAction());
+                            responseAction);
             if (notifyMeetingParticipantsOfMeetingInvitationUpdated) {
                 return updateMeetingInvitation.flatMap(result -> {
-                    if (!result.success()) {
+                    if (!result.updated()) {
                         return Mono.just(RequestHandlerResult.OK);
                     }
                     var meeting = result.meeting();
@@ -301,45 +309,46 @@ public class ConferenceServiceController extends BaseServiceController {
                             .map(participantIds -> {
                                 participantIds = CollectionUtil.remove(participantIds,
                                         clientRequest.userId());
-                                return participantIds.isEmpty() || !request.hasPassword()
-                                        ? RequestHandlerResult.of(
-                                                ClientMessagePool.getTurmsNotificationDataBuilder()
+                                TurmsNotification.Data response =
+                                        responseAction == ResponseAction.ACCEPT
+                                                ? ClientMessagePool
+                                                        .getTurmsNotificationDataBuilder()
                                                         .setString(result.accessToken())
-                                                        .build(),
-                                                true,
-                                                participantIds,
-                                                clientRequest.turmsRequest())
-                                        : RequestHandlerResult.of(
-                                                ClientMessagePool.getTurmsNotificationDataBuilder()
-                                                        .setString(result.accessToken())
-                                                        .build(),
-                                                participantIds,
-                                                ClientMessagePool.getTurmsRequestBuilder()
-                                                        .mergeFrom(clientRequest.turmsRequest())
-                                                        .setUpdateMeetingInvitationRequest(
-                                                                ClientMessagePool
-                                                                        .getUpdateMeetingInvitationRequestBuilder()
-                                                                        .clearPassword()
-                                                                        .build())
-                                                        .build(),
-                                                clientRequest.turmsRequest());
+                                                        .build()
+                                                : null;
+                                if (participantIds.isEmpty() || !request.hasPassword()) {
+                                    return RequestHandlerResult.of(response,
+                                            true,
+                                            participantIds,
+                                            clientRequest.turmsRequest());
+                                }
+                                return RequestHandlerResult.of(response,
+                                        participantIds,
+                                        ClientMessagePool.getTurmsRequestBuilder()
+                                                .mergeFrom(clientRequest.turmsRequest())
+                                                .setUpdateMeetingInvitationRequest(ClientMessagePool
+                                                        .getUpdateMeetingInvitationRequestBuilder()
+                                                        .clearPassword()
+                                                        .build())
+                                                .build(),
+                                        clientRequest.turmsRequest());
                             });
                 });
             } else if (notifyRequesterOtherOnlineSessionsOfMeetingInvitationUpdated) {
-                return updateMeetingInvitation.map(result -> result.success()
-                        ? RequestHandlerResult.of(
-                                ClientMessagePool.getTurmsNotificationDataBuilder()
+                return updateMeetingInvitation.map(result -> result.updated()
+                        ? RequestHandlerResult.of(responseAction == ResponseAction.ACCEPT
+                                ? ClientMessagePool.getTurmsNotificationDataBuilder()
                                         .setString(result.accessToken())
-                                        .build(),
-                                true,
-                                Collections.emptySet(),
-                                clientRequest.turmsRequest())
+                                        .build()
+                                : null, true, Collections.emptySet(), clientRequest.turmsRequest())
                         : RequestHandlerResult.OK);
             }
-            return updateMeetingInvitation.map(result -> RequestHandlerResult
-                    .of(ClientMessagePool.getTurmsNotificationDataBuilder()
-                            .setString(result.accessToken())
-                            .build()));
+            return updateMeetingInvitation
+                    .map(result -> RequestHandlerResult.of(responseAction == ResponseAction.ACCEPT
+                            ? ClientMessagePool.getTurmsNotificationDataBuilder()
+                                    .setString(result.accessToken())
+                                    .build()
+                            : null));
         };
 
     }

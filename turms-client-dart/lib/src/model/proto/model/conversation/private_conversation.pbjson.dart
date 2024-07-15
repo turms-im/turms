@@ -20,10 +20,20 @@ const PrivateConversation$json = {
     {'1': 'owner_id', '3': 1, '4': 1, '5': 3, '10': 'ownerId'},
     {'1': 'target_id', '3': 2, '4': 1, '5': 3, '10': 'targetId'},
     {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `PrivateConversation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List privateConversationDescriptor = $convert.base64Decode(
     'ChNQcml2YXRlQ29udmVyc2F0aW9uEhkKCG93bmVyX2lkGAEgASgDUgdvd25lcklkEhsKCXRhcm'
-    'dldF9pZBgCIAEoA1IIdGFyZ2V0SWQSGwoJcmVhZF9kYXRlGAMgASgDUghyZWFkRGF0ZQ==');
+    'dldF9pZBgCIAEoA1IIdGFyZ2V0SWQSGwoJcmVhZF9kYXRlGAMgASgDUghyZWFkRGF0ZRJCChFj'
+    'dXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdH'
+    'RyaWJ1dGVz');

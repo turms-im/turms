@@ -110,6 +110,10 @@ public struct UpdateGroupRequest {
     /// Clears the value of `successorID`. Subsequent reads from it will return its default value.
     public mutating func clearSuccessorID() { _successorID = nil }
 
+    public var userDefinedAttributes: [String: Value] = [:]
+
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -144,6 +148,8 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         7: .standard(proto: "type_id"),
         8: .standard(proto: "mute_end_date"),
         9: .standard(proto: "successor_id"),
+        10: .standard(proto: "user_defined_attributes"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -161,6 +167,8 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             case 7: try decoder.decodeSingularInt64Field(value: &_typeID)
             case 8: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             case 9: try decoder.decodeSingularInt64Field(value: &_successorID)
+            case 10: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: &userDefinedAttributes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -198,6 +206,12 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         try { if let v = self._successorID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 9)
         } }()
+        if !userDefinedAttributes.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: userDefinedAttributes, fieldNumber: 10)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -211,6 +225,8 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if lhs._typeID != rhs._typeID { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs._successorID != rhs._successorID { return false }
+        if lhs.userDefinedAttributes != rhs.userDefinedAttributes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -444,7 +444,7 @@ public final class GroupJoinRequestsWithVersion extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -495,7 +495,6 @@ public final class GroupJoinRequestsWithVersion extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.GroupJoinRequestsWithVersion)
     private static final im.turms.client.model.proto.model.group.GroupJoinRequestsWithVersion DEFAULT_INSTANCE;
-
     static {
         GroupJoinRequestsWithVersion defaultInstance = new GroupJoinRequestsWithVersion();
         // New instances are implicitly immutable so no need to make

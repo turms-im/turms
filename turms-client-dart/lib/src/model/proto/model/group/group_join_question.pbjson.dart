@@ -38,6 +38,14 @@ const GroupJoinQuestion$json = {
     },
     {'1': 'answers', '3': 4, '4': 3, '5': 9, '10': 'answers'},
     {'1': 'score', '3': 5, '4': 1, '5': 5, '9': 3, '10': 'score', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -51,5 +59,6 @@ const GroupJoinQuestion$json = {
 final $typed_data.Uint8List groupJoinQuestionDescriptor = $convert.base64Decode(
     'ChFHcm91cEpvaW5RdWVzdGlvbhITCgJpZBgBIAEoA0gAUgJpZIgBARIeCghncm91cF9pZBgCIA'
     'EoA0gBUgdncm91cElkiAEBEh8KCHF1ZXN0aW9uGAMgASgJSAJSCHF1ZXN0aW9uiAEBEhgKB2Fu'
-    'c3dlcnMYBCADKAlSB2Fuc3dlcnMSGQoFc2NvcmUYBSABKAVIA1IFc2NvcmWIAQFCBQoDX2lkQg'
-    'sKCV9ncm91cF9pZEILCglfcXVlc3Rpb25CCAoGX3Njb3Jl');
+    'c3dlcnMYBCADKAlSB2Fuc3dlcnMSGQoFc2NvcmUYBSABKAVIA1IFc2NvcmWIAQESQgoRY3VzdG'
+    '9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmli'
+    'dXRlc0IFCgNfaWRCCwoJX2dyb3VwX2lkQgsKCV9xdWVzdGlvbkIICgZfc2NvcmU=');

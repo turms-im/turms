@@ -29,6 +29,14 @@ const CreateRelationshipRequest$json = {
       '17': true
     },
     {'1': 'name', '3': 4, '4': 1, '5': 9, '9': 1, '10': 'name', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_group_index'},
@@ -40,5 +48,6 @@ const CreateRelationshipRequest$json = {
 final $typed_data.Uint8List createRelationshipRequestDescriptor = $convert.base64Decode(
     'ChlDcmVhdGVSZWxhdGlvbnNoaXBSZXF1ZXN0EhcKB3VzZXJfaWQYASABKANSBnVzZXJJZBIYCg'
     'dibG9ja2VkGAIgASgIUgdibG9ja2VkEiQKC2dyb3VwX2luZGV4GAMgASgFSABSCmdyb3VwSW5k'
-    'ZXiIAQESFwoEbmFtZRgEIAEoCUgBUgRuYW1liAEBQg4KDF9ncm91cF9pbmRleEIHCgVfbmFtZQ'
-    '==');
+    'ZXiIAQESFwoEbmFtZRgEIAEoCUgBUgRuYW1liAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAy'
+    'gLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCDgoMX2dyb3VwX2lu'
+    'ZGV4QgcKBV9uYW1l');

@@ -40,7 +40,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 StorageResourceType.class.getName());
     }
@@ -93,7 +93,7 @@ public enum StorageResourceType implements com.google.protobuf.ProtocolMessageEn
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<StorageResourceType> internalValueMap =
-            StorageResourceType::forNumber;
+            number -> StorageResourceType.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

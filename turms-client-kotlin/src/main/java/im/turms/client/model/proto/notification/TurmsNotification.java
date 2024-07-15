@@ -26,6 +26,7 @@ public final class TurmsNotification extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.TurmsNotification)
         TurmsNotificationOrBuilder {
     private TurmsNotification() {
+        customAttributes_ = emptyProtobufList();
         reason_ = "";
     }
 
@@ -362,6 +363,28 @@ public final class TurmsNotification extends
 
         /**
          * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return Whether the meetings field is set.
+         */
+        boolean hasMeetings();
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         *
+         * @return The meetings.
+         */
+        im.turms.client.model.proto.model.conference.Meetings getMeetings();
+
+        /**
+         * <pre>
          * Storage
          * </pre>
          *
@@ -382,7 +405,51 @@ public final class TurmsNotification extends
          */
         im.turms.client.model.proto.model.storage.StorageResourceInfos getStorageResourceInfos();
 
-        public im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return Whether the conversationSettingsList field is set.
+         */
+        boolean hasConversationSettingsList();
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         *
+         * @return The conversationSettingsList.
+         */
+        im.turms.client.model.proto.model.conversation.ConversationSettingsList getConversationSettingsList();
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return Whether the userSettings field is set.
+         */
+        boolean hasUserSettings();
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         *
+         * @return The userSettings.
+         */
+        im.turms.client.model.proto.model.user.UserSettings getUserSettings();
+
+        im.turms.client.model.proto.notification.TurmsNotification.Data.KindCase getKindCase();
     }
 
     /**
@@ -419,12 +486,15 @@ public final class TurmsNotification extends
             GROUP_JOIN_QUESTIONS_WITH_VERSION(18),
             GROUP_MEMBERS_WITH_VERSION(19),
             GROUPS_WITH_VERSION(20),
+            MEETINGS(40),
             STORAGE_RESOURCE_INFOS(50),
+            CONVERSATION_SETTINGS_LIST(200),
+            USER_SETTINGS(400),
             KIND_NOT_SET(0);
 
             private final int value;
 
-            private KindCase(int value) {
+            KindCase(int value) {
                 this.value = value;
             }
 
@@ -478,8 +548,14 @@ public final class TurmsNotification extends
                         return GROUP_MEMBERS_WITH_VERSION;
                     case 20:
                         return GROUPS_WITH_VERSION;
+                    case 40:
+                        return MEETINGS;
                     case 50:
                         return STORAGE_RESOURCE_INFOS;
+                    case 200:
+                        return CONVERSATION_SETTINGS_LIST;
+                    case 400:
+                        return USER_SETTINGS;
                     case 0:
                         return KIND_NOT_SET;
                     default:
@@ -1811,6 +1887,84 @@ public final class TurmsNotification extends
             }
         }
 
+        public static final int MEETINGS_FIELD_NUMBER = 40;
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        @java.lang.Override
+        public boolean hasMeetings() {
+            return kindCase_ == 40;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.conference.Meetings getMeetings() {
+            if (kindCase_ == 40) {
+                return (im.turms.client.model.proto.model.conference.Meetings) kind_;
+            }
+            return im.turms.client.model.proto.model.conference.Meetings.getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        private void setMeetings(im.turms.client.model.proto.model.conference.Meetings value) {
+            value.getClass();
+            kind_ = value;
+            kindCase_ = 40;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        private void mergeMeetings(im.turms.client.model.proto.model.conference.Meetings value) {
+            value.getClass();
+            if (kindCase_ == 40
+                    && kind_ != im.turms.client.model.proto.model.conference.Meetings
+                            .getDefaultInstance()) {
+                kind_ = im.turms.client.model.proto.model.conference.Meetings
+                        .newBuilder((im.turms.client.model.proto.model.conference.Meetings) kind_)
+                        .mergeFrom(value)
+                        .buildPartial();
+            } else {
+                kind_ = value;
+            }
+            kindCase_ = 40;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.Meetings meetings = 40;</code>
+         */
+        private void clearMeetings() {
+            if (kindCase_ == 40) {
+                kindCase_ = 0;
+                kind_ = null;
+            }
+        }
+
         public static final int STORAGE_RESOURCE_INFOS_FIELD_NUMBER = 50;
 
         /**
@@ -1887,6 +2041,166 @@ public final class TurmsNotification extends
          */
         private void clearStorageResourceInfos() {
             if (kindCase_ == 50) {
+                kindCase_ = 0;
+                kind_ = null;
+            }
+        }
+
+        public static final int CONVERSATION_SETTINGS_LIST_FIELD_NUMBER = 200;
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        @java.lang.Override
+        public boolean hasConversationSettingsList() {
+            return kindCase_ == 200;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.conversation.ConversationSettingsList getConversationSettingsList() {
+            if (kindCase_ == 200) {
+                return (im.turms.client.model.proto.model.conversation.ConversationSettingsList) kind_;
+            }
+            return im.turms.client.model.proto.model.conversation.ConversationSettingsList
+                    .getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        private void setConversationSettingsList(
+                im.turms.client.model.proto.model.conversation.ConversationSettingsList value) {
+            value.getClass();
+            kind_ = value;
+            kindCase_ = 200;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        private void mergeConversationSettingsList(
+                im.turms.client.model.proto.model.conversation.ConversationSettingsList value) {
+            value.getClass();
+            if (kindCase_ == 200
+                    && kind_ != im.turms.client.model.proto.model.conversation.ConversationSettingsList
+                            .getDefaultInstance()) {
+                kind_ = im.turms.client.model.proto.model.conversation.ConversationSettingsList
+                        .newBuilder(
+                                (im.turms.client.model.proto.model.conversation.ConversationSettingsList) kind_)
+                        .mergeFrom(value)
+                        .buildPartial();
+            } else {
+                kind_ = value;
+            }
+            kindCase_ = 200;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+         */
+        private void clearConversationSettingsList() {
+            if (kindCase_ == 200) {
+                kindCase_ = 0;
+                kind_ = null;
+            }
+        }
+
+        public static final int USER_SETTINGS_FIELD_NUMBER = 400;
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        @java.lang.Override
+        public boolean hasUserSettings() {
+            return kindCase_ == 400;
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.user.UserSettings getUserSettings() {
+            if (kindCase_ == 400) {
+                return (im.turms.client.model.proto.model.user.UserSettings) kind_;
+            }
+            return im.turms.client.model.proto.model.user.UserSettings.getDefaultInstance();
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        private void setUserSettings(im.turms.client.model.proto.model.user.UserSettings value) {
+            value.getClass();
+            kind_ = value;
+            kindCase_ = 400;
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        private void mergeUserSettings(im.turms.client.model.proto.model.user.UserSettings value) {
+            value.getClass();
+            if (kindCase_ == 400
+                    && kind_ != im.turms.client.model.proto.model.user.UserSettings
+                            .getDefaultInstance()) {
+                kind_ = im.turms.client.model.proto.model.user.UserSettings
+                        .newBuilder((im.turms.client.model.proto.model.user.UserSettings) kind_)
+                        .mergeFrom(value)
+                        .buildPartial();
+            } else {
+                kind_ = value;
+            }
+            kindCase_ = 400;
+        }
+
+        /**
+         * <pre>
+         * User - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+         */
+        private void clearUserSettings() {
+            if (kindCase_ == 400) {
                 kindCase_ = 0;
                 kind_ = null;
             }
@@ -3215,6 +3529,85 @@ public final class TurmsNotification extends
 
             /**
              * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            @java.lang.Override
+            public boolean hasMeetings() {
+                return instance.hasMeetings();
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            @java.lang.Override
+            public im.turms.client.model.proto.model.conference.Meetings getMeetings() {
+                return instance.getMeetings();
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder setMeetings(
+                    im.turms.client.model.proto.model.conference.Meetings value) {
+                copyOnWrite();
+                instance.setMeetings(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder setMeetings(
+                    im.turms.client.model.proto.model.conference.Meetings.Builder builderForValue) {
+                copyOnWrite();
+                instance.setMeetings(builderForValue.build());
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder mergeMeetings(
+                    im.turms.client.model.proto.model.conference.Meetings value) {
+                copyOnWrite();
+                instance.mergeMeetings(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conference
+             * </pre>
+             *
+             * <code>.im.turms.proto.Meetings meetings = 40;</code>
+             */
+            public Builder clearMeetings() {
+                copyOnWrite();
+                instance.clearMeetings();
+                return this;
+            }
+
+            /**
+             * <pre>
              * Storage
              * </pre>
              *
@@ -3292,12 +3685,170 @@ public final class TurmsNotification extends
                 return this;
             }
 
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            @java.lang.Override
+            public boolean hasConversationSettingsList() {
+                return instance.hasConversationSettingsList();
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            @java.lang.Override
+            public im.turms.client.model.proto.model.conversation.ConversationSettingsList getConversationSettingsList() {
+                return instance.getConversationSettingsList();
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder setConversationSettingsList(
+                    im.turms.client.model.proto.model.conversation.ConversationSettingsList value) {
+                copyOnWrite();
+                instance.setConversationSettingsList(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder setConversationSettingsList(
+                    im.turms.client.model.proto.model.conversation.ConversationSettingsList.Builder builderForValue) {
+                copyOnWrite();
+                instance.setConversationSettingsList(builderForValue.build());
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder mergeConversationSettingsList(
+                    im.turms.client.model.proto.model.conversation.ConversationSettingsList value) {
+                copyOnWrite();
+                instance.mergeConversationSettingsList(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * Conversation - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.ConversationSettingsList conversation_settings_list = 200;</code>
+             */
+            public Builder clearConversationSettingsList() {
+                copyOnWrite();
+                instance.clearConversationSettingsList();
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            @java.lang.Override
+            public boolean hasUserSettings() {
+                return instance.hasUserSettings();
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            @java.lang.Override
+            public im.turms.client.model.proto.model.user.UserSettings getUserSettings() {
+                return instance.getUserSettings();
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder setUserSettings(
+                    im.turms.client.model.proto.model.user.UserSettings value) {
+                copyOnWrite();
+                instance.setUserSettings(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder setUserSettings(
+                    im.turms.client.model.proto.model.user.UserSettings.Builder builderForValue) {
+                copyOnWrite();
+                instance.setUserSettings(builderForValue.build());
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder mergeUserSettings(
+                    im.turms.client.model.proto.model.user.UserSettings value) {
+                copyOnWrite();
+                instance.mergeUserSettings(value);
+                return this;
+            }
+
+            /**
+             * <pre>
+             * User - Supplement
+             * </pre>
+             *
+             * <code>.im.turms.proto.UserSettings user_settings = 400;</code>
+             */
+            public Builder clearUserSettings() {
+                copyOnWrite();
+                instance.clearUserSettings();
+                return this;
+            }
+
             // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsNotification.Data)
         }
 
         @java.lang.Override
         @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-        protected final java.lang.Object dynamicMethod(
+        protected java.lang.Object dynamicMethod(
                 com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
                 java.lang.Object arg0,
                 java.lang.Object arg1) {
@@ -3329,12 +3880,16 @@ public final class TurmsNotification extends
                             im.turms.client.model.proto.model.group.GroupJoinQuestionsWithVersion.class,
                             im.turms.client.model.proto.model.group.GroupMembersWithVersion.class,
                             im.turms.client.model.proto.model.group.GroupsWithVersion.class,
-                            im.turms.client.model.proto.model.storage.StorageResourceInfos.class,};
+                            im.turms.client.model.proto.model.conference.Meetings.class,
+                            im.turms.client.model.proto.model.storage.StorageResourceInfos.class,
+                            im.turms.client.model.proto.model.conversation.ConversationSettingsList.class,
+                            im.turms.client.model.proto.model.user.UserSettings.class,};
                     java.lang.String info =
-                            "\u0000\u0015\u0001\u0000\u00012\u0015\u0000\u0000\u0000\u00015\u0000\u0002\u023b"
+                            "\u0000\u0018\u0001\u0000\u0001\u0190\u0018\u0000\u0000\u0000\u00015\u0000\u0002\u023b"
                                     + "\u0000\u0003<\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000"
                                     + "\t<\u0000\n<\u0000\u000b<\u0000\f<\u0000\r<\u0000\u000e<\u0000\u000f<\u0000\u0010"
-                                    + "<\u0000\u0011<\u0000\u0012<\u0000\u0013<\u0000\u0014<\u00002<\u0000";
+                                    + "<\u0000\u0011<\u0000\u0012<\u0000\u0013<\u0000\u0014<\u0000(<\u00002<\u0000\u00c8"
+                                    + "<\u0000\u0190<\u0000";
                     return newMessageInfo(DEFAULT_INSTANCE, info, objects);
                 }
                 // fall through
@@ -3429,6 +3984,111 @@ public final class TurmsNotification extends
     private void clearTimestamp() {
 
         timestamp_ = 0L;
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 4;
@@ -3971,6 +4631,121 @@ public final class TurmsNotification extends
         }
 
         /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
+        /**
          * <pre>
          * Response =&gt; [4, 9]
          * "request_id" is used to tell the client that
@@ -4372,7 +5147,7 @@ public final class TurmsNotification extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -4386,6 +5161,8 @@ public final class TurmsNotification extends
             case BUILD_MESSAGE_INFO: {
                 java.lang.Object[] objects = new java.lang.Object[]{"bitField0_",
                         "timestamp_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,
                         "requestId_",
                         "code_",
                         "reason_",
@@ -4394,9 +5171,9 @@ public final class TurmsNotification extends
                         "closeStatus_",
                         "relayedRequest_",};
                 java.lang.String info =
-                        "\u0000\b\u0000\u0001\u0001\f\b\u0000\u0000\u0000\u0001\u0002\u0004\u1002\u0000\u0005"
-                                + "\u1004\u0001\u0006\u1208\u0002\u0007\u1009\u0003\n\u1002\u0004\u000b\u1004\u0005"
-                                + "\f\u1009\u0006";
+                        "\u0000\t\u0000\u0001\u0001\f\t\u0000\u0001\u0000\u0001\u0002\u0002\u001b\u0004\u1002"
+                                + "\u0000\u0005\u1004\u0001\u0006\u1208\u0002\u0007\u1009\u0003\n\u1002\u0004\u000b"
+                                + "\u1004\u0005\f\u1009\u0006";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -4429,7 +5206,6 @@ public final class TurmsNotification extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsNotification)
     private static final im.turms.client.model.proto.notification.TurmsNotification DEFAULT_INSTANCE;
-
     static {
         TurmsNotification defaultInstance = new TurmsNotification();
         // New instances are implicitly immutable so no need to make

@@ -26,7 +26,7 @@ public final class CreateGroupJoinQuestionsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateGroupJoinQuestionsRequestOuterClass.class.getName());
     }
@@ -49,25 +49,30 @@ public final class CreateGroupJoinQuestionsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nBrequest/group/enrollment/create_group_"
                 + "join_questions_request.proto\022\016im.turms.p"
-                + "roto\032%model/group/group_join_question.pr"
-                + "oto\"i\n\037CreateGroupJoinQuestionsRequest\022\020"
-                + "\n\010group_id\030\001 \001(\003\0224\n\tquestions\030\002 \003(\0132!.im"
-                + ".turms.proto.GroupJoinQuestionBH\nAim.tur"
-                + "ms.server.common.access.client.dto.reque"
-                + "st.group.enrollmentP\001\272\002\000b\006proto3"};
+                + "roto\032\030model/common/value.proto\032%model/gr"
+                + "oup/group_join_question.proto\"\233\001\n\037Create"
+                + "GroupJoinQuestionsRequest\022\020\n\010group_id\030\001 "
+                + "\001(\003\0224\n\tquestions\030\002 \003(\0132!.im.turms.proto."
+                + "GroupJoinQuestion\0220\n\021custom_attributes\030\017"
+                + " \003(\0132\025.im.turms.proto.ValueBH\nAim.turms."
+                + "server.common.access.client.dto.request."
+                + "group.enrollmentP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),
                         im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateGroupJoinQuestionsRequest_descriptor,
-                        new java.lang.String[]{"GroupId", "Questions",});
+                        new java.lang.String[]{"GroupId", "Questions", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
         im.turms.server.common.access.client.dto.model.group.GroupJoinQuestionOuterClass
                 .getDescriptor();
     }

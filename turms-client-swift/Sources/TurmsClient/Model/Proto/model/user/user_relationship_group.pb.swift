@@ -29,6 +29,8 @@ public struct UserRelationshipGroup {
 
     public var name: String = .init()
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -47,6 +49,7 @@ extension UserRelationshipGroup: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .same(proto: "index"),
         2: .same(proto: "name"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,6 +60,7 @@ extension UserRelationshipGroup: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt32Field(value: &index)
             case 2: try decoder.decodeSingularStringField(value: &name)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -69,12 +73,16 @@ extension UserRelationshipGroup: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
         if !name.isEmpty {
             try visitor.visitSingularStringField(value: name, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UserRelationshipGroup, rhs: UserRelationshipGroup) -> Bool {
         if lhs.index != rhs.index { return false }
         if lhs.name != rhs.name { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

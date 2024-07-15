@@ -30,7 +30,7 @@ public final class GroupJoinQuestionsWithVersion extends com.google.protobuf.Gen
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 GroupJoinQuestionsWithVersion.class.getName());
     }

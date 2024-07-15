@@ -29,6 +29,8 @@ public struct GroupConversation {
 
     public var memberIDToReadDate: [Int64: Int64] = [:]
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -47,6 +49,7 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_id"),
         2: .standard(proto: "member_id_to_read_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -57,6 +60,7 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &groupID)
             case 2: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: &memberIDToReadDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -69,12 +73,16 @@ extension GroupConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if !memberIDToReadDate.isEmpty {
             try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufInt64>.self, value: memberIDToReadDate, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: GroupConversation, rhs: GroupConversation) -> Bool {
         if lhs.groupID != rhs.groupID { return false }
         if lhs.memberIDToReadDate != rhs.memberIDToReadDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

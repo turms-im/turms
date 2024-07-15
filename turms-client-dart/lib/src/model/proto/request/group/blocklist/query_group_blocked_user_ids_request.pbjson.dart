@@ -27,6 +27,14 @@ const QueryGroupBlockedUserIdsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -37,5 +45,6 @@ const QueryGroupBlockedUserIdsRequest$json = {
 final $typed_data.Uint8List queryGroupBlockedUserIdsRequestDescriptor =
     $convert.base64Decode(
         'Ch9RdWVyeUdyb3VwQmxvY2tlZFVzZXJJZHNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm'
-        '91cElkEi8KEWxhc3RfdXBkYXRlZF9kYXRlGAIgASgDSABSD2xhc3RVcGRhdGVkRGF0ZYgBAUIU'
-        'ChJfbGFzdF91cGRhdGVkX2RhdGU=');
+        '91cElkEi8KEWxhc3RfdXBkYXRlZF9kYXRlGAIgASgDSABSD2xhc3RVcGRhdGVkRGF0ZYgBARJC'
+        'ChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b2'
+        '1BdHRyaWJ1dGVzQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');

@@ -31,6 +31,8 @@ public struct PrivateConversation {
 
     public var readDate: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -50,6 +52,7 @@ extension PrivateConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         1: .standard(proto: "owner_id"),
         2: .standard(proto: "target_id"),
         3: .standard(proto: "read_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -61,6 +64,7 @@ extension PrivateConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
             case 1: try decoder.decodeSingularInt64Field(value: &ownerID)
             case 2: try decoder.decodeSingularInt64Field(value: &targetID)
             case 3: try decoder.decodeSingularInt64Field(value: &readDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -76,6 +80,9 @@ extension PrivateConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         if readDate != 0 {
             try visitor.visitSingularInt64Field(value: readDate, fieldNumber: 3)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -83,6 +90,7 @@ extension PrivateConversation: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
         if lhs.ownerID != rhs.ownerID { return false }
         if lhs.targetID != rhs.targetID { return false }
         if lhs.readDate != rhs.readDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

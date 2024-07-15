@@ -14,21 +14,27 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class UpdateConversationRequest extends $pb.GeneratedMessage {
   factory UpdateConversationRequest({
-    $fixnum.Int64? targetId,
+    $fixnum.Int64? userId,
     $fixnum.Int64? groupId,
     $fixnum.Int64? readDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
-    if (targetId != null) {
-      $result.targetId = targetId;
+    if (userId != null) {
+      $result.userId = userId;
     }
     if (groupId != null) {
       $result.groupId = groupId;
     }
     if (readDate != null) {
       $result.readDate = readDate;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -44,9 +50,12 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'UpdateConversationRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'im.turms.proto'),
       createEmptyInstance: create)
-    ..aInt64(1, _omitFieldNames ? '' : 'targetId')
+    ..aInt64(1, _omitFieldNames ? '' : 'userId')
     ..aInt64(2, _omitFieldNames ? '' : 'groupId')
     ..aInt64(3, _omitFieldNames ? '' : 'readDate')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -76,16 +85,16 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
 
   /// Query filter
   @$pb.TagNumber(1)
-  $fixnum.Int64 get targetId => $_getI64(0);
+  $fixnum.Int64 get userId => $_getI64(0);
   @$pb.TagNumber(1)
-  set targetId($fixnum.Int64 v) {
+  set userId($fixnum.Int64 v) {
     $_setInt64(0, v);
   }
 
   @$pb.TagNumber(1)
-  $core.bool hasTargetId() => $_has(0);
+  $core.bool hasUserId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearTargetId() => clearField(1);
+  void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
   $fixnum.Int64 get groupId => $_getI64(1);
@@ -111,6 +120,9 @@ class UpdateConversationRequest extends $pb.GeneratedMessage {
   $core.bool hasReadDate() => $_has(2);
   @$pb.TagNumber(3)
   void clearReadDate() => clearField(3);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(3);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

@@ -37,6 +37,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MEETING_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REACTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
@@ -48,6 +49,7 @@ import static im.turms.server.common.access.client.dto.request.TurmsRequest.Kind
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBERS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_MEETING_REQUEST;
+import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_MESSAGE_REACTIONS_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
@@ -149,7 +151,8 @@ public enum PolicyStatementResource {
             Set.of(QUERY_JOINED_GROUP_IDS_REQUEST, QUERY_JOINED_GROUP_INFOS_REQUEST)),
     // endregion
     // region message
-    MESSAGE(Set.of(CREATE_MESSAGE_REQUEST), Collections.emptySet(), Set.of(UPDATE_MESSAGE_REQUEST),
+    MESSAGE(Set.of(CREATE_MESSAGE_REQUEST, CREATE_MESSAGE_REACTIONS_REQUEST),
+            Set.of(DELETE_MESSAGE_REACTIONS_REQUEST), Set.of(UPDATE_MESSAGE_REQUEST),
             Set.of(QUERY_MESSAGES_REQUEST)),
     // endregion
     // region conversation

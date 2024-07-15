@@ -26,7 +26,7 @@ public final class MeetingsOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 MeetingsOuterClass.class.getName());
     }
@@ -59,7 +59,7 @@ public final class MeetingsOuterClass {
                         im.turms.server.common.access.client.dto.model.conference.MeetingOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_Meetings_descriptor = getDescriptor().getMessageTypes()
-                .get(0);
+                .getFirst();
         internal_static_im_turms_proto_Meetings_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_Meetings_descriptor,

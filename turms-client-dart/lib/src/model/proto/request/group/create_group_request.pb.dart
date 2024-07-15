@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class CreateGroupRequest extends $pb.GeneratedMessage {
   factory CreateGroupRequest({
     $core.String? name,
@@ -22,6 +24,8 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     $core.int? minScore,
     $fixnum.Int64? typeId,
     $fixnum.Int64? muteEndDate,
+    $core.Map<$core.String, $0.Value>? userDefinedAttributes,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (name != null) {
@@ -41,6 +45,12 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     }
     if (muteEndDate != null) {
       $result.muteEndDate = muteEndDate;
+    }
+    if (userDefinedAttributes != null) {
+      $result.userDefinedAttributes.addAll(userDefinedAttributes);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -62,6 +72,17 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
     ..a<$core.int>(4, _omitFieldNames ? '' : 'minScore', $pb.PbFieldType.O3)
     ..aInt64(5, _omitFieldNames ? '' : 'typeId')
     ..aInt64(6, _omitFieldNames ? '' : 'muteEndDate')
+    ..m<$core.String, $0.Value>(
+        7, _omitFieldNames ? '' : 'userDefinedAttributes',
+        entryClassName: 'CreateGroupRequest.UserDefinedAttributesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $0.Value.create,
+        valueDefaultOrMaker: $0.Value.getDefault,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -158,6 +179,12 @@ class CreateGroupRequest extends $pb.GeneratedMessage {
   $core.bool hasMuteEndDate() => $_has(5);
   @$pb.TagNumber(6)
   void clearMuteEndDate() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.Map<$core.String, $0.Value> get userDefinedAttributes => $_getMap(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(7);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

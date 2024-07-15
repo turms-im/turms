@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class StorageResourceInfo extends $pb.GeneratedMessage {
   factory StorageResourceInfo({
     $fixnum.Int64? idNum,
@@ -22,6 +24,7 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
     $core.String? mediaType,
     $fixnum.Int64? uploaderId,
     $fixnum.Int64? creationDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (idNum != null) {
@@ -41,6 +44,9 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
     }
     if (creationDate != null) {
       $result.creationDate = creationDate;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -62,6 +68,9 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'mediaType')
     ..aInt64(5, _omitFieldNames ? '' : 'uploaderId')
     ..aInt64(6, _omitFieldNames ? '' : 'creationDate')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -158,6 +167,9 @@ class StorageResourceInfo extends $pb.GeneratedMessage {
   $core.bool hasCreationDate() => $_has(5);
   @$pb.TagNumber(6)
   void clearCreationDate() => clearField(6);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(6);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

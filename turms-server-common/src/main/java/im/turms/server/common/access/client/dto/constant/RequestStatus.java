@@ -56,7 +56,7 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 RequestStatus.class.getName());
     }
@@ -129,7 +129,7 @@ public enum RequestStatus implements com.google.protobuf.ProtocolMessageEnum {
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<RequestStatus> internalValueMap =
-            RequestStatus::forNumber;
+            number -> RequestStatus.forNumber(number);
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {

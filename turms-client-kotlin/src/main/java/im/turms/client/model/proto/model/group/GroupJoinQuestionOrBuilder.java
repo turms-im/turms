@@ -113,4 +113,19 @@ public interface GroupJoinQuestionOrBuilder extends
      * @return The score.
      */
     int getScore();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
 }

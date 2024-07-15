@@ -26,7 +26,7 @@ public final class CreateMeetingRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 CreateMeetingRequestOuterClass.class.getName());
     }
@@ -48,18 +48,22 @@ public final class CreateMeetingRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n/request/conference/create_meeting_requ"
-                + "est.proto\022\016im.turms.proto\"\342\001\n\024CreateMeet"
-                + "ingRequest\022\024\n\007user_id\030\001 \001(\003H\000\210\001\001\022\025\n\010grou"
-                + "p_id\030\002 \001(\003H\001\210\001\001\022\021\n\004name\030\003 \001(\tH\002\210\001\001\022\022\n\005in"
-                + "tro\030\004 \001(\tH\003\210\001\001\022\025\n\010password\030\005 \001(\tH\004\210\001\001\022\027\n"
-                + "\nstart_date\030\006 \001(\003H\005\210\001\001B\n\n\010_user_idB\013\n\t_g"
-                + "roup_idB\007\n\005_nameB\010\n\006_introB\013\n\t_passwordB"
-                + "\r\n\013_start_dateBB\n;im.turms.server.common"
-                + ".access.client.dto.request.conferenceP\001\272"
-                + "\002\000b\006proto3"};
+                + "est.proto\022\016im.turms.proto\032\030model/common/"
+                + "value.proto\"\224\002\n\024CreateMeetingRequest\022\024\n\007"
+                + "user_id\030\001 \001(\003H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001"
+                + "\001\022\021\n\004name\030\003 \001(\tH\002\210\001\001\022\022\n\005intro\030\004 \001(\tH\003\210\001\001"
+                + "\022\025\n\010password\030\005 \001(\tH\004\210\001\001\022\027\n\nstart_date\030\006 "
+                + "\001(\003H\005\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132\025.im"
+                + ".turms.proto.ValueB\n\n\010_user_idB\013\n\t_group"
+                + "_idB\007\n\005_nameB\010\n\006_introB\013\n\t_passwordB\r\n\013_"
+                + "start_dateBB\n;im.turms.server.common.acc"
+                + "ess.client.dto.request.conferenceP\001\272\002\000b\006"
+                + "proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_CreateMeetingRequest_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
@@ -71,8 +75,10 @@ public final class CreateMeetingRequestOuterClass {
                                 "Name",
                                 "Intro",
                                 "Password",
-                                "StartDate",});
+                                "StartDate",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

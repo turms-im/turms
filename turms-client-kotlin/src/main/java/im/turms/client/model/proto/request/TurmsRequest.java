@@ -29,6 +29,7 @@ public final class TurmsRequest extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.TurmsRequest)
         TurmsRequestOrBuilder {
     private TurmsRequest() {
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
@@ -54,6 +55,9 @@ public final class TurmsRequest extends
         UPDATE_USER_LOCATION_REQUEST(103),
         UPDATE_USER_ONLINE_STATUS_REQUEST(104),
         UPDATE_USER_REQUEST(105),
+        UPDATE_USER_SETTINGS_REQUEST(106),
+        DELETE_USER_SETTINGS_REQUEST(107),
+        QUERY_USER_SETTINGS_REQUEST(108),
         CREATE_FRIEND_REQUEST_REQUEST(200),
         CREATE_RELATIONSHIP_GROUP_REQUEST(201),
         CREATE_RELATIONSHIP_REQUEST(202),
@@ -90,16 +94,26 @@ public final class TurmsRequest extends
         UPDATE_GROUP_INVITATION_REQUEST(510),
         UPDATE_GROUP_JOIN_QUESTION_REQUEST(511),
         UPDATE_GROUP_JOIN_REQUEST_REQUEST(512),
+        CREATE_MEETING_REQUEST(900),
+        DELETE_MEETING_REQUEST(901),
+        QUERY_MEETINGS_REQUEST(902),
+        UPDATE_MEETING_REQUEST(903),
+        UPDATE_MEETING_INVITATION_REQUEST(904),
         DELETE_RESOURCE_REQUEST(1000),
         QUERY_RESOURCE_DOWNLOAD_INFO_REQUEST(1001),
         QUERY_RESOURCE_UPLOAD_INFO_REQUEST(1002),
         QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST(1003),
         UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST(1004),
+        DELETE_CONVERSATION_SETTINGS_REQUEST(1100),
+        QUERY_CONVERSATION_SETTINGS_REQUEST(1101),
+        UPDATE_CONVERSATION_SETTINGS_REQUEST(1102),
+        CREATE_MESSAGE_REACTIONS_REQUEST(1200),
+        DELETE_MESSAGE_REACTIONS_REQUEST(1201),
         KIND_NOT_SET(0);
 
         private final int value;
 
-        private KindCase(int value) {
+        KindCase(int value) {
             this.value = value;
         }
 
@@ -149,6 +163,12 @@ public final class TurmsRequest extends
                     return UPDATE_USER_ONLINE_STATUS_REQUEST;
                 case 105:
                     return UPDATE_USER_REQUEST;
+                case 106:
+                    return UPDATE_USER_SETTINGS_REQUEST;
+                case 107:
+                    return DELETE_USER_SETTINGS_REQUEST;
+                case 108:
+                    return QUERY_USER_SETTINGS_REQUEST;
                 case 200:
                     return CREATE_FRIEND_REQUEST_REQUEST;
                 case 201:
@@ -221,6 +241,16 @@ public final class TurmsRequest extends
                     return UPDATE_GROUP_JOIN_QUESTION_REQUEST;
                 case 512:
                     return UPDATE_GROUP_JOIN_REQUEST_REQUEST;
+                case 900:
+                    return CREATE_MEETING_REQUEST;
+                case 901:
+                    return DELETE_MEETING_REQUEST;
+                case 902:
+                    return QUERY_MEETINGS_REQUEST;
+                case 903:
+                    return UPDATE_MEETING_REQUEST;
+                case 904:
+                    return UPDATE_MEETING_INVITATION_REQUEST;
                 case 1000:
                     return DELETE_RESOURCE_REQUEST;
                 case 1001:
@@ -231,6 +261,16 @@ public final class TurmsRequest extends
                     return QUERY_MESSAGE_ATTACHMENT_INFOS_REQUEST;
                 case 1004:
                     return UPDATE_MESSAGE_ATTACHMENT_INFO_REQUEST;
+                case 1100:
+                    return DELETE_CONVERSATION_SETTINGS_REQUEST;
+                case 1101:
+                    return QUERY_CONVERSATION_SETTINGS_REQUEST;
+                case 1102:
+                    return UPDATE_CONVERSATION_SETTINGS_REQUEST;
+                case 1200:
+                    return CREATE_MESSAGE_REACTIONS_REQUEST;
+                case 1201:
+                    return DELETE_MESSAGE_REACTIONS_REQUEST;
                 case 0:
                     return KIND_NOT_SET;
                 default:
@@ -312,6 +352,111 @@ public final class TurmsRequest extends
     private void clearRequestId() {
         bitField0_ &= ~0x00000001;
         requestId_ = 0L;
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 2;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static final int CREATE_SESSION_REQUEST_FIELD_NUMBER = 3;
@@ -1515,6 +1660,189 @@ public final class TurmsRequest extends
      */
     private void clearUpdateUserRequest() {
         if (kindCase_ == 105) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_USER_SETTINGS_REQUEST_FIELD_NUMBER = 106;
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateUserSettingsRequest() {
+        return kindCase_ == 106;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest() {
+        if (kindCase_ == 106) {
+            return (im.turms.client.model.proto.request.user.UpdateUserSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.user.UpdateUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    private void setUpdateUserSettingsRequest(
+            im.turms.client.model.proto.request.user.UpdateUserSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 106;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    private void mergeUpdateUserSettingsRequest(
+            im.turms.client.model.proto.request.user.UpdateUserSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 106
+                && kind_ != im.turms.client.model.proto.request.user.UpdateUserSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.user.UpdateUserSettingsRequest.newBuilder(
+                    (im.turms.client.model.proto.request.user.UpdateUserSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 106;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+     */
+    private void clearUpdateUserSettingsRequest() {
+        if (kindCase_ == 106) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int DELETE_USER_SETTINGS_REQUEST_FIELD_NUMBER = 107;
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    @java.lang.Override
+    public boolean hasDeleteUserSettingsRequest() {
+        return kindCase_ == 107;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest() {
+        if (kindCase_ == 107) {
+            return (im.turms.client.model.proto.request.user.DeleteUserSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.user.DeleteUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    private void setDeleteUserSettingsRequest(
+            im.turms.client.model.proto.request.user.DeleteUserSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 107;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    private void mergeDeleteUserSettingsRequest(
+            im.turms.client.model.proto.request.user.DeleteUserSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 107
+                && kind_ != im.turms.client.model.proto.request.user.DeleteUserSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.user.DeleteUserSettingsRequest.newBuilder(
+                    (im.turms.client.model.proto.request.user.DeleteUserSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 107;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+     */
+    private void clearDeleteUserSettingsRequest() {
+        if (kindCase_ == 107) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int QUERY_USER_SETTINGS_REQUEST_FIELD_NUMBER = 108;
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    @java.lang.Override
+    public boolean hasQueryUserSettingsRequest() {
+        return kindCase_ == 108;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest() {
+        if (kindCase_ == 108) {
+            return (im.turms.client.model.proto.request.user.QueryUserSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.user.QueryUserSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    private void setQueryUserSettingsRequest(
+            im.turms.client.model.proto.request.user.QueryUserSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 108;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    private void mergeQueryUserSettingsRequest(
+            im.turms.client.model.proto.request.user.QueryUserSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 108
+                && kind_ != im.turms.client.model.proto.request.user.QueryUserSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.user.QueryUserSettingsRequest.newBuilder(
+                    (im.turms.client.model.proto.request.user.QueryUserSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 108;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+     */
+    private void clearQueryUserSettingsRequest() {
+        if (kindCase_ == 108) {
             kindCase_ = 0;
             kind_ = null;
         }
@@ -3827,6 +4155,332 @@ public final class TurmsRequest extends
         }
     }
 
+    public static final int CREATE_MEETING_REQUEST_FIELD_NUMBER = 900;
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    @java.lang.Override
+    public boolean hasCreateMeetingRequest() {
+        return kindCase_ == 900;
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conference.CreateMeetingRequest getCreateMeetingRequest() {
+        if (kindCase_ == 900) {
+            return (im.turms.client.model.proto.request.conference.CreateMeetingRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conference.CreateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    private void setCreateMeetingRequest(
+            im.turms.client.model.proto.request.conference.CreateMeetingRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 900;
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    private void mergeCreateMeetingRequest(
+            im.turms.client.model.proto.request.conference.CreateMeetingRequest value) {
+        value.getClass();
+        if (kindCase_ == 900
+                && kind_ != im.turms.client.model.proto.request.conference.CreateMeetingRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conference.CreateMeetingRequest.newBuilder(
+                    (im.turms.client.model.proto.request.conference.CreateMeetingRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 900;
+    }
+
+    /**
+     * <pre>
+     * Conference
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+     */
+    private void clearCreateMeetingRequest() {
+        if (kindCase_ == 900) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int DELETE_MEETING_REQUEST_FIELD_NUMBER = 901;
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    @java.lang.Override
+    public boolean hasDeleteMeetingRequest() {
+        return kindCase_ == 901;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest() {
+        if (kindCase_ == 901) {
+            return (im.turms.client.model.proto.request.conference.DeleteMeetingRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conference.DeleteMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    private void setDeleteMeetingRequest(
+            im.turms.client.model.proto.request.conference.DeleteMeetingRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 901;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    private void mergeDeleteMeetingRequest(
+            im.turms.client.model.proto.request.conference.DeleteMeetingRequest value) {
+        value.getClass();
+        if (kindCase_ == 901
+                && kind_ != im.turms.client.model.proto.request.conference.DeleteMeetingRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conference.DeleteMeetingRequest.newBuilder(
+                    (im.turms.client.model.proto.request.conference.DeleteMeetingRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 901;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+     */
+    private void clearDeleteMeetingRequest() {
+        if (kindCase_ == 901) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int QUERY_MEETINGS_REQUEST_FIELD_NUMBER = 902;
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    @java.lang.Override
+    public boolean hasQueryMeetingsRequest() {
+        return kindCase_ == 902;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest() {
+        if (kindCase_ == 902) {
+            return (im.turms.client.model.proto.request.conference.QueryMeetingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conference.QueryMeetingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    private void setQueryMeetingsRequest(
+            im.turms.client.model.proto.request.conference.QueryMeetingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 902;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    private void mergeQueryMeetingsRequest(
+            im.turms.client.model.proto.request.conference.QueryMeetingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 902
+                && kind_ != im.turms.client.model.proto.request.conference.QueryMeetingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conference.QueryMeetingsRequest.newBuilder(
+                    (im.turms.client.model.proto.request.conference.QueryMeetingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 902;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+     */
+    private void clearQueryMeetingsRequest() {
+        if (kindCase_ == 902) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_MEETING_REQUEST_FIELD_NUMBER = 903;
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateMeetingRequest() {
+        return kindCase_ == 903;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest() {
+        if (kindCase_ == 903) {
+            return (im.turms.client.model.proto.request.conference.UpdateMeetingRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conference.UpdateMeetingRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    private void setUpdateMeetingRequest(
+            im.turms.client.model.proto.request.conference.UpdateMeetingRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 903;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    private void mergeUpdateMeetingRequest(
+            im.turms.client.model.proto.request.conference.UpdateMeetingRequest value) {
+        value.getClass();
+        if (kindCase_ == 903
+                && kind_ != im.turms.client.model.proto.request.conference.UpdateMeetingRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conference.UpdateMeetingRequest.newBuilder(
+                    (im.turms.client.model.proto.request.conference.UpdateMeetingRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 903;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+     */
+    private void clearUpdateMeetingRequest() {
+        if (kindCase_ == 903) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_MEETING_INVITATION_REQUEST_FIELD_NUMBER = 904;
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateMeetingInvitationRequest() {
+        return kindCase_ == 904;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest() {
+        if (kindCase_ == 904) {
+            return (im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    private void setUpdateMeetingInvitationRequest(
+            im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 904;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    private void mergeUpdateMeetingInvitationRequest(
+            im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest value) {
+        value.getClass();
+        if (kindCase_ == 904
+                && kind_ != im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 904;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+     */
+    private void clearUpdateMeetingInvitationRequest() {
+        if (kindCase_ == 904) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
     public static final int DELETE_RESOURCE_REQUEST_FIELD_NUMBER = 1000;
 
     /**
@@ -4156,6 +4810,356 @@ public final class TurmsRequest extends
         }
     }
 
+    public static final int DELETE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1100;
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    @java.lang.Override
+    public boolean hasDeleteConversationSettingsRequest() {
+        return kindCase_ == 1100;
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest() {
+        if (kindCase_ == 1100) {
+            return (im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    private void setDeleteConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 1100;
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    private void mergeDeleteConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 1100
+                && kind_ != im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 1100;
+    }
+
+    /**
+     * <pre>
+     * Conversation - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+     */
+    private void clearDeleteConversationSettingsRequest() {
+        if (kindCase_ == 1100) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int QUERY_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1101;
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    @java.lang.Override
+    public boolean hasQueryConversationSettingsRequest() {
+        return kindCase_ == 1101;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest() {
+        if (kindCase_ == 1101) {
+            return (im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    private void setQueryConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 1101;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    private void mergeQueryConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 1101
+                && kind_ != im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 1101;
+    }
+
+    /**
+     * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+     */
+    private void clearQueryConversationSettingsRequest() {
+        if (kindCase_ == 1101) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int UPDATE_CONVERSATION_SETTINGS_REQUEST_FIELD_NUMBER = 1102;
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    @java.lang.Override
+    public boolean hasUpdateConversationSettingsRequest() {
+        return kindCase_ == 1102;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest() {
+        if (kindCase_ == 1102) {
+            return (im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    private void setUpdateConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 1102;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    private void mergeUpdateConversationSettingsRequest(
+            im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest value) {
+        value.getClass();
+        if (kindCase_ == 1102
+                && kind_ != im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 1102;
+    }
+
+    /**
+     * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+     */
+    private void clearUpdateConversationSettingsRequest() {
+        if (kindCase_ == 1102) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int CREATE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER = 1200;
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    @java.lang.Override
+    public boolean hasCreateMessageReactionsRequest() {
+        return kindCase_ == 1200;
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest() {
+        if (kindCase_ == 1200) {
+            return (im.turms.client.model.proto.request.message.CreateMessageReactionsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.message.CreateMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    private void setCreateMessageReactionsRequest(
+            im.turms.client.model.proto.request.message.CreateMessageReactionsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 1200;
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    private void mergeCreateMessageReactionsRequest(
+            im.turms.client.model.proto.request.message.CreateMessageReactionsRequest value) {
+        value.getClass();
+        if (kindCase_ == 1200
+                && kind_ != im.turms.client.model.proto.request.message.CreateMessageReactionsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.message.CreateMessageReactionsRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.message.CreateMessageReactionsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 1200;
+    }
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    private void clearCreateMessageReactionsRequest() {
+        if (kindCase_ == 1200) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
+    public static final int DELETE_MESSAGE_REACTIONS_REQUEST_FIELD_NUMBER = 1201;
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    @java.lang.Override
+    public boolean hasDeleteMessageReactionsRequest() {
+        return kindCase_ == 1201;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest() {
+        if (kindCase_ == 1201) {
+            return (im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest) kind_;
+        }
+        return im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest
+                .getDefaultInstance();
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    private void setDeleteMessageReactionsRequest(
+            im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest value) {
+        value.getClass();
+        kind_ = value;
+        kindCase_ = 1201;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    private void mergeDeleteMessageReactionsRequest(
+            im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest value) {
+        value.getClass();
+        if (kindCase_ == 1201
+                && kind_ != im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest
+                        .getDefaultInstance()) {
+            kind_ = im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest
+                    .newBuilder(
+                            (im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest) kind_)
+                    .mergeFrom(value)
+                    .buildPartial();
+        } else {
+            kind_ = value;
+        }
+        kindCase_ = 1201;
+    }
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    private void clearDeleteMessageReactionsRequest() {
+        if (kindCase_ == 1201) {
+            kindCase_ = 0;
+            kind_ = null;
+        }
+    }
+
     public static im.turms.client.model.proto.request.TurmsRequest parseFrom(
             java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
         return com.google.protobuf.GeneratedMessageLite.parseFrom(DEFAULT_INSTANCE, data);
@@ -4330,6 +5334,121 @@ public final class TurmsRequest extends
         public Builder clearRequestId() {
             copyOnWrite();
             instance.clearRequestId();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
             return this;
         }
 
@@ -5440,6 +6559,171 @@ public final class TurmsRequest extends
         public Builder clearUpdateUserRequest() {
             copyOnWrite();
             instance.clearUpdateUserRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateUserSettingsRequest() {
+            return instance.hasUpdateUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.user.UpdateUserSettingsRequest getUpdateUserSettingsRequest() {
+            return instance.getUpdateUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder setUpdateUserSettingsRequest(
+                im.turms.client.model.proto.request.user.UpdateUserSettingsRequest value) {
+            copyOnWrite();
+            instance.setUpdateUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder setUpdateUserSettingsRequest(
+                im.turms.client.model.proto.request.user.UpdateUserSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateUserSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder mergeUpdateUserSettingsRequest(
+                im.turms.client.model.proto.request.user.UpdateUserSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateUserSettingsRequest update_user_settings_request = 106;</code>
+         */
+        public Builder clearUpdateUserSettingsRequest() {
+            copyOnWrite();
+            instance.clearUpdateUserSettingsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        @java.lang.Override
+        public boolean hasDeleteUserSettingsRequest() {
+            return instance.hasDeleteUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.user.DeleteUserSettingsRequest getDeleteUserSettingsRequest() {
+            return instance.getDeleteUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder setDeleteUserSettingsRequest(
+                im.turms.client.model.proto.request.user.DeleteUserSettingsRequest value) {
+            copyOnWrite();
+            instance.setDeleteUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder setDeleteUserSettingsRequest(
+                im.turms.client.model.proto.request.user.DeleteUserSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setDeleteUserSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder mergeDeleteUserSettingsRequest(
+                im.turms.client.model.proto.request.user.DeleteUserSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeDeleteUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteUserSettingsRequest delete_user_settings_request = 107;</code>
+         */
+        public Builder clearDeleteUserSettingsRequest() {
+            copyOnWrite();
+            instance.clearDeleteUserSettingsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        @java.lang.Override
+        public boolean hasQueryUserSettingsRequest() {
+            return instance.hasQueryUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.user.QueryUserSettingsRequest getQueryUserSettingsRequest() {
+            return instance.getQueryUserSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder setQueryUserSettingsRequest(
+                im.turms.client.model.proto.request.user.QueryUserSettingsRequest value) {
+            copyOnWrite();
+            instance.setQueryUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder setQueryUserSettingsRequest(
+                im.turms.client.model.proto.request.user.QueryUserSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setQueryUserSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder mergeQueryUserSettingsRequest(
+                im.turms.client.model.proto.request.user.QueryUserSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeQueryUserSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryUserSettingsRequest query_user_settings_request = 108;</code>
+         */
+        public Builder clearQueryUserSettingsRequest() {
+            copyOnWrite();
+            instance.clearQueryUserSettingsRequest();
             return this;
         }
 
@@ -7521,6 +8805,305 @@ public final class TurmsRequest extends
 
         /**
          * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        @java.lang.Override
+        public boolean hasCreateMeetingRequest() {
+            return instance.hasCreateMeetingRequest();
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conference.CreateMeetingRequest getCreateMeetingRequest() {
+            return instance.getCreateMeetingRequest();
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder setCreateMeetingRequest(
+                im.turms.client.model.proto.request.conference.CreateMeetingRequest value) {
+            copyOnWrite();
+            instance.setCreateMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder setCreateMeetingRequest(
+                im.turms.client.model.proto.request.conference.CreateMeetingRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCreateMeetingRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder mergeCreateMeetingRequest(
+                im.turms.client.model.proto.request.conference.CreateMeetingRequest value) {
+            copyOnWrite();
+            instance.mergeCreateMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conference
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMeetingRequest create_meeting_request = 900;</code>
+         */
+        public Builder clearCreateMeetingRequest() {
+            copyOnWrite();
+            instance.clearCreateMeetingRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        @java.lang.Override
+        public boolean hasDeleteMeetingRequest() {
+            return instance.hasDeleteMeetingRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conference.DeleteMeetingRequest getDeleteMeetingRequest() {
+            return instance.getDeleteMeetingRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder setDeleteMeetingRequest(
+                im.turms.client.model.proto.request.conference.DeleteMeetingRequest value) {
+            copyOnWrite();
+            instance.setDeleteMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder setDeleteMeetingRequest(
+                im.turms.client.model.proto.request.conference.DeleteMeetingRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setDeleteMeetingRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder mergeDeleteMeetingRequest(
+                im.turms.client.model.proto.request.conference.DeleteMeetingRequest value) {
+            copyOnWrite();
+            instance.mergeDeleteMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMeetingRequest delete_meeting_request = 901;</code>
+         */
+        public Builder clearDeleteMeetingRequest() {
+            copyOnWrite();
+            instance.clearDeleteMeetingRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        @java.lang.Override
+        public boolean hasQueryMeetingsRequest() {
+            return instance.hasQueryMeetingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conference.QueryMeetingsRequest getQueryMeetingsRequest() {
+            return instance.getQueryMeetingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder setQueryMeetingsRequest(
+                im.turms.client.model.proto.request.conference.QueryMeetingsRequest value) {
+            copyOnWrite();
+            instance.setQueryMeetingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder setQueryMeetingsRequest(
+                im.turms.client.model.proto.request.conference.QueryMeetingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setQueryMeetingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder mergeQueryMeetingsRequest(
+                im.turms.client.model.proto.request.conference.QueryMeetingsRequest value) {
+            copyOnWrite();
+            instance.mergeQueryMeetingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryMeetingsRequest query_meetings_request = 902;</code>
+         */
+        public Builder clearQueryMeetingsRequest() {
+            copyOnWrite();
+            instance.clearQueryMeetingsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateMeetingRequest() {
+            return instance.hasUpdateMeetingRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conference.UpdateMeetingRequest getUpdateMeetingRequest() {
+            return instance.getUpdateMeetingRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder setUpdateMeetingRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingRequest value) {
+            copyOnWrite();
+            instance.setUpdateMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder setUpdateMeetingRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateMeetingRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder mergeUpdateMeetingRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateMeetingRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingRequest update_meeting_request = 903;</code>
+         */
+        public Builder clearUpdateMeetingRequest() {
+            copyOnWrite();
+            instance.clearUpdateMeetingRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateMeetingInvitationRequest() {
+            return instance.hasUpdateMeetingInvitationRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest getUpdateMeetingInvitationRequest() {
+            return instance.getUpdateMeetingInvitationRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder setUpdateMeetingInvitationRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest value) {
+            copyOnWrite();
+            instance.setUpdateMeetingInvitationRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder setUpdateMeetingInvitationRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateMeetingInvitationRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder mergeUpdateMeetingInvitationRequest(
+                im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateMeetingInvitationRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateMeetingInvitationRequest update_meeting_invitation_request = 904;</code>
+         */
+        public Builder clearUpdateMeetingInvitationRequest() {
+            copyOnWrite();
+            instance.clearUpdateMeetingInvitationRequest();
+            return this;
+        }
+
+        /**
+         * <pre>
          * Storage
          * </pre>
          *
@@ -7818,12 +9401,335 @@ public final class TurmsRequest extends
             return this;
         }
 
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        @java.lang.Override
+        public boolean hasDeleteConversationSettingsRequest() {
+            return instance.hasDeleteConversationSettingsRequest();
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest getDeleteConversationSettingsRequest() {
+            return instance.getDeleteConversationSettingsRequest();
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder setDeleteConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.setDeleteConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder setDeleteConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setDeleteConversationSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder mergeDeleteConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeDeleteConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Conversation - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.DeleteConversationSettingsRequest delete_conversation_settings_request = 1100;</code>
+         */
+        public Builder clearDeleteConversationSettingsRequest() {
+            copyOnWrite();
+            instance.clearDeleteConversationSettingsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        @java.lang.Override
+        public boolean hasQueryConversationSettingsRequest() {
+            return instance.hasQueryConversationSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest getQueryConversationSettingsRequest() {
+            return instance.getQueryConversationSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder setQueryConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.setQueryConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder setQueryConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setQueryConversationSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder mergeQueryConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeQueryConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.QueryConversationSettingsRequest query_conversation_settings_request = 1101;</code>
+         */
+        public Builder clearQueryConversationSettingsRequest() {
+            copyOnWrite();
+            instance.clearQueryConversationSettingsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        @java.lang.Override
+        public boolean hasUpdateConversationSettingsRequest() {
+            return instance.hasUpdateConversationSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest getUpdateConversationSettingsRequest() {
+            return instance.getUpdateConversationSettingsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder setUpdateConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.setUpdateConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder setUpdateConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setUpdateConversationSettingsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder mergeUpdateConversationSettingsRequest(
+                im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest value) {
+            copyOnWrite();
+            instance.mergeUpdateConversationSettingsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
+         */
+        public Builder clearUpdateConversationSettingsRequest() {
+            copyOnWrite();
+            instance.clearUpdateConversationSettingsRequest();
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        @java.lang.Override
+        public boolean hasCreateMessageReactionsRequest() {
+            return instance.hasCreateMessageReactionsRequest();
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest() {
+            return instance.getCreateMessageReactionsRequest();
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder setCreateMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.CreateMessageReactionsRequest value) {
+            copyOnWrite();
+            instance.setCreateMessageReactionsRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder setCreateMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.CreateMessageReactionsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCreateMessageReactionsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder mergeCreateMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.CreateMessageReactionsRequest value) {
+            copyOnWrite();
+            instance.mergeCreateMessageReactionsRequest(value);
+            return this;
+        }
+
+        /**
+         * <pre>
+         * Message - Supplement
+         * </pre>
+         *
+         * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+         */
+        public Builder clearCreateMessageReactionsRequest() {
+            copyOnWrite();
+            instance.clearCreateMessageReactionsRequest();
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        @java.lang.Override
+        public boolean hasDeleteMessageReactionsRequest() {
+            return instance.hasDeleteMessageReactionsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest() {
+            return instance.getDeleteMessageReactionsRequest();
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder setDeleteMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest value) {
+            copyOnWrite();
+            instance.setDeleteMessageReactionsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder setDeleteMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest.Builder builderForValue) {
+            copyOnWrite();
+            instance.setDeleteMessageReactionsRequest(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder mergeDeleteMessageReactionsRequest(
+                im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest value) {
+            copyOnWrite();
+            instance.mergeDeleteMessageReactionsRequest(value);
+            return this;
+        }
+
+        /**
+         * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+         */
+        public Builder clearDeleteMessageReactionsRequest() {
+            copyOnWrite();
+            instance.clearDeleteMessageReactionsRequest();
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.TurmsRequest)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -7839,6 +9745,8 @@ public final class TurmsRequest extends
                         "kindCase_",
                         "bitField0_",
                         "requestId_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,
                         im.turms.client.model.proto.request.user.CreateSessionRequest.class,
                         im.turms.client.model.proto.request.user.DeleteSessionRequest.class,
                         im.turms.client.model.proto.request.conversation.QueryConversationsRequest.class,
@@ -7857,6 +9765,9 @@ public final class TurmsRequest extends
                         im.turms.client.model.proto.request.user.UpdateUserLocationRequest.class,
                         im.turms.client.model.proto.request.user.UpdateUserOnlineStatusRequest.class,
                         im.turms.client.model.proto.request.user.UpdateUserRequest.class,
+                        im.turms.client.model.proto.request.user.UpdateUserSettingsRequest.class,
+                        im.turms.client.model.proto.request.user.DeleteUserSettingsRequest.class,
+                        im.turms.client.model.proto.request.user.QueryUserSettingsRequest.class,
                         im.turms.client.model.proto.request.user.relationship.CreateFriendRequestRequest.class,
                         im.turms.client.model.proto.request.user.relationship.CreateRelationshipGroupRequest.class,
                         im.turms.client.model.proto.request.user.relationship.CreateRelationshipRequest.class,
@@ -7893,22 +9804,34 @@ public final class TurmsRequest extends
                         im.turms.client.model.proto.request.group.enrollment.UpdateGroupInvitationRequest.class,
                         im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinQuestionRequest.class,
                         im.turms.client.model.proto.request.group.enrollment.UpdateGroupJoinRequestRequest.class,
+                        im.turms.client.model.proto.request.conference.CreateMeetingRequest.class,
+                        im.turms.client.model.proto.request.conference.DeleteMeetingRequest.class,
+                        im.turms.client.model.proto.request.conference.QueryMeetingsRequest.class,
+                        im.turms.client.model.proto.request.conference.UpdateMeetingRequest.class,
+                        im.turms.client.model.proto.request.conference.UpdateMeetingInvitationRequest.class,
                         im.turms.client.model.proto.request.storage.DeleteResourceRequest.class,
                         im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest.class,
                         im.turms.client.model.proto.request.storage.QueryResourceUploadInfoRequest.class,
                         im.turms.client.model.proto.request.storage.QueryMessageAttachmentInfosRequest.class,
-                        im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest.class,};
+                        im.turms.client.model.proto.request.storage.UpdateMessageAttachmentInfoRequest.class,
+                        im.turms.client.model.proto.request.conversation.DeleteConversationSettingsRequest.class,
+                        im.turms.client.model.proto.request.conversation.QueryConversationSettingsRequest.class,
+                        im.turms.client.model.proto.request.conversation.UpdateConversationSettingsRequest.class,
+                        im.turms.client.model.proto.request.message.CreateMessageReactionsRequest.class,
+                        im.turms.client.model.proto.request.message.DeleteMessageReactionsRequest.class,};
                 java.lang.String info =
-                        "\u0000<\u0001\u0001\u0001\u03ec<\u0000\u0000\u0000\u0001\u1002\u0000\u0003<\u0000"
-                                + "\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000\t<\u0000\n<\u0000\u000b"
-                                + "<\u0000\f<\u0000\r<\u0000\u000e<\u0000d<\u0000e<\u0000f<\u0000g<\u0000h<\u0000i<"
-                                + "\u0000\u00c8<\u0000\u00c9<\u0000\u00ca<\u0000\u00cb<\u0000\u00cc<\u0000\u00cd<\u0000"
-                                + "\u00ce<\u0000\u00cf<\u0000\u00d0<\u0000\u00d1<\u0000\u00d2<\u0000\u00d3<\u0000\u00d4"
-                                + "<\u0000\u012c<\u0000\u012d<\u0000\u012e<\u0000\u012f<\u0000\u0130<\u0000\u0131<\u0000"
-                                + "\u0190<\u0000\u0191<\u0000\u0192<\u0000\u0193<\u0000\u01f4<\u0000\u01f5<\u0000\u01f6"
-                                + "<\u0000\u01f7<\u0000\u01f8<\u0000\u01f9<\u0000\u01fa<\u0000\u01fb<\u0000\u01fc<\u0000"
-                                + "\u01fd<\u0000\u01fe<\u0000\u01ff<\u0000\u0200<\u0000\u03e8<\u0000\u03e9<\u0000\u03ea"
-                                + "<\u0000\u03eb<\u0000\u03ec<\u0000";
+                        "\u0000J\u0001\u0001\u0001\u04b1J\u0000\u0001\u0000\u0001\u1002\u0000\u0002\u001b"
+                                + "\u0003<\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000\t<\u0000"
+                                + "\n<\u0000\u000b<\u0000\f<\u0000\r<\u0000\u000e<\u0000d<\u0000e<\u0000f<\u0000g<\u0000"
+                                + "h<\u0000i<\u0000j<\u0000k<\u0000l<\u0000\u00c8<\u0000\u00c9<\u0000\u00ca<\u0000\u00cb"
+                                + "<\u0000\u00cc<\u0000\u00cd<\u0000\u00ce<\u0000\u00cf<\u0000\u00d0<\u0000\u00d1<\u0000"
+                                + "\u00d2<\u0000\u00d3<\u0000\u00d4<\u0000\u012c<\u0000\u012d<\u0000\u012e<\u0000\u012f"
+                                + "<\u0000\u0130<\u0000\u0131<\u0000\u0190<\u0000\u0191<\u0000\u0192<\u0000\u0193<\u0000"
+                                + "\u01f4<\u0000\u01f5<\u0000\u01f6<\u0000\u01f7<\u0000\u01f8<\u0000\u01f9<\u0000\u01fa"
+                                + "<\u0000\u01fb<\u0000\u01fc<\u0000\u01fd<\u0000\u01fe<\u0000\u01ff<\u0000\u0200<\u0000"
+                                + "\u0384<\u0000\u0385<\u0000\u0386<\u0000\u0387<\u0000\u0388<\u0000\u03e8<\u0000\u03e9"
+                                + "<\u0000\u03ea<\u0000\u03eb<\u0000\u03ec<\u0000\u044c<\u0000\u044d<\u0000\u044e<\u0000"
+                                + "\u04b0<\u0000\u04b1<\u0000";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -7941,7 +9864,6 @@ public final class TurmsRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.TurmsRequest)
     private static final im.turms.client.model.proto.request.TurmsRequest DEFAULT_INSTANCE;
-
     static {
         TurmsRequest defaultInstance = new TurmsRequest();
         // New instances are implicitly immutable so no need to make

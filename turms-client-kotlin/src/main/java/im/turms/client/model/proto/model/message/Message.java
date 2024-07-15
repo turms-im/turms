@@ -27,6 +27,8 @@ public final class Message
     private Message() {
         text_ = "";
         records_ = emptyProtobufList();
+        reactionGroups_ = emptyProtobufList();
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
@@ -542,6 +544,218 @@ public final class Message
     private void clearPreMessageId() {
         bitField0_ &= ~0x00000200;
         preMessageId_ = 0L;
+    }
+
+    public static final int REACTION_GROUPS_FIELD_NUMBER = 12;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.message.MessageReactionGroup> reactionGroups_;
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.message.MessageReactionGroup> getReactionGroupsList() {
+        return reactionGroups_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.message.MessageReactionGroupOrBuilder> getReactionGroupsOrBuilderList() {
+        return reactionGroups_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public int getReactionGroupsCount() {
+        return reactionGroups_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.message.MessageReactionGroup getReactionGroups(
+            int index) {
+        return reactionGroups_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    public im.turms.client.model.proto.model.message.MessageReactionGroupOrBuilder getReactionGroupsOrBuilder(
+            int index) {
+        return reactionGroups_.get(index);
+    }
+
+    private void ensureReactionGroupsIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.message.MessageReactionGroup> tmp =
+                reactionGroups_;
+        if (!tmp.isModifiable()) {
+            reactionGroups_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void setReactionGroups(
+            int index,
+            im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+        value.getClass();
+        ensureReactionGroupsIsMutable();
+        reactionGroups_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void addReactionGroups(
+            im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+        value.getClass();
+        ensureReactionGroupsIsMutable();
+        reactionGroups_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void addReactionGroups(
+            int index,
+            im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+        value.getClass();
+        ensureReactionGroupsIsMutable();
+        reactionGroups_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void addAllReactionGroups(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.message.MessageReactionGroup> values) {
+        ensureReactionGroupsIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, reactionGroups_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void clearReactionGroups() {
+        reactionGroups_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+     */
+    private void removeReactionGroups(int index) {
+        ensureReactionGroupsIsMutable();
+        reactionGroups_.remove(index);
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.model.message.Message parseFrom(
@@ -1174,12 +1388,244 @@ public final class Message
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.message.MessageReactionGroup> getReactionGroupsList() {
+            return java.util.Collections.unmodifiableList(instance.getReactionGroupsList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        @java.lang.Override
+        public int getReactionGroupsCount() {
+            return instance.getReactionGroupsCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.message.MessageReactionGroup getReactionGroups(
+                int index) {
+            return instance.getReactionGroups(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder setReactionGroups(
+                int index,
+                im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+            copyOnWrite();
+            instance.setReactionGroups(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder setReactionGroups(
+                int index,
+                im.turms.client.model.proto.model.message.MessageReactionGroup.Builder builderForValue) {
+            copyOnWrite();
+            instance.setReactionGroups(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+            copyOnWrite();
+            instance.addReactionGroups(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                int index,
+                im.turms.client.model.proto.model.message.MessageReactionGroup value) {
+            copyOnWrite();
+            instance.addReactionGroups(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                im.turms.client.model.proto.model.message.MessageReactionGroup.Builder builderForValue) {
+            copyOnWrite();
+            instance.addReactionGroups(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addReactionGroups(
+                int index,
+                im.turms.client.model.proto.model.message.MessageReactionGroup.Builder builderForValue) {
+            copyOnWrite();
+            instance.addReactionGroups(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder addAllReactionGroups(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.message.MessageReactionGroup> values) {
+            copyOnWrite();
+            instance.addAllReactionGroups(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder clearReactionGroups() {
+            copyOnWrite();
+            instance.clearReactionGroups();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.MessageReactionGroup reaction_groups = 12;</code>
+         */
+        public Builder removeReactionGroups(int index) {
+            copyOnWrite();
+            instance.removeReactionGroups(index);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.Message)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -1202,11 +1648,15 @@ public final class Message
                         "recipientId_",
                         "records_",
                         "sequenceId_",
-                        "preMessageId_",};
+                        "preMessageId_",
+                        "reactionGroups_",
+                        im.turms.client.model.proto.model.message.MessageReactionGroup.class,
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u000b\u0000\u0001\u0001\u000b\u000b\u0000\u0001\u0000\u0001\u1002\u0000\u0002"
-                                + "\u1002\u0001\u0003\u1002\u0002\u0004\u1208\u0003\u0005\u1002\u0004\u0006\u1002\u0005"
-                                + "\u0007\u1007\u0006\b\u1002\u0007\t\u001c\n\u1004\b\u000b\u1002\t";
+                        "\u0000\r\u0000\u0001\u0001\u000f\r\u0000\u0003\u0000\u0001\u1002\u0000\u0002\u1002"
+                                + "\u0001\u0003\u1002\u0002\u0004\u1208\u0003\u0005\u1002\u0004\u0006\u1002\u0005\u0007"
+                                + "\u1007\u0006\b\u1002\u0007\t\u001c\n\u1004\b\u000b\u1002\t\f\u001b\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -1239,7 +1689,6 @@ public final class Message
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.Message)
     private static final im.turms.client.model.proto.model.message.Message DEFAULT_INSTANCE;
-
     static {
         Message defaultInstance = new Message();
         // New instances are implicitly immutable so no need to make

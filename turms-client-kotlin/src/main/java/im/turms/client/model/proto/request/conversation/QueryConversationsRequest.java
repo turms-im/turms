@@ -26,25 +26,26 @@ public final class QueryConversationsRequest extends
         // @@protoc_insertion_point(message_implements:im.turms.proto.QueryConversationsRequest)
         QueryConversationsRequestOrBuilder {
     private QueryConversationsRequest() {
-        targetIds_ = emptyLongList();
+        userIds_ = emptyLongList();
         groupIds_ = emptyLongList();
+        customAttributes_ = emptyProtobufList();
     }
 
-    public static final int TARGET_IDS_FIELD_NUMBER = 1;
-    private com.google.protobuf.Internal.LongList targetIds_;
+    public static final int USER_IDS_FIELD_NUMBER = 1;
+    private com.google.protobuf.Internal.LongList userIds_;
 
     /**
      * <pre>
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @return A list containing the targetIds.
+     * @return A list containing the userIds.
      */
     @java.lang.Override
-    public java.util.List<java.lang.Long> getTargetIdsList() {
-        return targetIds_;
+    public java.util.List<java.lang.Long> getUserIdsList() {
+        return userIds_;
     }
 
     /**
@@ -52,13 +53,13 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @return The count of targetIds.
+     * @return The count of userIds.
      */
     @java.lang.Override
-    public int getTargetIdsCount() {
-        return targetIds_.size();
+    public int getUserIdsCount() {
+        return userIds_.size();
     }
 
     /**
@@ -66,22 +67,22 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
      * @param index The index of the element to return.
-     * @return The targetIds at the given index.
+     * @return The userIds at the given index.
      */
     @java.lang.Override
-    public long getTargetIds(int index) {
-        return targetIds_.getLong(index);
+    public long getUserIds(int index) {
+        return userIds_.getLong(index);
     }
 
-    private int targetIdsMemoizedSerializedSize = -1;
+    private final int userIdsMemoizedSerializedSize = -1;
 
-    private void ensureTargetIdsIsMutable() {
-        com.google.protobuf.Internal.LongList tmp = targetIds_;
+    private void ensureUserIdsIsMutable() {
+        com.google.protobuf.Internal.LongList tmp = userIds_;
         if (!tmp.isModifiable()) {
-            targetIds_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+            userIds_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
         }
     }
 
@@ -90,14 +91,14 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
      * @param index The index to set the value at.
-     * @param value The targetIds to set.
+     * @param value The userIds to set.
      */
-    private void setTargetIds(int index, long value) {
-        ensureTargetIdsIsMutable();
-        targetIds_.setLong(index, value);
+    private void setUserIds(int index, long value) {
+        ensureUserIdsIsMutable();
+        userIds_.setLong(index, value);
     }
 
     /**
@@ -105,13 +106,13 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @param value The targetIds to add.
+     * @param value The userIds to add.
      */
-    private void addTargetIds(long value) {
-        ensureTargetIdsIsMutable();
-        targetIds_.addLong(value);
+    private void addUserIds(long value) {
+        ensureUserIdsIsMutable();
+        userIds_.addLong(value);
     }
 
     /**
@@ -119,13 +120,13 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      *
-     * @param values The targetIds to add.
+     * @param values The userIds to add.
      */
-    private void addAllTargetIds(java.lang.Iterable<? extends java.lang.Long> values) {
-        ensureTargetIdsIsMutable();
-        com.google.protobuf.AbstractMessageLite.addAll(values, targetIds_);
+    private void addAllUserIds(java.lang.Iterable<? extends java.lang.Long> values) {
+        ensureUserIdsIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, userIds_);
     }
 
     /**
@@ -133,10 +134,10 @@ public final class QueryConversationsRequest extends
      * Private conversations
      * </pre>
      *
-     * <code>repeated int64 target_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      */
-    private void clearTargetIds() {
-        targetIds_ = emptyLongList();
+    private void clearUserIds() {
+        userIds_ = emptyLongList();
     }
 
     public static final int GROUP_IDS_FIELD_NUMBER = 2;
@@ -185,7 +186,7 @@ public final class QueryConversationsRequest extends
         return groupIds_.getLong(index);
     }
 
-    private int groupIdsMemoizedSerializedSize = -1;
+    private final int groupIdsMemoizedSerializedSize = -1;
 
     private void ensureGroupIdsIsMutable() {
         com.google.protobuf.Internal.LongList tmp = groupIds_;
@@ -246,6 +247,111 @@ public final class QueryConversationsRequest extends
      */
     private void clearGroupIds() {
         groupIds_ = emptyLongList();
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.request.conversation.QueryConversationsRequest parseFrom(
@@ -354,13 +460,13 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
-         * @return A list containing the targetIds.
+         * @return A list containing the userIds.
          */
         @java.lang.Override
-        public java.util.List<java.lang.Long> getTargetIdsList() {
-            return java.util.Collections.unmodifiableList(instance.getTargetIdsList());
+        public java.util.List<java.lang.Long> getUserIdsList() {
+            return java.util.Collections.unmodifiableList(instance.getUserIdsList());
         }
 
         /**
@@ -368,13 +474,13 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
-         * @return The count of targetIds.
+         * @return The count of userIds.
          */
         @java.lang.Override
-        public int getTargetIdsCount() {
-            return instance.getTargetIdsCount();
+        public int getUserIdsCount() {
+            return instance.getUserIdsCount();
         }
 
         /**
@@ -382,14 +488,14 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
          * @param index The index of the element to return.
-         * @return The targetIds at the given index.
+         * @return The userIds at the given index.
          */
         @java.lang.Override
-        public long getTargetIds(int index) {
-            return instance.getTargetIds(index);
+        public long getUserIds(int index) {
+            return instance.getUserIds(index);
         }
 
         /**
@@ -397,14 +503,14 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
-         * @param value The targetIds to set.
+         * @param value The userIds to set.
          * @return This builder for chaining.
          */
-        public Builder setTargetIds(int index, long value) {
+        public Builder setUserIds(int index, long value) {
             copyOnWrite();
-            instance.setTargetIds(index, value);
+            instance.setUserIds(index, value);
             return this;
         }
 
@@ -413,14 +519,14 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
-         * @param value The targetIds to add.
+         * @param value The userIds to add.
          * @return This builder for chaining.
          */
-        public Builder addTargetIds(long value) {
+        public Builder addUserIds(long value) {
             copyOnWrite();
-            instance.addTargetIds(value);
+            instance.addUserIds(value);
             return this;
         }
 
@@ -429,14 +535,14 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
-         * @param values The targetIds to add.
+         * @param values The userIds to add.
          * @return This builder for chaining.
          */
-        public Builder addAllTargetIds(java.lang.Iterable<? extends java.lang.Long> values) {
+        public Builder addAllUserIds(java.lang.Iterable<? extends java.lang.Long> values) {
             copyOnWrite();
-            instance.addAllTargetIds(values);
+            instance.addAllUserIds(values);
             return this;
         }
 
@@ -445,13 +551,13 @@ public final class QueryConversationsRequest extends
          * Private conversations
          * </pre>
          *
-         * <code>repeated int64 target_ids = 1;</code>
+         * <code>repeated int64 user_ids = 1;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearTargetIds() {
+        public Builder clearUserIds() {
             copyOnWrite();
-            instance.clearTargetIds();
+            instance.clearUserIds();
             return this;
         }
 
@@ -561,12 +667,127 @@ public final class QueryConversationsRequest extends
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.QueryConversationsRequest)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -578,9 +799,13 @@ public final class QueryConversationsRequest extends
                 return new Builder();
             }
             case BUILD_MESSAGE_INFO: {
-                java.lang.Object[] objects = new java.lang.Object[]{"targetIds_", "groupIds_",};
+                java.lang.Object[] objects = new java.lang.Object[]{"userIds_",
+                        "groupIds_",
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0002\u0000\u0001%\u0002%";
+                        "\u0000\u0003\u0000\u0000\u0001\u000f\u0003\u0000\u0003\u0000\u0001%\u0002%\u000f"
+                                + "\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -613,7 +838,6 @@ public final class QueryConversationsRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.QueryConversationsRequest)
     private static final im.turms.client.model.proto.request.conversation.QueryConversationsRequest DEFAULT_INSTANCE;
-
     static {
         QueryConversationsRequest defaultInstance = new QueryConversationsRequest();
         // New instances are implicitly immutable so no need to make

@@ -63,6 +63,14 @@ const UserRelationship$json = {
       '17': true
     },
     {'1': 'name', '3': 6, '4': 1, '5': 9, '9': 5, '10': 'name', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_owner_id'},
@@ -80,6 +88,7 @@ final $typed_data.Uint8List userRelationshipDescriptor = $convert.base64Decode(
     'VsYXRlZF91c2VyX2lkGAIgASgDSAFSDXJlbGF0ZWRVc2VySWSIAQESIgoKYmxvY2tfZGF0ZRgD'
     'IAEoA0gCUglibG9ja0RhdGWIAQESJAoLZ3JvdXBfaW5kZXgYBCABKANIA1IKZ3JvdXBJbmRleI'
     'gBARIyChJlc3RhYmxpc2htZW50X2RhdGUYBSABKANIBFIRZXN0YWJsaXNobWVudERhdGWIAQES'
-    'FwoEbmFtZRgGIAEoCUgFUgRuYW1liAEBQgsKCV9vd25lcl9pZEISChBfcmVsYXRlZF91c2VyX2'
-    'lkQg0KC19ibG9ja19kYXRlQg4KDF9ncm91cF9pbmRleEIVChNfZXN0YWJsaXNobWVudF9kYXRl'
-    'QgcKBV9uYW1l');
+    'FwoEbmFtZRgGIAEoCUgFUgRuYW1liAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW'
+    '0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCCwoJX293bmVyX2lkQhIKEF9y'
+    'ZWxhdGVkX3VzZXJfaWRCDQoLX2Jsb2NrX2RhdGVCDgoMX2dyb3VwX2luZGV4QhUKE19lc3RhYm'
+    'xpc2htZW50X2RhdGVCBwoFX25hbWU=');

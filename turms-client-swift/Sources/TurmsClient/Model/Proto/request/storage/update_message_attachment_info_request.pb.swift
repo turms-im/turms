@@ -87,6 +87,8 @@ public struct UpdateMessageAttachmentInfoRequest {
     /// Clears the value of `groupIDToUnshareWith`. Subsequent reads from it will return its default value.
     public mutating func clearGroupIDToUnshareWith() { _groupIDToUnshareWith = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -116,6 +118,7 @@ extension UpdateMessageAttachmentInfoRequest: SwiftProtobuf.Message, SwiftProtob
         4: .standard(proto: "user_id_to_unshare_with"),
         5: .standard(proto: "group_id_to_share_with"),
         6: .standard(proto: "group_id_to_unshare_with"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -130,6 +133,7 @@ extension UpdateMessageAttachmentInfoRequest: SwiftProtobuf.Message, SwiftProtob
             case 4: try decoder.decodeSingularInt64Field(value: &_userIDToUnshareWith)
             case 5: try decoder.decodeSingularInt64Field(value: &_groupIDToShareWith)
             case 6: try decoder.decodeSingularInt64Field(value: &_groupIDToUnshareWith)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -158,6 +162,9 @@ extension UpdateMessageAttachmentInfoRequest: SwiftProtobuf.Message, SwiftProtob
         try { if let v = self._groupIDToUnshareWith {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -168,6 +175,7 @@ extension UpdateMessageAttachmentInfoRequest: SwiftProtobuf.Message, SwiftProtob
         if lhs._userIDToUnshareWith != rhs._userIDToUnshareWith { return false }
         if lhs._groupIDToShareWith != rhs._groupIDToShareWith { return false }
         if lhs._groupIDToUnshareWith != rhs._groupIDToUnshareWith { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

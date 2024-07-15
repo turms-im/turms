@@ -30,10 +30,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
-import im.turms.server.common.infra.lang.Quadruple;
-import im.turms.server.common.infra.lang.Triple;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.serialization.DeserializationException;
@@ -52,11 +49,11 @@ public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
 
-    private static final Map<Triple<Class<?>, Class<?>, Boolean>, TurmsIterableCodec> CLASS_TO_ITERABLE_CODEC =
+    private static final Map<IterableCodecKey<?, ?>, TurmsIterableCodec<?, ?>> KEY_TO_ITERABLE_CODEC =
             new ConcurrentHashMap<>(32);
-    private static final Map<Quadruple<Class<?>, Class<?>, Class<?>, Boolean>, TurmsMapCodec> CLASS_TO_MAP_CODEC =
+    private static final Map<MapCodecKey<?, ?>, TurmsMapCodec<?, ?>> KEY_TO_MAP_CODEC =
             new ConcurrentHashMap<>(32);
-    private static final Map<Pair<Class<?>, Boolean>, MongoCodec<?>> CLASS_TO_ENUM_CODEC =
+    private static final Map<EnumCodecKey<?>, MongoCodec<?>> KEY_TO_ENUM_CODEC =
             new ConcurrentHashMap<>(32);
 
     private final CodecRegistry registry;
@@ -252,41 +249,63 @@ public class EntityCodec<T> extends MongoCodec<T> {
     private <F> Codec<F> getCodec(EntityField<F> field) {
         Class<?> fieldClass = field.getFieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
-            return CLASS_TO_ITERABLE_CODEC.computeIfAbsent(
-                    Triple.of(fieldClass, field.getElementClass(), field.isEnumNumber()),
-                    triple -> {
-                        TurmsIterableCodec iterableCodec = new TurmsIterableCodec(
-                                triple.first(),
-                                triple.second(),
-                                triple.third());
+            return (Codec<F>) KEY_TO_ITERABLE_CODEC.computeIfAbsent(new IterableCodecKey<>(
+                    fieldClass,
+                    field.getElementClass(),
+                    field.isEnumNumber()), key -> {
+                        TurmsIterableCodec<?, ?> iterableCodec = new TurmsIterableCodec<>(
+                                key.iterableClass,
+                                key.elementClass,
+                                key.isEnumNumber);
                         iterableCodec.setRegistry(registry);
                         return iterableCodec;
                     });
         } else if (Map.class.isAssignableFrom(fieldClass)) {
-            Quadruple<Class<?>, Class<?>, Class<?>, Boolean> key = Quadruple.of(fieldClass,
+            return (Codec<F>) KEY_TO_MAP_CODEC.computeIfAbsent(new MapCodecKey<>(
+                    (Class) fieldClass,
                     field.getKeyClass(),
                     field.getElementClass(),
-                    field.isEnumNumber());
-            return CLASS_TO_MAP_CODEC.computeIfAbsent(key, quadruple -> {
-                TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(
-                        quadruple.first(),
-                        quadruple.second(),
-                        quadruple.third(),
-                        quadruple.fourth());
-                mapCodec.setRegistry(registry);
-                return mapCodec;
-            });
+                    field.isEnumNumber()), key -> {
+                        TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(
+                                key.ownerClass,
+                                key.keyClass,
+                                key.valueClass,
+                                key.isEnumNumber);
+                        mapCodec.setRegistry(registry);
+                        return mapCodec;
+                    });
         } else if (fieldClass.isEnum()) {
-            Pair<Class<?>, Boolean> pair = Pair.of(fieldClass, field.isEnumNumber());
-            return (Codec<F>) CLASS_TO_ENUM_CODEC.computeIfAbsent(pair,
-                    key -> key.second()
-                            ? new EnumNumberCodec<>((Class) key.first())
-                            : new EnumStringCodec<>((Class) key.first()));
+            return (Codec<F>) KEY_TO_ENUM_CODEC.computeIfAbsent(
+                    new EnumCodecKey<>(fieldClass, field.isEnumNumber()),
+                    key -> key.isEnumNumber
+                            ? new EnumNumberCodec<>((Class) key.fieldClass)
+                            : new EnumStringCodec<>((Class) key.fieldClass));
         } else {
             if (fieldClass.isPrimitive()) {
                 fieldClass = PrimitiveUtil.primitiveToWrapper(fieldClass);
             }
             return (Codec<F>) registry.get(fieldClass);
         }
+    }
+
+    private record IterableCodecKey<I, E>(
+            Class<I> iterableClass,
+            Class<E> elementClass,
+            boolean isEnumNumber
+    ) {
+    }
+
+    private record MapCodecKey<K, V>(
+            Class<Map<K, V>> ownerClass,
+            Class<K> keyClass,
+            Class<V> valueClass,
+            boolean isEnumNumber
+    ) {
+    }
+
+    private record EnumCodecKey<F>(
+            Class<F> fieldClass,
+            boolean isEnumNumber
+    ) {
     }
 }

@@ -52,7 +52,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeviceType.class.getName());
     }
@@ -139,7 +139,7 @@ public enum DeviceType implements com.google.protobuf.ProtocolMessageEnum {
         return im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass
                 .getDescriptor()
                 .getEnumTypes()
-                .get(0);
+                .getFirst();
     }
 
     private static final DeviceType[] VALUES = values();

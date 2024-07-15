@@ -26,7 +26,7 @@ public final class UpdateConversationSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateConversationSettingsRequestOuterClass.class.getName());
     }
@@ -51,16 +51,17 @@ public final class UpdateConversationSettingsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n?request/conversation/update_conversati"
                 + "on_settings_request.proto\022\016im.turms.prot"
-                + "o\032\030model/common/value.proto\"\204\002\n!UpdateCo"
+                + "o\032\030model/common/value.proto\"\266\002\n!UpdateCo"
                 + "nversationSettingsRequest\022\024\n\007user_id\030\001 \001"
                 + "(\003H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022Q\n\010settin"
                 + "gs\030\003 \003(\0132?.im.turms.proto.UpdateConversa"
-                + "tionSettingsRequest.SettingsEntry\032F\n\rSet"
-                + "tingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(\0132\025"
-                + ".im.turms.proto.Value:\0028\001B\n\n\010_user_idB\013\n"
-                + "\t_group_idBD\n=im.turms.server.common.acc"
-                + "ess.client.dto.request.conversationP\001\272\002\000"
-                + "b\006proto3"};
+                + "tionSettingsRequest.SettingsEntry\0220\n\021cus"
+                + "tom_attributes\030\017 \003(\0132\025.im.turms.proto.Va"
+                + "lue\032F\n\rSettingsEntry\022\013\n\003key\030\001 \001(\t\022$\n\005val"
+                + "ue\030\002 \001(\0132\025.im.turms.proto.Value:\0028\001B\n\n\010_"
+                + "user_idB\013\n\t_group_idBD\n=im.turms.server."
+                + "common.access.client.dto.request.convers"
+                + "ationP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -68,15 +69,18 @@ public final class UpdateConversationSettingsRequestOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateConversationSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateConversationSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateConversationSettingsRequest_descriptor,
-                        new java.lang.String[]{"UserId", "GroupId", "Settings",});
+                        new java.lang.String[]{"UserId",
+                                "GroupId",
+                                "Settings",
+                                "CustomAttributes",});
         internal_static_im_turms_proto_UpdateConversationSettingsRequest_SettingsEntry_descriptor =
                 internal_static_im_turms_proto_UpdateConversationSettingsRequest_descriptor
                         .getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateConversationSettingsRequest_SettingsEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateConversationSettingsRequest_SettingsEntry_descriptor,

@@ -30,7 +30,7 @@ public final class UserRelationshipsWithVersion extends com.google.protobuf.Gene
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserRelationshipsWithVersion.class.getName());
     }
@@ -104,7 +104,7 @@ public final class UserRelationshipsWithVersion extends com.google.protobuf.Gene
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_ = 0L;
+    private long lastUpdatedDate_;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>

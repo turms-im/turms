@@ -26,15 +26,15 @@ public struct UpdateConversationRequest {
     // methods supported on all messages.
 
     /// Query filter
-    public var targetID: Int64 {
-        get { return _targetID ?? 0 }
-        set { _targetID = newValue }
+    public var userID: Int64 {
+        get { return _userID ?? 0 }
+        set { _userID = newValue }
     }
 
-    /// Returns true if `targetID` has been explicitly set.
-    public var hasTargetID: Bool { return _targetID != nil }
-    /// Clears the value of `targetID`. Subsequent reads from it will return its default value.
-    public mutating func clearTargetID() { _targetID = nil }
+    /// Returns true if `userID` has been explicitly set.
+    public var hasUserID: Bool { return _userID != nil }
+    /// Clears the value of `userID`. Subsequent reads from it will return its default value.
+    public mutating func clearUserID() { _userID = nil }
 
     public var groupID: Int64 {
         get { return _groupID ?? 0 }
@@ -49,11 +49,13 @@ public struct UpdateConversationRequest {
     /// Update
     public var readDate: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
 
-    fileprivate var _targetID: Int64?
+    fileprivate var _userID: Int64?
     fileprivate var _groupID: Int64?
 }
 
@@ -68,9 +70,10 @@ private let _protobuf_package = "im.turms.proto"
 extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
     public static let protoMessageName: String = _protobuf_package + ".UpdateConversationRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-        1: .standard(proto: "target_id"),
+        1: .standard(proto: "user_id"),
         2: .standard(proto: "group_id"),
         3: .standard(proto: "read_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -79,9 +82,10 @@ extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             // allocates stack space for every case branch when no optimizations are
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
-            case 1: try decoder.decodeSingularInt64Field(value: &_targetID)
+            case 1: try decoder.decodeSingularInt64Field(value: &_userID)
             case 2: try decoder.decodeSingularInt64Field(value: &_groupID)
             case 3: try decoder.decodeSingularInt64Field(value: &readDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -92,7 +96,7 @@ extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         // allocates stack space for every if/case branch local when no optimizations
         // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
         // https://github.com/apple/swift-protobuf/issues/1182
-        try { if let v = self._targetID {
+        try { if let v = self._userID {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
         } }()
         try { if let v = self._groupID {
@@ -101,13 +105,17 @@ extension UpdateConversationRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if readDate != 0 {
             try visitor.visitSingularInt64Field(value: readDate, fieldNumber: 3)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UpdateConversationRequest, rhs: UpdateConversationRequest) -> Bool {
-        if lhs._targetID != rhs._targetID { return false }
+        if lhs._userID != rhs._userID { return false }
         if lhs._groupID != rhs._groupID { return false }
         if lhs.readDate != rhs.readDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

@@ -46,6 +46,14 @@ const UpdateRelationshipRequest$json = {
       '17': true
     },
     {'1': 'name', '3': 5, '4': 1, '5': 9, '9': 3, '10': 'name', '17': true},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_blocked'},
@@ -60,5 +68,7 @@ final $typed_data.Uint8List updateRelationshipRequestDescriptor = $convert.base6
     'ChlVcGRhdGVSZWxhdGlvbnNoaXBSZXF1ZXN0EhcKB3VzZXJfaWQYASABKANSBnVzZXJJZBIdCg'
     'dibG9ja2VkGAIgASgISABSB2Jsb2NrZWSIAQESKwoPbmV3X2dyb3VwX2luZGV4GAMgASgFSAFS'
     'DW5ld0dyb3VwSW5kZXiIAQESMQoSZGVsZXRlX2dyb3VwX2luZGV4GAQgASgFSAJSEGRlbGV0ZU'
-    'dyb3VwSW5kZXiIAQESFwoEbmFtZRgFIAEoCUgDUgRuYW1liAEBQgoKCF9ibG9ja2VkQhIKEF9u'
-    'ZXdfZ3JvdXBfaW5kZXhCFQoTX2RlbGV0ZV9ncm91cF9pbmRleEIHCgVfbmFtZQ==');
+    'dyb3VwSW5kZXiIAQESFwoEbmFtZRgFIAEoCUgDUgRuYW1liAEBEkIKEWN1c3RvbV9hdHRyaWJ1'
+    'dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCCgoIX2'
+    'Jsb2NrZWRCEgoQX25ld19ncm91cF9pbmRleEIVChNfZGVsZXRlX2dyb3VwX2luZGV4QgcKBV9u'
+    'YW1l');

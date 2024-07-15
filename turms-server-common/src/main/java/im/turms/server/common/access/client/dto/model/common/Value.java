@@ -29,7 +29,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 Value.class.getName());
     }
@@ -40,6 +40,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
     }
 
     private Value() {
+        listValue_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -54,7 +55,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
                         im.turms.server.common.access.client.dto.model.common.Value.Builder.class);
     }
 
-    private int kindCase_ = 0;
+    private int kindCase_;
     @SuppressWarnings("serial")
     private java.lang.Object kind_;
 
@@ -180,7 +181,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 3) {
             return (java.lang.Float) kind_;
         }
-        return 0F;
+        return 0.0F;
     }
 
     public static final int DOUBLE_VALUE_FIELD_NUMBER = 4;
@@ -205,7 +206,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 4) {
             return (java.lang.Double) kind_;
         }
-        return 0D;
+        return 0.0D;
     }
 
     public static final int BOOL_VALUE_FIELD_NUMBER = 5;
@@ -310,6 +311,51 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         }
     }
 
+    public static final int LIST_VALUE_FIELD_NUMBER = 8;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> listValue_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getListValueList() {
+        return listValue_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getListValueOrBuilderList() {
+        return listValue_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    @java.lang.Override
+    public int getListValueCount() {
+        return listValue_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getListValue(int index) {
+        return listValue_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getListValueOrBuilder(
+            int index) {
+        return listValue_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
 
     @java.lang.Override
@@ -349,6 +395,9 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 7) {
             com.google.protobuf.GeneratedMessage.writeString(output, 7, kind_);
         }
+        for (Value value : listValue_) {
+            output.writeMessage(8, value);
+        }
         getUnknownFields().writeTo(output);
     }
 
@@ -382,6 +431,9 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 7) {
             size += com.google.protobuf.GeneratedMessage.computeStringSize(7, kind_);
         }
+        for (Value value : listValue_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(8, value);
+        }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
@@ -396,6 +448,9 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             return super.equals(obj);
         }
 
+        if (!getListValueList().equals(other.getListValueList())) {
+            return false;
+        }
         if (!getKindCase().equals(other.getKindCase())) {
             return false;
         }
@@ -450,6 +505,10 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
+        if (getListValueCount() > 0) {
+            hash = (37 * hash) + LIST_VALUE_FIELD_NUMBER;
+            hash = (53 * hash) + getListValueList().hashCode();
+        }
         switch (kindCase_) {
             case 1 -> {
                 hash = (37 * hash) + INT32_VALUE_FIELD_NUMBER;
@@ -624,6 +683,13 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         public Builder clear() {
             super.clear();
             bitField0_ = 0;
+            if (listValueBuilder_ == null) {
+                listValue_ = java.util.Collections.emptyList();
+            } else {
+                listValue_ = null;
+                listValueBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000080;
             kindCase_ = 0;
             kind_ = null;
             return this;
@@ -652,12 +718,26 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         public im.turms.server.common.access.client.dto.model.common.Value buildPartial() {
             im.turms.server.common.access.client.dto.model.common.Value result =
                     new im.turms.server.common.access.client.dto.model.common.Value(this);
+            buildPartialRepeatedFields(result);
             if (bitField0_ != 0) {
                 buildPartial0(result);
             }
             buildPartialOneofs(result);
             onBuilt();
             return result;
+        }
+
+        private void buildPartialRepeatedFields(
+                im.turms.server.common.access.client.dto.model.common.Value result) {
+            if (listValueBuilder_ == null) {
+                if (((bitField0_ & 0x00000080) != 0)) {
+                    listValue_ = java.util.Collections.unmodifiableList(listValue_);
+                    bitField0_ &= ~0x00000080;
+                }
+                result.listValue_ = listValue_;
+            } else {
+                result.listValue_ = listValueBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -688,13 +768,52 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
                     .getDefaultInstance()) {
                 return this;
             }
+            if (listValueBuilder_ == null) {
+                if (!other.listValue_.isEmpty()) {
+                    if (listValue_.isEmpty()) {
+                        listValue_ = other.listValue_;
+                        bitField0_ &= ~0x00000080;
+                    } else {
+                        ensureListValueIsMutable();
+                        listValue_.addAll(other.listValue_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.listValue_.isEmpty()) {
+                    if (listValueBuilder_.isEmpty()) {
+                        listValueBuilder_.dispose();
+                        listValueBuilder_ = null;
+                        listValue_ = other.listValue_;
+                        bitField0_ &= ~0x00000080;
+                        listValueBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getListValueFieldBuilder()
+                                        : null;
+                    } else {
+                        listValueBuilder_.addAllMessages(other.listValue_);
+                    }
+                }
+            }
             switch (other.getKindCase()) {
-                case INT32_VALUE -> setInt32Value(other.getInt32Value());
-                case INT64_VALUE -> setInt64Value(other.getInt64Value());
-                case FLOAT_VALUE -> setFloatValue(other.getFloatValue());
-                case DOUBLE_VALUE -> setDoubleValue(other.getDoubleValue());
-                case BOOL_VALUE -> setBoolValue(other.getBoolValue());
-                case BYTES_VALUE -> setBytesValue(other.getBytesValue());
+                case INT32_VALUE -> {
+                    setInt32Value(other.getInt32Value());
+                }
+                case INT64_VALUE -> {
+                    setInt64Value(other.getInt64Value());
+                }
+                case FLOAT_VALUE -> {
+                    setFloatValue(other.getFloatValue());
+                }
+                case DOUBLE_VALUE -> {
+                    setDoubleValue(other.getDoubleValue());
+                }
+                case BOOL_VALUE -> {
+                    setBoolValue(other.getBoolValue());
+                }
+                case BYTES_VALUE -> {
+                    setBytesValue(other.getBytesValue());
+                }
                 case STRING_VALUE -> {
                     kindCase_ = 7;
                     kind_ = other.kind_;
@@ -756,6 +875,15 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
                             kindCase_ = 7;
                             kind_ = s;
                         } // case 58
+                        case 66 -> {
+                            Value m = input.readMessage(Value.parser(), extensionRegistry);
+                            if (listValueBuilder_ == null) {
+                                ensureListValueIsMutable();
+                                listValue_.add(m);
+                            } else {
+                                listValueBuilder_.addMessage(m);
+                            }
+                        } // case 66
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -771,7 +899,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             return this;
         }
 
-        private int kindCase_ = 0;
+        private int kindCase_;
         private java.lang.Object kind_;
 
         public KindCase getKindCase() {
@@ -903,7 +1031,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             if (kindCase_ == 3) {
                 return (java.lang.Float) kind_;
             }
-            return 0F;
+            return 0.0F;
         }
 
         /**
@@ -952,7 +1080,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             if (kindCase_ == 4) {
                 return (java.lang.Double) kind_;
             }
-            return 0D;
+            return 0.0D;
         }
 
         /**
@@ -1181,6 +1309,266 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             kind_ = value;
             onChanged();
             return this;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> listValue_ =
+                java.util.Collections.emptyList();
+
+        private void ensureListValueIsMutable() {
+            if ((bitField0_ & 0x00000080) == 0) {
+                listValue_ = new java.util.ArrayList<>(listValue_);
+                bitField0_ |= 0x00000080;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> listValueBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getListValueList() {
+            if (listValueBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(listValue_);
+            } else {
+                return listValueBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public int getListValueCount() {
+            if (listValueBuilder_ == null) {
+                return listValue_.size();
+            } else {
+                return listValueBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getListValue(int index) {
+            if (listValueBuilder_ == null) {
+                return listValue_.get(index);
+            } else {
+                return listValueBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder setListValue(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (listValueBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureListValueIsMutable();
+                listValue_.set(index, value);
+                onChanged();
+            } else {
+                listValueBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder setListValue(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (listValueBuilder_ == null) {
+                ensureListValueIsMutable();
+                listValue_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                listValueBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder addListValue(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (listValueBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureListValueIsMutable();
+                listValue_.add(value);
+                onChanged();
+            } else {
+                listValueBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder addListValue(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (listValueBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureListValueIsMutable();
+                listValue_.add(index, value);
+                onChanged();
+            } else {
+                listValueBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder addListValue(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (listValueBuilder_ == null) {
+                ensureListValueIsMutable();
+                listValue_.add(builderForValue.build());
+                onChanged();
+            } else {
+                listValueBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder addListValue(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (listValueBuilder_ == null) {
+                ensureListValueIsMutable();
+                listValue_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                listValueBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder addAllListValue(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (listValueBuilder_ == null) {
+                ensureListValueIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, listValue_);
+                onChanged();
+            } else {
+                listValueBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder clearListValue() {
+            if (listValueBuilder_ == null) {
+                listValue_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000080;
+                onChanged();
+            } else {
+                listValueBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public Builder removeListValue(int index) {
+            if (listValueBuilder_ == null) {
+                ensureListValueIsMutable();
+                listValue_.remove(index);
+                onChanged();
+            } else {
+                listValueBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getListValueBuilder(
+                int index) {
+            return getListValueFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getListValueOrBuilder(
+                int index) {
+            if (listValueBuilder_ == null) {
+                return listValue_.get(index);
+            } else {
+                return listValueBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getListValueOrBuilderList() {
+            if (listValueBuilder_ != null) {
+                return listValueBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(listValue_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addListValueBuilder() {
+            return getListValueFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addListValueBuilder(
+                int index) {
+            return getListValueFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getListValueBuilderList() {
+            return getListValueFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getListValueFieldBuilder() {
+            if (listValueBuilder_ == null) {
+                listValueBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        listValue_,
+                        ((bitField0_ & 0x00000080) != 0),
+                        getParentForChildren(),
+                        isClean());
+                listValue_ = null;
+            }
+            return listValueBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.Value)

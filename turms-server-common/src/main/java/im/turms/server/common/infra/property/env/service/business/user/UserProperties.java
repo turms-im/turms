@@ -98,9 +98,7 @@ public class UserProperties {
     @Min(0)
     private int maxProfilePictureLength = 100;
 
-    @Description("The list of allowed user settings")
-    @GlobalProperty
-    @MutableProperty
-    private List<CustomSettingProperties> allowedSettings = Collections.emptyList();
+    @NestedConfigurationProperty
+    private UserSettingsProperties settings = new UserSettingsProperties();
 
 }

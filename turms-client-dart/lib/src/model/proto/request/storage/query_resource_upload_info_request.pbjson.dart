@@ -38,15 +38,14 @@ const QueryResourceUploadInfoRequest$json = {
       '17': true
     },
     {
-      '1': 'extra',
-      '3': 6,
+      '1': 'custom_attributes',
+      '3': 15,
       '4': 3,
       '5': 11,
-      '6': '.im.turms.proto.QueryResourceUploadInfoRequest.ExtraEntry',
-      '10': 'extra'
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
     },
   ],
-  '3': [QueryResourceUploadInfoRequest_ExtraEntry$json],
   '8': [
     {'1': '_id_num'},
     {'1': '_id_str'},
@@ -55,23 +54,11 @@ const QueryResourceUploadInfoRequest$json = {
   ],
 };
 
-@$core.Deprecated('Use queryResourceUploadInfoRequestDescriptor instead')
-const QueryResourceUploadInfoRequest_ExtraEntry$json = {
-  '1': 'ExtraEntry',
-  '2': [
-    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
-  ],
-  '7': {'7': true},
-};
-
 /// Descriptor for `QueryResourceUploadInfoRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List queryResourceUploadInfoRequestDescriptor = $convert.base64Decode(
     'Ch5RdWVyeVJlc291cmNlVXBsb2FkSW5mb1JlcXVlc3QSNwoEdHlwZRgBIAEoDjIjLmltLnR1cm'
     '1zLnByb3RvLlN0b3JhZ2VSZXNvdXJjZVR5cGVSBHR5cGUSGgoGaWRfbnVtGAIgASgDSABSBWlk'
     'TnVtiAEBEhoKBmlkX3N0chgDIAEoCUgBUgVpZFN0cogBARIXCgRuYW1lGAQgASgJSAJSBG5hbW'
-    'WIAQESIgoKbWVkaWFfdHlwZRgFIAEoCUgDUgltZWRpYVR5cGWIAQESTwoFZXh0cmEYBiADKAsy'
-    'OS5pbS50dXJtcy5wcm90by5RdWVyeVJlc291cmNlVXBsb2FkSW5mb1JlcXVlc3QuRXh0cmFFbn'
-    'RyeVIFZXh0cmEaOAoKRXh0cmFFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEo'
-    'CVIFdmFsdWU6AjgBQgkKB19pZF9udW1CCQoHX2lkX3N0ckIHCgVfbmFtZUINCgtfbWVkaWFfdH'
-    'lwZQ==');
+    'WIAQESIgoKbWVkaWFfdHlwZRgFIAEoCUgDUgltZWRpYVR5cGWIAQESQgoRY3VzdG9tX2F0dHJp'
+    'YnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlc0IJCg'
+    'dfaWRfbnVtQgkKB19pZF9zdHJCBwoFX25hbWVCDQoLX21lZGlhX3R5cGU=');

@@ -27,6 +27,8 @@ public struct DeleteFriendRequestRequest {
 
     public var requestID: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -44,6 +46,7 @@ extension DeleteFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     public static let protoMessageName: String = _protobuf_package + ".DeleteFriendRequestRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "request_id"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -53,6 +56,7 @@ extension DeleteFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt64Field(value: &requestID)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -62,11 +66,15 @@ extension DeleteFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
         if requestID != 0 {
             try visitor.visitSingularInt64Field(value: requestID, fieldNumber: 1)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: DeleteFriendRequestRequest, rhs: DeleteFriendRequestRequest) -> Bool {
         if lhs.requestID != rhs.requestID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

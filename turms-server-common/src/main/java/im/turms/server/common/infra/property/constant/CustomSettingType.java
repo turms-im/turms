@@ -24,7 +24,8 @@ public enum CustomSettingType {
     INT,
     LONG,
     DOUBLE,
-    STRING,
     BOOL,
-    LANGUAGE
+    STRING,
+    LANGUAGE,
+    ARRAY
 }

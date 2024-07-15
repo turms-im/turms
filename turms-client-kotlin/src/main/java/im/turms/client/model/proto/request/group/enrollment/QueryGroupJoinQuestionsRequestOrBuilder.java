@@ -48,4 +48,19 @@ public interface QueryGroupJoinQuestionsRequestOrBuilder extends
      * @return The lastUpdatedDate.
      */
     long getLastUpdatedDate();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
 }

@@ -63,6 +63,8 @@ public struct CreateSessionRequest {
     /// Clears the value of `location`. Subsequent reads from it will return its default value.
     public mutating func clearLocation() { _location = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -90,6 +92,7 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         5: .standard(proto: "device_type"),
         6: .standard(proto: "device_details"),
         7: .same(proto: "location"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -105,6 +108,7 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 5: try decoder.decodeSingularEnumField(value: &deviceType)
             case 6: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString, SwiftProtobuf.ProtobufString>.self, value: &deviceDetails)
             case 7: try decoder.decodeSingularMessageField(value: &_location)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -136,6 +140,9 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         try { if let v = self._location {
             try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -147,6 +154,7 @@ extension CreateSessionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs.deviceType != rhs.deviceType { return false }
         if lhs.deviceDetails != rhs.deviceDetails { return false }
         if lhs._location != rhs._location { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

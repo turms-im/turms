@@ -26,7 +26,7 @@ public final class UserLocationOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserLocationOuterClass.class.getName());
     }
@@ -50,22 +50,30 @@ public final class UserLocationOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\036model/user/user_location.proto\022\016im.tur"
-                + "ms.proto\"\305\001\n\014UserLocation\022\020\n\010latitude\030\001 "
-                + "\001(\002\022\021\n\tlongitude\030\002 \001(\002\022\026\n\ttimestamp\030\003 \001("
-                + "\003H\000\210\001\001\022:\n\007details\030\004 \003(\0132).im.turms.proto"
-                + ".UserLocation.DetailsEntry\032.\n\014DetailsEnt"
-                + "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\014\n\n_t"
-                + "imestampB:\n3im.turms.server.common.acces"
-                + "s.client.dto.model.userP\001\272\002\000b\006proto3"};
+                + "ms.proto\032\030model/common/value.proto\"\367\001\n\014U"
+                + "serLocation\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlongitu"
+                + "de\030\002 \001(\002\022\026\n\ttimestamp\030\003 \001(\003H\000\210\001\001\022:\n\007deta"
+                + "ils\030\004 \003(\0132).im.turms.proto.UserLocation."
+                + "DetailsEntry\0220\n\021custom_attributes\030\017 \003(\0132"
+                + "\025.im.turms.proto.Value\032.\n\014DetailsEntry\022\013"
+                + "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\014\n\n_times"
+                + "tampB:\n3im.turms.server.common.access.cl"
+                + "ient.dto.model.userP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UserLocation_descriptor = getDescriptor().getMessageTypes()
                 .get(0);
         internal_static_im_turms_proto_UserLocation_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_descriptor,
-                        new java.lang.String[]{"Latitude", "Longitude", "Timestamp", "Details",});
+                        new java.lang.String[]{"Latitude",
+                                "Longitude",
+                                "Timestamp",
+                                "Details",
+                                "CustomAttributes",});
         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor =
                 internal_static_im_turms_proto_UserLocation_descriptor.getNestedTypes()
                         .get(0);
@@ -74,6 +82,7 @@ public final class UserLocationOuterClass {
                         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor,
                         new java.lang.String[]{"Key", "Value",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

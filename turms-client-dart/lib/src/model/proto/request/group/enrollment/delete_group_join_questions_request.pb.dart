@@ -14,10 +14,13 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class DeleteGroupJoinQuestionsRequest extends $pb.GeneratedMessage {
   factory DeleteGroupJoinQuestionsRequest({
     $fixnum.Int64? groupId,
     $core.Iterable<$fixnum.Int64>? questionIds,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -25,6 +28,9 @@ class DeleteGroupJoinQuestionsRequest extends $pb.GeneratedMessage {
     }
     if (questionIds != null) {
       $result.questionIds.addAll(questionIds);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -43,6 +49,9 @@ class DeleteGroupJoinQuestionsRequest extends $pb.GeneratedMessage {
     ..aInt64(1, _omitFieldNames ? '' : 'groupId')
     ..p<$fixnum.Int64>(
         2, _omitFieldNames ? '' : 'questionIds', $pb.PbFieldType.K6)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -87,6 +96,9 @@ class DeleteGroupJoinQuestionsRequest extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $core.List<$fixnum.Int64> get questionIds => $_getList(1);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

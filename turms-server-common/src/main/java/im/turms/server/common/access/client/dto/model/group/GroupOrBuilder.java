@@ -195,4 +195,66 @@ public interface GroupOrBuilder extends
      * @return The active.
      */
     boolean getActive();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    int getUserDefinedAttributesCount();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    boolean containsUserDefinedAttributes(java.lang.String key);
+
+    /**
+     * Use {@link #getUserDefinedAttributesMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, im.turms.server.common.access.client.dto.model.common.Value> getUserDefinedAttributes();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    java.util.Map<java.lang.String, im.turms.server.common.access.client.dto.model.common.Value> getUserDefinedAttributesMap();
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    /* nullable */
+    im.turms.server.common.access.client.dto.model.common.Value getUserDefinedAttributesOrDefault(
+            java.lang.String key,
+            /* nullable */
+            im.turms.server.common.access.client.dto.model.common.Value defaultValue);
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getUserDefinedAttributesOrThrow(
+            java.lang.String key);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index);
 }

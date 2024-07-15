@@ -113,37 +113,28 @@ public interface QueryResourceUploadInfoRequestOrBuilder extends
     com.google.protobuf.ByteString getMediaTypeBytes();
 
     /**
-     * <code>map&lt;string, string&gt; extra = 6;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    int getExtraCount();
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();
 
     /**
-     * <code>map&lt;string, string&gt; extra = 6;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    boolean containsExtra(java.lang.String key);
+    im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(int index);
 
     /**
-     * Use {@link #getExtraMap()} instead.
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, java.lang.String> getExtra();
+    int getCustomAttributesCount();
 
     /**
-     * <code>map&lt;string, string&gt; extra = 6;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    java.util.Map<java.lang.String, java.lang.String> getExtraMap();
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList();
 
     /**
-     * <code>map&lt;string, string&gt; extra = 6;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    /* nullable */
-    java.lang.String getExtraOrDefault(
-            java.lang.String key,
-            /* nullable */
-            java.lang.String defaultValue);
-
-    /**
-     * <code>map&lt;string, string&gt; extra = 6;</code>
-     */
-    java.lang.String getExtraOrThrow(java.lang.String key);
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index);
 }

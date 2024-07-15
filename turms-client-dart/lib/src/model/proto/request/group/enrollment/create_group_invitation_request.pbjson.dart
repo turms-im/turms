@@ -20,12 +20,20 @@ const CreateGroupInvitationRequest$json = {
     {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
     {'1': 'invitee_id', '3': 2, '4': 1, '5': 3, '10': 'inviteeId'},
     {'1': 'content', '3': 3, '4': 1, '5': 9, '10': 'content'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `CreateGroupInvitationRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List createGroupInvitationRequestDescriptor =
-    $convert.base64Decode(
-        'ChxDcmVhdGVHcm91cEludml0YXRpb25SZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cE'
-        'lkEh0KCmludml0ZWVfaWQYAiABKANSCWludml0ZWVJZBIYCgdjb250ZW50GAMgASgJUgdjb250'
-        'ZW50');
+final $typed_data.Uint8List createGroupInvitationRequestDescriptor = $convert.base64Decode(
+    'ChxDcmVhdGVHcm91cEludml0YXRpb25SZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cE'
+    'lkEh0KCmludml0ZWVfaWQYAiABKANSCWludml0ZWVJZBIYCgdjb250ZW50GAMgASgJUgdjb250'
+    'ZW50EkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEG'
+    'N1c3RvbUF0dHJpYnV0ZXM=');

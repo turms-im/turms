@@ -77,6 +77,10 @@ public struct CreateGroupRequest {
     /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
     public mutating func clearMuteEndDate() { _muteEndDate = nil }
 
+    public var userDefinedAttributes: [String: Value] = [:]
+
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -105,6 +109,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         4: .standard(proto: "min_score"),
         5: .standard(proto: "type_id"),
         6: .standard(proto: "mute_end_date"),
+        7: .standard(proto: "user_defined_attributes"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -119,6 +125,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
             case 4: try decoder.decodeSingularInt32Field(value: &_minScore)
             case 5: try decoder.decodeSingularInt64Field(value: &_typeID)
             case 6: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 7: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: &userDefinedAttributes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -147,6 +155,12 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         try { if let v = self._muteEndDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 6)
         } }()
+        if !userDefinedAttributes.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: userDefinedAttributes, fieldNumber: 7)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -157,6 +171,8 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if lhs._minScore != rhs._minScore { return false }
         if lhs._typeID != rhs._typeID { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs.userDefinedAttributes != rhs.userDefinedAttributes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

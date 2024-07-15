@@ -18,10 +18,19 @@ const DeleteGroupRequest$json = {
   '1': 'DeleteGroupRequest',
   '2': [
     {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
 /// Descriptor for `DeleteGroupRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List deleteGroupRequestDescriptor =
-    $convert.base64Decode(
-        'ChJEZWxldGVHcm91cFJlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQ=');
+final $typed_data.Uint8List deleteGroupRequestDescriptor = $convert.base64Decode(
+    'ChJEZWxldGVHcm91cFJlcXVlc3QSGQoIZ3JvdXBfaWQYASABKANSB2dyb3VwSWQSQgoRY3VzdG'
+    '9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmli'
+    'dXRlcw==');

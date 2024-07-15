@@ -18,12 +18,12 @@ const UpdateConversationRequest$json = {
   '1': 'UpdateConversationRequest',
   '2': [
     {
-      '1': 'target_id',
+      '1': 'user_id',
       '3': 1,
       '4': 1,
       '5': 3,
       '9': 0,
-      '10': 'targetId',
+      '10': 'userId',
       '17': true
     },
     {
@@ -36,15 +36,24 @@ const UpdateConversationRequest$json = {
       '17': true
     },
     {'1': 'read_date', '3': 3, '4': 1, '5': 3, '10': 'readDate'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
-    {'1': '_target_id'},
+    {'1': '_user_id'},
     {'1': '_group_id'},
   ],
 };
 
 /// Descriptor for `UpdateConversationRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List updateConversationRequestDescriptor = $convert.base64Decode(
-    'ChlVcGRhdGVDb252ZXJzYXRpb25SZXF1ZXN0EiAKCXRhcmdldF9pZBgBIAEoA0gAUgh0YXJnZX'
-    'RJZIgBARIeCghncm91cF9pZBgCIAEoA0gBUgdncm91cElkiAEBEhsKCXJlYWRfZGF0ZRgDIAEo'
-    'A1IIcmVhZERhdGVCDAoKX3RhcmdldF9pZEILCglfZ3JvdXBfaWQ=');
+    'ChlVcGRhdGVDb252ZXJzYXRpb25SZXF1ZXN0EhwKB3VzZXJfaWQYASABKANIAFIGdXNlcklkiA'
+    'EBEh4KCGdyb3VwX2lkGAIgASgDSAFSB2dyb3VwSWSIAQESGwoJcmVhZF9kYXRlGAMgASgDUghy'
+    'ZWFkRGF0ZRJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbH'
+    'VlUhBjdXN0b21BdHRyaWJ1dGVzQgoKCF91c2VyX2lkQgsKCV9ncm91cF9pZA==');

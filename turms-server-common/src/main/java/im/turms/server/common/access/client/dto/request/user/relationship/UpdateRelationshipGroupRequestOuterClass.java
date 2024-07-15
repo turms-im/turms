@@ -26,7 +26,7 @@ public final class UpdateRelationshipGroupRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateRelationshipGroupRequestOuterClass.class.getName());
     }
@@ -49,21 +49,26 @@ public final class UpdateRelationshipGroupRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nArequest/user/relationship/update_relat"
                 + "ionship_group_request.proto\022\016im.turms.pr"
-                + "oto\"G\n\036UpdateRelationshipGroupRequest\022\023\n"
-                + "\013group_index\030\001 \001(\005\022\020\n\010new_name\030\002 \001(\tBI\nB"
-                + "im.turms.server.common.access.client.dto"
-                + ".request.user.relationshipP\001\272\002\000b\006proto3"};
+                + "oto\032\030model/common/value.proto\"y\n\036UpdateR"
+                + "elationshipGroupRequest\022\023\n\013group_index\030\001"
+                + " \001(\005\022\020\n\010new_name\030\002 \001(\t\0220\n\021custom_attribu"
+                + "tes\030\017 \003(\0132\025.im.turms.proto.ValueBI\nBim.t"
+                + "urms.server.common.access.client.dto.req"
+                + "uest.user.relationshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateRelationshipGroupRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateRelationshipGroupRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateRelationshipGroupRequest_descriptor,
-                        new java.lang.String[]{"GroupIndex", "NewName",});
+                        new java.lang.String[]{"GroupIndex", "NewName", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

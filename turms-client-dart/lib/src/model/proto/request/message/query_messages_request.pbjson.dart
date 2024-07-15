@@ -74,6 +74,14 @@ const QueryMessagesRequest$json = {
       '10': 'descending',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_are_group_messages'},
@@ -93,6 +101,8 @@ final $typed_data.Uint8List queryMessagesRequestDescriptor = $convert.base64Deco
     '9tSWRzEjMKE2RlbGl2ZXJ5X2RhdGVfc3RhcnQYBSABKANIAlIRZGVsaXZlcnlEYXRlU3RhcnSI'
     'AQESLwoRZGVsaXZlcnlfZGF0ZV9lbmQYBiABKANIA1IPZGVsaXZlcnlEYXRlRW5kiAEBEiAKCW'
     '1heF9jb3VudBgHIAEoBUgEUghtYXhDb3VudIgBARIdCgp3aXRoX3RvdGFsGAggASgIUgl3aXRo'
-    'VG90YWwSIwoKZGVzY2VuZGluZxgJIAEoCEgFUgpkZXNjZW5kaW5niAEBQhUKE19hcmVfZ3JvdX'
-    'BfbWVzc2FnZXNCFgoUX2FyZV9zeXN0ZW1fbWVzc2FnZXNCFgoUX2RlbGl2ZXJ5X2RhdGVfc3Rh'
-    'cnRCFAoSX2RlbGl2ZXJ5X2RhdGVfZW5kQgwKCl9tYXhfY291bnRCDQoLX2Rlc2NlbmRpbmc=');
+    'VG90YWwSIwoKZGVzY2VuZGluZxgJIAEoCEgFUgpkZXNjZW5kaW5niAEBEkIKEWN1c3RvbV9hdH'
+    'RyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNC'
+    'FQoTX2FyZV9ncm91cF9tZXNzYWdlc0IWChRfYXJlX3N5c3RlbV9tZXNzYWdlc0IWChRfZGVsaX'
+    'ZlcnlfZGF0ZV9zdGFydEIUChJfZGVsaXZlcnlfZGF0ZV9lbmRCDAoKX21heF9jb3VudEINCgtf'
+    'ZGVzY2VuZGluZw==');

@@ -37,6 +37,14 @@ const DeleteGroupMembersRequest$json = {
       '10': 'quitAfterTransfer',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_successor_id'},
@@ -49,4 +57,6 @@ final $typed_data.Uint8List deleteGroupMembersRequestDescriptor = $convert.base6
     'ChlEZWxldGVHcm91cE1lbWJlcnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm91cElkEh'
     '0KCm1lbWJlcl9pZHMYAiADKANSCW1lbWJlcklkcxImCgxzdWNjZXNzb3JfaWQYAyABKANIAFIL'
     'c3VjY2Vzc29ySWSIAQESMwoTcXVpdF9hZnRlcl90cmFuc2ZlchgEIAEoCEgBUhFxdWl0QWZ0ZX'
-    'JUcmFuc2ZlcogBAUIPCg1fc3VjY2Vzc29yX2lkQhYKFF9xdWl0X2FmdGVyX3RyYW5zZmVy');
+    'JUcmFuc2ZlcogBARJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3Rv'
+    'LlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVzQg8KDV9zdWNjZXNzb3JfaWRCFgoUX3F1aXRfYWZ0ZX'
+    'JfdHJhbnNmZXI=');

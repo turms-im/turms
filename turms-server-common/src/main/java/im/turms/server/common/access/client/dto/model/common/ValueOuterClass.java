@@ -26,7 +26,7 @@ public final class ValueOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 ValueOuterClass.class.getName());
     }
@@ -48,13 +48,14 @@ public final class ValueOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n\030model/common/value.proto\022\016im.turms.pro"
-                + "to\"\261\001\n\005Value\022\025\n\013int32_value\030\001 \001(\005H\000\022\025\n\013i"
+                + "to\"\334\001\n\005Value\022\025\n\013int32_value\030\001 \001(\005H\000\022\025\n\013i"
                 + "nt64_value\030\002 \001(\003H\000\022\025\n\013float_value\030\003 \001(\002H"
                 + "\000\022\026\n\014double_value\030\004 \001(\001H\000\022\024\n\nbool_value\030"
                 + "\005 \001(\010H\000\022\025\n\013bytes_value\030\006 \001(\014H\000\022\026\n\014string"
-                + "_value\030\007 \001(\tH\000B\006\n\004kindB<\n5im.turms.serve"
-                + "r.common.access.client.dto.model.commonP"
-                + "\001\272\002\000b\006proto3"};
+                + "_value\030\007 \001(\tH\000\022)\n\nlist_value\030\010 \003(\0132\025.im."
+                + "turms.proto.ValueB\006\n\004kindB<\n5im.turms.se"
+                + "rver.common.access.client.dto.model.comm"
+                + "onP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
@@ -70,6 +71,7 @@ public final class ValueOuterClass {
                                 "BoolValue",
                                 "BytesValue",
                                 "StringValue",
+                                "ListValue",
                                 "Kind",});
         descriptor.resolveAllFeaturesImmutable();
     }

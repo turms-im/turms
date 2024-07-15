@@ -204,7 +204,8 @@ export default class UserService {
             }
             userInfo.location = new UserLocation(parsedLocation.longitude,
                 parsedLocation.latitude,
-                (parsedLocation as UserLocation).details);
+                (parsedLocation as UserLocation).details,
+                []);
         }
         this._storePassword = storePassword;
         return new Promise((resolve, reject) => {
@@ -242,8 +243,10 @@ export default class UserService {
                             deviceType: userInfo.deviceType,
                             deviceDetails: userInfo.deviceDetails || {},
                             userStatus: userInfo.onlineStatus,
-                            location: userInfo.location
-                        }
+                            location: userInfo.location,
+                            customAttributes: []
+                        },
+                        customAttributes: []
                     }).then(n => {
                         this._changeToOnline();
                         this._userInfo = userInfo;
@@ -303,7 +306,10 @@ export default class UserService {
             promise = this._turmsClient.driver.disconnect();
         } else {
             promise = this._turmsClient.driver.send({
-                deleteSessionRequest: {}
+                deleteSessionRequest: {
+                    customAttributes: []
+                },
+                customAttributes: []
             }).catch(e => {
                 if (e?.code !== ResponseStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED) {
                     throw e;
@@ -349,8 +355,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateUserOnlineStatusRequest: {
                 deviceTypes: [],
-                userStatus: onlineStatus
-            }
+                userStatus: onlineStatus,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => {
             this._userInfo.onlineStatus = onlineStatus as UserStatus;
             this._updateSharedUserInfo();
@@ -384,8 +392,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateUserOnlineStatusRequest: {
                 userStatus: UserStatus.OFFLINE,
-                deviceTypes: deviceTypes as DeviceType[]
-            }
+                deviceTypes: deviceTypes as DeviceType[],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -405,8 +415,11 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
-                password
-            }
+                password,
+                userDefinedAttributes: {},
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => {
             if (this._storePassword) {
                 this._userInfo.password = password;
@@ -458,8 +471,11 @@ export default class UserService {
                 name,
                 intro,
                 profilePicture,
-                profileAccessStrategy
-            }
+                profileAccessStrategy,
+                userDefinedAttributes: {},
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -487,8 +503,10 @@ export default class UserService {
             queryUserProfilesRequest: {
                 userIds: CollectionUtil.uniqueArray(userIds),
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
-                fieldsToHighlight: []
-            }
+                fieldsToHighlight: [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data =>
             NotificationUtil.transformOrEmpty(data.userInfosWithVersion?.userInfos)));
     }
@@ -519,10 +537,82 @@ export default class UserService {
                 name: name,
                 fieldsToHighlight: highlight ? [1] : [],
                 skip: skip,
-                limit: limit
-            }
+                limit: limit,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, (data) =>
             NotificationUtil.transform(data.userInfosWithVersion?.userInfos)));
+    }
+
+    /**
+     * Upsert user settings, such as "preferred language", "new message alert", etc.
+     * Note that only the settings specified in `turms.service.user.settings.allowed-settings` can be upserted.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.user-setting-updated.notify-requester-other-online-sessions` is true (true by default),
+     *   the server will send a user settings updated notification to all other online sessions of the logged-in user actively.
+     *
+     * @param settings - the user settings to upsert.
+     * @throws {@link ResponseError} if an error occurs.
+     * * If trying to update any existing immutable setting, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#ILLEGAL_ARGUMENT}
+     * * If trying to upsert an unknown setting and the server property `turms.service.user.settings.ignore-unknown-settings-on-upsert` is
+     *   false (false by default), throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#ILLEGAL_ARGUMENT}.
+     */
+    upsertUserSettings(settings: Record<string, any>): Promise<Response<void>> {
+        if (Object.keys(settings).length === 0) {
+            return Promise.resolve(Response.nullValue());
+        }
+        return this._turmsClient.driver.send({
+            updateUserSettingsRequest: {
+                settings,
+                customAttributes: []
+            },
+            customAttributes: []
+        }).then(n => Response.fromNotification(n));
+    }
+
+    /**
+     * Delete user settings.
+     *
+     * @remarks
+     * Notifications:
+     * * If the server property `turms.service.notification.user-setting-deleted.notify-requester-other-online-sessions` is true (true by default),
+     *   the server will send a user settings deleted notification to all other online sessions of the logged-in user actively.
+     *
+     * @param names - the names of the user settings to delete. If null, all deletable user settings will be deleted.
+     * @throws {@link ResponseError} if an error occurs.
+     * * If trying to delete any non-deletable setting, throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#ILLEGAL_ARGUMENT}.
+     */
+    deleteUserSettings(names?: string[]): Promise<Response<void>> {
+        return this._turmsClient.driver.send({
+            deleteUserSettingsRequest: {
+                names: CollectionUtil.uniqueArray(names),
+                customAttributes: []
+            },
+            customAttributes: []
+        }).then(n => Response.fromNotification(n));
+    }
+
+    /**
+     * Find user settings.
+     *
+     * @param names - the names of the user settings to query. If null, all user settings will be returned.
+     * @param lastUpdatedDate - the last updated date of user settings stored locally.
+     * The server will only return user settings if a setting has been updated after {@link lastUpdatedDate}.
+     * @throws {@link ResponseError} if an error occurs.
+     */
+    queryUserSettings(names?: string[], lastUpdatedDate?: Date): Promise<Response<ParsedModel.UserSettings | undefined>> {
+        return this._turmsClient.driver.send({
+            queryUserSettingsRequest: {
+                names: CollectionUtil.uniqueArray(names),
+                lastUpdatedDateStart: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
+        }).then(n => Response.fromNotification(n, data =>
+            NotificationUtil.transform(data.userSettings)));
     }
 
     /**
@@ -569,8 +659,10 @@ export default class UserService {
                 maxDistance,
                 withCoordinates,
                 withDistance,
-                withUserInfo
-            }
+                withUserInfo,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.nearbyUsers?.nearbyUsers)));
     }
 
@@ -581,7 +673,7 @@ export default class UserService {
      * @returns a list of online status of users.
      * @throws {@link ResponseError} if an error occurs.
      */
-    queryOnlineStatusesRequest({
+    queryOnlineStatuses({
         userIds
     }: {
         userIds: string[]
@@ -591,8 +683,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             queryUserOnlineStatusesRequest: {
-                userIds
-            }
+                userIds,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data =>
             NotificationUtil.transformOrEmpty(data.userOnlineStatuses?.statuses)));
     }
@@ -631,8 +725,10 @@ export default class UserService {
                 userIds: relatedUserIds || [],
                 blocked: isBlocked,
                 groupIndexes: groupIndexes || [],
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipsWithVersion)));
     }
 
@@ -664,8 +760,10 @@ export default class UserService {
             queryRelatedUserIdsRequest: {
                 blocked: isBlocked,
                 groupIndexes: groupIndexes || [],
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
@@ -756,8 +854,10 @@ export default class UserService {
             createRelationshipRequest: {
                 userId,
                 blocked: isBlocked,
-                groupIndex
-            }
+                groupIndex,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -851,8 +951,10 @@ export default class UserService {
             deleteRelationshipRequest: {
                 userId: relatedUserId,
                 groupIndex: deleteGroupIndex,
-                targetGroupIndex
-            }
+                targetGroupIndex,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -890,8 +992,10 @@ export default class UserService {
             updateRelationshipRequest: {
                 userId: relatedUserId,
                 blocked: isBlocked,
-                newGroupIndex: groupIndex
-            }
+                newGroupIndex: groupIndex,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -926,8 +1030,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             createFriendRequestRequest: {
                 recipientId,
-                content
-            }
+                content,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -961,8 +1067,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             deleteFriendRequestRequest: {
-                requestId
-            }
+                requestId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1015,8 +1123,10 @@ export default class UserService {
             updateFriendRequestRequest: {
                 requestId: requestId,
                 responseAction: responseAction,
-                reason
-            }
+                reason,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1043,8 +1153,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
                 areSentByMe,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userFriendRequestsWithVersion)));
     }
 
@@ -1065,8 +1177,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             createRelationshipGroupRequest: {
-                name
-            }
+                name,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => parseInt(NotificationUtil.getLongOrThrow(data))));
     }
 
@@ -1099,8 +1213,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             deleteRelationshipGroupRequest: {
                 groupIndex,
-                targetGroupIndex
-            }
+                targetGroupIndex,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1134,8 +1250,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipGroupRequest: {
                 groupIndex,
-                newName
-            }
+                newName,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1156,8 +1274,10 @@ export default class UserService {
     } = {}): Promise<Response<ParsedModel.UserRelationshipGroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userRelationshipGroupsWithVersion)));
     }
 
@@ -1191,8 +1311,10 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 userId: relatedUserId,
-                newGroupIndex: groupIndex
-            }
+                newGroupIndex: groupIndex,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1232,8 +1354,10 @@ export default class UserService {
             updateUserLocationRequest: {
                 latitude,
                 longitude,
-                details: details || {}
-            }
+                details: details || {},
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 

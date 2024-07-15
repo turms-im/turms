@@ -26,7 +26,7 @@ public final class DeleteConversationSettingsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteConversationSettingsRequestOuterClass.class.getName());
     }
@@ -49,22 +49,30 @@ public final class DeleteConversationSettingsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n?request/conversation/delete_conversati"
                 + "on_settings_request.proto\022\016im.turms.prot"
-                + "o\"W\n!DeleteConversationSettingsRequest\022\020"
-                + "\n\010user_ids\030\001 \003(\003\022\021\n\tgroup_ids\030\002 \003(\003\022\r\n\005n"
-                + "ames\030\003 \003(\tBD\n=im.turms.server.common.acc"
-                + "ess.client.dto.request.conversationP\001\272\002\000"
-                + "b\006proto3"};
+                + "o\032\030model/common/value.proto\"\211\001\n!DeleteCo"
+                + "nversationSettingsRequest\022\020\n\010user_ids\030\001 "
+                + "\003(\003\022\021\n\tgroup_ids\030\002 \003(\003\022\r\n\005names\030\003 \003(\t\0220\n"
+                + "\021custom_attributes\030\017 \003(\0132\025.im.turms.prot"
+                + "o.ValueBD\n=im.turms.server.common.access"
+                + ".client.dto.request.conversationP\001\272\002\000b\006p"
+                + "roto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteConversationSettingsRequest_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
         internal_static_im_turms_proto_DeleteConversationSettingsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteConversationSettingsRequest_descriptor,
-                        new java.lang.String[]{"UserIds", "GroupIds", "Names",});
+                        new java.lang.String[]{"UserIds",
+                                "GroupIds",
+                                "Names",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

@@ -18,6 +18,14 @@ const QueryUserOnlineStatusesRequest$json = {
   '1': 'QueryUserOnlineStatusesRequest',
   '2': [
     {'1': 'user_ids', '3': 1, '4': 3, '5': 3, '10': 'userIds'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -25,4 +33,5 @@ const QueryUserOnlineStatusesRequest$json = {
 final $typed_data.Uint8List queryUserOnlineStatusesRequestDescriptor =
     $convert.base64Decode(
         'Ch5RdWVyeVVzZXJPbmxpbmVTdGF0dXNlc1JlcXVlc3QSGQoIdXNlcl9pZHMYASADKANSB3VzZX'
-        'JJZHM=');
+        'JJZHMSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQ'
+        'Y3VzdG9tQXR0cmlidXRlcw==');

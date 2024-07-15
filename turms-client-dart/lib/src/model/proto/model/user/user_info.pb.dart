@@ -14,7 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/profile_access_strategy.pbenum.dart' as $0;
+import '../../constant/profile_access_strategy.pbenum.dart' as $1;
+import '../common/value.pb.dart' as $0;
 
 class UserInfo extends $pb.GeneratedMessage {
   factory UserInfo({
@@ -22,10 +23,12 @@ class UserInfo extends $pb.GeneratedMessage {
     $core.String? name,
     $core.String? intro,
     $core.String? profilePicture,
-    $0.ProfileAccessStrategy? profileAccessStrategy,
+    $1.ProfileAccessStrategy? profileAccessStrategy,
     $fixnum.Int64? registrationDate,
     $fixnum.Int64? lastUpdatedDate,
     $core.bool? active,
+    $core.Map<$core.String, $0.Value>? userDefinedAttributes,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (id != null) {
@@ -52,6 +55,12 @@ class UserInfo extends $pb.GeneratedMessage {
     if (active != null) {
       $result.active = active;
     }
+    if (userDefinedAttributes != null) {
+      $result.userDefinedAttributes.addAll(userDefinedAttributes);
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   UserInfo._() : super();
@@ -70,14 +79,25 @@ class UserInfo extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'intro')
     ..aOS(4, _omitFieldNames ? '' : 'profilePicture')
-    ..e<$0.ProfileAccessStrategy>(
+    ..e<$1.ProfileAccessStrategy>(
         5, _omitFieldNames ? '' : 'profileAccessStrategy', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.ProfileAccessStrategy.ALL,
-        valueOf: $0.ProfileAccessStrategy.valueOf,
-        enumValues: $0.ProfileAccessStrategy.values)
+        defaultOrMaker: $1.ProfileAccessStrategy.ALL,
+        valueOf: $1.ProfileAccessStrategy.valueOf,
+        enumValues: $1.ProfileAccessStrategy.values)
     ..aInt64(6, _omitFieldNames ? '' : 'registrationDate')
     ..aInt64(7, _omitFieldNames ? '' : 'lastUpdatedDate')
     ..aOB(8, _omitFieldNames ? '' : 'active')
+    ..m<$core.String, $0.Value>(
+        9, _omitFieldNames ? '' : 'userDefinedAttributes',
+        entryClassName: 'UserInfo.UserDefinedAttributesEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $0.Value.create,
+        valueDefaultOrMaker: $0.Value.getDefault,
+        packageName: const $pb.PackageName('im.turms.proto'))
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -150,9 +170,9 @@ class UserInfo extends $pb.GeneratedMessage {
   void clearProfilePicture() => clearField(4);
 
   @$pb.TagNumber(5)
-  $0.ProfileAccessStrategy get profileAccessStrategy => $_getN(4);
+  $1.ProfileAccessStrategy get profileAccessStrategy => $_getN(4);
   @$pb.TagNumber(5)
-  set profileAccessStrategy($0.ProfileAccessStrategy v) {
+  set profileAccessStrategy($1.ProfileAccessStrategy v) {
     setField(5, v);
   }
 
@@ -196,6 +216,12 @@ class UserInfo extends $pb.GeneratedMessage {
   $core.bool hasActive() => $_has(7);
   @$pb.TagNumber(8)
   void clearActive() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.Map<$core.String, $0.Value> get userDefinedAttributes => $_getMap(8);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(9);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

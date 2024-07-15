@@ -36,7 +36,6 @@ import io.netty.buffer.Unpooled;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.DuplicateResourceException;
 import im.turms.server.common.infra.io.ResourceNotFoundException;
-import im.turms.server.common.infra.netty.ByteBufUtil;
 
 /**
  * @author James Chen
@@ -44,7 +43,6 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 public final class OpenApiResourceConst {
 
     public static final ByteBuf FAVICON_32x32;
-    public static final ByteBuf INDEX_HTML;
     public static final ByteBuf INDEX_CSS;
     public static final ByteBuf SWAGGER_UI_CSS;
     public static final ByteBuf SWAGGER_UI_BUNDLE;
@@ -113,27 +111,6 @@ public final class OpenApiResourceConst {
         SWAGGER_UI_CSS = nameToBuffer.get(RESOURCE_SWAGGER_UI_CSS);
         SWAGGER_UI_BUNDLE = nameToBuffer.get(RESOURCE_SWAGGER_UI_BUNDLE);
         SWAGGER_UI_STANDALONE_PRESET = nameToBuffer.get(RESOURCE_SWAGGER_UI_STANDALONE_PRESET);
-
-        INDEX_HTML = ByteBufUtil.getUnreleasableDirectBuffer(
-                // language=HTML
-                """
-                        <!DOCTYPE html>
-                        <html lang="en">
-                          <head>
-                            <meta charset="UTF-8">
-                            <title>Swagger UI</title>
-                            <link rel="stylesheet" type="text/css" href="/openapi/ui/swagger-ui.css" />
-                            <link rel="stylesheet" type="text/css" href="/openapi/ui/index.css" />
-                            <link rel="icon" type="image/png" href="/openapi/ui/favicon-32x32.png" sizes="32x32" />
-                          </head>
-                          <body>
-                            <div id="swagger-ui"></div>
-                            <script src="/openapi/ui/swagger-ui-bundle.js" charset="UTF-8"> </script>
-                            <script src="/openapi/ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-                            <script src="/openapi/ui/swagger-initializer.js" charset="UTF-8"> </script>
-                          </body>
-                        </html>
-                        """);
     }
 
     private static int findResources(

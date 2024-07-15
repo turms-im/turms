@@ -29,7 +29,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserOnlineStatus.class.getName());
     }
@@ -41,7 +41,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
 
     private UserOnlineStatus() {
         userStatus_ = 0;
-        usingDeviceTypes_ = java.util.Collections.emptyList();
+        deviceTypes_ = java.util.Collections.emptyList();
+        customAttributes_ = java.util.Collections.emptyList();
     }
 
     public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -57,7 +58,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_ = 0L;
+    private long userId_;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -70,7 +71,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int USER_STATUS_FIELD_NUMBER = 2;
-    private int userStatus_ = 0;
+    private int userStatus_;
 
     /**
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
@@ -96,10 +97,10 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 : result;
     }
 
-    public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 3;
+    public static final int DEVICE_TYPES_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
-    private java.util.List<java.lang.Integer> usingDeviceTypes_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> usingDeviceTypes_converter_ =
+    private java.util.List<java.lang.Integer> deviceTypes_;
+    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
             from -> {
                 im.turms.server.common.access.client.dto.constant.DeviceType result =
                         im.turms.server.common.access.client.dto.constant.DeviceType
@@ -110,61 +111,104 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             };
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the usingDeviceTypes.
+     * @return A list containing the deviceTypes.
      */
     @java.lang.Override
-    public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<>(
-                usingDeviceTypes_,
-                usingDeviceTypes_converter_);
+    public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
+        return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return The count of usingDeviceTypes.
+     * @return The count of deviceTypes.
      */
     @java.lang.Override
-    public int getUsingDeviceTypesCount() {
-        return usingDeviceTypes_.size();
+    public int getDeviceTypesCount() {
+        return deviceTypes_.size();
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the element to return.
-     * @return The usingDeviceTypes at the given index.
+     * @return The deviceTypes at the given index.
      */
     @java.lang.Override
-    public im.turms.server.common.access.client.dto.constant.DeviceType getUsingDeviceTypes(
-            int index) {
-        return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
+    public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index) {
+        return deviceTypes_converter_.convert(deviceTypes_.get(index));
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+     * @return A list containing the enum numeric values on the wire for deviceTypes.
      */
     @java.lang.Override
-    public java.util.List<java.lang.Integer> getUsingDeviceTypesValueList() {
-        return usingDeviceTypes_;
+    public java.util.List<java.lang.Integer> getDeviceTypesValueList() {
+        return deviceTypes_;
     }
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the value to return.
-     * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
      */
     @java.lang.Override
-    public int getUsingDeviceTypesValue(int index) {
-        return usingDeviceTypes_.get(index);
+    public int getDeviceTypesValue(int index) {
+        return deviceTypes_.get(index);
     }
 
-    private int usingDeviceTypesMemoizedSerializedSize;
+    private int deviceTypesMemoizedSerializedSize;
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    @SuppressWarnings("serial")
+    private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
 
     private byte memoizedIsInitialized = -1;
 
@@ -192,12 +236,15 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 .getNumber()) {
             output.writeEnum(2, userStatus_);
         }
-        if (getUsingDeviceTypesList().size() > 0) {
+        if (!getDeviceTypesList().isEmpty()) {
             output.writeUInt32NoTag(26);
-            output.writeUInt32NoTag(usingDeviceTypesMemoizedSerializedSize);
+            output.writeUInt32NoTag(deviceTypesMemoizedSerializedSize);
         }
-        for (Integer integer : usingDeviceTypes_) {
+        for (Integer integer : deviceTypes_) {
             output.writeEnumNoTag(integer);
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            output.writeMessage(15, value);
         }
         getUnknownFields().writeTo(output);
     }
@@ -219,15 +266,18 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         }
         {
             int dataSize = 0;
-            for (Integer integer : usingDeviceTypes_) {
+            for (Integer integer : deviceTypes_) {
                 dataSize += com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag(integer);
             }
             size += dataSize;
-            if (!getUsingDeviceTypesList().isEmpty()) {
+            if (!getDeviceTypesList().isEmpty()) {
                 size += 1;
                 size += com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(dataSize);
             }
-            usingDeviceTypesMemoizedSerializedSize = dataSize;
+            deviceTypesMemoizedSerializedSize = dataSize;
+        }
+        for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
+            size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -246,10 +296,9 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         if (getUserId() != other.getUserId()) {
             return false;
         }
-        if (userStatus_ != other.userStatus_) {
-            return false;
-        }
-        return usingDeviceTypes_.equals(other.usingDeviceTypes_)
+        return userStatus_ == other.userStatus_
+                && deviceTypes_.equals(other.deviceTypes_)
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -264,9 +313,13 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getUserId());
         hash = (37 * hash) + USER_STATUS_FIELD_NUMBER;
         hash = (53 * hash) + userStatus_;
-        if (getUsingDeviceTypesCount() > 0) {
-            hash = (37 * hash) + USING_DEVICE_TYPES_FIELD_NUMBER;
-            hash = (53 * hash) + usingDeviceTypes_.hashCode();
+        if (getDeviceTypesCount() > 0) {
+            hash = (37 * hash) + DEVICE_TYPES_FIELD_NUMBER;
+            hash = (53 * hash) + deviceTypes_.hashCode();
+        }
+        if (getCustomAttributesCount() > 0) {
+            hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
+            hash = (53 * hash) + getCustomAttributesList().hashCode();
         }
         hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
@@ -412,8 +465,14 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             bitField0_ = 0;
             userId_ = 0L;
             userStatus_ = 0;
-            usingDeviceTypes_ = java.util.Collections.emptyList();
-            bitField0_ &= ~0x00000004;
+            deviceTypes_ = java.util.Collections.emptyList();
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+            } else {
+                customAttributes_ = null;
+                customAttributesBuilder_.clear();
+            }
+            bitField0_ &= ~0x00000008;
             return this;
         }
 
@@ -453,10 +512,19 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.model.user.UserOnlineStatus result) {
             if (((bitField0_ & 0x00000004) != 0)) {
-                usingDeviceTypes_ = java.util.Collections.unmodifiableList(usingDeviceTypes_);
+                deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
                 bitField0_ &= ~0x00000004;
             }
-            result.usingDeviceTypes_ = usingDeviceTypes_;
+            result.deviceTypes_ = deviceTypes_;
+            if (customAttributesBuilder_ == null) {
+                if (((bitField0_ & 0x00000008) != 0)) {
+                    customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
+                    bitField0_ &= ~0x00000008;
+                }
+                result.customAttributes_ = customAttributes_;
+            } else {
+                result.customAttributes_ = customAttributesBuilder_.build();
+            }
         }
 
         private void buildPartial0(
@@ -493,15 +561,42 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             if (other.userStatus_ != 0) {
                 setUserStatusValue(other.getUserStatusValue());
             }
-            if (!other.usingDeviceTypes_.isEmpty()) {
-                if (usingDeviceTypes_.isEmpty()) {
-                    usingDeviceTypes_ = other.usingDeviceTypes_;
+            if (!other.deviceTypes_.isEmpty()) {
+                if (deviceTypes_.isEmpty()) {
+                    deviceTypes_ = other.deviceTypes_;
                     bitField0_ &= ~0x00000004;
                 } else {
-                    ensureUsingDeviceTypesIsMutable();
-                    usingDeviceTypes_.addAll(other.usingDeviceTypes_);
+                    ensureDeviceTypesIsMutable();
+                    deviceTypes_.addAll(other.deviceTypes_);
                 }
                 onChanged();
+            }
+            if (customAttributesBuilder_ == null) {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributes_.isEmpty()) {
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                    } else {
+                        ensureCustomAttributesIsMutable();
+                        customAttributes_.addAll(other.customAttributes_);
+                    }
+                    onChanged();
+                }
+            } else {
+                if (!other.customAttributes_.isEmpty()) {
+                    if (customAttributesBuilder_.isEmpty()) {
+                        customAttributesBuilder_.dispose();
+                        customAttributesBuilder_ = null;
+                        customAttributes_ = other.customAttributes_;
+                        bitField0_ &= ~0x00000008;
+                        customAttributesBuilder_ =
+                                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
+                                        ? getCustomAttributesFieldBuilder()
+                                        : null;
+                    } else {
+                        customAttributesBuilder_.addAllMessages(other.customAttributes_);
+                    }
+                }
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();
@@ -537,19 +632,32 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                         } // case 16
                         case 24 -> {
                             int tmpRaw = input.readEnum();
-                            ensureUsingDeviceTypesIsMutable();
-                            usingDeviceTypes_.add(tmpRaw);
+                            ensureDeviceTypesIsMutable();
+                            deviceTypes_.add(tmpRaw);
                         } // case 24
                         case 26 -> {
                             int length = input.readRawVarint32();
                             int oldLimit = input.pushLimit(length);
                             while (input.getBytesUntilLimit() > 0) {
                                 int tmpRaw = input.readEnum();
-                                ensureUsingDeviceTypesIsMutable();
-                                usingDeviceTypes_.add(tmpRaw);
+                                ensureDeviceTypesIsMutable();
+                                deviceTypes_.add(tmpRaw);
                             }
                             input.popLimit(oldLimit);
                         } // case 26
+                        case 122 -> {
+                            im.turms.server.common.access.client.dto.model.common.Value m =
+                                    input.readMessage(
+                                            im.turms.server.common.access.client.dto.model.common.Value
+                                                    .parser(),
+                                            extensionRegistry);
+                            if (customAttributesBuilder_ == null) {
+                                ensureCustomAttributesIsMutable();
+                                customAttributes_.add(m);
+                            } else {
+                                customAttributesBuilder_.addMessage(m);
+                            }
+                        } // case 122
                         default -> {
                             if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                                 done = true; // was an endgroup tag
@@ -605,7 +713,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
-        private int userStatus_ = 0;
+        private int userStatus_;
 
         /**
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
@@ -674,170 +782,430 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
-        private java.util.List<java.lang.Integer> usingDeviceTypes_ =
-                java.util.Collections.emptyList();
+        private java.util.List<java.lang.Integer> deviceTypes_ = java.util.Collections.emptyList();
 
-        private void ensureUsingDeviceTypesIsMutable() {
+        private void ensureDeviceTypesIsMutable() {
             if ((bitField0_ & 0x00000004) == 0) {
-                usingDeviceTypes_ = new java.util.ArrayList<>(usingDeviceTypes_);
+                deviceTypes_ = new java.util.ArrayList<>(deviceTypes_);
                 bitField0_ |= 0x00000004;
             }
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return A list containing the usingDeviceTypes.
+         * @return A list containing the deviceTypes.
          */
-        public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
+        public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
             return new com.google.protobuf.Internal.ListAdapter<>(
-                    usingDeviceTypes_,
-                    usingDeviceTypes_converter_);
+                    deviceTypes_,
+                    deviceTypes_converter_);
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return The count of usingDeviceTypes.
+         * @return The count of deviceTypes.
          */
-        public int getUsingDeviceTypesCount() {
-            return usingDeviceTypes_.size();
+        public int getDeviceTypesCount() {
+            return deviceTypes_.size();
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index of the element to return.
-         * @return The usingDeviceTypes at the given index.
+         * @return The deviceTypes at the given index.
          */
-        public im.turms.server.common.access.client.dto.constant.DeviceType getUsingDeviceTypes(
+        public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(
                 int index) {
-            return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
+            return deviceTypes_converter_.convert(deviceTypes_.get(index));
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index to set the value at.
-         * @param value The usingDeviceTypes to set.
+         * @param value The deviceTypes to set.
          * @return This builder for chaining.
          */
-        public Builder setUsingDeviceTypes(
+        public Builder setDeviceTypes(
                 int index,
                 im.turms.server.common.access.client.dto.constant.DeviceType value) {
             if (value == null) {
                 throw new NullPointerException();
             }
-            ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.set(index, value.getNumber());
+            ensureDeviceTypesIsMutable();
+            deviceTypes_.set(index, value.getNumber());
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param value The usingDeviceTypes to add.
+         * @param value The deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addUsingDeviceTypes(
+        public Builder addDeviceTypes(
                 im.turms.server.common.access.client.dto.constant.DeviceType value) {
             if (value == null) {
                 throw new NullPointerException();
             }
-            ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.add(value.getNumber());
+            ensureDeviceTypesIsMutable();
+            deviceTypes_.add(value.getNumber());
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param values The usingDeviceTypes to add.
+         * @param values The deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addAllUsingDeviceTypes(
+        public Builder addAllDeviceTypes(
                 java.lang.Iterable<? extends im.turms.server.common.access.client.dto.constant.DeviceType> values) {
-            ensureUsingDeviceTypesIsMutable();
+            ensureDeviceTypesIsMutable();
             for (im.turms.server.common.access.client.dto.constant.DeviceType value : values) {
-                usingDeviceTypes_.add(value.getNumber());
+                deviceTypes_.add(value.getNumber());
             }
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @return This builder for chaining.
          */
-        public Builder clearUsingDeviceTypes() {
-            usingDeviceTypes_ = java.util.Collections.emptyList();
+        public Builder clearDeviceTypes() {
+            deviceTypes_ = java.util.Collections.emptyList();
             bitField0_ &= ~0x00000004;
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+         * @return A list containing the enum numeric values on the wire for deviceTypes.
          */
-        public java.util.List<java.lang.Integer> getUsingDeviceTypesValueList() {
-            return java.util.Collections.unmodifiableList(usingDeviceTypes_);
+        public java.util.List<java.lang.Integer> getDeviceTypesValueList() {
+            return java.util.Collections.unmodifiableList(deviceTypes_);
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index of the value to return.
-         * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+         * @return The enum numeric value on the wire of deviceTypes at the given index.
          */
-        public int getUsingDeviceTypesValue(int index) {
-            return usingDeviceTypes_.get(index);
+        public int getDeviceTypesValue(int index) {
+            return deviceTypes_.get(index);
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
          * @param index The index to set the value at.
-         * @param value The enum numeric value on the wire for usingDeviceTypes to set.
+         * @param value The enum numeric value on the wire for deviceTypes to set.
          * @return This builder for chaining.
          */
-        public Builder setUsingDeviceTypesValue(int index, int value) {
-            ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.set(index, value);
+        public Builder setDeviceTypesValue(int index, int value) {
+            ensureDeviceTypesIsMutable();
+            deviceTypes_.set(index, value);
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param value The enum numeric value on the wire for usingDeviceTypes to add.
+         * @param value The enum numeric value on the wire for deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addUsingDeviceTypesValue(int value) {
-            ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.add(value);
+        public Builder addDeviceTypesValue(int value) {
+            ensureDeviceTypesIsMutable();
+            deviceTypes_.add(value);
             onChanged();
             return this;
         }
 
         /**
-         * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+         * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
          *
-         * @param values The enum numeric values on the wire for usingDeviceTypes to add.
+         * @param values The enum numeric values on the wire for deviceTypes to add.
          * @return This builder for chaining.
          */
-        public Builder addAllUsingDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
-            ensureUsingDeviceTypesIsMutable();
+        public Builder addAllDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
+            ensureDeviceTypesIsMutable();
             for (int value : values) {
-                usingDeviceTypes_.add(value);
+                deviceTypes_.add(value);
             }
             onChanged();
             return this;
+        }
+
+        private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
+                java.util.Collections.emptyList();
+
+        private void ensureCustomAttributesIsMutable() {
+            if ((bitField0_ & 0x00000008) == 0) {
+                customAttributes_ = new java.util.ArrayList<>(customAttributes_);
+                bitField0_ |= 0x00000008;
+            }
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> customAttributesBuilder_;
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList() {
+            if (customAttributesBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            } else {
+                return customAttributesBuilder_.getMessageList();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public int getCustomAttributesCount() {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.size();
+            } else {
+                return customAttributesBuilder_.getCount();
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessage(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.set(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value value) {
+            if (customAttributesBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, value);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, value);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.server.common.access.client.dto.model.common.Value.Builder builderForValue) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.add(index, builderForValue.build());
+                onChanged();
+            } else {
+                customAttributesBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.server.common.access.client.dto.model.common.Value> values) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                com.google.protobuf.AbstractMessageLite.Builder.addAll(values, customAttributes_);
+                onChanged();
+            } else {
+                customAttributesBuilder_.addAllMessages(values);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            if (customAttributesBuilder_ == null) {
+                customAttributes_ = java.util.Collections.emptyList();
+                bitField0_ &= ~0x00000008;
+                onChanged();
+            } else {
+                customAttributesBuilder_.clear();
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            if (customAttributesBuilder_ == null) {
+                ensureCustomAttributesIsMutable();
+                customAttributes_.remove(index);
+                onChanged();
+            } else {
+                customAttributesBuilder_.remove(index);
+            }
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder getCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().getBuilder(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+                int index) {
+            if (customAttributesBuilder_ == null) {
+                return customAttributes_.get(index);
+            } else {
+                return customAttributesBuilder_.getMessageOrBuilder(index);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+            if (customAttributesBuilder_ != null) {
+                return customAttributesBuilder_.getMessageOrBuilderList();
+            } else {
+                return java.util.Collections.unmodifiableList(customAttributes_);
+            }
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder() {
+            return getCustomAttributesFieldBuilder()
+                    .addBuilder(im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public im.turms.server.common.access.client.dto.model.common.Value.Builder addCustomAttributesBuilder(
+                int index) {
+            return getCustomAttributesFieldBuilder().addBuilder(index,
+                    im.turms.server.common.access.client.dto.model.common.Value
+                            .getDefaultInstance());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public java.util.List<im.turms.server.common.access.client.dto.model.common.Value.Builder> getCustomAttributesBuilderList() {
+            return getCustomAttributesFieldBuilder().getBuilderList();
+        }
+
+        private com.google.protobuf.RepeatedFieldBuilder<im.turms.server.common.access.client.dto.model.common.Value, im.turms.server.common.access.client.dto.model.common.Value.Builder, im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesFieldBuilder() {
+            if (customAttributesBuilder_ == null) {
+                customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
+                        customAttributes_,
+                        ((bitField0_ & 0x00000008) != 0),
+                        getParentForChildren(),
+                        isClean());
+                customAttributes_ = null;
+            }
+            return customAttributesBuilder_;
         }
 
         // @@protoc_insertion_point(builder_scope:im.turms.proto.UserOnlineStatus)

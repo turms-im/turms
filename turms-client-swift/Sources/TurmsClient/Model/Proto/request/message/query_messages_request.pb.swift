@@ -96,6 +96,8 @@ public struct QueryMessagesRequest {
     /// Clears the value of `descending`. Subsequent reads from it will return its default value.
     public mutating func clearDescending() { _descending = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -128,6 +130,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         7: .standard(proto: "max_count"),
         8: .standard(proto: "with_total"),
         9: .same(proto: "descending"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -145,6 +148,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
             case 7: try decoder.decodeSingularInt32Field(value: &_maxCount)
             case 8: try decoder.decodeSingularBoolField(value: &withTotal)
             case 9: try decoder.decodeSingularBoolField(value: &_descending)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -182,6 +186,9 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         try { if let v = self._descending {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 9)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -195,6 +202,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if lhs._maxCount != rhs._maxCount { return false }
         if lhs.withTotal != rhs.withTotal { return false }
         if lhs._descending != rhs._descending { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

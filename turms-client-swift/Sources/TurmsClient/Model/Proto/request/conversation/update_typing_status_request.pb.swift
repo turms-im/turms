@@ -30,6 +30,8 @@ public struct UpdateTypingStatusRequest {
 
     public var toID: Int64 = 0
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -48,6 +50,7 @@ extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "is_group_message"),
         2: .standard(proto: "to_id"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -58,6 +61,7 @@ extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             switch fieldNumber {
             case 1: try decoder.decodeSingularBoolField(value: &isGroupMessage)
             case 2: try decoder.decodeSingularInt64Field(value: &toID)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -70,12 +74,16 @@ extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if toID != 0 {
             try visitor.visitSingularInt64Field(value: toID, fieldNumber: 2)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: UpdateTypingStatusRequest, rhs: UpdateTypingStatusRequest) -> Bool {
         if lhs.isGroupMessage != rhs.isGroupMessage { return false }
         if lhs.toID != rhs.toID { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

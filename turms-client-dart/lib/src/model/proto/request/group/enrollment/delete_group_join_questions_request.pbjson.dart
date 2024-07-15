@@ -19,6 +19,14 @@ const DeleteGroupJoinQuestionsRequest$json = {
   '2': [
     {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
     {'1': 'question_ids', '3': 2, '4': 3, '5': 3, '10': 'questionIds'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -26,4 +34,5 @@ const DeleteGroupJoinQuestionsRequest$json = {
 final $typed_data.Uint8List deleteGroupJoinQuestionsRequestDescriptor =
     $convert.base64Decode(
         'Ch9EZWxldGVHcm91cEpvaW5RdWVzdGlvbnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm'
-        '91cElkEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHM=');
+        '91cElkEiEKDHF1ZXN0aW9uX2lkcxgCIAMoA1ILcXVlc3Rpb25JZHMSQgoRY3VzdG9tX2F0dHJp'
+        'YnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

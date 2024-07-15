@@ -3,7 +3,6 @@
 #include <google/protobuf/io/coded_stream.h>
 
 #include <boost/asio.hpp>
-#include <iostream>
 
 #include "google/protobuf/io/zero_copy_stream_impl_lite.h"
 
@@ -11,9 +10,8 @@ namespace turms {
 namespace client {
 namespace transport {
 
-auto TcpClient::connect(const std::string& host,
-                        int port,
-                        int connectTimeoutMillis) -> boost::future<void> {
+auto TcpClient::connect(const std::string& host, int port, int connectTimeoutMillis)
+    -> boost::future<void> {
     if (socket_.is_open()) {
         return boost::make_exceptional_future<void>(
             std::runtime_error("The TCP client has connected"));
@@ -152,10 +150,8 @@ auto TcpClient::write(const std::shared_ptr<std::array<uint8_t, N>>& bytes) -> b
         boost::asio::async_write(
             socket_,
             boost::asio::buffer(*bytes),
-            [weakThis = std::weak_ptr<TcpClient>(shared_from_this()),
-             bytes,
-             promise = std::move(promise)](const boost::system::error_code& errorCode,
-                                           std::size_t bytesTransferred) mutable {
+            [weakThis = std::weak_ptr<TcpClient>(shared_from_this()), promise = std::move(promise)](
+                const boost::system::error_code& errorCode, std::size_t bytesTransferred) mutable {
                 if (errorCode) {
                     boost::system::system_error e{boost::system::system_error(errorCode)};
                     promise.set_exception(std::move(e));
@@ -186,15 +182,12 @@ auto TcpClient::writeVarIntLengthAndBytes(const std::shared_ptr<std::vector<uint
     const auto varintLengthBytes = std::make_shared<std::vector<uint8_t>>(varintLengthByteCount);
     google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(dataLength,
                                                                   (*varintLengthBytes).data());
-    boost::asio::async_write(
+    async_write(
         socket_,
-        boost::asio::buffer(std::array<boost::asio::const_buffer, 2>{
-            boost::asio::buffer(*varintLengthBytes), boost::asio::buffer(*bytes)}),
-        [weakThis = std::weak_ptr<TcpClient>(shared_from_this()),
-         promise = std::move(promise),
-         bytes,
-         varintLengthBytes](const boost::system::error_code& errorCode,
-                            std::size_t bytesTransferred) mutable {
+        buffer(std::array<boost::asio::const_buffer, 2>{boost::asio::buffer(*varintLengthBytes),
+                                                        boost::asio::buffer(*bytes)}),
+        [weakThis = std::weak_ptr<TcpClient>(shared_from_this()), promise = std::move(promise)](
+            const boost::system::error_code& errorCode, std::size_t bytesTransferred) mutable {
             if (errorCode) {
                 promise.set_exception(boost::system::system_error(errorCode));
                 if (auto sharedThis = weakThis.lock()) {

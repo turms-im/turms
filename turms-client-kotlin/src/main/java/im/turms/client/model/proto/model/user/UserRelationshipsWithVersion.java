@@ -443,7 +443,7 @@ public final class UserRelationshipsWithVersion extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -494,7 +494,6 @@ public final class UserRelationshipsWithVersion extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.UserRelationshipsWithVersion)
     private static final im.turms.client.model.proto.model.user.UserRelationshipsWithVersion DEFAULT_INSTANCE;
-
     static {
         UserRelationshipsWithVersion defaultInstance = new UserRelationshipsWithVersion();
         // New instances are implicitly immutable so no need to make

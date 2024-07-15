@@ -15,6 +15,8 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
 
         case let .conversations(v):
             message = v
+        case let .conversationSettingsList(v):
+            message = v
 
         case let .messages(v):
             message = v
@@ -33,6 +35,8 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case let .userRelationshipsWithVersion(v):
             message = v
+        case let .userSettings(v):
+            message = v
         case let .nearbyUsers(v):
             message = v
 
@@ -48,7 +52,11 @@ public extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case let .groupsWithVersion(v):
             message = v
+
         case let .storageResourceInfos(v):
+            message = v
+
+        case let .meetings(v):
             message = v
         }
         return message as? T

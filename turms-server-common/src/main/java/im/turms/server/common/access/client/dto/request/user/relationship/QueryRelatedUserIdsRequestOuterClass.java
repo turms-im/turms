@@ -26,7 +26,7 @@ public final class QueryRelatedUserIdsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 QueryRelatedUserIdsRequestOuterClass.class.getName());
     }
@@ -49,23 +49,31 @@ public final class QueryRelatedUserIdsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n>request/user/relationship/query_relate"
                 + "d_user_ids_request.proto\022\016im.turms.proto"
-                + "\"\213\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block"
-                + "ed\030\001 \001(\010H\000\210\001\001\022\025\n\rgroup_indexes\030\002 \003(\005\022\036\n\021"
-                + "last_updated_date\030\003 \001(\003H\001\210\001\001B\n\n\010_blocked"
-                + "B\024\n\022_last_updated_dateBI\nBim.turms.serve"
-                + "r.common.access.client.dto.request.user."
-                + "relationshipP\001\272\002\000b\006proto3"};
+                + "\032\030model/common/value.proto\"\275\001\n\032QueryRela"
+                + "tedUserIdsRequest\022\024\n\007blocked\030\001 \001(\010H\000\210\001\001\022"
+                + "\025\n\rgroup_indexes\030\002 \003(\005\022\036\n\021last_updated_d"
+                + "ate\030\003 \001(\003H\001\210\001\001\0220\n\021custom_attributes\030\017 \003("
+                + "\0132\025.im.turms.proto.ValueB\n\n\010_blockedB\024\n\022"
+                + "_last_updated_dateBI\nBim.turms.server.co"
+                + "mmon.access.client.dto.request.user.rela"
+                + "tionshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
-                        new java.lang.String[]{"Blocked", "GroupIndexes", "LastUpdatedDate",});
+                        new java.lang.String[]{"Blocked",
+                                "GroupIndexes",
+                                "LastUpdatedDate",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

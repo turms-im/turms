@@ -47,8 +47,6 @@ public class ConversationProperties {
     @NestedConfigurationProperty
     private TypingStatusProperties typingStatus = new TypingStatusProperties();
 
-    @Description("The list of allowed conversation settings")
-    @GlobalProperty
-    @MutableProperty
-    private List<CustomSettingProperties> allowedSettings = Collections.emptyList();
+    @NestedConfigurationProperty
+    private ConversationSettingsProperties settings = new ConversationSettingsProperties();
 }

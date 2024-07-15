@@ -26,6 +26,14 @@ const QueryRelationshipGroupsRequest$json = {
       '10': 'lastUpdatedDate',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_last_updated_date'},
@@ -36,4 +44,6 @@ const QueryRelationshipGroupsRequest$json = {
 final $typed_data.Uint8List queryRelationshipGroupsRequestDescriptor =
     $convert.base64Decode(
         'Ch5RdWVyeVJlbGF0aW9uc2hpcEdyb3Vwc1JlcXVlc3QSLwoRbGFzdF91cGRhdGVkX2RhdGUYAS'
-        'ABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBQhQKEl9sYXN0X3VwZGF0ZWRfZGF0ZQ==');
+        'ABKANIAFIPbGFzdFVwZGF0ZWREYXRliAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygLMhUu'
+        'aW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCFAoSX2xhc3RfdXBkYXRlZF'
+        '9kYXRl');

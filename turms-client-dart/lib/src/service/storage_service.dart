@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 import '../../turms_client.dart';
+import '../model/proto/model/common/value.pb.dart';
 
 typedef ResourceUrlExtractor = String Function(Map<String, String>);
 
@@ -32,8 +33,8 @@ class StorageService {
   Future<Response<StorageUploadResult>> uploadUserProfilePicture(Uint8List data,
       {String? name,
       String? mediaType,
-      Map<String, String>? extra,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     if (data.isEmpty) {
       throw ResponseException(
           code: ResponseStatusCode.illegalArgument,
@@ -41,7 +42,7 @@ class StorageService {
     }
     final type = mediaType == null ? null : _parseMediaType(mediaType);
     final uploadInfo = await queryUserProfilePictureUploadInfo(
-        name: name, mediaType: mediaType, extra: extra);
+        name: name, mediaType: mediaType, customAttributes: customAttributes);
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
     final id = uploadInfo.data.remove(_resourceIdKeyName);
     if (id == null) {
@@ -54,15 +55,18 @@ class StorageService {
   }
 
   Future<Response<void>> deleteUserProfilePicture(
-          {Map<String, String>? extra}) =>
-      _deleteResource(StorageResourceType.USER_PROFILE_PICTURE, extra: extra);
+          {List<Value>? customAttributes}) =>
+      _deleteResource(StorageResourceType.USER_PROFILE_PICTURE,
+          customAttributes: customAttributes);
 
   Future<Response<StorageResource>> queryUserProfilePicture(Int64 userId,
-      {Map<String, String>? extra,
-      bool fetchDownloadInfo = false,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      {bool fetchDownloadInfo = false,
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     final downloadInfo = await queryUserProfilePictureDownloadInfo(userId,
-        extra: extra, fetch: fetchDownloadInfo, urlKeyName: urlKeyName);
+        fetch: fetchDownloadInfo,
+        urlKeyName: urlKeyName,
+        customAttributes: customAttributes);
     final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
     return _queryResource(url);
   }
@@ -70,20 +74,20 @@ class StorageService {
   Future<Response<Map<String, String>>> queryUserProfilePictureUploadInfo(
           {String? name,
           String? mediaType,
-          Map<String, String>? extra}) async =>
+          List<Value>? customAttributes}) async =>
       _queryResourceUploadInfo(StorageResourceType.USER_PROFILE_PICTURE,
-          name: name, mediaType: mediaType, extra: extra);
+          name: name, mediaType: mediaType, customAttributes: customAttributes);
 
   Future<Response<Map<String, String>>> queryUserProfilePictureDownloadInfo(
       Int64 userId,
-      {Map<String, String>? extra,
-      bool fetch = false,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      {bool fetch = false,
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     if (fetch) {
       return _queryResourceDownloadInfo(
           StorageResourceType.USER_PROFILE_PICTURE,
           idNum: userId,
-          extra: extra);
+          customAttributes: customAttributes);
     }
     return Response.value({
       urlKeyName:
@@ -97,8 +101,8 @@ class StorageService {
       Int64 groupId, Uint8List data,
       {String? name,
       String? mediaType,
-      Map<String, String>? extra,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     if (data.isEmpty) {
       throw ResponseException(
           code: ResponseStatusCode.illegalArgument,
@@ -106,7 +110,7 @@ class StorageService {
     }
     final type = mediaType == null ? null : _parseMediaType(mediaType);
     final uploadInfo = await queryGroupProfilePictureUploadInfo(groupId,
-        name: name, mediaType: mediaType, extra: extra);
+        name: name, mediaType: mediaType, customAttributes: customAttributes);
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
     final id = uploadInfo.data.remove(_resourceIdKeyName);
     if (id == null) {
@@ -119,16 +123,18 @@ class StorageService {
   }
 
   Future<Response<void>> deleteGroupProfilePicture(Int64 groupId,
-          {Map<String, String>? extra}) =>
+          {List<Value>? customAttributes}) =>
       _deleteResource(StorageResourceType.GROUP_PROFILE_PICTURE,
-          idNum: groupId, extra: extra);
+          idNum: groupId, customAttributes: customAttributes);
 
   Future<Response<StorageResource>> queryGroupProfilePicture(Int64 groupId,
-      {Map<String, String>? extra,
-      bool fetchDownloadInfo = false,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      {bool fetchDownloadInfo = false,
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     final downloadInfo = await queryGroupProfilePictureDownloadInfo(groupId,
-        extra: extra, fetch: fetchDownloadInfo, urlKeyName: urlKeyName);
+        fetch: fetchDownloadInfo,
+        urlKeyName: urlKeyName,
+        customAttributes: customAttributes);
     final url = _getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
     return _queryResource(url);
   }
@@ -137,20 +143,23 @@ class StorageService {
           Int64 groupId,
           {String? name,
           String? mediaType,
-          Map<String, String>? extra}) =>
+          List<Value>? customAttributes}) =>
       _queryResourceUploadInfo(StorageResourceType.GROUP_PROFILE_PICTURE,
-          idNum: groupId, name: name, mediaType: mediaType, extra: extra);
+          idNum: groupId,
+          name: name,
+          mediaType: mediaType,
+          customAttributes: customAttributes);
 
   Future<Response<Map<String, String>>> queryGroupProfilePictureDownloadInfo(
       Int64 groupId,
-      {Map<String, String>? extra,
+      {List<Value>? customAttributes,
       bool fetch = false,
       String urlKeyName = _defaultUrlKeyName}) async {
     if (fetch) {
       return _queryResourceDownloadInfo(
           StorageResourceType.GROUP_PROFILE_PICTURE,
           idNum: groupId,
-          extra: extra);
+          customAttributes: customAttributes);
     }
     return Response.value({
       urlKeyName:
@@ -163,47 +172,47 @@ class StorageService {
   Future<Response<StorageUploadResult>> uploadMessageAttachment(Uint8List data,
           {String? name,
           String? mediaType,
-          Map<String, String>? extra,
-          String urlKeyName = _defaultUrlKeyName}) async =>
+          String urlKeyName = _defaultUrlKeyName,
+          List<Value>? customAttributes}) async =>
       _uploadMessageAttachment(data,
           name: name,
           mediaType: mediaType,
-          extra: extra,
-          urlKeyName: urlKeyName);
+          urlKeyName: urlKeyName,
+          customAttributes: customAttributes);
 
   Future<Response<StorageUploadResult>>
       uploadMessageAttachmentInPrivateConversation(Int64 userId, Uint8List data,
               {String? name,
               String? mediaType,
-              Map<String, String>? extra,
-              String urlKeyName = _defaultUrlKeyName}) async =>
+              String urlKeyName = _defaultUrlKeyName,
+              List<Value>? customAttributes}) async =>
           _uploadMessageAttachment(data,
               userId: userId,
               name: name,
               mediaType: mediaType,
-              extra: extra,
-              urlKeyName: urlKeyName);
+              urlKeyName: urlKeyName,
+              customAttributes: customAttributes);
 
   Future<Response<StorageUploadResult>>
       uploadMessageAttachmentInGroupConversation(Int64 groupId, Uint8List data,
               {String? name,
               String? mediaType,
-              Map<String, String>? extra,
-              String urlKeyName = _defaultUrlKeyName}) async =>
+              String urlKeyName = _defaultUrlKeyName,
+              List<Value>? customAttributes}) async =>
           _uploadMessageAttachment(data,
               groupId: groupId,
               name: name,
               mediaType: mediaType,
-              extra: extra,
-              urlKeyName: urlKeyName);
+              urlKeyName: urlKeyName,
+              customAttributes: customAttributes);
 
   Future<Response<StorageUploadResult>> _uploadMessageAttachment(Uint8List data,
       {Int64? userId,
       Int64? groupId,
       String? name,
       String? mediaType,
-      Map<String, String>? extra,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     if (data.isEmpty) {
       throw ResponseException(
           code: ResponseStatusCode.illegalArgument,
@@ -213,7 +222,7 @@ class StorageService {
     final Response<Map<String, String>> uploadInfo;
     if (userId == null && groupId == null) {
       uploadInfo = await queryMessageAttachmentUploadInfo(
-          name: name, mediaType: mediaType, extra: extra);
+          name: name, mediaType: mediaType, customAttributes: customAttributes);
     } else if (userId != null) {
       if (groupId != null) {
         throw ResponseException(
@@ -224,13 +233,13 @@ class StorageService {
           userId,
           name: name,
           mediaType: mediaType,
-          extra: extra);
+          customAttributes: customAttributes);
     } else {
       uploadInfo = await queryMessageAttachmentUploadInfoInGroupConversation(
           groupId!,
           name: name,
           mediaType: mediaType,
-          extra: extra);
+          customAttributes: customAttributes);
     }
     final url = _getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
     final id = uploadInfo.data.remove(_resourceIdKeyName);
@@ -246,14 +255,16 @@ class StorageService {
   Future<Response<void>> deleteMessageAttachment(
       {Int64? attachmentIdNum,
       String? attachmentIdStr,
-      Map<String, String>? extra}) {
+      List<Value>? customAttributes}) {
     if ([attachmentIdNum, attachmentIdStr].areAllNullOrNonNull) {
       throw ResponseException(
           code: ResponseStatusCode.illegalArgument,
           reason: 'One and only one attachment ID must be specified');
     }
     return _deleteResource(StorageResourceType.MESSAGE_ATTACHMENT,
-        idNum: attachmentIdNum, idStr: attachmentIdStr, extra: extra);
+        idNum: attachmentIdNum,
+        idStr: attachmentIdStr,
+        customAttributes: customAttributes);
   }
 
   Future<Response<void>> shareMessageAttachmentWithUser(Int64 userId,
@@ -315,42 +326,52 @@ class StorageService {
   Future<Response<StorageResource>> queryMessageAttachment(
       {Int64? attachmentIdNum,
       String? attachmentIdStr,
-      Map<String, String>? extra,
       bool fetchDownloadInfo = false,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     final response = await queryMessageAttachmentDownloadInfo(
         attachmentIdNum: attachmentIdNum,
         attachmentIdStr: attachmentIdStr,
-        extra: extra,
         fetch: fetchDownloadInfo,
-        urlKeyName: urlKeyName);
+        urlKeyName: urlKeyName,
+        customAttributes: customAttributes);
     final url = _getAndRemoveResourceUrl(response.data, urlKeyName);
     return _queryResource(url);
   }
 
   Future<Response<Map<String, String>>> queryMessageAttachmentUploadInfo(
-          {String? name, String? mediaType, Map<String, String>? extra}) =>
+          {String? name, String? mediaType, List<Value>? customAttributes}) =>
       _queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
-          name: name, mediaType: mediaType, extra: extra);
+          name: name, mediaType: mediaType, customAttributes: customAttributes);
 
   Future<Response<Map<String, String>>>
       queryMessageAttachmentUploadInfoInPrivateConversation(Int64 userId,
-              {String? name, String? mediaType, Map<String, String>? extra}) =>
+              {String? name,
+              String? mediaType,
+              List<Value>? customAttributes}) =>
           _queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
-              idNum: userId, name: name, mediaType: mediaType, extra: extra);
+              idNum: userId,
+              name: name,
+              mediaType: mediaType,
+              customAttributes: customAttributes);
 
   Future<Response<Map<String, String>>>
       queryMessageAttachmentUploadInfoInGroupConversation(Int64 groupId,
-              {String? name, String? mediaType, Map<String, String>? extra}) =>
+              {String? name,
+              String? mediaType,
+              List<Value>? customAttributes}) =>
           _queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
-              idNum: -groupId, name: name, mediaType: mediaType, extra: extra);
+              idNum: -groupId,
+              name: name,
+              mediaType: mediaType,
+              customAttributes: customAttributes);
 
   Future<Response<Map<String, String>>> queryMessageAttachmentDownloadInfo(
       {Int64? attachmentIdNum,
       String? attachmentIdStr,
-      Map<String, String>? extra,
       bool fetch = false,
-      String urlKeyName = _defaultUrlKeyName}) async {
+      String urlKeyName = _defaultUrlKeyName,
+      List<Value>? customAttributes}) async {
     if ([attachmentIdNum, attachmentIdStr].areAllNullOrNonNull) {
       throw ResponseException(
           code: ResponseStatusCode.illegalArgument,
@@ -358,7 +379,9 @@ class StorageService {
     }
     if (fetch) {
       return _queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT,
-          idNum: attachmentIdNum, idStr: attachmentIdStr, extra: extra);
+          idNum: attachmentIdNum,
+          idStr: attachmentIdStr,
+          customAttributes: customAttributes);
     }
     return Response.value({
       urlKeyName:
@@ -463,10 +486,12 @@ class StorageService {
   }
 
   Future<Response<void>> _deleteResource(StorageResourceType type,
-      {Int64? idNum, String? idStr, Map<String, String>? extra}) async {
-    if (extra?.isNotEmpty == true) {}
+      {Int64? idNum, String? idStr, List<Value>? customAttributes}) async {
     final n = await _turmsClient.driver.send(DeleteResourceRequest(
-        type: type, idNum: idNum, idStr: idStr, extra: extra));
+        type: type,
+        idNum: idNum,
+        idStr: idStr,
+        customAttributes: customAttributes));
     return n.toNullResponse();
   }
 
@@ -506,14 +531,14 @@ class StorageService {
       String? idStr,
       String? name,
       String? mediaType,
-      Map<String, String>? extra}) async {
+      List<Value>? customAttributes}) async {
     final n = await _turmsClient.driver.send(QueryResourceUploadInfoRequest(
         type: type,
         idNum: idNum,
         idStr: idStr,
         name: name,
         mediaType: mediaType,
-        extra: extra));
+        customAttributes: customAttributes));
     return n.toResponse((data) => data.stringsWithVersion.strings.toMap());
   }
 
@@ -521,9 +546,12 @@ class StorageService {
       StorageResourceType type,
       {Int64? idNum,
       String? idStr,
-      Map<String, String>? extra}) async {
+      List<Value>? customAttributes}) async {
     final n = await _turmsClient.driver.send(QueryResourceDownloadInfoRequest(
-        type: type, idNum: idNum, idStr: idStr, extra: extra));
+        type: type,
+        idNum: idNum,
+        idStr: idStr,
+        customAttributes: customAttributes));
     return n.toResponse((data) => data.stringsWithVersion.strings.toMap());
   }
 

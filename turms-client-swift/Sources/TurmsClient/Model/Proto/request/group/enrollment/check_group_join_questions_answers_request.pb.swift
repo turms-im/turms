@@ -27,6 +27,8 @@ public struct CheckGroupJoinQuestionsAnswersRequest {
 
     public var questionIDToAnswer: [Int64: String] = [:]
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -44,6 +46,7 @@ extension CheckGroupJoinQuestionsAnswersRequest: SwiftProtobuf.Message, SwiftPro
     public static let protoMessageName: String = _protobuf_package + ".CheckGroupJoinQuestionsAnswersRequest"
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "question_id_to_answer"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -53,6 +56,7 @@ extension CheckGroupJoinQuestionsAnswersRequest: SwiftProtobuf.Message, SwiftPro
             // enabled. https://github.com/apple/swift-protobuf/issues/1034
             switch fieldNumber {
             case 1: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufString>.self, value: &questionIDToAnswer)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -62,11 +66,15 @@ extension CheckGroupJoinQuestionsAnswersRequest: SwiftProtobuf.Message, SwiftPro
         if !questionIDToAnswer.isEmpty {
             try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufInt64, SwiftProtobuf.ProtobufString>.self, value: questionIDToAnswer, fieldNumber: 1)
         }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: CheckGroupJoinQuestionsAnswersRequest, rhs: CheckGroupJoinQuestionsAnswersRequest) -> Bool {
         if lhs.questionIDToAnswer != rhs.questionIDToAnswer { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

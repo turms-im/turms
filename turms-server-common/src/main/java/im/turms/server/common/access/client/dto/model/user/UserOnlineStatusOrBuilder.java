@@ -43,39 +43,65 @@ public interface UserOnlineStatusOrBuilder extends
     im.turms.server.common.access.client.dto.constant.UserStatus getUserStatus();
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the usingDeviceTypes.
+     * @return A list containing the deviceTypes.
      */
-    java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList();
+    java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList();
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return The count of usingDeviceTypes.
+     * @return The count of deviceTypes.
      */
-    int getUsingDeviceTypesCount();
+    int getDeviceTypesCount();
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the element to return.
-     * @return The usingDeviceTypes at the given index.
+     * @return The deviceTypes at the given index.
      */
-    im.turms.server.common.access.client.dto.constant.DeviceType getUsingDeviceTypes(int index);
+    im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index);
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
-     * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
+     * @return A list containing the enum numeric values on the wire for deviceTypes.
      */
-    java.util.List<java.lang.Integer> getUsingDeviceTypesValueList();
+    java.util.List<java.lang.Integer> getDeviceTypesValueList();
 
     /**
-     * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
+     * <code>repeated .im.turms.proto.DeviceType device_types = 3;</code>
      *
      * @param index The index of the value to return.
-     * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
      */
-    int getUsingDeviceTypesValue(int index);
+    int getDeviceTypesValue(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index);
 }

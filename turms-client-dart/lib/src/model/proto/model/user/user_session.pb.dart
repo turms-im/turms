@@ -13,10 +13,13 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class UserSession extends $pb.GeneratedMessage {
   factory UserSession({
     $core.String? sessionId,
     $core.String? serverId,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (sessionId != null) {
@@ -24,6 +27,9 @@ class UserSession extends $pb.GeneratedMessage {
     }
     if (serverId != null) {
       $result.serverId = serverId;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -41,6 +47,9 @@ class UserSession extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'sessionId')
     ..aOS(2, _omitFieldNames ? '' : 'serverId')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -88,6 +97,9 @@ class UserSession extends $pb.GeneratedMessage {
   $core.bool hasServerId() => $_has(1);
   @$pb.TagNumber(2)
   void clearServerId() => clearField(2);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

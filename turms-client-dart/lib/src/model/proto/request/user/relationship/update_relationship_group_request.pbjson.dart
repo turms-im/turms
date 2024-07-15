@@ -19,6 +19,14 @@ const UpdateRelationshipGroupRequest$json = {
   '2': [
     {'1': 'group_index', '3': 1, '4': 1, '5': 5, '10': 'groupIndex'},
     {'1': 'new_name', '3': 2, '4': 1, '5': 9, '10': 'newName'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -26,4 +34,5 @@ const UpdateRelationshipGroupRequest$json = {
 final $typed_data.Uint8List updateRelationshipGroupRequestDescriptor =
     $convert.base64Decode(
         'Ch5VcGRhdGVSZWxhdGlvbnNoaXBHcm91cFJlcXVlc3QSHwoLZ3JvdXBfaW5kZXgYASABKAVSCm'
-        'dyb3VwSW5kZXgSGQoIbmV3X25hbWUYAiABKAlSB25ld05hbWU=');
+        'dyb3VwSW5kZXgSGQoIbmV3X25hbWUYAiABKAlSB25ld05hbWUSQgoRY3VzdG9tX2F0dHJpYnV0'
+        'ZXMYDyADKAsyFS5pbS50dXJtcy5wcm90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

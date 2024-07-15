@@ -27,7 +27,7 @@ describe('Constructor', () => {
 describe('Update', () => {
     it('updatePrivateConversationReadDate_shouldSucceed', async () => {
         const response = await turmsClient.conversationService.updatePrivateConversationReadDate({
-            targetId: RELATED_USER_ID
+            userId: RELATED_USER_ID
         });
         expect(response.data).toBeFalsy();
     });
@@ -39,7 +39,7 @@ describe('Update', () => {
     });
     it('updatePrivateConversationTypingStatus_shouldSucceed', async () => {
         const response = await turmsClient.conversationService.updatePrivateConversationTypingStatus({
-            targetId: RELATED_USER_ID
+            userId: RELATED_USER_ID
         });
         expect(response.data).toBeFalsy();
     });
@@ -54,7 +54,7 @@ describe('Update', () => {
 describe('Query', () => {
     it('queryPrivateConversations_shouldReturnNotEmptyConversations', async () => {
         const response = await turmsClient.conversationService.queryPrivateConversations({
-            targetIds: [RELATED_USER_ID]
+            userIds: [RELATED_USER_ID]
         });
         const conversations = response.data;
         expect(conversations.length).toBeGreaterThan(0);

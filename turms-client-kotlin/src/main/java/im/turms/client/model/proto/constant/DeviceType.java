@@ -133,7 +133,7 @@ public enum DeviceType implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    private DeviceType(int value) {
+    DeviceType(int value) {
         this.value = value;
     }
 

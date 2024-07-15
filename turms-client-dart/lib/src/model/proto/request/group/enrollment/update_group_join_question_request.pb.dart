@@ -14,12 +14,15 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../model/common/value.pb.dart' as $0;
+
 class UpdateGroupJoinQuestionRequest extends $pb.GeneratedMessage {
   factory UpdateGroupJoinQuestionRequest({
     $fixnum.Int64? questionId,
     $core.String? question,
     $core.Iterable<$core.String>? answers,
     $core.int? score,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (questionId != null) {
@@ -33,6 +36,9 @@ class UpdateGroupJoinQuestionRequest extends $pb.GeneratedMessage {
     }
     if (score != null) {
       $result.score = score;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -52,6 +58,9 @@ class UpdateGroupJoinQuestionRequest extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'question')
     ..pPS(3, _omitFieldNames ? '' : 'answers')
     ..a<$core.int>(4, _omitFieldNames ? '' : 'score', $pb.PbFieldType.O3)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -121,6 +130,9 @@ class UpdateGroupJoinQuestionRequest extends $pb.GeneratedMessage {
   $core.bool hasScore() => $_has(3);
   @$pb.TagNumber(4)
   void clearScore() => clearField(4);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(4);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

@@ -76,8 +76,11 @@ export default class GroupService {
                 announcement,
                 minScore,
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate),
-                typeId
-            }
+                typeId,
+                userDefinedAttributes: {},
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -108,8 +111,10 @@ export default class GroupService {
         }
         return this._turmsClient.driver.send({
             deleteGroupRequest: {
-                groupId
-            }
+                groupId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -236,8 +241,11 @@ export default class GroupService {
                 minScore,
                 typeId,
                 successorId,
-                quitAfterTransfer
-            }
+                quitAfterTransfer,
+                userDefinedAttributes: {},
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -383,8 +391,10 @@ export default class GroupService {
             queryGroupsRequest: {
                 groupIds: CollectionUtil.uniqueArray(groupIds),
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
-                fieldsToHighlight: []
-            }
+                fieldsToHighlight: [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, (data) =>
             NotificationUtil.transform(data.groupsWithVersion?.groups)));
     }
@@ -415,8 +425,10 @@ export default class GroupService {
                 name: name,
                 fieldsToHighlight: highlight ? [1] : [],
                 skip: skip,
-                limit: limit
-            }
+                limit: limit,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, (data) =>
             NotificationUtil.transform(data.groupsWithVersion?.groups)));
     }
@@ -438,8 +450,10 @@ export default class GroupService {
     } = {}): Promise<Response<ParsedModel.LongsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryJoinedGroupIdsRequest: {
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
@@ -458,8 +472,10 @@ export default class GroupService {
     } = {}): Promise<Response<ParsedModel.GroupsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryJoinedGroupInfosRequest: {
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupsWithVersion)));
     }
 
@@ -523,8 +539,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             createGroupJoinQuestionsRequest: {
                 groupId,
-                questions: newQuestions
-            }
+                questions: newQuestions,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => data.longsWithVersion?.longs || []));
     }
 
@@ -553,8 +571,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupJoinQuestionsRequest: {
                 groupId,
-                questionIds
-            }
+                questionIds,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -597,8 +617,10 @@ export default class GroupService {
                 questionId,
                 question,
                 answers: answers || [],
-                score
-            }
+                score,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -642,8 +664,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             createGroupBlockedUserRequest: {
                 userId,
-                groupId
-            }
+                groupId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -683,8 +707,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupBlockedUserRequest: {
                 groupId,
-                userId
-            }
+                userId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -710,8 +736,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupBlockedUserIdsRequest: {
                 groupId,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongsWithVersion(data)));
     }
 
@@ -737,8 +765,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupBlockedUserInfosRequest: {
                 groupId,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.userInfosWithVersion)));
     }
 
@@ -799,8 +829,10 @@ export default class GroupService {
             createGroupInvitationRequest: {
                 groupId,
                 inviteeId,
-                content
-            }
+                content,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -843,8 +875,10 @@ export default class GroupService {
         }
         return this._turmsClient.driver.send({
             deleteGroupInvitationRequest: {
-                invitationId
-            }
+                invitationId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -895,8 +929,10 @@ export default class GroupService {
             updateGroupInvitationRequest: {
                 invitationId,
                 responseAction,
-                reason
-            }
+                reason,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -924,8 +960,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 groupId,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupInvitationsWithVersion)));
     }
 
@@ -953,8 +991,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 areSentByMe,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupInvitationsWithVersion)));
     }
 
@@ -1003,8 +1043,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             createGroupJoinRequestRequest: {
                 groupId,
-                content
-            }
+                content,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -1040,8 +1082,10 @@ export default class GroupService {
         }
         return this._turmsClient.driver.send({
             deleteGroupJoinRequestRequest: {
-                requestId
-            }
+                requestId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1092,8 +1136,10 @@ export default class GroupService {
             updateGroupJoinRequestRequest: {
                 requestId,
                 responseAction,
-                reason
-            }
+                reason,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1121,8 +1167,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
                 groupId,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupJoinRequestsWithVersion)));
     }
 
@@ -1143,8 +1191,10 @@ export default class GroupService {
     } = {}): Promise<Response<ParsedModel.GroupJoinRequestsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupJoinRequestsWithVersion)));
     }
 
@@ -1180,8 +1230,10 @@ export default class GroupService {
             queryGroupJoinQuestionsRequest: {
                 groupId,
                 withAnswers,
-                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate)
-            }
+                lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupJoinQuestionsWithVersion)));
     }
 
@@ -1204,8 +1256,10 @@ export default class GroupService {
         }
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
-                questionIdToAnswer: questionIdToAnswer
-            }
+                questionIdToAnswer: questionIdToAnswer,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => {
             const result = NotificationUtil.transform(data.groupJoinQuestionAnswerResult);
             if (result) {
@@ -1292,8 +1346,10 @@ export default class GroupService {
                 userIds,
                 name,
                 role,
-                muteEndDate: DataParser.getDateTimeStr(muteEndDate)
-            }
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1390,8 +1446,10 @@ export default class GroupService {
                 groupId,
                 memberIds: [userId],
                 successorId,
-                quitAfterTransfer
-            }
+                quitAfterTransfer,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1431,8 +1489,10 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupMembersRequest: {
                 groupId,
-                memberIds
-            }
+                memberIds,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1502,8 +1562,10 @@ export default class GroupService {
                 memberId,
                 name,
                 role,
-                muteEndDate: DataParser.getDateTimeStr(muteEndDate)
-            }
+                muteEndDate: DataParser.getDateTimeStr(muteEndDate),
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -1620,8 +1682,10 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
                 withStatus,
-                memberIds: []
-            }
+                memberIds: [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupMembersWithVersion)));
     }
 
@@ -1654,8 +1718,10 @@ export default class GroupService {
             queryGroupMembersRequest: {
                 groupId,
                 memberIds,
-                withStatus
-            }
+                withStatus,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.groupMembersWithVersion)));
     }
 }

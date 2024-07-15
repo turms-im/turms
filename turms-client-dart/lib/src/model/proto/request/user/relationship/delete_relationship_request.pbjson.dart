@@ -36,6 +36,14 @@ const DeleteRelationshipRequest$json = {
       '10': 'targetGroupIndex',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_group_index'},
@@ -47,5 +55,6 @@ const DeleteRelationshipRequest$json = {
 final $typed_data.Uint8List deleteRelationshipRequestDescriptor = $convert.base64Decode(
     'ChlEZWxldGVSZWxhdGlvbnNoaXBSZXF1ZXN0EhcKB3VzZXJfaWQYASABKANSBnVzZXJJZBIkCg'
     'tncm91cF9pbmRleBgCIAEoBUgAUgpncm91cEluZGV4iAEBEjEKEnRhcmdldF9ncm91cF9pbmRl'
-    'eBgDIAEoBUgBUhB0YXJnZXRHcm91cEluZGV4iAEBQg4KDF9ncm91cF9pbmRleEIVChNfdGFyZ2'
-    'V0X2dyb3VwX2luZGV4');
+    'eBgDIAEoBUgBUhB0YXJnZXRHcm91cEluZGV4iAEBEkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAy'
+    'gLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXNCDgoMX2dyb3VwX2lu'
+    'ZGV4QhUKE190YXJnZXRfZ3JvdXBfaW5kZXg=');

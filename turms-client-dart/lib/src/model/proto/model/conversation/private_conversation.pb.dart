@@ -14,11 +14,14 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../common/value.pb.dart' as $0;
+
 class PrivateConversation extends $pb.GeneratedMessage {
   factory PrivateConversation({
     $fixnum.Int64? ownerId,
     $fixnum.Int64? targetId,
     $fixnum.Int64? readDate,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (ownerId != null) {
@@ -29,6 +32,9 @@ class PrivateConversation extends $pb.GeneratedMessage {
     }
     if (readDate != null) {
       $result.readDate = readDate;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -47,6 +53,9 @@ class PrivateConversation extends $pb.GeneratedMessage {
     ..aInt64(1, _omitFieldNames ? '' : 'ownerId')
     ..aInt64(2, _omitFieldNames ? '' : 'targetId')
     ..aInt64(3, _omitFieldNames ? '' : 'readDate')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -107,6 +116,9 @@ class PrivateConversation extends $pb.GeneratedMessage {
   $core.bool hasReadDate() => $_has(2);
   @$pb.TagNumber(3)
   void clearReadDate() => clearField(3);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(3);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

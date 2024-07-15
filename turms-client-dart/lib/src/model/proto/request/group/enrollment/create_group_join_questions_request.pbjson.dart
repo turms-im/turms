@@ -26,6 +26,14 @@ const CreateGroupJoinQuestionsRequest$json = {
       '6': '.im.turms.proto.GroupJoinQuestion',
       '10': 'questions'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -34,4 +42,5 @@ final $typed_data.Uint8List createGroupJoinQuestionsRequestDescriptor =
     $convert.base64Decode(
         'Ch9DcmVhdGVHcm91cEpvaW5RdWVzdGlvbnNSZXF1ZXN0EhkKCGdyb3VwX2lkGAEgASgDUgdncm'
         '91cElkEj8KCXF1ZXN0aW9ucxgCIAMoCzIhLmltLnR1cm1zLnByb3RvLkdyb3VwSm9pblF1ZXN0'
-        'aW9uUglxdWVzdGlvbnM=');
+        'aW9uUglxdWVzdGlvbnMSQgoRY3VzdG9tX2F0dHJpYnV0ZXMYDyADKAsyFS5pbS50dXJtcy5wcm'
+        '90by5WYWx1ZVIQY3VzdG9tQXR0cmlidXRlcw==');

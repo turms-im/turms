@@ -144,7 +144,7 @@ public enum RequestStatus implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    private RequestStatus(int value) {
+    RequestStatus(int value) {
         this.value = value;
     }
 

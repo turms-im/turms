@@ -73,9 +73,8 @@ auto MessageService::sendMessage(bool isGroupMessage,
         });
 }
 
-auto MessageService::forwardMessage(int64_t messageId,
-                                    bool isGroupMessage,
-                                    int64_t targetId) -> boost::future<model::Response<int64_t>> {
+auto MessageService::forwardMessage(int64_t messageId, bool isGroupMessage, int64_t targetId)
+    -> boost::future<model::Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_message_request();
     request->set_message_id(messageId);
@@ -208,9 +207,9 @@ auto MessageService::queryMessagesWithTotal(const std::unordered_set<int64_t>& i
         });
 }
 
-auto MessageService::recallMessage(int64_t messageId,
-                                   const std::chrono::time_point<std::chrono::system_clock>&
-                                       recallDate) -> boost::future<model::Response<void>> {
+auto MessageService::recallMessage(
+    int64_t messageId, const std::chrono::time_point<std::chrono::system_clock>& recallDate)
+    -> boost::future<model::Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_message_request();
     request->set_message_id(messageId);

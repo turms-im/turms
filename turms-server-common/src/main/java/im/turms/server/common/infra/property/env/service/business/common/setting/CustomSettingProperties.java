@@ -64,6 +64,6 @@ public class CustomSettingProperties {
     private boolean deletable = true;
 
     @NestedConfigurationProperty
-    private CustomSettingValueProperties value = new CustomSettingValueProperties();
+    private CustomSettingValueOneOfProperties value = new CustomSettingValueOneOfProperties();
 
 }

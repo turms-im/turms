@@ -27,6 +27,7 @@ public final class QueryResourceDownloadInfoRequest extends
         QueryResourceDownloadInfoRequestOrBuilder {
     private QueryResourceDownloadInfoRequest() {
         idStr_ = "";
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
@@ -188,99 +189,109 @@ public final class QueryResourceDownloadInfoRequest extends
         bitField0_ |= 0x00000002;
     }
 
-    public static final int EXTRA_FIELD_NUMBER = 4;
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
 
-    private static final class ExtraDefaultEntryHolder {
-        static final com.google.protobuf.MapEntryLite<java.lang.String, java.lang.String> defaultEntry =
-                com.google.protobuf.MapEntryLite.newDefaultInstance(
-                        com.google.protobuf.WireFormat.FieldType.STRING,
-                        "",
-                        com.google.protobuf.WireFormat.FieldType.STRING,
-                        "");
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
     }
 
-    private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String> extra_ =
-            com.google.protobuf.MapFieldLite.emptyMapField();
-
-    private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String> internalGetExtra() {
-        return extra_;
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
     }
 
-    private com.google.protobuf.MapFieldLite<java.lang.String, java.lang.String> internalGetMutableExtra() {
-        if (!extra_.isMutable()) {
-            extra_ = extra_.mutableCopy();
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
         }
-        return extra_;
-    }
-
-    @java.lang.Override
-
-    public int getExtraCount() {
-        return internalGetExtra().size();
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Override
-
-    public boolean containsExtra(java.lang.String key) {
-        java.lang.Class<?> keyClass = key.getClass();
-        return internalGetExtra().containsKey(key);
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
     }
 
     /**
-     * Use {@link #getExtraMap()} instead.
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String> getExtra() {
-        return getExtraMap();
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
-        return java.util.Collections.unmodifiableMap(internalGetExtra());
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Override
-
-    public /* nullable */
-    java.lang.String getExtraOrDefault(
-            java.lang.String key,
-            /* nullable */
-            java.lang.String defaultValue) {
-        java.lang.Class<?> keyClass = key.getClass();
-        java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra();
-        return map.getOrDefault(key, defaultValue);
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    @java.lang.Override
-
-    public java.lang.String getExtraOrThrow(java.lang.String key) {
-        java.lang.Class<?> keyClass = key.getClass();
-        java.util.Map<java.lang.String, java.lang.String> map = internalGetExtra();
-        if (!map.containsKey(key)) {
-            throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
     }
 
     /**
-     * <code>map&lt;string, string&gt; extra = 4;</code>
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
-    private java.util.Map<java.lang.String, java.lang.String> getMutableExtraMap() {
-        return internalGetMutableExtra();
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest parseFrom(
@@ -547,108 +558,118 @@ public final class QueryResourceDownloadInfoRequest extends
             return this;
         }
 
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
         @java.lang.Override
-
-        public int getExtraCount() {
-            return instance.getExtraMap()
-                    .size();
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
         @java.lang.Override
-
-        public boolean containsExtra(java.lang.String key) {
-            java.lang.Class<?> keyClass = key.getClass();
-            return instance.getExtraMap()
-                    .containsKey(key);
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
         }
 
-        public Builder clearExtra() {
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
             copyOnWrite();
-            instance.getMutableExtraMap()
-                    .clear();
+            instance.setCustomAttributes(index, value);
             return this;
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-
-        public Builder removeExtra(java.lang.String key) {
-            java.lang.Class<?> keyClass = key.getClass();
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
             copyOnWrite();
-            instance.getMutableExtraMap()
-                    .remove(key);
+            instance.setCustomAttributes(index, builderForValue.build());
             return this;
         }
 
         /**
-         * Use {@link #getExtraMap()} instead.
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        @java.lang.Override
-        @java.lang.Deprecated
-        public java.util.Map<java.lang.String, java.lang.String> getExtra() {
-            return getExtraMap();
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        @java.lang.Override
-        public java.util.Map<java.lang.String, java.lang.String> getExtraMap() {
-            return java.util.Collections.unmodifiableMap(instance.getExtraMap());
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        @java.lang.Override
-
-        public /* nullable */
-        java.lang.String getExtraOrDefault(
-                java.lang.String key,
-                /* nullable */
-                java.lang.String defaultValue) {
-            java.lang.Class<?> keyClass = key.getClass();
-            java.util.Map<java.lang.String, java.lang.String> map = instance.getExtraMap();
-            return map.getOrDefault(key, defaultValue);
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        @java.lang.Override
-
-        public java.lang.String getExtraOrThrow(java.lang.String key) {
-            java.lang.Class<?> keyClass = key.getClass();
-            java.util.Map<java.lang.String, java.lang.String> map = instance.getExtraMap();
-            if (!map.containsKey(key)) {
-                throw new java.lang.IllegalArgumentException();
-            }
-            return map.get(key);
-        }
-
-        /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
-         */
-        public Builder putExtra(java.lang.String key, java.lang.String value) {
-            java.lang.Class<?> keyClass = key.getClass();
-            java.lang.Class<?> valueClass = value.getClass();
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
             copyOnWrite();
-            instance.getMutableExtraMap()
-                    .put(key, value);
+            instance.addCustomAttributes(value);
             return this;
         }
 
         /**
-         * <code>map&lt;string, string&gt; extra = 4;</code>
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
          */
-        public Builder putAllExtra(java.util.Map<java.lang.String, java.lang.String> values) {
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
             copyOnWrite();
-            instance.getMutableExtraMap()
-                    .putAll(values);
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
             return this;
         }
 
@@ -657,7 +678,7 @@ public final class QueryResourceDownloadInfoRequest extends
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -673,11 +694,11 @@ public final class QueryResourceDownloadInfoRequest extends
                         "type_",
                         "idNum_",
                         "idStr_",
-                        "extra_",
-                        ExtraDefaultEntryHolder.defaultEntry,};
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u0004\u0000\u0001\u0001\u0004\u0004\u0001\u0000\u0000\u0001\f\u0002\u1002"
-                                + "\u0000\u0003\u1208\u0001\u00042";
+                        "\u0000\u0004\u0000\u0001\u0001\u000f\u0004\u0000\u0001\u0000\u0001\f\u0002\u1002"
+                                + "\u0000\u0003\u1208\u0001\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -710,7 +731,6 @@ public final class QueryResourceDownloadInfoRequest extends
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.QueryResourceDownloadInfoRequest)
     private static final im.turms.client.model.proto.request.storage.QueryResourceDownloadInfoRequest DEFAULT_INSTANCE;
-
     static {
         QueryResourceDownloadInfoRequest defaultInstance = new QueryResourceDownloadInfoRequest();
         // New instances are implicitly immutable so no need to make

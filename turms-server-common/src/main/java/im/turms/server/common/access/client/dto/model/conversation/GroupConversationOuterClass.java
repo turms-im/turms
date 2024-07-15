@@ -26,7 +26,7 @@ public final class GroupConversationOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 GroupConversationOuterClass.class.getName());
     }
@@ -50,32 +50,39 @@ public final class GroupConversationOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n+model/conversation/group_conversation."
-                + "proto\022\016im.turms.proto\"\273\001\n\021GroupConversat"
-                + "ion\022\020\n\010group_id\030\001 \001(\003\022Y\n\026member_id_to_re"
-                + "ad_date\030\002 \003(\01329.im.turms.proto.GroupConv"
-                + "ersation.MemberIdToReadDateEntry\0329\n\027Memb"
-                + "erIdToReadDateEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005valu"
-                + "e\030\002 \001(\003:\0028\001BB\n;im.turms.server.common.ac"
-                + "cess.client.dto.model.conversationP\001\272\002\000b"
-                + "\006proto3"};
+                + "proto\022\016im.turms.proto\032\030model/common/valu"
+                + "e.proto\"\355\001\n\021GroupConversation\022\020\n\010group_i"
+                + "d\030\001 \001(\003\022Y\n\026member_id_to_read_date\030\002 \003(\0132"
+                + "9.im.turms.proto.GroupConversation.Membe"
+                + "rIdToReadDateEntry\0220\n\021custom_attributes\030"
+                + "\017 \003(\0132\025.im.turms.proto.Value\0329\n\027MemberId"
+                + "ToReadDateEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 "
+                + "\001(\003:\0028\001BB\n;im.turms.server.common.access"
+                + ".client.dto.model.conversationP\001\272\002\000b\006pro"
+                + "to3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_GroupConversation_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_GroupConversation_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupConversation_descriptor,
-                        new java.lang.String[]{"GroupId", "MemberIdToReadDate",});
+                        new java.lang.String[]{"GroupId",
+                                "MemberIdToReadDate",
+                                "CustomAttributes",});
         internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor =
                 internal_static_im_turms_proto_GroupConversation_descriptor.getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupConversation_MemberIdToReadDateEntry_descriptor,
                         new java.lang.String[]{"Key", "Value",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

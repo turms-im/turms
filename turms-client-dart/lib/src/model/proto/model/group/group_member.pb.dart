@@ -14,20 +14,22 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../constant/device_type.pbenum.dart' as $2;
-import '../../constant/group_member_role.pbenum.dart' as $0;
-import '../../constant/user_status.pbenum.dart' as $1;
+import '../../constant/device_type.pbenum.dart' as $3;
+import '../../constant/group_member_role.pbenum.dart' as $1;
+import '../../constant/user_status.pbenum.dart' as $2;
+import '../common/value.pb.dart' as $0;
 
 class GroupMember extends $pb.GeneratedMessage {
   factory GroupMember({
     $fixnum.Int64? groupId,
     $fixnum.Int64? userId,
     $core.String? name,
-    $0.GroupMemberRole? role,
+    $1.GroupMemberRole? role,
     $fixnum.Int64? joinDate,
     $fixnum.Int64? muteEndDate,
-    $1.UserStatus? userStatus,
-    $core.Iterable<$2.DeviceType>? usingDeviceTypes,
+    $2.UserStatus? userStatus,
+    $core.Iterable<$3.DeviceType>? usingDeviceTypes,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (groupId != null) {
@@ -54,6 +56,9 @@ class GroupMember extends $pb.GeneratedMessage {
     if (usingDeviceTypes != null) {
       $result.usingDeviceTypes.addAll(usingDeviceTypes);
     }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
+    }
     return $result;
   }
   GroupMember._() : super();
@@ -71,23 +76,26 @@ class GroupMember extends $pb.GeneratedMessage {
     ..aInt64(1, _omitFieldNames ? '' : 'groupId')
     ..aInt64(2, _omitFieldNames ? '' : 'userId')
     ..aOS(3, _omitFieldNames ? '' : 'name')
-    ..e<$0.GroupMemberRole>(
+    ..e<$1.GroupMemberRole>(
         4, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
-        defaultOrMaker: $0.GroupMemberRole.OWNER,
-        valueOf: $0.GroupMemberRole.valueOf,
-        enumValues: $0.GroupMemberRole.values)
+        defaultOrMaker: $1.GroupMemberRole.OWNER,
+        valueOf: $1.GroupMemberRole.valueOf,
+        enumValues: $1.GroupMemberRole.values)
     ..aInt64(5, _omitFieldNames ? '' : 'joinDate')
     ..aInt64(6, _omitFieldNames ? '' : 'muteEndDate')
-    ..e<$1.UserStatus>(
+    ..e<$2.UserStatus>(
         7, _omitFieldNames ? '' : 'userStatus', $pb.PbFieldType.OE,
-        defaultOrMaker: $1.UserStatus.AVAILABLE,
-        valueOf: $1.UserStatus.valueOf,
-        enumValues: $1.UserStatus.values)
-    ..pc<$2.DeviceType>(
+        defaultOrMaker: $2.UserStatus.AVAILABLE,
+        valueOf: $2.UserStatus.valueOf,
+        enumValues: $2.UserStatus.values)
+    ..pc<$3.DeviceType>(
         8, _omitFieldNames ? '' : 'usingDeviceTypes', $pb.PbFieldType.KE,
-        valueOf: $2.DeviceType.valueOf,
-        enumValues: $2.DeviceType.values,
-        defaultEnumValue: $2.DeviceType.DESKTOP)
+        valueOf: $3.DeviceType.valueOf,
+        enumValues: $3.DeviceType.values,
+        defaultEnumValue: $3.DeviceType.DESKTOP)
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -149,9 +157,9 @@ class GroupMember extends $pb.GeneratedMessage {
   void clearName() => clearField(3);
 
   @$pb.TagNumber(4)
-  $0.GroupMemberRole get role => $_getN(3);
+  $1.GroupMemberRole get role => $_getN(3);
   @$pb.TagNumber(4)
-  set role($0.GroupMemberRole v) {
+  set role($1.GroupMemberRole v) {
     setField(4, v);
   }
 
@@ -185,9 +193,9 @@ class GroupMember extends $pb.GeneratedMessage {
   void clearMuteEndDate() => clearField(6);
 
   @$pb.TagNumber(7)
-  $1.UserStatus get userStatus => $_getN(6);
+  $2.UserStatus get userStatus => $_getN(6);
   @$pb.TagNumber(7)
-  set userStatus($1.UserStatus v) {
+  set userStatus($2.UserStatus v) {
     setField(7, v);
   }
 
@@ -197,7 +205,10 @@ class GroupMember extends $pb.GeneratedMessage {
   void clearUserStatus() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.List<$2.DeviceType> get usingDeviceTypes => $_getList(7);
+  $core.List<$3.DeviceType> get usingDeviceTypes => $_getList(7);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(8);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

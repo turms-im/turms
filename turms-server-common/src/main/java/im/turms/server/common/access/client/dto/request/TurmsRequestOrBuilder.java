@@ -46,6 +46,32 @@ public interface TurmsRequestOrBuilder extends
     long getRequestId();
 
     /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    int getCustomAttributesCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 2;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index);
+
+    /**
      * <pre>
      * User - Session
      * </pre>
@@ -1518,6 +1544,56 @@ public interface TurmsRequestOrBuilder extends
      * <code>.im.turms.proto.UpdateConversationSettingsRequest update_conversation_settings_request = 1102;</code>
      */
     im.turms.server.common.access.client.dto.request.conversation.UpdateConversationSettingsRequestOrBuilder getUpdateConversationSettingsRequestOrBuilder();
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return Whether the createMessageReactionsRequest field is set.
+     */
+    boolean hasCreateMessageReactionsRequest();
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     *
+     * @return The createMessageReactionsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequest getCreateMessageReactionsRequest();
+
+    /**
+     * <pre>
+     * Message - Supplement
+     * </pre>
+     *
+     * <code>.im.turms.proto.CreateMessageReactionsRequest create_message_reactions_request = 1200;</code>
+     */
+    im.turms.server.common.access.client.dto.request.message.CreateMessageReactionsRequestOrBuilder getCreateMessageReactionsRequestOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return Whether the deleteMessageReactionsRequest field is set.
+     */
+    boolean hasDeleteMessageReactionsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     *
+     * @return The deleteMessageReactionsRequest.
+     */
+    im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequest getDeleteMessageReactionsRequest();
+
+    /**
+     * <code>.im.turms.proto.DeleteMessageReactionsRequest delete_message_reactions_request = 1201;</code>
+     */
+    im.turms.server.common.access.client.dto.request.message.DeleteMessageReactionsRequestOrBuilder getDeleteMessageReactionsRequestOrBuilder();
 
     im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase getKindCase();
 }

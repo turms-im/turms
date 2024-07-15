@@ -79,6 +79,8 @@ public struct QueryNearbyUsersRequest {
     /// Clears the value of `withUserInfo`. Subsequent reads from it will return its default value.
     public mutating func clearWithUserInfo() { _withUserInfo = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -108,6 +110,7 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
         5: .standard(proto: "with_coordinates"),
         6: .standard(proto: "with_distance"),
         7: .standard(proto: "with_user_info"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -123,6 +126,7 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
             case 5: try decoder.decodeSingularBoolField(value: &_withCoordinates)
             case 6: try decoder.decodeSingularBoolField(value: &_withDistance)
             case 7: try decoder.decodeSingularBoolField(value: &_withUserInfo)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -154,6 +158,9 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
         try { if let v = self._withUserInfo {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 7)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -165,6 +172,7 @@ extension QueryNearbyUsersRequest: SwiftProtobuf.Message, SwiftProtobuf._Message
         if lhs._withCoordinates != rhs._withCoordinates { return false }
         if lhs._withDistance != rhs._withDistance { return false }
         if lhs._withUserInfo != rhs._withUserInfo { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

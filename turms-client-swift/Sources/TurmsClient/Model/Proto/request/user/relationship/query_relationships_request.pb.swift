@@ -49,6 +49,8 @@ public struct QueryRelationshipsRequest {
     /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
     public mutating func clearLastUpdatedDate() { _lastUpdatedDate = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -72,6 +74,7 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         2: .same(proto: "blocked"),
         3: .standard(proto: "group_indexes"),
         4: .standard(proto: "last_updated_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -84,6 +87,7 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             case 2: try decoder.decodeSingularBoolField(value: &_blocked)
             case 3: try decoder.decodeRepeatedInt32Field(value: &groupIndexes)
             case 4: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -106,6 +110,9 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         try { if let v = self._lastUpdatedDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 4)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -114,6 +121,7 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if lhs._blocked != rhs._blocked { return false }
         if lhs.groupIndexes != rhs.groupIndexes { return false }
         if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

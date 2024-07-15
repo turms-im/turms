@@ -37,6 +37,8 @@ public struct DeleteRelationshipGroupRequest {
     /// Clears the value of `targetGroupIndex`. Subsequent reads from it will return its default value.
     public mutating func clearTargetGroupIndex() { _targetGroupIndex = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -57,6 +59,7 @@ extension DeleteRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
     public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
         1: .standard(proto: "group_index"),
         2: .standard(proto: "target_group_index"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -67,6 +70,7 @@ extension DeleteRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
             switch fieldNumber {
             case 1: try decoder.decodeSingularInt32Field(value: &groupIndex)
             case 2: try decoder.decodeSingularInt32Field(value: &_targetGroupIndex)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -83,12 +87,16 @@ extension DeleteRelationshipGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._
         try { if let v = self._targetGroupIndex {
             try visitor.visitSingularInt32Field(value: v, fieldNumber: 2)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
     public static func == (lhs: DeleteRelationshipGroupRequest, rhs: DeleteRelationshipGroupRequest) -> Bool {
         if lhs.groupIndex != rhs.groupIndex { return false }
         if lhs._targetGroupIndex != rhs._targetGroupIndex { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

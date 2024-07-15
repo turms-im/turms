@@ -26,7 +26,7 @@ public final class StringsWithVersionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 StringsWithVersionOuterClass.class.getName());
     }
@@ -47,7 +47,7 @@ public final class StringsWithVersionOuterClass {
 
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
-        java.lang.String[] descriptorData = {"\n\'model/common/strings_with_version.prot"
+        java.lang.String[] descriptorData = {"\n'model/common/strings_with_version.prot"
                 + "o\022\016im.turms.proto\"[\n\022StringsWithVersion\022"
                 + "\017\n\007strings\030\001 \003(\t\022\036\n\021last_updated_date\030\002 "
                 + "\001(\003H\000\210\001\001B\024\n\022_last_updated_dateB<\n5im.tur"
@@ -58,7 +58,7 @@ public final class StringsWithVersionOuterClass {
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
         internal_static_im_turms_proto_StringsWithVersion_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_StringsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_StringsWithVersion_descriptor,

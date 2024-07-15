@@ -28,6 +28,7 @@ public final class Group extends com.google.protobuf.GeneratedMessageLite<Group,
         name_ = "";
         intro_ = "";
         announcement_ = "";
+        customAttributes_ = emptyProtobufList();
     }
 
     private int bitField0_;
@@ -546,6 +547,209 @@ public final class Group extends com.google.protobuf.GeneratedMessageLite<Group,
     private void clearActive() {
         bitField0_ &= ~0x00000400;
         active_ = false;
+    }
+
+    public static final int USER_DEFINED_ATTRIBUTES_FIELD_NUMBER = 12;
+
+    private static final class UserDefinedAttributesDefaultEntryHolder {
+        static final com.google.protobuf.MapEntryLite<java.lang.String, im.turms.client.model.proto.model.common.Value> defaultEntry =
+                com.google.protobuf.MapEntryLite.newDefaultInstance(
+                        com.google.protobuf.WireFormat.FieldType.STRING,
+                        "",
+                        com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                        im.turms.client.model.proto.model.common.Value.getDefaultInstance());
+    }
+
+    private com.google.protobuf.MapFieldLite<java.lang.String, im.turms.client.model.proto.model.common.Value> userDefinedAttributes_ =
+            com.google.protobuf.MapFieldLite.emptyMapField();
+
+    private com.google.protobuf.MapFieldLite<java.lang.String, im.turms.client.model.proto.model.common.Value> internalGetUserDefinedAttributes() {
+        return userDefinedAttributes_;
+    }
+
+    private com.google.protobuf.MapFieldLite<java.lang.String, im.turms.client.model.proto.model.common.Value> internalGetMutableUserDefinedAttributes() {
+        if (!userDefinedAttributes_.isMutable()) {
+            userDefinedAttributes_ = userDefinedAttributes_.mutableCopy();
+        }
+        return userDefinedAttributes_;
+    }
+
+    @java.lang.Override
+
+    public int getUserDefinedAttributesCount() {
+        return internalGetUserDefinedAttributes().size();
+    }
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    @java.lang.Override
+
+    public boolean containsUserDefinedAttributes(java.lang.String key) {
+        java.lang.Class<?> keyClass = key.getClass();
+        return internalGetUserDefinedAttributes().containsKey(key);
+    }
+
+    /**
+     * Use {@link #getUserDefinedAttributesMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributes() {
+        return getUserDefinedAttributesMap();
+    }
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributesMap() {
+        return java.util.Collections.unmodifiableMap(internalGetUserDefinedAttributes());
+    }
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    @java.lang.Override
+
+    public /* nullable */
+    im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrDefault(
+            java.lang.String key,
+            /* nullable */
+            im.turms.client.model.proto.model.common.Value defaultValue) {
+        java.lang.Class<?> keyClass = key.getClass();
+        java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> map =
+                internalGetUserDefinedAttributes();
+        return map.getOrDefault(key, defaultValue);
+    }
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    @java.lang.Override
+
+    public im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrThrow(
+            java.lang.String key) {
+        java.lang.Class<?> keyClass = key.getClass();
+        java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> map =
+                internalGetUserDefinedAttributes();
+        if (!map.containsKey(key)) {
+            throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+    }
+
+    /**
+     * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+     */
+    private java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getMutableUserDefinedAttributesMap() {
+        return internalGetMutableUserDefinedAttributes();
+    }
+
+    public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
+    private com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> customAttributes_;
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public java.util.List<? extends im.turms.client.model.proto.model.common.ValueOrBuilder> getCustomAttributesOrBuilderList() {
+        return customAttributes_;
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public int getCustomAttributesCount() {
+        return customAttributes_.size();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    @java.lang.Override
+    public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+        return customAttributes_.get(index);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    public im.turms.client.model.proto.model.common.ValueOrBuilder getCustomAttributesOrBuilder(
+            int index) {
+        return customAttributes_.get(index);
+    }
+
+    private void ensureCustomAttributesIsMutable() {
+        com.google.protobuf.Internal.ProtobufList<im.turms.client.model.proto.model.common.Value> tmp =
+                customAttributes_;
+        if (!tmp.isModifiable()) {
+            customAttributes_ = com.google.protobuf.GeneratedMessageLite.mutableCopy(tmp);
+        }
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void setCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.set(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addCustomAttributes(
+            int index,
+            im.turms.client.model.proto.model.common.Value value) {
+        value.getClass();
+        ensureCustomAttributesIsMutable();
+        customAttributes_.add(index, value);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void addAllCustomAttributes(
+            java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+        ensureCustomAttributesIsMutable();
+        com.google.protobuf.AbstractMessageLite.addAll(values, customAttributes_);
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void clearCustomAttributes() {
+        customAttributes_ = emptyProtobufList();
+    }
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    private void removeCustomAttributes(int index) {
+        ensureCustomAttributesIsMutable();
+        customAttributes_.remove(index);
     }
 
     public static im.turms.client.model.proto.model.group.Group parseFrom(java.nio.ByteBuffer data)
@@ -1186,12 +1390,238 @@ public final class Group extends com.google.protobuf.GeneratedMessageLite<Group,
             return this;
         }
 
+        @java.lang.Override
+
+        public int getUserDefinedAttributesCount() {
+            return instance.getUserDefinedAttributesMap()
+                    .size();
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        @java.lang.Override
+
+        public boolean containsUserDefinedAttributes(java.lang.String key) {
+            java.lang.Class<?> keyClass = key.getClass();
+            return instance.getUserDefinedAttributesMap()
+                    .containsKey(key);
+        }
+
+        public Builder clearUserDefinedAttributes() {
+            copyOnWrite();
+            instance.getMutableUserDefinedAttributesMap()
+                    .clear();
+            return this;
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+
+        public Builder removeUserDefinedAttributes(java.lang.String key) {
+            java.lang.Class<?> keyClass = key.getClass();
+            copyOnWrite();
+            instance.getMutableUserDefinedAttributesMap()
+                    .remove(key);
+            return this;
+        }
+
+        /**
+         * Use {@link #getUserDefinedAttributesMap()} instead.
+         */
+        @java.lang.Override
+        @java.lang.Deprecated
+        public java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributes() {
+            return getUserDefinedAttributesMap();
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        @java.lang.Override
+        public java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> getUserDefinedAttributesMap() {
+            return java.util.Collections.unmodifiableMap(instance.getUserDefinedAttributesMap());
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        @java.lang.Override
+
+        public /* nullable */
+        im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrDefault(
+                java.lang.String key,
+                /* nullable */
+                im.turms.client.model.proto.model.common.Value defaultValue) {
+            java.lang.Class<?> keyClass = key.getClass();
+            java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> map =
+                    instance.getUserDefinedAttributesMap();
+            return map.getOrDefault(key, defaultValue);
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        @java.lang.Override
+
+        public im.turms.client.model.proto.model.common.Value getUserDefinedAttributesOrThrow(
+                java.lang.String key) {
+            java.lang.Class<?> keyClass = key.getClass();
+            java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> map =
+                    instance.getUserDefinedAttributesMap();
+            if (!map.containsKey(key)) {
+                throw new java.lang.IllegalArgumentException();
+            }
+            return map.get(key);
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        public Builder putUserDefinedAttributes(
+                java.lang.String key,
+                im.turms.client.model.proto.model.common.Value value) {
+            java.lang.Class<?> keyClass = key.getClass();
+            java.lang.Class<?> valueClass = value.getClass();
+            copyOnWrite();
+            instance.getMutableUserDefinedAttributesMap()
+                    .put(key, value);
+            return this;
+        }
+
+        /**
+         * <code>map&lt;string, .im.turms.proto.Value&gt; user_defined_attributes = 12;</code>
+         */
+        public Builder putAllUserDefinedAttributes(
+                java.util.Map<java.lang.String, im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.getMutableUserDefinedAttributesMap()
+                    .putAll(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList() {
+            return java.util.Collections.unmodifiableList(instance.getCustomAttributesList());
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public int getCustomAttributesCount() {
+            return instance.getCustomAttributesCount();
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        @java.lang.Override
+        public im.turms.client.model.proto.model.common.Value getCustomAttributes(int index) {
+            return instance.getCustomAttributes(index);
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder setCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.setCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value value) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, value);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addCustomAttributes(
+                int index,
+                im.turms.client.model.proto.model.common.Value.Builder builderForValue) {
+            copyOnWrite();
+            instance.addCustomAttributes(index, builderForValue.build());
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder addAllCustomAttributes(
+                java.lang.Iterable<? extends im.turms.client.model.proto.model.common.Value> values) {
+            copyOnWrite();
+            instance.addAllCustomAttributes(values);
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder clearCustomAttributes() {
+            copyOnWrite();
+            instance.clearCustomAttributes();
+            return this;
+        }
+
+        /**
+         * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+         */
+        public Builder removeCustomAttributes(int index) {
+            copyOnWrite();
+            instance.removeCustomAttributes(index);
+            return this;
+        }
+
         // @@protoc_insertion_point(builder_scope:im.turms.proto.Group)
     }
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -1214,11 +1644,15 @@ public final class Group extends com.google.protobuf.GeneratedMessageLite<Group,
                         "creationDate_",
                         "lastUpdatedDate_",
                         "muteEndDate_",
-                        "active_",};
+                        "active_",
+                        "userDefinedAttributes_",
+                        UserDefinedAttributesDefaultEntryHolder.defaultEntry,
+                        "customAttributes_",
+                        im.turms.client.model.proto.model.common.Value.class,};
                 java.lang.String info =
-                        "\u0000\u000b\u0000\u0001\u0001\u000b\u000b\u0000\u0000\u0000\u0001\u1002\u0000\u0002"
-                                + "\u1002\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1208\u0004\u0006\u1208\u0005"
-                                + "\u0007\u1208\u0006\b\u1002\u0007\t\u1002\b\n\u1002\t\u000b\u1007\n";
+                        "\u0000\r\u0000\u0001\u0001\u000f\r\u0001\u0001\u0000\u0001\u1002\u0000\u0002\u1002"
+                                + "\u0001\u0003\u1002\u0002\u0004\u1002\u0003\u0005\u1208\u0004\u0006\u1208\u0005\u0007"
+                                + "\u1208\u0006\b\u1002\u0007\t\u1002\b\n\u1002\t\u000b\u1007\n\f2\u000f\u001b";
                 return newMessageInfo(DEFAULT_INSTANCE, info, objects);
             }
             // fall through
@@ -1251,7 +1685,6 @@ public final class Group extends com.google.protobuf.GeneratedMessageLite<Group,
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.Group)
     private static final im.turms.client.model.proto.model.group.Group DEFAULT_INSTANCE;
-
     static {
         Group defaultInstance = new Group();
         // New instances are implicitly immutable so no need to make

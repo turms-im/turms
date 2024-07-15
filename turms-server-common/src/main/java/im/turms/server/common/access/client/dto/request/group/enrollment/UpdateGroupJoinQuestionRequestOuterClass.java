@@ -26,7 +26,7 @@ public final class UpdateGroupJoinQuestionRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UpdateGroupJoinQuestionRequestOuterClass.class.getName());
     }
@@ -49,23 +49,32 @@ public final class UpdateGroupJoinQuestionRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nArequest/group/enrollment/update_group_"
                 + "join_question_request.proto\022\016im.turms.pr"
-                + "oto\"\210\001\n\036UpdateGroupJoinQuestionRequest\022\023"
-                + "\n\013question_id\030\001 \001(\003\022\025\n\010question\030\002 \001(\tH\000\210"
-                + "\001\001\022\017\n\007answers\030\003 \003(\t\022\022\n\005score\030\004 \001(\005H\001\210\001\001B"
-                + "\013\n\t_questionB\010\n\006_scoreBH\nAim.turms.serve"
-                + "r.common.access.client.dto.request.group"
-                + ".enrollmentP\001\272\002\000b\006proto3"};
+                + "oto\032\030model/common/value.proto\"\272\001\n\036Update"
+                + "GroupJoinQuestionRequest\022\023\n\013question_id\030"
+                + "\001 \001(\003\022\025\n\010question\030\002 \001(\tH\000\210\001\001\022\017\n\007answers\030"
+                + "\003 \003(\t\022\022\n\005score\030\004 \001(\005H\001\210\001\001\0220\n\021custom_attr"
+                + "ibutes\030\017 \003(\0132\025.im.turms.proto.ValueB\013\n\t_"
+                + "questionB\010\n\006_scoreBH\nAim.turms.server.co"
+                + "mmon.access.client.dto.request.group.enr"
+                + "ollmentP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateGroupJoinQuestionRequest_descriptor,
-                        new java.lang.String[]{"QuestionId", "Question", "Answers", "Score",});
+                        new java.lang.String[]{"QuestionId",
+                                "Question",
+                                "Answers",
+                                "Score",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

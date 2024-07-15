@@ -26,7 +26,7 @@ public final class QueryMessagesRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 QueryMessagesRequestOuterClass.class.getName());
     }
@@ -48,21 +48,25 @@ public final class QueryMessagesRequestOuterClass {
     private static final com.google.protobuf.Descriptors.FileDescriptor descriptor;
     static {
         java.lang.String[] descriptorData = {"\n,request/message/query_messages_request"
-                + ".proto\022\016im.turms.proto\"\371\002\n\024QueryMessages"
-                + "Request\022\013\n\003ids\030\001 \003(\003\022\037\n\022are_group_messag"
-                + "es\030\002 \001(\010H\000\210\001\001\022 \n\023are_system_messages\030\003 \001"
-                + "(\010H\001\210\001\001\022\020\n\010from_ids\030\004 \003(\003\022 \n\023delivery_da"
-                + "te_start\030\005 \001(\003H\002\210\001\001\022\036\n\021delivery_date_end"
-                + "\030\006 \001(\003H\003\210\001\001\022\026\n\tmax_count\030\007 \001(\005H\004\210\001\001\022\022\n\nw"
-                + "ith_total\030\010 \001(\010\022\027\n\ndescending\030\t \001(\010H\005\210\001\001"
-                + "B\025\n\023_are_group_messagesB\026\n\024_are_system_m"
-                + "essagesB\026\n\024_delivery_date_startB\024\n\022_deli"
-                + "very_date_endB\014\n\n_max_countB\r\n\013_descendi"
-                + "ngB?\n8im.turms.server.common.access.clie"
-                + "nt.dto.request.messageP\001\272\002\000b\006proto3"};
+                + ".proto\022\016im.turms.proto\032\030model/common/val"
+                + "ue.proto\"\253\003\n\024QueryMessagesRequest\022\013\n\003ids"
+                + "\030\001 \003(\003\022\037\n\022are_group_messages\030\002 \001(\010H\000\210\001\001\022"
+                + " \n\023are_system_messages\030\003 \001(\010H\001\210\001\001\022\020\n\010fro"
+                + "m_ids\030\004 \003(\003\022 \n\023delivery_date_start\030\005 \001(\003"
+                + "H\002\210\001\001\022\036\n\021delivery_date_end\030\006 \001(\003H\003\210\001\001\022\026\n"
+                + "\tmax_count\030\007 \001(\005H\004\210\001\001\022\022\n\nwith_total\030\010 \001("
+                + "\010\022\027\n\ndescending\030\t \001(\010H\005\210\001\001\0220\n\021custom_att"
+                + "ributes\030\017 \003(\0132\025.im.turms.proto.ValueB\025\n\023"
+                + "_are_group_messagesB\026\n\024_are_system_messa"
+                + "gesB\026\n\024_delivery_date_startB\024\n\022_delivery"
+                + "_date_endB\014\n\n_max_countB\r\n\013_descendingB?"
+                + "\n8im.turms.server.common.access.client.d"
+                + "to.request.messageP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_QueryMessagesRequest_descriptor =
                 getDescriptor().getMessageTypes()
                         .get(0);
@@ -77,8 +81,10 @@ public final class QueryMessagesRequestOuterClass {
                                 "DeliveryDateEnd",
                                 "MaxCount",
                                 "WithTotal",
-                                "Descending",});
+                                "Descending",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

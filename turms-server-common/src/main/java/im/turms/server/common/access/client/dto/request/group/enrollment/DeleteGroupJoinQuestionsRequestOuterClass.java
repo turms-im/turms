@@ -26,7 +26,7 @@ public final class DeleteGroupJoinQuestionsRequestOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 DeleteGroupJoinQuestionsRequestOuterClass.class.getName());
     }
@@ -49,22 +49,26 @@ public final class DeleteGroupJoinQuestionsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\nBrequest/group/enrollment/delete_group_"
                 + "join_questions_request.proto\022\016im.turms.p"
-                + "roto\"I\n\037DeleteGroupJoinQuestionsRequest\022"
-                + "\020\n\010group_id\030\001 \001(\003\022\024\n\014question_ids\030\002 \003(\003B"
-                + "H\nAim.turms.server.common.access.client."
-                + "dto.request.group.enrollmentP\001\272\002\000b\006proto"
-                + "3"};
+                + "roto\032\030model/common/value.proto\"{\n\037Delete"
+                + "GroupJoinQuestionsRequest\022\020\n\010group_id\030\001 "
+                + "\001(\003\022\024\n\014question_ids\030\002 \003(\003\0220\n\021custom_attr"
+                + "ibutes\030\017 \003(\0132\025.im.turms.proto.ValueBH\nAi"
+                + "m.turms.server.common.access.client.dto."
+                + "request.group.enrollmentP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
-                new com.google.protobuf.Descriptors.FileDescriptor[]{});
+                new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
+                                .getDescriptor(),});
         internal_static_im_turms_proto_DeleteGroupJoinQuestionsRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_DeleteGroupJoinQuestionsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_DeleteGroupJoinQuestionsRequest_descriptor,
-                        new java.lang.String[]{"GroupId", "QuestionIds",});
+                        new java.lang.String[]{"GroupId", "QuestionIds", "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

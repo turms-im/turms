@@ -7,6 +7,7 @@ import MessageService from './service/message-service';
 import NotificationService from './service/notification-service';
 import StorageService from './service/storage-service';
 import UserService from './service/user-service';
+import ConferenceService from './service/conference-service';
 
 class TurmsClient {
     static readonly version = version;
@@ -17,6 +18,7 @@ class TurmsClient {
     private readonly _conversationService: ConversationService;
     private readonly _messageService: MessageService;
     private readonly _storageService: StorageService;
+    private readonly _conferenceService: ConferenceService;
     private readonly _notificationService: NotificationService;
 
     constructor(options?: ClientOptions);
@@ -62,6 +64,7 @@ class TurmsClient {
         this._conversationService = new ConversationService(this);
         this._messageService = new MessageService(this);
         this._storageService = new StorageService(this, storageServerUrl);
+        this._conferenceService = new ConferenceService(this);
         this._notificationService = new NotificationService(this);
     }
 
@@ -93,6 +96,10 @@ class TurmsClient {
 
     get storageService(): StorageService {
         return this._storageService;
+    }
+
+    get conferenceService(): ConferenceService {
+        return this._conferenceService;
     }
 
     get notificationService(): NotificationService {

@@ -59,6 +59,8 @@ public struct CreateGroupMembersRequest {
     /// Clears the value of `muteEndDate`. Subsequent reads from it will return its default value.
     public mutating func clearMuteEndDate() { _muteEndDate = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -84,6 +86,7 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         3: .same(proto: "name"),
         4: .same(proto: "role"),
         5: .standard(proto: "mute_end_date"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -97,6 +100,7 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
             case 3: try decoder.decodeSingularStringField(value: &_name)
             case 4: try decoder.decodeSingularEnumField(value: &_role)
             case 5: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -122,6 +126,9 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         try { if let v = self._muteEndDate {
             try visitor.visitSingularInt64Field(value: v, fieldNumber: 5)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -131,6 +138,7 @@ extension CreateGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         if lhs._name != rhs._name { return false }
         if lhs._role != rhs._role { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

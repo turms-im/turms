@@ -26,6 +26,7 @@ import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.StorageResource
 import im.turms.client.model.StorageUploadResult
 import im.turms.client.model.proto.constant.StorageResourceType
+import im.turms.client.model.proto.model.common.Value
 import im.turms.client.model.proto.model.storage.StorageResourceInfo
 import im.turms.client.model.proto.request.storage.DeleteResourceRequest
 import im.turms.client.model.proto.request.storage.QueryMessageAttachmentInfosRequest
@@ -64,8 +65,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         data: ByteArray,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         if (data.isEmpty()) {
             throw ResponseException.from(
@@ -74,7 +75,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val type = if (mediaType == null) null else parseMediaType(mediaType)
-        val uploadInfo = queryUserProfilePictureUploadInfo(name, mediaType, extra)
+        val uploadInfo = queryUserProfilePictureUploadInfo(name, mediaType, customAttributes)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
         val id =
@@ -88,21 +89,21 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         return upload(url, responseData, data, id, name, type)
     }
 
-    suspend fun deleteUserProfilePicture(extra: Map<String, String>? = null): Response<Unit> =
-        deleteResource(StorageResourceType.USER_PROFILE_PICTURE, extra = extra)
+    suspend fun deleteUserProfilePicture(customAttributes: List<Value>? = null): Response<Unit> =
+        deleteResource(StorageResourceType.USER_PROFILE_PICTURE, customAttributes = customAttributes)
 
     suspend fun queryUserProfilePicture(
         userId: Long,
-        extra: Map<String, String>? = null,
         fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageResource> {
         val downloadInfo =
             queryUserProfilePictureDownloadInfo(
                 userId,
-                extra,
                 fetchDownloadInfo,
                 urlKeyName,
+                customAttributes,
             )
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
@@ -111,27 +112,27 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun queryUserProfilePictureUploadInfo(
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         return queryResourceUploadInfo(
             StorageResourceType.USER_PROFILE_PICTURE,
             name = name,
             mediaType = mediaType,
-            extra = extra,
+            customAttributes = customAttributes,
         )
     }
 
     suspend fun queryUserProfilePictureDownloadInfo(
         userId: Long,
-        extra: Map<String, String>? = null,
         fetch: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         if (fetch) {
             return queryResourceDownloadInfo(
                 StorageResourceType.USER_PROFILE_PICTURE,
                 idNum = userId,
-                extra = extra,
+                customAttributes = customAttributes,
             )
         }
         return Response.value(
@@ -146,8 +147,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         data: ByteArray,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         if (data.isEmpty()) {
             throw ResponseException.from(
@@ -156,7 +157,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val type = if (mediaType == null) null else parseMediaType(mediaType)
-        val uploadInfo = queryGroupProfilePictureUploadInfo(groupId, name, mediaType, extra)
+        val uploadInfo = queryGroupProfilePictureUploadInfo(groupId, name, mediaType, customAttributes)
         val responseData = uploadInfo.data.toMutableMap()
         val url = getAndRemoveResourceUrl(responseData, urlKeyName)
         val id =
@@ -172,16 +173,16 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
 
     suspend fun deleteGroupProfilePicture(
         groupId: Long,
-        extra: Map<String, String>? = null,
-    ) = deleteResource(StorageResourceType.GROUP_PROFILE_PICTURE, idNum = groupId, extra = extra)
+        customAttributes: List<Value>? = null,
+    ) = deleteResource(StorageResourceType.GROUP_PROFILE_PICTURE, idNum = groupId, customAttributes = customAttributes)
 
     suspend fun queryGroupProfilePicture(
         groupId: Long,
-        extra: Map<String, String>? = null,
         fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageResource> {
-        val downloadInfo = queryGroupProfilePictureDownloadInfo(groupId, extra, fetchDownloadInfo, urlKeyName)
+        val downloadInfo = queryGroupProfilePictureDownloadInfo(groupId, fetchDownloadInfo, urlKeyName, customAttributes)
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
     }
@@ -190,27 +191,27 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         groupId: Long,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> =
         queryResourceUploadInfo(
             StorageResourceType.GROUP_PROFILE_PICTURE,
             idNum = groupId,
             name = name,
             mediaType = mediaType,
-            extra = extra,
+            customAttributes = customAttributes,
         )
 
     suspend fun queryGroupProfilePictureDownloadInfo(
         groupId: Long,
-        extra: Map<String, String>? = null,
         fetch: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         if (fetch) {
             return queryResourceDownloadInfo(
                 StorageResourceType.GROUP_PROFILE_PICTURE,
                 idNum = groupId,
-                extra = extra,
+                customAttributes = customAttributes,
             )
         }
         return Response.value(
@@ -224,15 +225,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         data: ByteArray,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         return uploadMessageAttachment0(
             data,
             name = name,
             mediaType = mediaType,
-            extra = extra,
             urlKeyName = urlKeyName,
+            customAttributes = customAttributes,
         )
     }
 
@@ -241,16 +242,16 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         data: ByteArray,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         return uploadMessageAttachment0(
             data,
             userId = userId,
             name = name,
             mediaType = mediaType,
-            extra = extra,
             urlKeyName = urlKeyName,
+            customAttributes = customAttributes,
         )
     }
 
@@ -259,16 +260,16 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         data: ByteArray,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         return uploadMessageAttachment0(
             data,
             groupId = groupId,
             name = name,
             mediaType = mediaType,
-            extra = extra,
             urlKeyName = urlKeyName,
+            customAttributes = customAttributes,
         )
     }
 
@@ -278,8 +279,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         groupId: Long? = null,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageUploadResult> {
         if (data.isEmpty()) {
             throw ResponseException.from(
@@ -294,7 +295,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 queryMessageAttachmentUploadInfo(
                     name,
                     mediaType,
-                    extra,
+                    customAttributes,
                 )
         } else if (userId != null) {
             if (groupId != null) {
@@ -308,7 +309,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     userId,
                     name,
                     mediaType,
-                    extra,
+                    customAttributes,
                 )
         } else {
             uploadInfo =
@@ -316,7 +317,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     groupId!!,
                     name,
                     mediaType,
-                    extra,
+                    customAttributes,
                 )
         }
         val responseData = uploadInfo.data.toMutableMap()
@@ -335,7 +336,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun deleteMessageAttachment(
         attachmentIdNum: Long? = null,
         attachmentIdStr: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Unit> {
         if (Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr)) {
             throw ResponseException.from(
@@ -343,7 +344,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        return deleteResource(StorageResourceType.MESSAGE_ATTACHMENT, attachmentIdNum, attachmentIdStr, extra)
+        return deleteResource(StorageResourceType.MESSAGE_ATTACHMENT, attachmentIdNum, attachmentIdStr, customAttributes)
     }
 
     suspend fun shareMessageAttachmentWithUser(
@@ -437,9 +438,9 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun queryMessageAttachment(
         attachmentIdNum: Long? = null,
         attachmentIdStr: String? = null,
-        extra: Map<String, String>? = null,
         fetchDownloadInfo: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<StorageResource> {
         if (Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr)) {
             throw ResponseException.from(
@@ -447,7 +448,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 reason = "One and only one attachment ID must be specified",
             )
         }
-        val downloadInfo = queryMessageAttachmentDownloadInfo(attachmentIdNum, attachmentIdStr, extra, fetchDownloadInfo, urlKeyName)
+        val downloadInfo =
+            queryMessageAttachmentDownloadInfo(attachmentIdNum, attachmentIdStr, fetchDownloadInfo, urlKeyName, customAttributes)
         val url = getResourceUrl(downloadInfo.data, urlKeyName)
         return queryResource(url)
     }
@@ -455,44 +457,49 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     suspend fun queryMessageAttachmentUploadInfo(
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> =
-        queryResourceUploadInfo(StorageResourceType.MESSAGE_ATTACHMENT, name = name, mediaType = mediaType, extra = extra)
+        queryResourceUploadInfo(
+            StorageResourceType.MESSAGE_ATTACHMENT,
+            name = name,
+            mediaType = mediaType,
+            customAttributes = customAttributes,
+        )
 
     suspend fun queryMessageAttachmentUploadInfoInPrivateConversation(
         userId: Long,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> =
         queryResourceUploadInfo(
             StorageResourceType.MESSAGE_ATTACHMENT,
             userId,
             name = name,
             mediaType = mediaType,
-            extra = extra,
+            customAttributes = customAttributes,
         )
 
     suspend fun queryMessageAttachmentUploadInfoInGroupConversation(
         groupId: Long,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> =
         queryResourceUploadInfo(
             StorageResourceType.MESSAGE_ATTACHMENT,
             -groupId,
             name = name,
             mediaType = mediaType,
-            extra = extra,
+            customAttributes = customAttributes,
         )
 
     suspend fun queryMessageAttachmentDownloadInfo(
         attachmentIdNum: Long? = null,
         attachmentIdStr: String? = null,
-        extra: Map<String, String>? = null,
         fetch: Boolean = false,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         if (Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr)) {
             throw ResponseException.from(
@@ -501,7 +508,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         if (fetch) {
-            return queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT, attachmentIdNum, attachmentIdStr, extra)
+            return queryResourceDownloadInfo(StorageResourceType.MESSAGE_ATTACHMENT, attachmentIdNum, attachmentIdStr, customAttributes)
         }
         return Response.value(
             mapOf(
@@ -673,7 +680,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         type: StorageResourceType,
         idNum: Long? = null,
         idStr: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Unit> {
         val request =
             DeleteResourceRequest.newBuilder()
@@ -681,7 +688,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 .apply {
                     idNum?.let { this.idNum = it }
                     idStr?.let { this.idStr = it }
-                    extra?.let { extraMap.putAll(extra) }
+                    customAttributes?.let { addAllCustomAttributes(customAttributes) }
                 }
         return turmsClient.driver
             .send(request)
@@ -748,7 +755,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         idStr: String? = null,
         name: String? = null,
         mediaType: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         val request =
             QueryResourceUploadInfoRequest.newBuilder()
@@ -758,7 +765,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     idStr?.let { this.idStr = it }
                     name?.let { this.name = it }
                     mediaType?.let { this.mediaType = it }
-                    extra?.let { extraMap.putAll(it) }
+                    customAttributes?.let { addAllCustomAttributes(customAttributes) }
                 }
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
@@ -768,7 +775,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         type: StorageResourceType,
         idNum: Long? = null,
         idStr: String? = null,
-        extra: Map<String, String>? = null,
+        customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         val request =
             QueryResourceDownloadInfoRequest.newBuilder()
@@ -776,7 +783,7 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 .apply {
                     idNum?.let { this.idNum = it }
                     idStr?.let { this.idStr = it }
-                    extra?.let { extraMap.putAll(it) }
+                    customAttributes?.let { addAllCustomAttributes(customAttributes) }
                 }
         return turmsClient.driver.send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }

@@ -19,6 +19,14 @@ const CreateGroupJoinRequestRequest$json = {
   '2': [
     {'1': 'group_id', '3': 1, '4': 1, '5': 3, '10': 'groupId'},
     {'1': 'content', '3': 2, '4': 1, '5': 9, '10': 'content'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -26,4 +34,5 @@ const CreateGroupJoinRequestRequest$json = {
 final $typed_data.Uint8List createGroupJoinRequestRequestDescriptor =
     $convert.base64Decode(
         'Ch1DcmVhdGVHcm91cEpvaW5SZXF1ZXN0UmVxdWVzdBIZCghncm91cF9pZBgBIAEoA1IHZ3JvdX'
-        'BJZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50');
+        'BJZBIYCgdjb250ZW50GAIgASgJUgdjb250ZW50EkIKEWN1c3RvbV9hdHRyaWJ1dGVzGA8gAygL'
+        'MhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZXM=');

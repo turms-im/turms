@@ -20,4 +20,19 @@ package im.turms.client.model.proto.request.user;
 public interface DeleteSessionRequestOrBuilder extends
         // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteSessionRequest)
         com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    java.util.List<im.turms.client.model.proto.model.common.Value> getCustomAttributesList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    im.turms.client.model.proto.model.common.Value getCustomAttributes(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
+     */
+    int getCustomAttributesCount();
 }

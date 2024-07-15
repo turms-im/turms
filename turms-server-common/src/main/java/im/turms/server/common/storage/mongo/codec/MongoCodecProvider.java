@@ -18,6 +18,7 @@
 package im.turms.server.common.storage.mongo.codec;
 
 import java.util.Map;
+import jakarta.annotation.Nullable;
 
 import lombok.Setter;
 import org.bson.codecs.Codec;
@@ -51,7 +52,16 @@ public class MongoCodecProvider implements CodecProvider {
         return getCodec(clazz);
     }
 
+    @Nullable
     public <T> MongoCodec<T> getCodec(Class<T> clazz) {
+        if (clazz == Object.class) {
+            ObjectCodec objectCodec = new ObjectCodec();
+            objectCodec.setRegistry(registry);
+            return (MongoCodec<T>) objectCodec;
+        } else if (clazz.getClassLoader() == null) {
+            // Return null if the class is loaded by the bootstrap class loader.
+            return null;
+        }
         return (MongoCodec<T>) classToCodec.computeIfAbsent(clazz, key -> {
             MongoCodec<T> codec = (MongoCodec<T>) createCodec(key);
             codec.setRegistry(registry);

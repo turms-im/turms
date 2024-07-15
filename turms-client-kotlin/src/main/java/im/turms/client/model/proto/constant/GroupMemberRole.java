@@ -124,7 +124,7 @@ public enum GroupMemberRole implements com.google.protobuf.Internal.EnumLite {
 
     private final int value;
 
-    private GroupMemberRole(int value) {
+    GroupMemberRole(int value) {
         this.value = value;
     }
 

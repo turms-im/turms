@@ -139,7 +139,7 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
-    void handleQueryUserOnlineStatusesRequest_queryOnlineStatusesRequest_shouldUserOnlineStatuses() {
+    void handleQueryUserOnlineStatusesRequest_queryOnlineStatuses_shouldUserOnlineStatuses() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest.newBuilder()
                         .addUserIds(1))

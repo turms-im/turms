@@ -26,7 +26,7 @@ public final class UserFriendRequestsWithVersionOuterClass {
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
                 /* minor= */ 27,
-                /* patch= */ 0,
+                /* patch= */ 2,
                 /* suffix= */ "",
                 UserFriendRequestsWithVersionOuterClass.class.getName());
     }
@@ -63,7 +63,7 @@ public final class UserFriendRequestsWithVersionOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor,

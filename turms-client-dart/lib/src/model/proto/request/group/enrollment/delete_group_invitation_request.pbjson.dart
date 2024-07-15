@@ -18,6 +18,14 @@ const DeleteGroupInvitationRequest$json = {
   '1': 'DeleteGroupInvitationRequest',
   '2': [
     {'1': 'invitation_id', '3': 1, '4': 1, '5': 3, '10': 'invitationId'},
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
 };
 
@@ -25,4 +33,5 @@ const DeleteGroupInvitationRequest$json = {
 final $typed_data.Uint8List deleteGroupInvitationRequestDescriptor =
     $convert.base64Decode(
         'ChxEZWxldGVHcm91cEludml0YXRpb25SZXF1ZXN0EiMKDWludml0YXRpb25faWQYASABKANSDG'
-        'ludml0YXRpb25JZA==');
+        'ludml0YXRpb25JZBJCChFjdXN0b21fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3Rv'
+        'LlZhbHVlUhBjdXN0b21BdHRyaWJ1dGVz');

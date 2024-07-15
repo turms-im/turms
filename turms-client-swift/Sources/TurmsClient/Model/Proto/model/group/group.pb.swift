@@ -135,6 +135,10 @@ public struct Group {
     /// Clears the value of `active`. Subsequent reads from it will return its default value.
     public mutating func clearActive() { _active = nil }
 
+    public var userDefinedAttributes: [String: Value] = [:]
+
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -174,6 +178,8 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         9: .standard(proto: "last_updated_date"),
         10: .standard(proto: "mute_end_date"),
         11: .same(proto: "active"),
+        12: .standard(proto: "user_defined_attributes"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -193,6 +199,8 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 9: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
             case 10: try decoder.decodeSingularInt64Field(value: &_muteEndDate)
             case 11: try decoder.decodeSingularBoolField(value: &_active)
+            case 12: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: &userDefinedAttributes)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -236,6 +244,12 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         try { if let v = self._active {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 11)
         } }()
+        if !userDefinedAttributes.isEmpty {
+            try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMessageMap<SwiftProtobuf.ProtobufString, Value>.self, value: userDefinedAttributes, fieldNumber: 12)
+        }
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -251,6 +265,8 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
         if lhs._muteEndDate != rhs._muteEndDate { return false }
         if lhs._active != rhs._active { return false }
+        if lhs.userDefinedAttributes != rhs.userDefinedAttributes { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

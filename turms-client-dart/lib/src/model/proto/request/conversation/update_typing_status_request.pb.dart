@@ -14,10 +14,13 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../model/common/value.pb.dart' as $0;
+
 class UpdateTypingStatusRequest extends $pb.GeneratedMessage {
   factory UpdateTypingStatusRequest({
     $core.bool? isGroupMessage,
     $fixnum.Int64? toId,
+    $core.Iterable<$0.Value>? customAttributes,
   }) {
     final $result = create();
     if (isGroupMessage != null) {
@@ -25,6 +28,9 @@ class UpdateTypingStatusRequest extends $pb.GeneratedMessage {
     }
     if (toId != null) {
       $result.toId = toId;
+    }
+    if (customAttributes != null) {
+      $result.customAttributes.addAll(customAttributes);
     }
     return $result;
   }
@@ -42,6 +48,9 @@ class UpdateTypingStatusRequest extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'isGroupMessage')
     ..aInt64(2, _omitFieldNames ? '' : 'toId')
+    ..pc<$0.Value>(
+        15, _omitFieldNames ? '' : 'customAttributes', $pb.PbFieldType.PM,
+        subBuilder: $0.Value.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('Using this can add significant overhead to your binary. '
@@ -93,6 +102,9 @@ class UpdateTypingStatusRequest extends $pb.GeneratedMessage {
   $core.bool hasToId() => $_has(1);
   @$pb.TagNumber(2)
   void clearToId() => clearField(2);
+
+  @$pb.TagNumber(15)
+  $core.List<$0.Value> get customAttributes => $_getList(2);
 }
 
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');

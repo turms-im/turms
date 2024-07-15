@@ -82,6 +82,14 @@ const GroupInvitation$json = {
       '10': 'inviteeId',
       '17': true
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '8': [
     {'1': '_id'},
@@ -102,6 +110,8 @@ final $typed_data.Uint8List groupInvitationDescriptor = $convert.base64Decode(
     'EjoKBnN0YXR1cxgEIAEoDjIdLmltLnR1cm1zLnByb3RvLlJlcXVlc3RTdGF0dXNIA1IGc3RhdH'
     'VziAEBEiwKD2V4cGlyYXRpb25fZGF0ZRgFIAEoA0gEUg5leHBpcmF0aW9uRGF0ZYgBARIeCghn'
     'cm91cF9pZBgGIAEoA0gFUgdncm91cElkiAEBEiIKCmludml0ZXJfaWQYByABKANIBlIJaW52aX'
-    'RlcklkiAEBEiIKCmludml0ZWVfaWQYCCABKANIB1IJaW52aXRlZUlkiAEBQgUKA19pZEIQCg5f'
-    'Y3JlYXRpb25fZGF0ZUIKCghfY29udGVudEIJCgdfc3RhdHVzQhIKEF9leHBpcmF0aW9uX2RhdG'
-    'VCCwoJX2dyb3VwX2lkQg0KC19pbnZpdGVyX2lkQg0KC19pbnZpdGVlX2lk');
+    'RlcklkiAEBEiIKCmludml0ZWVfaWQYCCABKANIB1IJaW52aXRlZUlkiAEBEkIKEWN1c3RvbV9h'
+    'dHRyaWJ1dGVzGA8gAygLMhUuaW0udHVybXMucHJvdG8uVmFsdWVSEGN1c3RvbUF0dHJpYnV0ZX'
+    'NCBQoDX2lkQhAKDl9jcmVhdGlvbl9kYXRlQgoKCF9jb250ZW50QgkKB19zdGF0dXNCEgoQX2V4'
+    'cGlyYXRpb25fZGF0ZUILCglfZ3JvdXBfaWRCDQoLX2ludml0ZXJfaWRCDQoLX2ludml0ZWVfaW'
+    'Q=');

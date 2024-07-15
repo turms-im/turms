@@ -28,6 +28,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.admin.web.MediaType;
 import im.turms.server.common.access.client.dto.constant.StorageResourceType;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
@@ -96,43 +97,43 @@ public class StorageService extends BaseService {
     static {
         try {
             DELETE_USER_PROFILE_PICTURE_METHOD = StorageServiceProvider.class
-                    .getDeclaredMethod("deleteUserProfilePicture", Long.class, Map.class);
+                    .getDeclaredMethod("deleteUserProfilePicture", Long.class, List.class);
             QUERY_USER_PROFILE_PICTURE_UPLOAD_INFO_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryUserProfilePictureUploadInfo",
                             Long.class,
                             String.class,
                             MediaType.class,
-                            Map.class);
+                            List.class);
             QUERY_USER_PROFILE_PICTURE_DOWNLOAD_INFO_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryUserProfilePictureDownloadInfo",
                             Long.class,
                             Long.class,
-                            Map.class);
+                            List.class);
 
             DELETE_GROUP_PROFILE_PICTURE_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod("deleteGroupProfilePicture",
                             Long.class,
                             Long.class,
-                            Map.class);
+                            List.class);
             QUERY_GROUP_PROFILE_PICTURE_UPLOAD_INFO_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryGroupProfilePictureUploadInfo",
                             Long.class,
                             Long.class,
                             String.class,
                             MediaType.class,
-                            Map.class);
+                            List.class);
             QUERY_GROUP_PROFILE_PICTURE_DOWNLOAD_INFO_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryGroupProfilePictureDownloadInfo",
                             Long.class,
                             Long.class,
-                            Map.class);
+                            List.class);
 
             DELETE_MESSAGE_ATTACHMENT_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod("deleteMessageAttachment",
                             Long.class,
                             Long.class,
                             String.class,
-                            Map.class);
+                            List.class);
             SHARE_MESSAGE_ATTACHMENT_WITH_USER_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod("shareMessageAttachmentWithUser",
                             Long.class,
@@ -162,7 +163,7 @@ public class StorageService extends BaseService {
                             Long.class,
                             String.class,
                             MediaType.class,
-                            Map.class);
+                            List.class);
             QUERY_MESSAGE_ATTACHMENT_UPLOAD_INFO_IN_PRIVATE_CONVERSATION_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod(
                             "queryMessageAttachmentUploadInfoInPrivateConversation",
@@ -170,7 +171,7 @@ public class StorageService extends BaseService {
                             Long.class,
                             String.class,
                             MediaType.class,
-                            Map.class);
+                            List.class);
             QUERY_MESSAGE_ATTACHMENT_UPLOAD_INFO_IN_GROUP_CONVERSATION_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod(
                             "queryMessageAttachmentUploadInfoInGroupConversation",
@@ -178,13 +179,13 @@ public class StorageService extends BaseService {
                             Long.class,
                             String.class,
                             MediaType.class,
-                            Map.class);
+                            List.class);
             QUERY_MESSAGE_ATTACHMENT_DOWNLOAD_INFO_METHOD = StorageServiceProvider.class
                     .getDeclaredMethod("queryMessageAttachmentDownloadInfo",
                             Long.class,
                             Long.class,
                             String.class,
-                            Map.class);
+                            List.class);
 
             QUERY_MESSAGE_ATTACHMENT_INFOS_UPLOADED_BY_REQUESTER_METHOD =
                     StorageServiceProvider.class.getDeclaredMethod(
@@ -219,7 +220,7 @@ public class StorageService extends BaseService {
             StorageResourceType resourceType,
             @Nullable Long resourceIdNum,
             @Nullable String resourceIdStr,
-            Map<String, String> extra) {
+            List<Value> customAttributes) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(resourceType, "resourceType");
@@ -231,11 +232,11 @@ public class StorageService extends BaseService {
             return Mono.error(e);
         }
         return switch (resourceType) {
-            case USER_PROFILE_PICTURE ->
-                pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
-                        DELETE_USER_PROFILE_PICTURE_METHOD,
-                        DELETE_RESOURCE_NOT_IMPLEMENTED,
-                        provider -> provider.deleteUserProfilePicture(requesterId, extra));
+            case USER_PROFILE_PICTURE -> pluginManager.invokeFirstExtensionPoint(
+                    StorageServiceProvider.class,
+                    DELETE_USER_PROFILE_PICTURE_METHOD,
+                    DELETE_RESOURCE_NOT_IMPLEMENTED,
+                    provider -> provider.deleteUserProfilePicture(requesterId, customAttributes));
             case GROUP_PROFILE_PICTURE ->
                 pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
                         DELETE_GROUP_PROFILE_PICTURE_METHOD,
@@ -246,8 +247,9 @@ public class StorageService extends BaseService {
                                         ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                                                 "The group ID must not be null"));
                             }
-                            return provider
-                                    .deleteGroupProfilePicture(requesterId, resourceIdNum, extra);
+                            return provider.deleteGroupProfilePicture(requesterId,
+                                    resourceIdNum,
+                                    customAttributes);
                         });
             case MESSAGE_ATTACHMENT ->
                 pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
@@ -256,7 +258,7 @@ public class StorageService extends BaseService {
                         provider -> provider.deleteMessageAttachment(requesterId,
                                 resourceIdNum,
                                 resourceIdStr,
-                                extra));
+                                customAttributes));
             default -> Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Unknown resource type: "
                             + resourceType));
@@ -269,11 +271,11 @@ public class StorageService extends BaseService {
             @Nullable Long resourceIdNum,
             @Nullable String resourceName,
             @Nullable String resourceMediaType,
-            Map<String, String> extra) {
+            List<Value> customAttributes) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(resourceType, "resourceType");
-            Validator.notNull(extra, "extra");
+            Validator.notNull(customAttributes, "customAttributes");
             if (resourceType == StorageResourceType.UNRECOGNIZED) {
                 return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                         "The resource type must not be UNRECOGNIZED"));
@@ -300,7 +302,7 @@ public class StorageService extends BaseService {
                         provider -> provider.queryUserProfilePictureUploadInfo(requesterId,
                                 resourceName,
                                 mediaType,
-                                extra));
+                                customAttributes));
             case GROUP_PROFILE_PICTURE ->
                 pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
                         QUERY_GROUP_PROFILE_PICTURE_UPLOAD_INFO_METHOD,
@@ -315,7 +317,7 @@ public class StorageService extends BaseService {
                                     resourceIdNum,
                                     resourceName,
                                     mediaType,
-                                    extra);
+                                    customAttributes);
                         });
             case MESSAGE_ATTACHMENT -> {
                 if (resourceIdNum == null) {
@@ -325,7 +327,7 @@ public class StorageService extends BaseService {
                             provider -> provider.queryMessageAttachmentUploadInfo(requesterId,
                                     resourceName,
                                     mediaType,
-                                    extra));
+                                    customAttributes));
                 }
                 // Note that the user ID can be 0, but the group ID cannot be 0.
                 if (resourceIdNum < 0) {
@@ -338,7 +340,7 @@ public class StorageService extends BaseService {
                                             -resourceIdNum,
                                             resourceName,
                                             mediaType,
-                                            extra));
+                                            customAttributes));
                 }
                 yield pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
                         QUERY_MESSAGE_ATTACHMENT_UPLOAD_INFO_IN_PRIVATE_CONVERSATION_METHOD,
@@ -348,7 +350,7 @@ public class StorageService extends BaseService {
                                 resourceIdNum,
                                 resourceName,
                                 mediaType,
-                                extra));
+                                customAttributes));
             }
             default -> Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Unknown resource type: "
@@ -361,11 +363,11 @@ public class StorageService extends BaseService {
             StorageResourceType resourceType,
             @Nullable Long resourceIdNum,
             @Nullable String resourceIdStr,
-            Map<String, String> extra) {
+            List<Value> customAttributes) {
         try {
             Validator.notNull(requesterId, "requesterId");
             Validator.notNull(resourceType, "resourceType");
-            Validator.notNull(extra, "extra");
+            Validator.notNull(customAttributes, "customAttributes");
             if (resourceType == StorageResourceType.UNRECOGNIZED) {
                 return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                         "The resource type must not be UNRECOGNIZED"));
@@ -384,7 +386,7 @@ public class StorageService extends BaseService {
                         QUERY_RESOURCE_DOWNLOAD_INFO_NOT_IMPLEMENTED,
                         provider -> provider.queryUserProfilePictureDownloadInfo(requesterId,
                                 resourceIdNum,
-                                extra));
+                                customAttributes));
             }
             case GROUP_PROFILE_PICTURE -> {
                 if (resourceIdNum == null) {
@@ -396,7 +398,7 @@ public class StorageService extends BaseService {
                         QUERY_RESOURCE_DOWNLOAD_INFO_NOT_IMPLEMENTED,
                         provider -> provider.queryGroupProfilePictureDownloadInfo(requesterId,
                                 resourceIdNum,
-                                extra));
+                                customAttributes));
             }
             case MESSAGE_ATTACHMENT ->
                 pluginManager.invokeFirstExtensionPoint(StorageServiceProvider.class,
@@ -405,7 +407,7 @@ public class StorageService extends BaseService {
                         provider -> provider.queryMessageAttachmentDownloadInfo(requesterId,
                                 resourceIdNum,
                                 resourceIdStr,
-                                extra));
+                                customAttributes));
             default -> Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
                     "Unknown resource type: "
                             + resourceType));

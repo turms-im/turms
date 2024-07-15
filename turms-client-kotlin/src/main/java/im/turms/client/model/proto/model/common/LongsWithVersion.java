@@ -64,7 +64,7 @@ public final class LongsWithVersion
         return longs_.getLong(index);
     }
 
-    private int longsMemoizedSerializedSize = -1;
+    private final int longsMemoizedSerializedSize = -1;
 
     private void ensureLongsIsMutable() {
         com.google.protobuf.Internal.LongList tmp = longs_;
@@ -378,7 +378,7 @@ public final class LongsWithVersion
 
     @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
+    protected java.lang.Object dynamicMethod(
             com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
             java.lang.Object arg0,
             java.lang.Object arg1) {
@@ -426,7 +426,6 @@ public final class LongsWithVersion
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.LongsWithVersion)
     private static final im.turms.client.model.proto.model.common.LongsWithVersion DEFAULT_INSTANCE;
-
     static {
         LongsWithVersion defaultInstance = new LongsWithVersion();
         // New instances are implicitly immutable so no need to make

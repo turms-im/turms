@@ -11,6 +11,7 @@ import CollectionUtil from '../util/collection-util';
 import DataParser from '../util/data-parser';
 import Validator from '../util/validator';
 import { ParsedModel } from '../model/parsed-model';
+import { Value } from '../model/proto/model/common/value';
 
 const isResponseSuccessful = (res): boolean => res.statusText.startsWith('2');
 
@@ -45,14 +46,14 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
         urlKeyName?: string
+        customAttributes?: Value[]
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
             return Promise.reject(ResponseError.from({
@@ -63,7 +64,7 @@ export default class StorageService {
         return this.queryUserProfilePictureUploadInfo({
             name,
             mediaType,
-            extra
+            customAttributes
         }).then(uploadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
             const id = StorageService._getAndRemoveResourceId(uploadInfo.data);
@@ -85,32 +86,32 @@ export default class StorageService {
     }
 
     public deleteUserProfilePicture({
-        extra
+        customAttributes
     }: {
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     } = {}): Promise<Response<void>> {
         return this._deleteResource({
             type: StorageResourceType.USER_PROFILE_PICTURE,
-            extra
+            customAttributes
         });
     }
 
     public queryUserProfilePicture({
         userId,
-        extra,
         urlKeyName,
-        fetchDownloadInfo
+        fetchDownloadInfo,
+        customAttributes
     }: {
         userId: string,
-        extra?: Record<string, string>
         urlKeyName?: string,
         fetchDownloadInfo?: boolean
+        customAttributes?: Value[]
     }): Promise<Response<StorageResource>> {
         return this.queryUserProfilePictureDownloadInfo({
             userId,
-            extra,
             fetch: fetchDownloadInfo,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
             return this._queryResource(url);
@@ -120,36 +121,36 @@ export default class StorageService {
     public queryUserProfilePictureUploadInfo({
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     } = {}): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.USER_PROFILE_PICTURE,
             name,
             mediaType,
-            extra
+            customAttributes
         });
     }
 
     public queryUserProfilePictureDownloadInfo({
         userId,
-        extra,
         fetch,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         userId: string
-        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<Record<string, string>>> {
         if (fetch) {
             return this._queryResourceDownloadInfo({
                 type: StorageResourceType.USER_PROFILE_PICTURE,
                 idNum: userId,
-                extra
+                customAttributes
             });
         }
         const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.USER_PROFILE_PICTURE)}/${userId}`;
@@ -165,15 +166,15 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         groupId: string
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
             return Promise.reject(ResponseError.from({
@@ -185,7 +186,7 @@ export default class StorageService {
             groupId,
             name,
             mediaType,
-            extra
+            customAttributes
         })
             .then(uploadInfo => {
                 const url = StorageService._getAndRemoveResourceUrl(uploadInfo.data, urlKeyName);
@@ -209,34 +210,34 @@ export default class StorageService {
 
     public deleteGroupProfilePicture({
         groupId,
-        extra
+        customAttributes
     }: {
         groupId: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<void>> {
         return this._deleteResource({
             type: StorageResourceType.GROUP_PROFILE_PICTURE,
             idNum: groupId,
-            extra
+            customAttributes
         });
     }
 
     public queryGroupProfilePicture({
         groupId,
-        extra,
         fetchDownloadInfo,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         groupId: string
-        extra?: Record<string, string>,
         fetchDownloadInfo?: boolean,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageResource>> {
         return this.queryGroupProfilePictureDownloadInfo({
             groupId,
-            extra,
             fetch: fetchDownloadInfo,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
             return this._queryResource(url);
@@ -247,38 +248,38 @@ export default class StorageService {
         groupId,
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         groupId: string,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.GROUP_PROFILE_PICTURE,
             idNum: groupId,
             name,
             mediaType,
-            extra
+            customAttributes
         });
     }
 
     public queryGroupProfilePictureDownloadInfo({
         groupId,
-        extra,
         fetch,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         groupId: string,
-        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<Record<string, string>>> {
         if (fetch) {
             return this._queryResourceDownloadInfo({
                 type: StorageResourceType.GROUP_PROFILE_PICTURE,
                 idNum: groupId,
-                extra
+                customAttributes
             });
         }
         const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.GROUP_PROFILE_PICTURE)}/${groupId}`;
@@ -293,21 +294,21 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageUpdateResult>> {
         return this._uploadMessageAttachment({
             data,
             name: name,
             mediaType,
-            extra,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         });
     }
 
@@ -316,23 +317,23 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         userId: string,
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageUpdateResult>> {
         return this._uploadMessageAttachment({
             userId,
             data,
             name: name,
             mediaType,
-            extra,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         });
     }
 
@@ -341,23 +342,23 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         groupId: string,
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageUpdateResult>> {
         return this._uploadMessageAttachment({
             groupId,
             data,
             name: name,
             mediaType,
-            extra,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         });
     }
 
@@ -367,16 +368,16 @@ export default class StorageService {
         data,
         name,
         mediaType,
-        extra,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         userId?: string,
         groupId?: string,
         data: Uint8Array,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageUpdateResult>> {
         if (!data.length) {
             return Promise.reject(ResponseError.from({
@@ -390,7 +391,7 @@ export default class StorageService {
             queryUploadInfo = this.queryMessageAttachmentUploadInfo({
                 name,
                 mediaType,
-                extra
+                customAttributes
             });
         } else if (userId != null) {
             if (groupId != null) {
@@ -403,14 +404,14 @@ export default class StorageService {
                 userId,
                 name,
                 mediaType,
-                extra
+                customAttributes
             });
         } else {
             queryUploadInfo = this.queryMessageAttachmentUploadInfoInGroupConversation({
                 groupId,
                 name,
                 mediaType,
-                extra
+                customAttributes
             });
         }
         return queryUploadInfo.then(uploadInfo => {
@@ -436,11 +437,11 @@ export default class StorageService {
     public deleteMessageAttachment({
         attachmentIdNum,
         attachmentIdStr,
-        extra
+        customAttributes
     }: {
         attachmentIdNum?: string,
         attachmentIdStr?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<void>> {
         if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
             return Promise.reject(ResponseError.from({
@@ -452,7 +453,7 @@ export default class StorageService {
             type: StorageResourceType.MESSAGE_ATTACHMENT,
             idNum: attachmentIdNum,
             idStr: attachmentIdStr,
-            extra
+            customAttributes
         });
     }
 
@@ -475,8 +476,10 @@ export default class StorageService {
             updateMessageAttachmentInfoRequest: {
                 attachmentIdNum,
                 attachmentIdStr,
-                userIdToShareWith: userId
-            }
+                userIdToShareWith: userId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -499,8 +502,10 @@ export default class StorageService {
             updateMessageAttachmentInfoRequest: {
                 attachmentIdNum,
                 attachmentIdStr,
-                groupIdToShareWith: groupId
-            }
+                groupIdToShareWith: groupId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -523,8 +528,10 @@ export default class StorageService {
             updateMessageAttachmentInfoRequest: {
                 attachmentIdNum,
                 attachmentIdStr,
-                userIdToUnshareWith: userId
-            }
+                userIdToUnshareWith: userId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -547,30 +554,32 @@ export default class StorageService {
             updateMessageAttachmentInfoRequest: {
                 attachmentIdNum,
                 attachmentIdStr,
-                groupIdToUnshareWith: groupId
-            }
+                groupIdToUnshareWith: groupId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
     public queryMessageAttachment({
         attachmentIdNum,
         attachmentIdStr,
-        extra,
         fetchDownloadInfo,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         attachmentIdNum?: string,
         attachmentIdStr?: string,
-        extra?: Record<string, string>,
         fetchDownloadInfo?: boolean,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<StorageResource>> {
         return this.queryMessageAttachmentDownloadInfo({
             attachmentIdNum,
             attachmentIdStr,
-            extra,
             fetch: fetchDownloadInfo,
-            urlKeyName
+            urlKeyName,
+            customAttributes
         }).then(downloadInfo => {
             const url = StorageService._getAndRemoveResourceUrl(downloadInfo.data, urlKeyName);
             return this._queryResource(url);
@@ -580,17 +589,17 @@ export default class StorageService {
     public queryMessageAttachmentUploadInfo({
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     } = {}): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.MESSAGE_ATTACHMENT,
             name,
             mediaType,
-            extra
+            customAttributes
         });
     }
 
@@ -598,19 +607,19 @@ export default class StorageService {
         userId,
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         userId: string,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.MESSAGE_ATTACHMENT,
             idNum: userId,
             name,
             mediaType,
-            extra
+            customAttributes
         });
     }
 
@@ -618,34 +627,34 @@ export default class StorageService {
         groupId,
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         groupId: string,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<Record<string, string>>> {
         return this._queryResourceUploadInfo({
             type: StorageResourceType.MESSAGE_ATTACHMENT,
             idNum: `-${groupId}`,
             name,
             mediaType,
-            extra
+            customAttributes
         });
     }
 
     public queryMessageAttachmentDownloadInfo({
         attachmentIdNum,
         attachmentIdStr,
-        extra,
         fetch,
-        urlKeyName
+        urlKeyName,
+        customAttributes
     }: {
         attachmentIdNum?: string,
         attachmentIdStr?: string,
-        extra?: Record<string, string>,
         fetch?: boolean,
         urlKeyName?: string
+        customAttributes?: Value[],
     }): Promise<Response<Record<string, string>>> {
         if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
             return Promise.reject(ResponseError.from({
@@ -658,7 +667,7 @@ export default class StorageService {
                 type: StorageResourceType.MESSAGE_ATTACHMENT,
                 idNum: attachmentIdNum,
                 idStr: attachmentIdStr,
-                extra
+                customAttributes
             });
         }
         const url = `${this._serverUrl}/${StorageService._getBucketName(StorageResourceType.MESSAGE_ATTACHMENT)}/${attachmentIdNum || attachmentIdStr}`;
@@ -680,7 +689,9 @@ export default class StorageService {
                 groupIds: [],
                 creationDateStart: DataParser.getDateTimeStr(creationDateStart),
                 creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
-            }
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
     }
 
@@ -702,7 +713,9 @@ export default class StorageService {
                 areSharedByMe,
                 creationDateStart: DataParser.getDateTimeStr(creationDateStart),
                 creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
-            }
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
     }
 
@@ -723,7 +736,9 @@ export default class StorageService {
                 userIds: userIds == null ? undefined:CollectionUtil.uniqueArray(userIds),
                 creationDateStart: DataParser.getDateTimeStr(creationDateStart),
                 creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
-            }
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transform(data.storageResourceInfos.infos)));
     }
 
@@ -798,20 +813,21 @@ export default class StorageService {
         type,
         idNum,
         idStr,
-        extra
+                                customAttributes
     }: {
         type: StorageResourceType,
         idNum?: string,
         idStr?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<void>> {
         return this._turmsClient.driver.send({
             deleteResourceRequest: {
                 type,
                 idNum,
                 idStr,
-                extra
-            }
+                customAttributes
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -857,14 +873,14 @@ export default class StorageService {
         idStr,
         name,
         mediaType,
-        extra
+        customAttributes
     }: {
         type: StorageResourceType,
         idNum?: string,
         idStr?: string,
         name?: string,
         mediaType?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<Record<string, string>>> {
         return this._turmsClient.driver.send({
             queryResourceUploadInfoRequest: {
@@ -873,8 +889,9 @@ export default class StorageService {
                 idStr,
                 name,
                 mediaType,
-                extra
-            }
+                customAttributes
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.toMap(data.stringsWithVersion.strings)));
     }
 
@@ -882,20 +899,21 @@ export default class StorageService {
         type,
         idNum,
         idStr,
-        extra
+        customAttributes
     }: {
         type: StorageResourceType,
         idNum?: string,
         idStr?: string,
-        extra?: Record<string, string>
+        customAttributes?: Value[]
     }): Promise<Response<Record<string, string>>> {
         return this._turmsClient.driver.send({
             queryResourceDownloadInfoRequest: {
                 type,
                 idNum,
                 idStr,
-                extra
-            }
+                customAttributes
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.toMap(data.stringsWithVersion.strings)));
     }
 

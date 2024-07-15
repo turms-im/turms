@@ -26,6 +26,14 @@ const GroupConversation$json = {
       '6': '.im.turms.proto.GroupConversation.MemberIdToReadDateEntry',
       '10': 'memberIdToReadDate'
     },
+    {
+      '1': 'custom_attributes',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.im.turms.proto.Value',
+      '10': 'customAttributes'
+    },
   ],
   '3': [GroupConversation_MemberIdToReadDateEntry$json],
 };
@@ -44,6 +52,7 @@ const GroupConversation_MemberIdToReadDateEntry$json = {
 final $typed_data.Uint8List groupConversationDescriptor = $convert.base64Decode(
     'ChFHcm91cENvbnZlcnNhdGlvbhIZCghncm91cF9pZBgBIAEoA1IHZ3JvdXBJZBJtChZtZW1iZX'
     'JfaWRfdG9fcmVhZF9kYXRlGAIgAygLMjkuaW0udHVybXMucHJvdG8uR3JvdXBDb252ZXJzYXRp'
-    'b24uTWVtYmVySWRUb1JlYWREYXRlRW50cnlSEm1lbWJlcklkVG9SZWFkRGF0ZRpFChdNZW1iZX'
-    'JJZFRvUmVhZERhdGVFbnRyeRIQCgNrZXkYASABKANSA2tleRIUCgV2YWx1ZRgCIAEoA1IFdmFs'
-    'dWU6AjgB');
+    'b24uTWVtYmVySWRUb1JlYWREYXRlRW50cnlSEm1lbWJlcklkVG9SZWFkRGF0ZRJCChFjdXN0b2'
+    '1fYXR0cmlidXRlcxgPIAMoCzIVLmltLnR1cm1zLnByb3RvLlZhbHVlUhBjdXN0b21BdHRyaWJ1'
+    'dGVzGkUKF01lbWJlcklkVG9SZWFkRGF0ZUVudHJ5EhAKA2tleRgBIAEoA1IDa2V5EhQKBXZhbH'
+    'VlGAIgASgDUgV2YWx1ZToCOAE=');

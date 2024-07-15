@@ -49,6 +49,8 @@ public struct QueryGroupMembersRequest {
     /// Clears the value of `withStatus`. Subsequent reads from it will return its default value.
     public mutating func clearWithStatus() { _withStatus = nil }
 
+    public var customAttributes: [Value] = []
+
     public var unknownFields = SwiftProtobuf.UnknownStorage()
 
     public init() {}
@@ -72,6 +74,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         2: .standard(proto: "last_updated_date"),
         3: .standard(proto: "member_ids"),
         4: .standard(proto: "with_status"),
+        15: .standard(proto: "custom_attributes"),
     ]
 
     public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -84,6 +87,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
             case 2: try decoder.decodeSingularInt64Field(value: &_lastUpdatedDate)
             case 3: try decoder.decodeRepeatedInt64Field(value: &memberIds)
             case 4: try decoder.decodeSingularBoolField(value: &_withStatus)
+            case 15: try decoder.decodeRepeatedMessageField(value: &customAttributes)
             default: break
             }
         }
@@ -106,6 +110,9 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         try { if let v = self._withStatus {
             try visitor.visitSingularBoolField(value: v, fieldNumber: 4)
         } }()
+        if !customAttributes.isEmpty {
+            try visitor.visitRepeatedMessageField(value: customAttributes, fieldNumber: 15)
+        }
         try unknownFields.traverse(visitor: &visitor)
     }
 
@@ -114,6 +121,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         if lhs._lastUpdatedDate != rhs._lastUpdatedDate { return false }
         if lhs.memberIds != rhs.memberIds { return false }
         if lhs._withStatus != rhs._withStatus { return false }
+        if lhs.customAttributes != rhs.customAttributes { return false }
         if lhs.unknownFields != rhs.unknownFields { return false }
         return true
     }

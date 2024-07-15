@@ -164,8 +164,10 @@ export default class MessageService {
                 text,
                 records: records || [],
                 burnAfter,
-                preMessageId
-            }
+                preMessageId,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -213,8 +215,10 @@ export default class MessageService {
                 messageId,
                 groupId: isGroupMessage ? targetId : undefined,
                 recipientId: !isGroupMessage ? targetId : undefined,
-                records: []
-            }
+                records: [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.getLongOrThrow(data)));
     }
 
@@ -266,8 +270,10 @@ export default class MessageService {
             updateMessageRequest: {
                 messageId,
                 text,
-                records: records || []
-            }
+                records: records || [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -324,8 +330,10 @@ export default class MessageService {
                 deliveryDateEnd: DataParser.getDateTimeStr(deliveryDateEnd),
                 maxCount,
                 descending: descending != null && descending ? true : null,
-                withTotal: false
-            }
+                withTotal: false,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messages?.messages)));
     }
 
@@ -382,8 +390,10 @@ export default class MessageService {
                 deliveryDateEnd: DataParser.getDateTimeStr(deliveryDateEnd),
                 maxCount,
                 descending: descending != null && descending ? true : null,
-                withTotal: true
-            }
+                withTotal: true,
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n, data => NotificationUtil.transformOrEmpty(data.messagesWithTotalList?.messagesWithTotalList)));
     }
 
@@ -423,8 +433,10 @@ export default class MessageService {
             updateMessageRequest: {
                 messageId,
                 recallDate: DataParser.getDateTimeStr(recallDate),
-                records: []
-            }
+                records: [],
+                customAttributes: []
+            },
+            customAttributes: []
         }).then(n => Response.fromNotification(n));
     }
 
@@ -453,7 +465,8 @@ export default class MessageService {
         return UserLocation.encode({
             latitude,
             longitude,
-            details: details || {}
+            details: details || {},
+            customAttributes: []
         }).finish();
     }
 
@@ -474,8 +487,9 @@ export default class MessageService {
                 url,
                 duration,
                 format,
-                size,
-            }
+                size
+            },
+            customAttributes: []
         }).finish();
     }
 
@@ -486,7 +500,8 @@ export default class MessageService {
     }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return AudioFile.encode({
-            data: new Uint8Array(data)
+            data: new Uint8Array(data),
+            customAttributes: []
         }).finish();
     }
 
@@ -507,8 +522,9 @@ export default class MessageService {
                 url,
                 duration,
                 format,
-                size,
-            }
+                size
+            },
+            customAttributes: []
         }).finish();
     }
 
@@ -519,7 +535,8 @@ export default class MessageService {
     }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return VideoFile.encode({
-            data: new Uint8Array(data)
+            data: new Uint8Array(data),
+            customAttributes: []
         }).finish();
     }
 
@@ -530,7 +547,8 @@ export default class MessageService {
     }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return ImageFile.encode({
-            data: new Uint8Array(data)
+            data: new Uint8Array(data),
+            customAttributes: []
         }).finish();
     }
 
@@ -552,7 +570,8 @@ export default class MessageService {
                 fileSize,
                 imageSize,
                 original
-            }
+            },
+            customAttributes: []
         }).finish();
     }
 
@@ -563,7 +582,8 @@ export default class MessageService {
     }): Uint8Array {
         Validator.throwIfAnyFalsy(data);
         return File.encode({
-            data: new Uint8Array(data)
+            data: new Uint8Array(data),
+            customAttributes: []
         }).finish();
     }
 
@@ -582,7 +602,8 @@ export default class MessageService {
                 url,
                 format,
                 size
-            }
+            },
+            customAttributes: []
         }).finish();
     }
 
@@ -615,7 +636,8 @@ export default class MessageService {
             records: request.records,
             senderId: requesterId,
             groupId: request.groupId,
-            recipientId: request.recipientId
+            recipientId: request.recipientId,
+            customAttributes: []
         };
     }
 }

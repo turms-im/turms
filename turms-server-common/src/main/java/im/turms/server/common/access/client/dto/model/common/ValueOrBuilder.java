@@ -126,5 +126,31 @@ public interface ValueOrBuilder extends
      */
     com.google.protobuf.ByteString getStringValueBytes();
 
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getListValueList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.Value getListValue(int index);
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    int getListValueCount();
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    java.util.List<? extends im.turms.server.common.access.client.dto.model.common.ValueOrBuilder> getListValueOrBuilderList();
+
+    /**
+     * <code>repeated .im.turms.proto.Value list_value = 8;</code>
+     */
+    im.turms.server.common.access.client.dto.model.common.ValueOrBuilder getListValueOrBuilder(
+            int index);
+
     im.turms.server.common.access.client.dto.model.common.Value.KindCase getKindCase();
 }
