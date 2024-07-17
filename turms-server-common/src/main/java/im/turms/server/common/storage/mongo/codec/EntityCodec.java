@@ -19,6 +19,7 @@ package im.turms.server.common.storage.mongo.codec;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,8 +29,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 
+import im.turms.server.common.domain.common.po.Customizable;
 import im.turms.server.common.infra.lang.PrimitiveUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -49,6 +50,19 @@ public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
 
+    /**
+     * @implNote Don't use "_" because:
+     *           <p>
+     *           1. MongoDB has use "_" for "_id";
+     *           <p>
+     *           2. To not mix with the default index name (The default index name uses "_" as
+     *           separator);
+     *           <p>
+     *           Don't use "$" because MongoDB uses it for internal operators (e.g., "$set").
+     */
+    private static final String USER_DEFINED_ATTRIBUTE_PREFIX = "#";
+    private static final int USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH = 1;
+
     private static final Map<IterableCodecKey<?, ?>, TurmsIterableCodec<?, ?>> KEY_TO_ITERABLE_CODEC =
             new ConcurrentHashMap<>(32);
     private static final Map<MapCodecKey<?, ?>, TurmsMapCodec<?, ?>> KEY_TO_MAP_CODEC =
@@ -56,42 +70,18 @@ public class EntityCodec<T> extends MongoCodec<T> {
     private static final Map<EnumCodecKey<?>, MongoCodec<?>> KEY_TO_ENUM_CODEC =
             new ConcurrentHashMap<>(32);
 
-    private final CodecRegistry registry;
     private final Class<T> entityClass;
     private final MongoEntity<T> entity;
 
-    public EntityCodec(CodecRegistry registry, Class<T> entityClass) {
+    public EntityCodec(Class<T> entityClass) {
         super(entityClass);
-        this.registry = registry;
         this.entityClass = entityClass;
         entity = MongoEntityFactory.parse(entityClass);
     }
 
     @Override
-    public T decode(BsonReader reader, DecoderContext decoderContext) {
-        T instance = null;
-        Object[] ctorValues = null;
-        try {
-            Constructor<T> constructor = entity.constructor();
-            if (constructor.getParameterCount() == 0) {
-                instance = constructor.newInstance();
-                initInstance(instance, reader, decoderContext);
-                return instance;
-            } else {
-                ctorValues = parseCtorValues(reader, decoderContext);
-                return constructor.newInstance(ctorValues);
-            }
-        } catch (Exception e) {
-            throw new DeserializationException(
-                    "Failed to decode the current Bson into the entity of the class: "
-                            + entity.entityClass()
-                                    .getName()
-                            + ", instance: "
-                            + instance
-                            + ", constructor arguments: "
-                            + Arrays.toString(ctorValues),
-                    e);
-        }
+    public Class<T> getEncoderClass() {
+        return entityClass;
     }
 
     @Override
@@ -114,19 +104,7 @@ public class EntityCodec<T> extends MongoCodec<T> {
     }
 
     private void encodeValue(BsonWriter writer, T value, EncoderContext encoderContext) {
-        for (EntityField<?> field : entity.fields()) {
-            Object fieldValue = field.get(value);
-            if (fieldValue == null) {
-                continue;
-            }
-            if (field.isIdField()) {
-                writer.writeName(DomainFieldName.ID);
-            } else {
-                writer.writeName(field.getName());
-            }
-            Codec codec = getCodec(field);
-            codec.encode(writer, fieldValue, encoderContext);
-        }
+        encodeValue0(writer, value, encoderContext, false);
     }
 
     /**
@@ -135,25 +113,150 @@ public class EntityCodec<T> extends MongoCodec<T> {
      * use cases.
      */
     private void encodeValueForUpsert(BsonWriter writer, T value, EncoderContext encoderContext) {
+        encodeValue0(writer, value, encoderContext, true);
+    }
+
+    private void encodeValue0(
+            BsonWriter writer,
+            T value,
+            EncoderContext encoderContext,
+            boolean writeNullValue) {
         for (EntityField<?> field : entity.fields()) {
             Object fieldValue = field.get(value);
-            if (field.isIdField()) {
-                writer.writeName(DomainFieldName.ID);
-            } else {
-                writer.writeName(field.getName());
+            switch (field.type()) {
+                case ID -> {
+                    if (fieldValue == null) {
+                        if (writeNullValue) {
+                            writer.writeName(DomainFieldName.ID);
+                            writer.writeNull();
+                        }
+                    } else {
+                        writer.writeName(DomainFieldName.ID);
+                        Codec codec = getCodec(field);
+                        codec.encode(writer, fieldValue, encoderContext);
+                    }
+                }
+                case USER_DEFINED_ATTRIBUTES -> {
+                    Map<String, Object> userDefinedAttributes = (Map<String, Object>) fieldValue;
+                    if (userDefinedAttributes == null) {
+                        continue;
+                    }
+                    writer.writeStartDocument();
+                    for (Map.Entry<String, Object> entry : userDefinedAttributes.entrySet()) {
+                        Object entryValue = entry.getValue();
+                        if (entryValue == null) {
+                            if (writeNullValue) {
+                                writer.writeName(USER_DEFINED_ATTRIBUTE_PREFIX + entry.getKey());
+                                writer.writeNull();
+                            }
+                        } else {
+                            writer.writeName(USER_DEFINED_ATTRIBUTE_PREFIX + entry.getKey());
+                            CodecUtil.write(writer, entryValue);
+                        }
+                    }
+                    writer.writeEndDocument();
+                }
+                case NORMAL -> {
+                    if (fieldValue == null) {
+                        if (writeNullValue) {
+                            writer.writeName(field.name());
+                            writer.writeNull();
+                        }
+                    } else {
+                        writer.writeName(field.name());
+                        Codec codec = getCodec(field);
+                        codec.encode(writer, fieldValue, encoderContext);
+                    }
+                }
             }
-            if (fieldValue == null) {
-                writer.writeNull();
-                continue;
-            }
-            Codec codec = getCodec(field);
-            codec.encode(writer, fieldValue, encoderContext);
         }
     }
 
     @Override
-    public Class<T> getEncoderClass() {
-        return entityClass;
+    public T decode(BsonReader reader, DecoderContext decoderContext) {
+        T instance = null;
+        Object[] constructorValues = null;
+        try {
+            Constructor<T> constructor = entity.constructor();
+            if (constructor.getParameterCount() == 0) {
+                instance = constructor.newInstance();
+                initInstance(instance, reader, decoderContext);
+                return instance;
+            } else {
+                constructorValues = parseCtorValues(reader, decoderContext);
+                return constructor.newInstance(constructorValues);
+            }
+        } catch (Exception e) {
+            throw new DeserializationException(
+                    "Failed to decode the current Bson into the entity of the class: "
+                            + entity.entityClass()
+                                    .getName()
+                            + ", instance: "
+                            + instance
+                            + ", constructor arguments: "
+                            + Arrays.toString(constructorValues),
+                    e);
+        }
+    }
+
+    private <F> F decode(EntityField<F> field, BsonReader reader, DecoderContext decoderContext) {
+        Codec<F> codec = getCodec(field);
+        return decoderContext.decodeWithChildContext(codec, reader);
+    }
+
+    private Object[] parseCtorValues(BsonReader reader, DecoderContext decoderContext) {
+        Object[] values = new Object[entity.constructor()
+                .getParameters().length];
+        reader.readStartDocument();
+        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+            String fieldName = reader.readName();
+            EntityField<T> field = DomainFieldName.ID.equals(fieldName)
+                    ? entity.getField(entity.idFieldName())
+                    : entity.getField(fieldName);
+            if (field == null) {
+                if (fieldName.startsWith(USER_DEFINED_ATTRIBUTE_PREFIX)) {
+                    field = entity.getField(Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME);
+                    if (field != null) {
+                        int constructorParamIndex = field.constructorParamIndex();
+                        Map<String, Object> userDefinedAttributes =
+                                (Map<String, Object>) values[constructorParamIndex];
+                        if (userDefinedAttributes == null) {
+                            userDefinedAttributes = new HashMap<>(16);
+                            values[constructorParamIndex] = userDefinedAttributes;
+                        }
+                        userDefinedAttributes.put(
+                                fieldName.substring(USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH),
+                                CodecUtil.read(reader));
+                        continue;
+                    }
+                }
+                LOGGER.warn("The field \"{}\" does not exist in the entity class: {}",
+                        fieldName,
+                        entity.entityClass()
+                                .getName());
+                reader.skipValue();
+            } else {
+                Object value = null;
+                if (reader.getCurrentBsonType() == BsonType.NULL) {
+                    reader.readNull();
+                } else {
+                    try {
+                        value = decode(field, reader, decoderContext);
+                    } catch (Exception e) {
+                        throw new DeserializationException(
+                                "Failed to decode the field \""
+                                        + fieldName
+                                        + "\" of the class: "
+                                        + entity.entityClass()
+                                                .getName(),
+                                e);
+                    }
+                }
+                values[field.constructorParamIndex()] = value;
+            }
+        }
+        reader.readEndDocument();
+        return values;
     }
 
     private void initInstance(T instance, BsonReader reader, DecoderContext decoderContext) {
@@ -164,6 +267,21 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     ? entity.getField(entity.idFieldName())
                     : entity.getField(fieldName);
             if (field == null) {
+                if (fieldName.startsWith(USER_DEFINED_ATTRIBUTE_PREFIX)) {
+                    field = entity.getField(Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME);
+                    if (field != null) {
+                        Map<String, Object> userDefinedAttributes =
+                                (Map<String, Object>) field.get(instance);
+                        if (userDefinedAttributes == null) {
+                            userDefinedAttributes = new HashMap<>(16);
+                            field.set(instance, userDefinedAttributes);
+                        }
+                        userDefinedAttributes.put(
+                                fieldName.substring(USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH),
+                                CodecUtil.read(reader));
+                        continue;
+                    }
+                }
                 LOGGER.warn("The field \"{}\" does not exist in the entity class: {}",
                         fieldName,
                         entity.entityClass()
@@ -202,57 +320,12 @@ public class EntityCodec<T> extends MongoCodec<T> {
         reader.readEndDocument();
     }
 
-    private Object[] parseCtorValues(BsonReader reader, DecoderContext decoderContext) {
-        Object[] values = new Object[entity.constructor()
-                .getParameters().length];
-        reader.readStartDocument();
-        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            String fieldName = reader.readName();
-            EntityField<T> field = DomainFieldName.ID.equals(fieldName)
-                    ? entity.getField(entity.idFieldName())
-                    : entity.getField(fieldName);
-            if (field == null) {
-                LOGGER.warn("The field \"{}\" does not exist in the entity class: {}",
-                        fieldName,
-                        entity.entityClass()
-                                .getName());
-                reader.skipValue();
-            } else {
-                Object value = null;
-                if (reader.getCurrentBsonType() == BsonType.NULL) {
-                    reader.readNull();
-                } else {
-                    try {
-                        value = decode(field, reader, decoderContext);
-                    } catch (Exception e) {
-                        throw new DeserializationException(
-                                "Failed to decode the field \""
-                                        + fieldName
-                                        + "\" of the class: "
-                                        + entity.entityClass()
-                                                .getName(),
-                                e);
-                    }
-                }
-                values[field.getCtorParamIndex()] = value;
-            }
-        }
-        reader.readEndDocument();
-        return values;
-    }
-
-    private <F> F decode(EntityField<F> field, BsonReader reader, DecoderContext decoderContext) {
-        Codec<F> codec = getCodec(field);
-        return decoderContext.decodeWithChildContext(codec, reader);
-    }
-
     private <F> Codec<F> getCodec(EntityField<F> field) {
-        Class<?> fieldClass = field.getFieldClass();
+        Class<?> fieldClass = field.fieldClass();
         if (Iterable.class.isAssignableFrom(fieldClass)) {
-            return (Codec<F>) KEY_TO_ITERABLE_CODEC.computeIfAbsent(new IterableCodecKey<>(
-                    fieldClass,
-                    field.getElementClass(),
-                    field.isEnumNumber()), key -> {
+            return (Codec<F>) KEY_TO_ITERABLE_CODEC.computeIfAbsent(
+                    new IterableCodecKey<>(fieldClass, field.elementClass(), field.isEnumNumber()),
+                    key -> {
                         TurmsIterableCodec<?, ?> iterableCodec = new TurmsIterableCodec<>(
                                 key.iterableClass,
                                 key.elementClass,
@@ -263,8 +336,8 @@ public class EntityCodec<T> extends MongoCodec<T> {
         } else if (Map.class.isAssignableFrom(fieldClass)) {
             return (Codec<F>) KEY_TO_MAP_CODEC.computeIfAbsent(new MapCodecKey<>(
                     (Class) fieldClass,
-                    field.getKeyClass(),
-                    field.getElementClass(),
+                    field.keyClass(),
+                    field.elementClass(),
                     field.isEnumNumber()), key -> {
                         TurmsMapCodec<?, ?> mapCodec = new TurmsMapCodec(
                                 key.ownerClass,

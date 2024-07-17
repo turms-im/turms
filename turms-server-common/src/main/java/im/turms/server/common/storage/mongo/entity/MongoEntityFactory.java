@@ -41,6 +41,7 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.springframework.util.StringUtils;
 
+import im.turms.server.common.domain.common.po.Customizable;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.AsciiCode;
@@ -52,6 +53,7 @@ import im.turms.server.common.infra.reflect.VarAccessor;
 import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
+import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
@@ -78,7 +80,7 @@ public final class MongoEntityFactory {
         List<EntityField<?>> fields = new ArrayList<>(entityFieldsInfo.nameToField.values());
         // Sort the fields by name to ensure serializing fields in a consistent order.
         // And that's important when querying embedded documents
-        fields.sort(Comparator.comparing(EntityField::getName));
+        fields.sort(Comparator.comparing(EntityField::name));
         return new MongoEntity<>(
                 clazz,
                 constructor,
@@ -96,24 +98,21 @@ public final class MongoEntityFactory {
     private static <T> Constructor<T> findConstructor(Class<T> entityClass) {
         Constructor<T>[] declaredConstructors =
                 (Constructor<T>[]) entityClass.getDeclaredConstructors();
-        Constructor<T> constructor = null;
         if (declaredConstructors.length == 1) {
-            constructor = declaredConstructors[0];
+            Constructor<T> constructor = declaredConstructors[0];
+            ReflectionUtil.setAccessible(constructor);
+            return constructor;
         }
         for (Constructor<T> candidate : declaredConstructors) {
             if (candidate.isAnnotationPresent(PersistenceConstructor.class)
                     || candidate.getParameterCount() == 0) {
-                constructor = candidate;
-                break;
+                ReflectionUtil.setAccessible(candidate);
+                return candidate;
             }
         }
-        if (constructor == null) {
-            String message = "Could not find a constructor for the entity class: "
-                    + entityClass.getName();
-            throw new IllegalArgumentException(message);
-        }
-        ReflectionUtil.setAccessible(constructor);
-        return constructor;
+        String message = "Could not find a constructor for the entity class: "
+                + entityClass.getName();
+        throw new IllegalArgumentException(message);
     }
 
     @Nullable
@@ -282,6 +281,8 @@ public final class MongoEntityFactory {
         Parameter[] parameters = hasParameters
                 ? constructor.getParameters()
                 : null;
+        boolean isUserDefinedAttributesFieldRequired = Customizable.class.isAssignableFrom(clazz);
+        boolean isUserDefinedAttributesFieldFound = false;
         for (Field field : fields) {
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers)) {
@@ -299,12 +300,15 @@ public final class MongoEntityFactory {
                 keyClass = keyAndElement.first();
                 elementClass = keyAndElement.second();
             }
-            // ID and field name
+
+            // ID, field name and type
             String fieldName = parseFieldName(field);
+            EntityFieldType fieldType = EntityFieldType.NORMAL;
             boolean isIdField = field.isAnnotationPresent(Id.class);
             if (isIdField) {
                 if (idField == null) {
                     idField = fieldName;
+                    fieldType = EntityFieldType.ID;
                 } else {
                     throw new IllegalArgumentException(
                             "The entity class ("
@@ -312,6 +316,28 @@ public final class MongoEntityFactory {
                                     + ") must not have multiple fields marked with @"
                                     + Id.class.getSimpleName());
                 }
+            }
+            if (isUserDefinedAttributesFieldRequired
+                    && Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME.equals(field.getName())) {
+                if (isIdField) {
+                    throw new IllegalArgumentException(
+                            "The entity class ("
+                                    + clazz.getName()
+                                    + ") must not have a field named \""
+                                    + Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME
+                                    + "\" that is also marked with @"
+                                    + Id.class.getSimpleName());
+                }
+                if (keyClass == null) {
+                    throw new IllegalArgumentException(
+                            "The entity class ("
+                                    + clazz.getName()
+                                    + ") must have a field named \""
+                                    + Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME
+                                    + "\" that is a Map");
+                }
+                fieldType = EntityFieldType.USER_DEFINED_ATTRIBUTES;
+                isUserDefinedAttributesFieldFound = true;
             }
             // Indexes
             List<Index> indexes = parseIndexes(field);
@@ -327,8 +353,8 @@ public final class MongoEntityFactory {
                     ? VarAccessorFactory.get(field)
                     : VarAccessorFactory.get(field, setter);
             // Constructor
-            int ctorParamIndex = hasParameters
-                    ? parseCtorParamIndex(constructor, parameters, field)
+            int constructorParamIndex = hasParameters
+                    ? parseConstructorParamIndex(constructor, parameters, field)
                     : EntityField.UNSET_CTOR_PARAM_INDEX;
             if (nameToField == null) {
                 nameToField = CollectionUtil.newMapWithExpectedSize(fields.size());
@@ -339,10 +365,18 @@ public final class MongoEntityFactory {
                             keyClass,
                             elementClass,
                             fieldName,
-                            isIdField,
-                            ctorParamIndex,
+                            fieldType,
+                            constructorParamIndex,
                             varAccessor,
                             field.isAnnotationPresent(EnumNumber.class)));
+        }
+        if (isUserDefinedAttributesFieldRequired && !isUserDefinedAttributesFieldFound) {
+            throw new IllegalArgumentException(
+                    "The entity class ("
+                            + clazz.getName()
+                            + ") must have a field named \""
+                            + Customizable.USER_DEFINED_ATTRIBUTES_FIELD_NAME
+                            + "\" that is a Map");
         }
         return new EntityFieldsInfo(
                 idField,
@@ -395,7 +429,7 @@ public final class MongoEntityFactory {
                 : setterMethods;
     }
 
-    private static <T> int parseCtorParamIndex(
+    private static <T> int parseConstructorParamIndex(
             Constructor<T> constructor,
             Parameter[] params,
             Field field) {
@@ -415,7 +449,7 @@ public final class MongoEntityFactory {
     }
 
     /**
-     * @implNote Note that we just follow the original name without any naming convention
+     * @implNote Note that we just use the original specified field name without modification.
      */
     @Nullable
     private static String parseFieldName(Field field) {
