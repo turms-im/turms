@@ -1281,7 +1281,7 @@ public final class BCrypt {
      * @param psw  the password
      * @return a 192 bit key
      */
-    private final byte[] deriveRawKey(int cost, byte[] salt, byte[] psw) {
+    public final byte[] deriveRawKey(int cost, byte[] salt, byte[] psw) {
 //        if (salt.length != 16) {
 //            throw new DataLengthException("Invalid salt size: 16 bytes expected.");
 //        }
@@ -1350,37 +1350,6 @@ public final class BCrypt {
      */
     // Blowfish spec limits keys to 448bit/56 bytes to ensure all bits of key affect all ciphertext
     // bits, but technically algorithm handles 72 byte keys and most implementations support this.
-    static final int MAX_PASSWORD_BYTES = 72;
+    public static final int MAX_PASSWORD_BYTES = 72;
 
-    /**
-     * Calculates the <b>bcrypt</b> hash of an input - note for processing general passwords you
-     * want to make sure the password is terminated in a manner similar to what is done by
-     * passwordToByteArray().
-     * <p>
-     * This implements the raw <b>bcrypt</b> function as defined in the bcrypt specification, not
-     * the crypt encoded version implemented in OpenBSD.
-     * </p>
-     *
-     * @param pwInput the password bytes (up to 72 bytes) to use for this invocation.
-     * @param salt    the 128 bit salt to use for this invocation.
-     * @param cost    the bcrypt cost parameter. The cost of the bcrypt function grows as
-     *                <code>2^cost</code>. Legal values are 4..31 inclusive.
-     * @return the output of the raw bcrypt operation: a 192 bit (24 byte) hash.
-     */
-    public byte[] generate(byte[] pwInput, byte[] salt, int cost) {
-        if (pwInput == null || salt == null) {
-            throw new IllegalArgumentException("pwInput and salt are required");
-        }
-//        if (salt.length != SALT_SIZE_BYTES) {
-//            throw new IllegalArgumentException("BCrypt salt must be 128 bits");
-//        }
-        if (pwInput.length > MAX_PASSWORD_BYTES) {
-            throw new IllegalArgumentException("BCrypt password must be <= 72 bytes");
-        }
-        if (cost < MIN_COST || cost > MAX_COST) {
-            throw new IllegalArgumentException("BCrypt cost must be from 4..31");
-        }
-
-        return deriveRawKey(cost, salt, pwInput);
-    }
 }

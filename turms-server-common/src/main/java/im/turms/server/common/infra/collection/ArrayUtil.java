@@ -28,9 +28,19 @@ public final class ArrayUtil {
     }
 
     public static byte[] concat(byte[] a, byte[] b) {
-        byte[] result = new byte[a.length + b.length];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
+        int aLength = a.length;
+        int bLength = b.length;
+        byte[] result = new byte[aLength + bLength];
+        System.arraycopy(a, 0, result, 0, aLength);
+        System.arraycopy(b, 0, result, aLength, bLength);
+        return result;
+    }
+
+    public static byte[] concat(byte[] a, byte b) {
+        int length = a.length;
+        byte[] result = new byte[length + 1];
+        System.arraycopy(a, 0, result, 0, length);
+        result[length] = b;
         return result;
     }
 
