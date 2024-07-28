@@ -1344,7 +1344,7 @@ public class GroupMemberService extends BaseService {
                     if (deletedCount == 0) {
                         return OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT;
                     }
-                    if(isMemberCacheEnabled){
+                    if (isMemberCacheEnabled) {
                         if (groupIds == null) {
                             groupIdToMembersCache.invalidateAll();
                         } else {
