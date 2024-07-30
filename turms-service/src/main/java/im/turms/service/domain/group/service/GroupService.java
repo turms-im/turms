@@ -389,25 +389,35 @@ public class GroupService extends BaseService {
             @Nullable Set<Long> memberIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
-                .defaultIfEmpty(Collections.emptySet())
-                .flatMapMany(groupIds -> {
-                    // fix return all groups when query member's groups
-                    if (CollectionUtil.isNotEmpty(memberIds) && CollectionUtil.isEmpty(groupIds)) {
-                        return Flux.empty();
-                    }
-                    return groupRepository.findGroups(groupIds,
-                            typeIds,
-                            creatorIds,
-                            ownerIds,
-                            isActive,
-                            creationDateRange,
-                            deletionDateRange,
-                            lastUpdatedDateRange,
-                            muteEndDateRange,
-                            page,
-                            size);
-                });
+        if (CollectionUtil.isEmpty(memberIds)) {
+            return groupRepository.findGroups(ids,
+                    typeIds,
+                    creatorIds,
+                    ownerIds,
+                    isActive,
+                    creationDateRange,
+                    deletionDateRange,
+                    lastUpdatedDateRange,
+                    muteEndDateRange,
+                    page,
+                    size);
+        }
+        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds).flatMapMany(groupIds -> {
+            if (groupIds.isEmpty()) {
+                return Flux.empty();
+            }
+            return groupRepository.findGroups(groupIds,
+                    typeIds,
+                    creatorIds,
+                    ownerIds,
+                    isActive,
+                    creationDateRange,
+                    deletionDateRange,
+                    lastUpdatedDateRange,
+                    muteEndDateRange,
+                    page,
+                    size);
+        });
     }
 
     /**
@@ -1139,17 +1149,31 @@ public class GroupService extends BaseService {
             @Nullable DateRange lastUpdatedDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Set<Long> memberIds) {
-        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
-                .defaultIfEmpty(Collections.emptySet())
-                .flatMap(groupIds -> groupRepository.countGroups(groupIds,
-                        typeIds,
-                        creatorIds,
-                        ownerIds,
-                        isActive,
-                        creationDateRange,
-                        deletionDateRange,
-                        lastUpdatedDateRange,
-                        muteEndDateRange));
+        if (CollectionUtil.isEmpty(memberIds)) {
+            return groupRepository.countGroups(ids,
+                    typeIds,
+                    creatorIds,
+                    ownerIds,
+                    isActive,
+                    creationDateRange,
+                    deletionDateRange,
+                    lastUpdatedDateRange,
+                    muteEndDateRange);
+        }
+        return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds).flatMap(groupIds -> {
+            if (groupIds.isEmpty()) {
+                return PublisherPool.LONG_ZERO;
+            }
+            return groupRepository.countGroups(groupIds,
+                    typeIds,
+                    creatorIds,
+                    ownerIds,
+                    isActive,
+                    creationDateRange,
+                    deletionDateRange,
+                    lastUpdatedDateRange,
+                    muteEndDateRange);
+        });
     }
 
     public Mono<Long> countDeletedGroups(@Nullable DateRange dateRange) {
@@ -1180,20 +1204,12 @@ public class GroupService extends BaseService {
 
     private Mono<Set<Long>> queryGroupIdsFromGroupIdsAndMemberIds(
             @Nullable Set<Long> groupIds,
-            @Nullable Set<Long> memberIds) {
-        if (CollectionUtil.isEmpty(memberIds)) {
-            return CollectionUtil.isEmpty(groupIds)
-                    ? PublisherPool.emptySet()
-                    : Mono.just(groupIds);
-        }
+            @NotEmpty Set<Long> memberIds) {
         Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
         Mono<List<Long>> joinedGroupIdListMono =
-                groupMemberService.queryUsersJoinedGroupIds(memberIds, null, null)
+                groupMemberService.queryUsersJoinedGroupIds(groupIds, memberIds, null, null)
                         .collect(Collectors.toCollection(recyclableList::getValue));
-        return (groupIds == null
-                ? joinedGroupIdListMono.map(CollectionUtil::newSet)
-                : joinedGroupIdListMono
-                        .map(groupIdList -> CollectionUtil.newSet(groupIdList, groupIds)))
+        return joinedGroupIdListMono.map(CollectionUtil::newSet)
                 .doFinally(signalType -> recyclableList.recycle());
     }
 
