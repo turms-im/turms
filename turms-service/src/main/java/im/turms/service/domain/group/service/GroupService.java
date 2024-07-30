@@ -391,17 +391,23 @@ public class GroupService extends BaseService {
             @Nullable Integer size) {
         return queryGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
-                .flatMapMany(groupIds -> groupRepository.findGroups(groupIds,
-                        typeIds,
-                        creatorIds,
-                        ownerIds,
-                        isActive,
-                        creationDateRange,
-                        deletionDateRange,
-                        lastUpdatedDateRange,
-                        muteEndDateRange,
-                        page,
-                        size));
+                .flatMapMany(groupIds -> {
+                    // fix return all groups when query member's groups
+                    if (CollectionUtil.isNotEmpty(memberIds) && CollectionUtil.isEmpty(groupIds)) {
+                        return Flux.empty();
+                    }
+                    return groupRepository.findGroups(groupIds,
+                            typeIds,
+                            creatorIds,
+                            ownerIds,
+                            isActive,
+                            creationDateRange,
+                            deletionDateRange,
+                            lastUpdatedDateRange,
+                            muteEndDateRange,
+                            page,
+                            size);
+                });
     }
 
     /**
