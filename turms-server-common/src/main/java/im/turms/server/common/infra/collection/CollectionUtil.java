@@ -665,7 +665,12 @@ public final class CollectionUtil {
 
     // region intersection/union
     public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
-        Set<T> result = newSetWithExpectedSize(Math.min(c1.size(), c2.size()));
+        int size1 = c1.size();
+        int size2 = c2.size();
+        if (size1 == 0 || size2 == 0) {
+            return Collections.emptySet();
+        }
+        Set<T> result = newSetWithExpectedSize(Math.min(size1, size2));
         for (T value : c2) {
             if (c1.contains(value)) {
                 result.add(value);
@@ -674,8 +679,15 @@ public final class CollectionUtil {
         return result;
     }
 
-    public static <T> List<T> union(List<? extends T> list1, List<? extends T> list2) {
-        ArrayList<T> result = new ArrayList<>(list1.size() + list2.size());
+    public static <T> List<T> union(List<T> list1, List<T> list2) {
+        int size1 = list1.size();
+        int size2 = list2.size();
+        if (size1 == 0) {
+            return list2;
+        } else if (size2 == 0) {
+            return list1;
+        }
+        ArrayList<T> result = new ArrayList<>(size1 + size2);
         result.addAll(list1);
         result.addAll(list2);
         return result;

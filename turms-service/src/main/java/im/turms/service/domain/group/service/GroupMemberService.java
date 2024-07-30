@@ -884,6 +884,7 @@ public class GroupMemberService extends BaseService {
     }
 
     public Flux<Long> queryUsersJoinedGroupIds(
+            @Nullable Set<Long> groupIds,
             @NotEmpty Set<Long> userIds,
             @Nullable Integer page,
             @Nullable Integer size) {
@@ -892,7 +893,7 @@ public class GroupMemberService extends BaseService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        return groupMemberRepository.findUsersJoinedGroupIds(userIds, page, size);
+        return groupMemberRepository.findUsersJoinedGroupIds(groupIds, userIds, page, size);
     }
 
     public Mono<Set<Long>> queryMemberIdsInUsersJoinedGroups(
@@ -904,7 +905,7 @@ public class GroupMemberService extends BaseService {
             return Mono.error(e);
         }
         Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
-        return queryUsersJoinedGroupIds(userIds, null, null)
+        return queryUsersJoinedGroupIds(null, userIds, null, null)
                 .collect(Collectors.toCollection(recyclableSet::getValue))
                 .flatMap(groupIds -> groupIds.isEmpty()
                         ? PublisherPool.<Long>emptySet()

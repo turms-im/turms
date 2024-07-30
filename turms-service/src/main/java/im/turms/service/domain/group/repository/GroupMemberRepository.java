@@ -204,10 +204,12 @@ public class GroupMemberRepository extends BaseRepository<GroupMember, GroupMemb
     }
 
     public Flux<Long> findUsersJoinedGroupIds(
+            @Nullable Set<Long> groupIds,
             @NotEmpty Set<Long> userIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder(1)
+        Filter filter = Filter.newBuilder(2)
+                .inIfNotNull(GroupMember.Fields.ID_GROUP_ID, groupIds)
                 .inIfNotNull(GroupMember.Fields.ID_USER_ID, userIds);
         QueryOptions options = QueryOptions.newBuilder(3)
                 .paginateIfNotNull(page, size)
