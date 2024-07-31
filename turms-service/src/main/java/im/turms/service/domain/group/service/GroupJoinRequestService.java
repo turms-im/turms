@@ -495,7 +495,7 @@ public class GroupJoinRequestService extends ExpirableEntityService<GroupJoinReq
                                                 session)
                                                 .then(groupMemberService
                                                         .addGroupMember(joinRequest.getGroupId(),
-                                                                requesterId,
+                                                                joinRequest.getRequesterId(),
                                                                 GroupMemberRole.MEMBER,
                                                                 null,
                                                                 null,
