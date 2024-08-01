@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-package benchmark.im.turms.server.common.infra.reflect;
+package benchmark.java;
 
-import java.lang.reflect.Field;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -30,41 +32,51 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import im.turms.server.common.infra.reflect.ReflectionUtil;
-
 /**
- * Reference: JMH version: 1.35 VM version: JDK 17.0.4.1, OpenJDK 64-Bit Server VM, 17.0.4.1+1
- * SetAccessible.field_setAccessible avgt 10 50.175 ± 4.245 ns/op
- * SetAccessible.reflectionUtil_setAccessible avgt 10 0.518 ± 0.009 ns/op
+ * Reference:
+ * <p>
+ * JMH version: 1.37
+ * <p>
+ * VM version: JDK 21, OpenJDK 64-Bit Server VM, 21+35-LTS
+ * <p>
+ * Random.secureRandom_nextBytes avgt 10 1292.702 ± 158.306 ns/op
+ * <p>
+ * Random.threadLocalRandom_nextBytes avgt 10 34.875 ± 3.729 ns/op
  *
  * @author James Chen
  */
-@Fork(value = 2, jvmArgsAppend = "--add-opens=java.base/java.lang=ALL-UNNAMED")
+@Fork(value = 2)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 2)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
-public class SetAccessible {
+public class Random {
 
-    private static final Field PRIVATE_FIELD;
+    private static final SecureRandom SECURE_RANDOM;
 
     static {
         try {
-            PRIVATE_FIELD = String.class.getDeclaredField("value");
-        } catch (NoSuchFieldException e) {
+            SECURE_RANDOM = SecureRandom.getInstance("DRBG");
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Benchmark
-    public void field_setAccessible() {
-        PRIVATE_FIELD.setAccessible(true);
+    public void threadLocalRandom_nextBytes() {
+        byte[] bytes = new byte[16];
+        // Note we don't cache "ThreadLocalRandom.current()" on purpose
+        // because most use cases of Turms will call "ThreadLocalRandom.current()"
+        // without cache to generate random values.
+        ThreadLocalRandom.current()
+                .nextBytes(bytes);
     }
 
     @Benchmark
-    public void reflectionUtil_setAccessible() {
-        ReflectionUtil.setAccessible(PRIVATE_FIELD);
+    public void secureRandom_nextBytes() {
+        byte[] bytes = new byte[16];
+        SECURE_RANDOM.nextBytes(bytes);
     }
 
 }

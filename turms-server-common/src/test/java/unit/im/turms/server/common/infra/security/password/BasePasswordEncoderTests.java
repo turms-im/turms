@@ -29,17 +29,50 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class BasePasswordEncoderTests {
 
     void test(PasswordEncoder encoder, int expectedEncodedPasswordLength) {
-        byte[] rawPassword = "asdfjh9^(*:L}{<sdfy516测试テスト".getBytes(StandardCharsets.UTF_8);
-        byte[] encodedPassword = encoder.encode(rawPassword);
-        boolean matches = encoder.matches(rawPassword, encodedPassword);
+        String password = "asdfjh9^(*:L}{<sdfy516测试テスト";
+        assertMatchResult(encoder, password, password, true, expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                password,
+                "asdfjh9^(*:L}\0abc",
+                false,
+                expectedEncodedPasswordLength);
+        assertMatchResult(encoder, "abc", "abcdef", false, expectedEncodedPasswordLength);
+        // Reference: https://github.com/bcgit/bc-java/issues/1496
+        assertMatchResult(encoder, "abc", "abcabc", false, expectedEncodedPasswordLength);
+        assertMatchResult(encoder, "abc", "abc\0abc", false, expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                "abc\0{<sdfy516",
+                "abc\0abc",
+                false,
+                expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                "0123456789012345678901234567890123456789",
+                "01234567890123456789012345678901234567890123456789",
+                false,
+                expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                "0123456789012345678901234567890123456789",
+                "0123456789012345678901234567890123456789'\0'0123456789",
+                false,
+                expectedEncodedPasswordLength);
+    }
 
-        assertThat(matches).isTrue();
+    public void assertMatchResult(
+            PasswordEncoder encoder,
+            String password1,
+            String password2,
+            boolean expectedMatched,
+            int expectedEncodedPasswordLength) {
+        byte[] encodedPassword;
+        byte[] rawPassword;
+        boolean actualMatched;
+        rawPassword = password1.getBytes(StandardCharsets.UTF_8);
+        encodedPassword = encoder.encode(rawPassword);
+        rawPassword = password2.getBytes(StandardCharsets.UTF_8);
+        actualMatched = encoder.matches(rawPassword, encodedPassword);
+
+        assertThat(actualMatched).isEqualTo(expectedMatched);
         assertThat(encodedPassword).hasSize(expectedEncodedPasswordLength);
-
-        rawPassword = "asdfjh9^(*:L}{<sdfy516".getBytes(StandardCharsets.UTF_8);
-        matches = encoder.matches(rawPassword, encodedPassword);
-
-        assertThat(matches).isFalse();
     }
 
 }

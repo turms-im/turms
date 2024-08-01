@@ -17,6 +17,7 @@
 
 package unit.im.turms.server.common.infra.security.password;
 
+import org.bouncycastle.crypto.generators.BCrypt;
 import org.junit.jupiter.api.Test;
 
 import im.turms.server.common.infra.security.password.BCryptPasswordEncoder;
@@ -28,9 +29,24 @@ class BCryptPasswordEncoderTests extends BasePasswordEncoderTests {
 
     @Test
     void test() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         int bcryptOutputLength = 24;
-        test(new BCryptPasswordEncoder(),
-                BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength);
+        int expectedEncodedPasswordLength = BCryptPasswordEncoder.VERSION_BYTES
+                + BCryptPasswordEncoder.SALT_SIZE_BYTES + bcryptOutputLength;
+
+        test(encoder, expectedEncodedPasswordLength);
+        String maxPassword = "1".repeat(BCrypt.MAX_PASSWORD_BYTES);
+        assertMatchResult(encoder, maxPassword, maxPassword, true, expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                "1".repeat(BCrypt.MAX_PASSWORD_BYTES - 1),
+                maxPassword,
+                false,
+                expectedEncodedPasswordLength);
+        assertMatchResult(encoder,
+                maxPassword,
+                "1".repeat(BCrypt.MAX_PASSWORD_BYTES + 1),
+                false,
+                expectedEncodedPasswordLength);
     }
 
 }

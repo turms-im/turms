@@ -34,7 +34,7 @@ import org.bson.BsonValue;
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.storage.mongo.codec.BsonValueEncoder;
+import im.turms.server.common.storage.mongo.codec.CodecUtil;
 
 /**
  * @author James Chen
@@ -75,35 +75,32 @@ public class Filter extends BaseBson {
     }
 
     public Filter eq(String key, @Nullable Object value) {
-        document.append(key, BsonValueEncoder.encodeSingleValue(value));
+        document.append(key, CodecUtil.encodeSingleValue(value));
         return this;
     }
 
     public Filter eqIfFalse(@NotNull String key, @Nullable Object value, boolean condition) {
         if (!condition) {
-            document.append(key,
-                    new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key, new BsonDocument("$eq", CodecUtil.encodeSingleValue(value)));
         }
         return this;
     }
 
     public Filter eqIfNotNull(@NotNull String key, @Nullable Object value) {
         if (value != null) {
-            document.append(key,
-                    new BsonDocument("$eq", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key, new BsonDocument("$eq", CodecUtil.encodeSingleValue(value)));
         }
         return this;
     }
 
     public Filter gt(String key, Object value) {
-        document.append(key, new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$gt", CodecUtil.encodeSingleValue(value)));
         return this;
     }
 
     public Filter gtIfNotNull(String key, @Nullable Object value) {
         if (value != null) {
-            document.append(key,
-                    new BsonDocument("$gt", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key, new BsonDocument("$gt", CodecUtil.encodeSingleValue(value)));
         }
         return this;
     }
@@ -117,14 +114,13 @@ public class Filter extends BaseBson {
     }
 
     public Filter gte(String key, Object value) {
-        document.append(key, new BsonDocument("$gte", BsonValueEncoder.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$gte", CodecUtil.encodeSingleValue(value)));
         return this;
     }
 
     public Filter gteIfNotNull(String key, @Nullable Object value) {
         if (value != null) {
-            document.append(key,
-                    new BsonDocument("$gte", BsonValueEncoder.encodeSingleValue(value)));
+            document.append(key, new BsonDocument("$gte", CodecUtil.encodeSingleValue(value)));
         }
         return this;
     }
@@ -138,18 +134,18 @@ public class Filter extends BaseBson {
     }
 
     public <T> Filter in(String key, T... values) {
-        document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(values)));
+        document.append(key, new BsonDocument("$in", CodecUtil.encode(values)));
         return this;
     }
 
     public <T> Filter in(String key, Collection<T> collection) {
-        document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(collection)));
+        document.append(key, new BsonDocument("$in", CodecUtil.encode(collection)));
         return this;
     }
 
     public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
         if (collection != null && !collection.isEmpty()) {
-            document.append(key, new BsonDocument("$in", BsonValueEncoder.encodeValue(collection)));
+            document.append(key, new BsonDocument("$in", CodecUtil.encode(collection)));
         }
         return this;
     }
@@ -158,27 +154,25 @@ public class Filter extends BaseBson {
             @NotNull String key,
             @Nullable Collection<? extends Enum<?>> collection) {
         if (collection != null && !collection.isEmpty()) {
-            document.append(key,
-                    new BsonDocument("$in", BsonValueEncoder.encodeValuesAsStrings(collection)));
+            document.append(key, new BsonDocument("$in", CodecUtil.encodeAsStrings(collection)));
         }
         return this;
     }
 
     public <T> Filter nin(String key, Collection<T> collection) {
-        document.append(key, new BsonDocument("$nin", BsonValueEncoder.encodeValue(collection)));
+        document.append(key, new BsonDocument("$nin", CodecUtil.encode(collection)));
         return this;
     }
 
     public Filter ninIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
         if (collection != null && !collection.isEmpty()) {
-            document.append(key,
-                    new BsonDocument("$nin", BsonValueEncoder.encodeValue(collection)));
+            document.append(key, new BsonDocument("$nin", CodecUtil.encode(collection)));
         }
         return this;
     }
 
     public Filter lt(String key, Object value) {
-        document.append(key, new BsonDocument("$lt", BsonValueEncoder.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$lt", CodecUtil.encodeSingleValue(value)));
         return this;
     }
 
@@ -191,7 +185,7 @@ public class Filter extends BaseBson {
     }
 
     public Filter ne(String key, Object value) {
-        document.append(key, new BsonDocument("$ne", BsonValueEncoder.encodeSingleValue(value)));
+        document.append(key, new BsonDocument("$ne", CodecUtil.encodeSingleValue(value)));
         return this;
     }
 

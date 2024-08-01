@@ -21,9 +21,11 @@ import java.util.Map;
 import jakarta.annotation.Nullable;
 
 import lombok.Setter;
+import org.bson.BsonValue;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 import org.jctools.maps.NonBlockingIdentityHashMap;
 
 /**
@@ -55,11 +57,12 @@ public class MongoCodecProvider implements CodecProvider {
     @Nullable
     public <T> MongoCodec<T> getCodec(Class<T> clazz) {
         if (clazz == Object.class) {
-            ObjectCodec objectCodec = new ObjectCodec();
-            objectCodec.setRegistry(registry);
-            return (MongoCodec<T>) objectCodec;
-        } else if (clazz.getClassLoader() == null) {
-            // Return null if the class is loaded by the bootstrap class loader.
+            return (MongoCodec<T>) ObjectCodec.INSTANCE;
+        } else if (clazz.getClassLoader() == null
+                || Bson.class.isAssignableFrom(clazz)
+                || BsonValue.class.isAssignableFrom(clazz)) {
+            // Return null if the class is loaded by the bootstrap class loader, which means
+            // it is a system class.
             return null;
         }
         return (MongoCodec<T>) classToCodec.computeIfAbsent(clazz, key -> {
@@ -79,7 +82,7 @@ public class MongoCodecProvider implements CodecProvider {
         } else if (clazz.isArray()) {
             return new ArrayCodec(clazz);
         } else {
-            return new EntityCodec<>(registry, clazz);
+            return new EntityCodec<>(clazz);
         }
     }
 
