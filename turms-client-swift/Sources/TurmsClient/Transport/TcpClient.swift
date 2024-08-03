@@ -6,7 +6,6 @@ public enum TCPTransportError: Error {
     case invalidRequest
 }
 
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public class TcpClient {
     private var connection: NWConnection?
     private let queue = DispatchQueue(label: "im.turms.turmsclient.transport", attributes: [])

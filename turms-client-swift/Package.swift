@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "TurmsClient",
     platforms: [
-        .macOS(.v10_14),
-        .iOS(.v12),
+        .macOS(.v10_15),
+        .iOS(.v13),
     ],
     products: [
         .library(
@@ -15,15 +15,13 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // Don't use Combine because of "@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)"
-        .package(url: "https://github.com/mxcl/PromiseKit", from: "8.1.1"),
-        .package(url: "https://github.com/apple/swift-protobuf", from: "1.25.2"),
+        .package(url: "https://github.com/apple/swift-protobuf", from: "1.27.1"),
 
         // Dev deps
         // Only uncomment the dependencies when developing so that users don't need to resolve them
 //        .package(url: "https://github.com/shibapm/PackageConfig", from: "1.1.3"),
-//        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.53.1"),
-//        .package(url: "https://github.com/Realm/SwiftLint", from: "0.54.0"),
+//        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.54.3"),
+//        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.55.1"),
 //        .package(url: "https://github.com/orta/Komondor", from: "1.1.4"),
     ],
     targets: [
@@ -45,8 +43,8 @@ let package = Package(
     let config = PackageConfig([
         "komondor": [
             "pre-commit": [
-                "swift run swiftformat .",
-                "swift run swiftlint autocorrect --path Sources/",
+                "swift run swiftformat . --swiftversion 5 --selfrequired assertCompleted,wait",
+                "swift run swiftlint --fix --path Sources/",
                 "git add .",
             ],
         ],
