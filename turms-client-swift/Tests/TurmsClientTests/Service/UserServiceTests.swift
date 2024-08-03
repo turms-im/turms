@@ -1,90 +1,99 @@
-import PromiseKit
 @testable import TurmsClient
 import XCTest
 
 class UserServiceTests: XCTestCase {
-    var turmsClient: TurmsClient!
+    private var turmsClient: TurmsClient!
 
     override func setUp() {
         continueAfterFailure = false
         turmsClient = TurmsClient(Config.HOST, Config.PORT)
     }
 
-    override func tearDown() {
-        wait(turmsClient.userService.logout())
+    override func tearDown() async throws {
+        try await wait(await self.turmsClient.userService.logout())
     }
 
-    func test_e2e() {
+    func test_e2e() async throws {
         var relationshipGroupIndex: Int32!
         let userStatus = UserStatus.busy
         let service = turmsClient.userService!
 
         // Login
-        assertCompleted("login_shouldSucceed", service.login(userId: 1, password: "123"))
+        try await assertCompleted("login_shouldSucceed", await service.login(userId: 1, password: "123"))
 
         // Create
-        assertCompleted("createRelationship_shouldSucceed", service.createRelationship(userId: 10, isBlocked: true).recover { error -> Promise<Response<Void>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(Response.empty())
-            } else {
-                throw error
+        try await assertCompleted("createRelationship_shouldSucceed") {
+            do {
+                let result = try await service.createRelationship(userId: 10, isBlocked: true)
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("createFriendRelationship_shouldSucceed", service.createFriendRelationship(userId: 10).recover { error -> Promise<Response<Void>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(Response.empty())
-            } else {
-                throw error
+        }
+        try await assertCompleted("createFriendRelationship_shouldSucceed") {
+            do {
+                let result = try await service.createFriendRelationship(userId: 10)
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("createBlockedUserRelationship_shouldSucceed", service.createBlockedUserRelationship(userId: 10).recover { error -> Promise<Response<Void>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue {
-                return Promise.value(Response.empty())
-            } else {
-                throw error
+        }
+        try await assertCompleted("createBlockedUserRelationship_shouldSucceed") {
+            do {
+                let result = try await service.createBlockedUserRelationship(userId: 10)
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingRelationship.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("sendFriendRequest_shouldReturnFriendRequestId", service.sendFriendRequest(recipientId: 11, content: "content").recover { error -> Promise<Response<Int64>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingFriendRequest.rawValue {
-                return Promise.value(Response.value(0))
-            } else {
-                throw error
+        }
+        try await assertCompleted("sendFriendRequest_shouldReturnFriendRequestId") {
+            do {
+                let result = try await service.sendFriendRequest(recipientId: 11, content: "content")
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.createExistingFriendRequest.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("createRelationshipGroup_shouldReturnRelationshipGroupIndex", service.createRelationshipGroup("newGroup").done {
-            relationshipGroupIndex = $0.data
-        })
+        }
+        try await assertCompleted("createRelationshipGroup_shouldReturnRelationshipGroupIndex") {
+            let result = try await service.createRelationshipGroup("newGroup")
+            relationshipGroupIndex = result.data
+        }
 
         // Update
-        assertCompleted("updateUserOnlineStatus_shouldSucceed", service.updateUserOnlineStatus(userStatus))
-        assertCompleted("updatePassword_shouldSucceed", service.updatePassword("123"))
-        assertCompleted("updateProfile_shouldSucceed", service.updateProfile(name: "123", intro: "123"))
-        assertCompleted("updateRelationship_shouldSucceed", service.updateRelationship(relatedUserId: 10, groupIndex: 1))
-        assertCompleted("replyFriendRequest_shouldSucceed", service.replyFriendRequest(requestId: 10, responseAction: .accept, reason: "reason"))
-        assertCompleted("updateRelationshipGroup_shouldSucceed", service.updateRelationshipGroup(groupIndex: relationshipGroupIndex, newName: "newGroupName"))
-        assertCompleted("moveRelatedUserToGroup_shouldSucceed", service.moveRelatedUserToGroup(relatedUserId: 2, groupIndex: 1))
-        wait(service.moveRelatedUserToGroup(relatedUserId: 2, groupIndex: 0))
-        assertCompleted("updateLocation_shouldSucceed", service.updateLocation(latitude: 2, longitude: 2))
+        try await assertCompleted("updateUserOnlineStatus_shouldSucceed", await service.updateUserOnlineStatus(userStatus))
+        try await assertCompleted("updatePassword_shouldSucceed", await service.updatePassword("123"))
+        try await assertCompleted("updateProfile_shouldSucceed", await service.updateProfile(name: "123", intro: "123"))
+        try await assertCompleted("updateRelationship_shouldSucceed", await service.updateRelationship(relatedUserId: 10, groupIndex: 1))
+        try await assertCompleted("replyFriendRequest_shouldSucceed", await service.replyFriendRequest(requestId: 10, responseAction: .accept, reason: "reason"))
+        try await assertCompleted("updateRelationshipGroup_shouldSucceed", await service.updateRelationshipGroup(groupIndex: relationshipGroupIndex, newName: "newGroupName"))
+        try await assertCompleted("moveRelatedUserToGroup_shouldSucceed", await service.moveRelatedUserToGroup(relatedUserId: 2, groupIndex: 1))
+        try await wait(await service.moveRelatedUserToGroup(relatedUserId: 2, groupIndex: 0))
+        try await assertCompleted("updateLocation_shouldSucceed", await service.updateLocation(latitude: 2, longitude: 2))
 
         // Query
 
-        assertCompleted("queryUserProfiles_shouldReturnUserInfos", service.queryUserProfiles(userIds: [1]))
-        assertCompleted("queryNearbyUsers_shouldReturnNearbyUsers", service.queryNearbyUsers(latitude: 1, longitude: 1))
-        assertCompleted("queryUserOnlineStatusesRequest_shouldUserOnlineStatuses", service.queryUserOnlineStatusesRequest([1]).done {
-            XCTAssertEqual($0.data[0].userStatus, userStatus)
-        })
-        assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", service.queryRelationships(relatedUserIds: [2]))
-        assertCompleted("queryRelatedUserIds_shouldReturnRelatedUserIds", service.queryRelatedUserIds())
-        assertCompleted("queryFriends_shouldReturnFriendRelationships", service.queryFriends())
-        assertCompleted("queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers", service.queryBlockedUsers())
-        assertCompleted("queryFriendRequests_shouldReturnFriendRequests", service.queryFriendRequests(true))
-        assertCompleted("queryRelationshipGroups_shouldReturnRelationshipGroups", service.queryRelationshipGroups())
+        try await assertCompleted("queryUserProfiles_shouldReturnUserInfos", await service.queryUserProfiles(userIds: [1]))
+        try await assertCompleted("queryNearbyUsers_shouldReturnNearbyUsers", await service.queryNearbyUsers(latitude: 1, longitude: 1))
+        try await assertCompleted("queryUserOnlineStatusesRequest_shouldUserOnlineStatuses") {
+            let result = try await service.queryUserOnlineStatusesRequest([1])
+            XCTAssertEqual(result.data[0].userStatus, userStatus)
+        }
+        try await assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", await service.queryRelationships(relatedUserIds: [2]))
+        try await assertCompleted("queryRelatedUserIds_shouldReturnRelatedUserIds", await service.queryRelatedUserIds())
+        try await assertCompleted("queryFriends_shouldReturnFriendRelationships", await service.queryFriends())
+        try await assertCompleted("queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers", await service.queryBlockedUsers())
+        try await assertCompleted("queryFriendRequests_shouldReturnFriendRequests", await service.queryFriendRequests(true))
+        try await assertCompleted("queryRelationshipGroups_shouldReturnRelationshipGroups", await service.queryRelationshipGroups())
 
         // Delete
-        assertCompleted("deleteRelationship_shouldSucceed", service.deleteRelationship(relatedUserId: 10))
-        assertCompleted("deleteRelationshipGroups_shouldSucceed", service.deleteRelationshipGroups(groupIndex: relationshipGroupIndex))
+        try await assertCompleted("deleteRelationship_shouldSucceed", await service.deleteRelationship(relatedUserId: 10))
+        try await assertCompleted("deleteRelationshipGroups_shouldSucceed", await service.deleteRelationshipGroups(groupIndex: relationshipGroupIndex))
 
         // Logout
-        wait(service.logout())
+        try await wait(await service.logout())
     }
 }

@@ -1,17 +1,16 @@
 import Foundation
-import PromiseKit
 
 class HeartbeatService: BaseService {
     private static let HEARTBEAT_FAILURE_REQUEST_ID: Int64 = -100
     private static let HEARTBEAT_REQUEST = Data([0])
 
-    private let createQueue = DispatchQueue(label: "im.turms.turmsclient.heartbeatservice.createqueue")
+    private let lock = Lock()
 
     private let heartbeatInterval: TimeInterval
     private let heartbeatTimerInterval: TimeInterval
     private var lastHeartbeatRequestDate: TimeInterval = 0
     private var heartbeatTimer: Timer?
-    private var heartbeatPromises: [Resolver<Void>] = []
+    private var heartbeatContinuations: [UnsafeContinuation<Void, any Error>] = []
 
     init(stateStore: StateStore, heartbeatInterval: TimeInterval? = nil) {
         self.heartbeatInterval = heartbeatInterval ?? 120
@@ -24,7 +23,7 @@ class HeartbeatService: BaseService {
     }
 
     func start() {
-        createQueue.sync {
+        lock.locked {
             if isRunning {
                 return
             }
@@ -42,59 +41,72 @@ class HeartbeatService: BaseService {
         heartbeatTimer?.invalidate()
     }
 
-    func send() -> Promise<Void> {
-        return Promise { seal in
+    func send() async throws {
+        return try await withUnsafeThrowingContinuation { continuation in
             if !stateStore.isConnected || !stateStore.isSessionOpen {
-                seal.reject(ResponseError(code: .clientSessionHasBeenClosed))
-                return
+                return continuation.resume(throwing: ResponseError(code: .clientSessionHasBeenClosed))
             }
-            stateStore.tcp!.write(HeartbeatService.HEARTBEAT_REQUEST) { error in
-                if let error = error {
-                    seal.reject(error)
-                    return
+            Task {
+                guard let tcp = stateStore.tcp else {
+                    return continuation.resume(throwing: ResponseError(code: .clientSessionHasBeenClosed))
                 }
-                self.heartbeatPromises.append(seal)
+                do {
+                    try await tcp.write(HeartbeatService.HEARTBEAT_REQUEST)
+                } catch {
+                    return continuation.resume(throwing: error)
+                }
+                lock.locked {
+                    self.heartbeatContinuations.append(continuation)
+                }
             }
         }
     }
 
-    func fulfillHeartbeatPromises() {
-        repeat {
-            heartbeatPromises.popLast()?.fulfill(())
-        } while !heartbeatPromises.isEmpty
+    func fulfillHeartbeatContinuations() {
+        lock.locked {
+            repeat {
+                heartbeatContinuations.popLast()?.resume()
+            } while !heartbeatContinuations.isEmpty
+        }
     }
 
-    func rejectHeartbeatPromisesIfFail(_ notification: TurmsNotification) -> Bool {
+    func rejectHeartbeatContinuationsIfFail(_ notification: TurmsNotification) -> Bool {
         if notification.hasRequestID, notification.requestID == HeartbeatService.HEARTBEAT_FAILURE_REQUEST_ID {
-            rejectHeartbeatPromises(ResponseError(notification))
+            rejectHeartbeatContinuations(ResponseError(notification))
             return true
         }
         return false
     }
 
-    func rejectHeartbeatPromises(_ error: Error) {
-        repeat {
-            heartbeatPromises.popLast()?.reject(error)
-        } while !heartbeatPromises.isEmpty
+    func rejectHeartbeatContinuations(_ error: Error) {
+        lock.locked {
+            repeat {
+                heartbeatContinuations.popLast()?.resume(throwing: error)
+            } while !heartbeatContinuations.isEmpty
+        }
     }
 
-    @objc func checkAndSendHeartbeat() {
+    @objc func checkAndSendHeartbeat() async throws {
         let now = Date().timeIntervalSince1970
         let difference = min(now - stateStore.lastRequestDate.timeIntervalSince1970,
                              now - lastHeartbeatRequestDate)
         if difference > heartbeatInterval {
-            send()
-            lastHeartbeatRequestDate = now
+            do {
+                try await send()
+            } catch {
+                // TODO: log
+                return
+            }
+            lastHeartbeatRequestDate = max(lastHeartbeatRequestDate, now)
         }
     }
 
-    override func close() -> Promise<Void> {
+    override func close() async {
         onDisconnected()
-        return Promise.value(())
     }
 
     override func onDisconnected(_ error: Error? = nil) {
         stop()
-        rejectHeartbeatPromises(ResponseError(code: .clientSessionHasBeenClosed, cause: error))
+        rejectHeartbeatContinuations(ResponseError(code: .clientSessionHasBeenClosed, cause: error))
     }
 }

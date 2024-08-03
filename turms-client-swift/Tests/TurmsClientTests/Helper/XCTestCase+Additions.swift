@@ -1,27 +1,42 @@
 import Foundation
-import PromiseKit
+
 import TurmsClient
 import XCTest
 
 extension XCTestCase {
-    func assertCompleted<T>(_ description: String, _ promise: Promise<T>) {
-        let e = expectation(description: description)
-        promise.done { _ in
-            e.fulfill()
-        }.catch { error in
-            XCTFail("Failed: \(description): \(error)")
-        }
-        let result = XCTWaiter().wait(for: [e], timeout: 5)
-        XCTAssertEqual(.completed, result, "Failed: \(description): \(result)")
+    func assertCompleted<T>(_ description: String, _ taskProvider: @autoclosure @escaping () async throws -> T) async throws {
+        return try await assertCompleted(description, taskProvider)
     }
 
-    func wait<T>(_ promise: Promise<T>) -> XCTWaiter.Result {
-        let e = expectation(description: "")
-        promise.done { _ in
-            e.fulfill()
-        }.catch { error in
-            XCTFail("Failed: \(error)")
+    func assertCompleted<T>(_ description: String, _ taskProvider: @escaping () async throws -> T) async throws {
+        let e = expectation(description: description)
+        let task = Task {
+            do {
+                let result = try await taskProvider()
+                e.fulfill()
+            } catch {
+                XCTFail("Failed: \(description): \(error)")
+            }
         }
-        return XCTWaiter().wait(for: [e], timeout: 5)
+        await fulfillment(of: [e], timeout: 5)
+        task.cancel()
+    }
+
+    func wait<T>(_ taskProvider: @autoclosure @escaping () async throws -> T) async throws {
+        return try await wait(taskProvider)
+    }
+
+    func wait<T>(_ taskProvider: @escaping () async throws -> T) async throws {
+        let e = expectation(description: "")
+        let task = Task {
+            do {
+                let result = try await taskProvider()
+                e.fulfill()
+            } catch {
+                XCTFail("Failed: \(error)")
+            }
+        }
+        await fulfillment(of: [e], timeout: 5)
+        task.cancel()
     }
 }

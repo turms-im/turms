@@ -1,21 +1,20 @@
-import PromiseKit
 @testable import TurmsClient
 import XCTest
 
 class GroupServiceTests: XCTestCase {
-    var turmsClient: TurmsClient!
+    private var turmsClient: TurmsClient!
 
-    override func setUp() {
+    override func setUp() async throws {
         continueAfterFailure = false
         turmsClient = TurmsClient(Config.HOST, Config.PORT)
-        wait(turmsClient.userService.login(userId: 1, password: "123"))
+        try await wait(await self.turmsClient.userService.login(userId: 1, password: "123"))
     }
 
-    override func tearDown() {
-        wait(turmsClient.userService.logout())
+    override func tearDown() async throws {
+        try await wait(await self.turmsClient.userService.logout())
     }
 
-    func test_e2e() {
+    func test_e2e() async throws {
         let groupMemberId: Int64 = 3
         let groupInvitationInviteeId: Int64 = 4
         let groupSuccessorId: Int64 = 1
@@ -28,99 +27,120 @@ class GroupServiceTests: XCTestCase {
         let service = turmsClient.groupService!
 
         // Create
-        assertCompleted("createGroup_shouldReturnGroupId", service.createGroup(name: "name", intro: "intro", announcement: "announcement", minScore: 10).done {
-            groupId = $0.data
-        })
-        assertCompleted("addGroupJoinQuestions_shouldReturnQuestionIds", service.addGroupJoinQuestions(groupId: groupId!, questions: [NewGroupJoinQuestion(question: "question", answers: ["answer1", "answer2"], score: 10)]).done {
-            groupQuestionId = $0.data[0]
-        })
-        assertCompleted("createJoinRequest_shouldReturnJoinRequestId", service.createJoinRequest(groupId: groupId!, content: "content").done {
-            groupJoinRequestId = $0.data
-        })
-        assertCompleted("addGroupMembers_shouldSucceed", service.addGroupMembers(groupId: groupId!, userIds: [groupMemberId], name: "name", role: .member))
-        assertCompleted("blockUser_shouldSucceed", service.blockUser(groupId: groupId!, userId: groupBlockedUserId))
-        assertCompleted("createInvitation_shouldReturnInvitationId", service.createInvitation(groupId: groupId!, inviteeId: groupInvitationInviteeId, content: "content").done {
-            groupInvitationId = $0.data
-        })
+        try await assertCompleted("createGroup_shouldReturnGroupId") {
+            let result = try await service.createGroup(name: "name", intro: "intro", announcement: "announcement", minScore: 10)
+            groupId = result.data
+        }
+        try await assertCompleted("addGroupJoinQuestions_shouldReturnQuestionIds") {
+            let result = try await service.addGroupJoinQuestions(groupId: groupId!, questions: [NewGroupJoinQuestion(question: "question", answers: ["answer1", "answer2"], score: 10)])
+            groupQuestionId = result.data[0]
+        }
+        try await assertCompleted("createJoinRequest_shouldReturnJoinRequestId") {
+            let result = try await service.createJoinRequest(groupId: groupId!, content: "content")
+            groupJoinRequestId = result.data
+        }
+        try await assertCompleted("addGroupMembers_shouldSucceed", await service.addGroupMembers(groupId: groupId!, userIds: [groupMemberId], name: "name", role: .member))
+        try await assertCompleted("blockUser_shouldSucceed", await service.blockUser(groupId: groupId!, userId: groupBlockedUserId))
+        try await assertCompleted("createInvitation_shouldReturnInvitationId") {
+            let result = try await service.createInvitation(groupId: groupId!, inviteeId: groupInvitationInviteeId, content: "content")
+            groupInvitationId = result.data
+        }
 
         // Update
-        assertCompleted("updateGroup_shouldSucceed", service.updateGroup(groupId: groupId!, name: "name", intro: "intro", announcement: "announcement", minScore: 10))
-        assertCompleted("muteGroup_shouldSucceed", service.muteGroup(groupId: groupId!, muteEndDate: Date()))
-        assertCompleted("unmuteGroup_shouldSucceed", service.unmuteGroup(groupId!))
-        assertCompleted("updateGroupJoinQuestion_shouldSucceed", service.updateGroupJoinQuestion(questionId: groupQuestionId!, question: "new-question", answers: ["answer"]))
-        assertCompleted("updateGroupMemberInfo_shouldSucceed", service.updateGroupMemberInfo(groupId: groupId!, memberId: groupMemberId, name: "myname"))
-        assertCompleted("muteGroupMember_shouldSucceed", service.muteGroupMember(groupId: groupId!, memberId: groupMemberId, muteEndDate: Date(timeIntervalSinceNow: 100_000)))
-        assertCompleted("unmuteGroupMember_shouldSucceed", service.unmuteGroupMember(groupId: groupId!, memberId: groupMemberId))
+        try await assertCompleted("updateGroup_shouldSucceed", await service.updateGroup(groupId: groupId!, name: "name", intro: "intro", announcement: "announcement", minScore: 10))
+        try await assertCompleted("muteGroup_shouldSucceed", await service.muteGroup(groupId: groupId!, muteEndDate: Date()))
+        try await assertCompleted("unmuteGroup_shouldSucceed", await service.unmuteGroup(groupId!))
+        try await assertCompleted("updateGroupJoinQuestion_shouldSucceed", await service.updateGroupJoinQuestion(questionId: groupQuestionId!, question: "new-question", answers: ["answer"]))
+        try await assertCompleted("updateGroupMemberInfo_shouldSucceed", await service.updateGroupMemberInfo(groupId: groupId!, memberId: groupMemberId, name: "myname"))
+        try await assertCompleted("muteGroupMember_shouldSucceed", await service.muteGroupMember(groupId: groupId!, memberId: groupMemberId, muteEndDate: Date(timeIntervalSinceNow: 100_000)))
+        try await assertCompleted("unmuteGroupMember_shouldSucceed", await service.unmuteGroupMember(groupId: groupId!, memberId: groupMemberId))
 
         // Query
-        assertCompleted("queryGroups_shouldReturnGroups", service.queryGroups(groupIds: [groupId!]).done {
-            XCTAssertEqual(groupId!, $0.data[0].id)
-        })
-        assertCompleted("queryJoinedGroupIds_shouldEqualNewGroupId", service.queryJoinedGroupIds().done {
-            XCTAssert($0.data!.longs.contains(groupId!))
-        })
-        assertCompleted("queryJoinedGroupInfos_shouldEqualNewGroupId", service.queryJoinedGroupInfos().done {
-            let groupIds = $0.data!.groups.map {
+        try await assertCompleted("queryGroups_shouldReturnGroups") {
+            let groups = try await service.queryGroups(groupIds: [groupId!])
+            XCTAssertEqual(groupId!, groups.data[0].id)
+        }
+        try await assertCompleted("queryJoinedGroupIds_shouldEqualNewGroupId") {
+            let joinedGroupIds = try await service.queryJoinedGroupIds()
+            XCTAssert(joinedGroupIds.data!.longs.contains(groupId!))
+        }
+        try await assertCompleted("queryJoinedGroupInfos_shouldEqualNewGroupId") {
+            let joinedGroupInfos = try await service.queryJoinedGroupInfos()
+            let groupIds = joinedGroupInfos.data!.groups.map {
                 $0.id
             }
             XCTAssert(groupIds.contains(groupId!))
-        })
-        assertCompleted("queryBlockedUserIds_shouldEqualBlockedUserId", service.queryBlockedUserIds(groupId: groupId!).done {
-            XCTAssertEqual(groupBlockedUserId, $0.data!.longs[0])
-        })
-        assertCompleted("queryBlockedUserInfos_shouldEqualBlockedUserId", service.queryBlockedUserInfos(groupId: groupId!).done {
-            XCTAssertEqual(groupBlockedUserId, $0.data!.userInfos[0].id)
-        })
-        assertCompleted("queryInvitations_shouldEqualNewInvitationId", service.queryInvitations(groupId: groupId!).done {
-            XCTAssertEqual(groupInvitationId, $0.data!.groupInvitations[0].id)
-        })
-        assertCompleted("queryJoinRequests_shouldEqualNewJoinRequestId", service.queryJoinRequests(groupId: groupId!).done {
-            XCTAssertEqual(groupJoinRequestId, $0.data!.groupJoinRequests[0].id)
-        })
-        assertCompleted("queryGroupJoinQuestions_shouldEqualNewGroupQuestionId", service.queryGroupJoinQuestions(groupId: groupId!, withAnswers: true).done {
-            XCTAssertEqual(groupQuestionId, $0.data!.groupJoinQuestions[0].id)
-        })
-        assertCompleted("queryGroupMembers_shouldEqualNewMemberId", service.queryGroupMembers(groupId: groupId!, withStatus: true).done {
-            XCTAssertEqual(groupMemberId, $0.data!.groupMembers[1].userID)
-        })
-        assertCompleted("queryGroupMembersByMemberIds_shouldEqualNewMemberId", service.queryGroupMembersByMemberIds(groupId: groupId!, memberIds: [groupMemberId], withStatus: true).done {
-            XCTAssertEqual(groupMemberId, $0.data!.groupMembers[0].userID)
-        })
-        assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", service.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<Response<GroupJoinQuestionsAnswerResult>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.groupMemberAnswerGroupQuestion.rawValue {
-                return Promise.value(Response.value(GroupJoinQuestionsAnswerResult()))
-            } else {
-                throw error
+        }
+        try await assertCompleted("queryBlockedUserIds_shouldEqualBlockedUserId") {
+            let blockedUserIds = try await service.queryBlockedUserIds(groupId: groupId!)
+            XCTAssertEqual(groupBlockedUserId, blockedUserIds.data!.longs[0])
+        }
+        try await assertCompleted("queryBlockedUserInfos_shouldEqualBlockedUserId") {
+            let blockedUserInfos = try await service.queryBlockedUserInfos(groupId: groupId!)
+            XCTAssertEqual(groupBlockedUserId, blockedUserInfos.data!.userInfos[0].id)
+        }
+        try await assertCompleted("queryInvitations_shouldEqualNewInvitationId") {
+            let invitations = try await service.queryInvitations(groupId: groupId!)
+            XCTAssertEqual(groupInvitationId, invitations.data!.groupInvitations[0].id)
+        }
+        try await assertCompleted("queryJoinRequests_shouldEqualNewJoinRequestId") {
+            let joinRequests = try await service.queryJoinRequests(groupId: groupId!)
+            XCTAssertEqual(groupJoinRequestId, joinRequests.data!.groupJoinRequests[0].id)
+        }
+        try await assertCompleted("queryGroupJoinQuestions_shouldEqualNewGroupQuestionId") {
+            let groupJoinQuestions = try await service.queryGroupJoinQuestions(groupId: groupId!, withAnswers: true)
+            XCTAssertEqual(groupQuestionId, groupJoinQuestions.data!.groupJoinQuestions[0].id)
+        }
+        try await assertCompleted("queryGroupMembers_shouldEqualNewMemberId") {
+            let groupMembers = try await service.queryGroupMembers(groupId: groupId!, withStatus: true)
+            XCTAssertEqual(groupMemberId, groupMembers.data!.groupMembers[1].userID)
+        }
+        try await assertCompleted("queryGroupMembersByMemberIds_shouldEqualNewMemberId") {
+            let groupMembers = try await service.queryGroupMembersByMemberIds(groupId: groupId!, memberIds: [groupMemberId], withStatus: true)
+            XCTAssertEqual(groupMemberId, groupMembers.data!.groupMembers[0].userID)
+        }
+        try await assertCompleted("answerGroupQuestions_shouldReturnAnswerResult") {
+            do {
+                let result = try await service.answerGroupQuestions([groupQuestionId!: "answer"])
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.groupMemberAnswerGroupQuestion.rawValue else {
+                    throw error
+                }
             }
-        })
+        }
 
         // Delete
 
-        assertCompleted("removeGroupMember_shouldSucceed", service.removeGroupMember(groupId: groupId!, memberId: groupMemberId))
-        assertCompleted("deleteGroupJoinQuestions_shouldSucceed", service.deleteGroupJoinQuestions(groupId: groupId!, questionIds: [groupQuestionId!]))
-        assertCompleted("unblockUser_shouldSucceed", service.unblockUser(groupId: groupId!, userId: groupBlockedUserId))
-        assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", service.deleteInvitation(groupInvitationId!).recover { error -> Promise<Response<Void>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupInvitationIsDisabled.rawValue {
-                return Promise.value(Response.empty())
-            } else {
-                throw error
+        try await assertCompleted("removeGroupMember_shouldSucceed", await service.removeGroupMember(groupId: groupId!, memberId: groupMemberId))
+        try await assertCompleted("deleteGroupJoinQuestions_shouldSucceed", await service.deleteGroupJoinQuestions(groupId: groupId!, questionIds: [groupQuestionId!]))
+        try await assertCompleted("unblockUser_shouldSucceed", await service.unblockUser(groupId: groupId!, userId: groupBlockedUserId))
+        try await assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction") {
+            do {
+                let result = try await service.deleteInvitation(groupInvitationId!)
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupInvitationIsDisabled.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction", service.deleteJoinRequest(groupJoinRequestId!).recover { error -> Promise<Response<Void>> in
-            if let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupJoinRequestIsDisabled.rawValue {
-                return Promise.value(Response.empty())
-            } else {
-                throw error
+        }
+        try await assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction") {
+            do {
+                let result = try await service.deleteJoinRequest(groupJoinRequestId!)
+            } catch {
+                guard let businessError = error as? ResponseError, businessError.code == ResponseStatusCode.recallingGroupJoinRequestIsDisabled.rawValue else {
+                    throw error
+                }
             }
-        })
-        assertCompleted("quitGroup_shouldSucceed", service.quitGroup(groupId: groupId!, quitAfterTransfer: false))
+        }
+        try await assertCompleted("quitGroup_shouldSucceed", await service.quitGroup(groupId: groupId!, quitAfterTransfer: false))
         var readyToDeleteGroupId: Int64!
-        wait(service.createGroup(name: "readyToDelete").done {
-            readyToDeleteGroupId = $0.data
-        })
-        assertCompleted("deleteGroup_shouldSucceed", service.deleteGroup(readyToDeleteGroupId))
+        try await wait {
+            let result = try await service.createGroup(name: "readyToDelete")
+            readyToDeleteGroupId = result.data
+        }
+        try await assertCompleted("deleteGroup_shouldSucceed", await service.deleteGroup(readyToDeleteGroupId))
 
         // Lowest-priority Update
-        assertCompleted("transferOwnership_shouldSucceed", service.transferOwnership(groupId: groupId!, successorId: groupSuccessorId, quitAfterTransfer: true))
+        try await assertCompleted("transferOwnership_shouldSucceed", await service.transferOwnership(groupId: groupId!, successorId: groupSuccessorId, quitAfterTransfer: true))
     }
 }

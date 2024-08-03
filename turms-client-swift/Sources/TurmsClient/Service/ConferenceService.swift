@@ -1,8 +1,7 @@
 import Foundation
-import PromiseKit
 
 public class ConferenceService {
-    private weak var turmsClient: TurmsClient!
+    private unowned var turmsClient: TurmsClient
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
@@ -60,34 +59,31 @@ public class ConferenceService {
                               name: String? = nil,
                               intro: String? = nil,
                               password: String? = nil,
-                              startDate: Date? = nil) -> Promise<Response<Int64>>
+                              startDate: Date? = nil) async throws -> Response<Int64>
     {
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.createMeetingRequest = .with {
-                    if let v = userId {
-                        $0.userID = v
+                    if let userId {
+                        $0.userID = userId
                     }
-                    if let v = groupId {
-                        $0.groupID = v
+                    if let groupId {
+                        $0.groupID = groupId
                     }
-                    if let v = name {
-                        $0.name = v
+                    if let name {
+                        $0.name = name
                     }
-                    if let v = intro {
-                        $0.intro = v
+                    if let intro {
+                        $0.intro = intro
                     }
-                    if let v = password {
-                        $0.password = v
+                    if let password {
+                        $0.password = password
                     }
-                    if let v = startDate {
-                        $0.startDate = v.toMillis()
+                    if let startDate {
+                        $0.startDate = startDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Cancel a meeting.
@@ -108,16 +104,13 @@ public class ConferenceService {
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If the server hasn't implemented the feature, throws ``ResponseError`` with the code ``ResponseStatusCode/conferenceNotImplemented``.
-    public func cancelMeeting(_ meetingId: Int64) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func cancelMeeting(_ meetingId: Int64) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteMeetingRequest = .with {
                     $0.id = meetingId
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Update a meeting.
@@ -149,26 +142,23 @@ public class ConferenceService {
     public func updateMeeting(_ meetingId: Int64,
                               name: String? = nil,
                               intro: String? = nil,
-                              password: String? = nil) -> Promise<Response<Void>>
+                              password: String? = nil) async throws -> Response<Void>
     {
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateMeetingRequest = .with {
                     $0.id = meetingId
-                    if let v = name {
-                        $0.name = v
+                    if let name {
+                        $0.name = name
                     }
-                    if let v = intro {
-                        $0.intro = v
+                    if let intro {
+                        $0.intro = intro
                     }
-                    if let v = password {
-                        $0.password = v
+                    if let password {
+                        $0.password = password
                     }
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Find meetings.
@@ -191,42 +181,39 @@ public class ConferenceService {
                               creationDateStart: Date? = nil,
                               creationDateEnd: Date? = nil,
                               skip: Int32? = nil,
-                              limit: Int32? = nil) -> Promise<Response<[Meeting]>>
+                              limit: Int32? = nil) async throws -> Response<[Meeting]>
     {
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.queryMeetingsRequest = .with {
-                    if let v = meetingIds {
-                        $0.ids = v
+                    if let meetingIds {
+                        $0.ids = meetingIds
                     }
-                    if let v = creatorIds {
-                        $0.creatorIds = v
+                    if let creatorIds {
+                        $0.creatorIds = creatorIds
                     }
-                    if let v = userIds {
-                        $0.userIds = v
+                    if let userIds {
+                        $0.userIds = userIds
                     }
-                    if let v = groupIds {
-                        $0.groupIds = v
+                    if let groupIds {
+                        $0.groupIds = groupIds
                     }
-                    if let v = creationDateStart {
-                        $0.creationDateStart = v.toMillis()
+                    if let creationDateStart {
+                        $0.creationDateStart = creationDateStart.toMillis()
                     }
-                    if let v = creationDateEnd {
-                        $0.creationDateEnd = v.toMillis()
+                    if let creationDateEnd {
+                        $0.creationDateEnd = creationDateEnd.toMillis()
                     }
-                    if let v = skip {
-                        $0.skip = v
+                    if let skip {
+                        $0.skip = skip
                     }
-                    if let v = limit {
-                        $0.limit = v
+                    if let limit {
+                        $0.limit = limit
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.meetings.meetings
-                }
-            }
+            }).toResponse {
+            $0.meetings.meetings
+        }
     }
 
     /// Accept a meeting invitation.
@@ -251,20 +238,18 @@ public class ConferenceService {
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If the server hasn't implemented the feature, throws ``ResponseError`` with the code ``ResponseStatusCode/conferenceNotImplemented``.
-    public func acceptMeetingInvitation(_ meetingId: Int64, password: String? = nil) -> Promise<Response<String>> {
-        return turmsClient.driver
+    public func acceptMeetingInvitation(_ meetingId: Int64, password: String? = nil) async throws -> Response<String> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateMeetingInvitationRequest = .with {
                     $0.meetingID = meetingId
                     $0.responseAction = .accept
-                    if let v = password {
-                        $0.password = v
+                    if let password {
+                        $0.password = password
                     }
                 }
-            }
-            .map { try $0.toResponse {
-                try $0.string
-            }
-            }
+            }).toResponse {
+            $0.string
+        }
     }
 }

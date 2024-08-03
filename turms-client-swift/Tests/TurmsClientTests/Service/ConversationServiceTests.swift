@@ -1,35 +1,36 @@
-import PromiseKit
 @testable import TurmsClient
 import XCTest
 
 class ConversationServiceTests: XCTestCase {
-    static let USER_ID: Int64 = 1
-    static let RELATED_USER_ID: Int64 = 2
-    static let GROUP_ID: Int64 = 1
-    var turmsClient: TurmsClient!
+    private static let USER_ID: Int64 = 1
+    private static let RELATED_USER_ID: Int64 = 2
+    private static let GROUP_ID: Int64 = 1
+    private var turmsClient: TurmsClient!
 
-    func test_e2e() {
+    func test_e2e() async throws {
         // Set up
         continueAfterFailure = false
         turmsClient = TurmsClient(Config.HOST, Config.PORT)
-        wait(turmsClient.userService.login(userId: ConversationServiceTests.USER_ID, password: "123"))
+        try await wait(await self.turmsClient.userService.login(userId: ConversationServiceTests.USER_ID, password: "123"))
 
         // Update
         let service = turmsClient.conversationService!
-        assertCompleted("updatePrivateConversationReadDate_shouldSucceed", service.updatePrivateConversationReadDate(ConversationServiceTests.RELATED_USER_ID))
-        assertCompleted("updateGroupConversationReadDate_shouldSucceed", service.updateGroupConversationReadDate(ConversationServiceTests.GROUP_ID))
-        assertCompleted("updatePrivateConversationTypingStatus_shouldSucceed", service.updatePrivateConversationTypingStatus(ConversationServiceTests.RELATED_USER_ID))
-        assertCompleted("updateGroupConversationTypingStatus_shouldSucceed", service.updateGroupConversationTypingStatus(ConversationServiceTests.GROUP_ID))
+        try await assertCompleted("updatePrivateConversationReadDate_shouldSucceed", await service.updatePrivateConversationReadDate(ConversationServiceTests.RELATED_USER_ID))
+        try await assertCompleted("updateGroupConversationReadDate_shouldSucceed", await service.updateGroupConversationReadDate(ConversationServiceTests.GROUP_ID))
+        try await assertCompleted("updatePrivateConversationTypingStatus_shouldSucceed", await service.updatePrivateConversationTypingStatus(ConversationServiceTests.RELATED_USER_ID))
+        try await assertCompleted("updateGroupConversationTypingStatus_shouldSucceed", await service.updateGroupConversationTypingStatus(ConversationServiceTests.GROUP_ID))
 
         // Query
-        assertCompleted("queryPrivateConversations_shouldReturnNotEmptyConversations", service.queryPrivateConversations([ConversationServiceTests.RELATED_USER_ID]).done {
-            XCTAssertFalse($0.data.isEmpty)
-        })
-        assertCompleted("queryGroupConversations_shouldReturnNotEmptyConversations", service.queryGroupConversations([ConversationServiceTests.GROUP_ID]).done {
-            XCTAssertFalse($0.data.isEmpty)
-        })
+        try await assertCompleted("queryPrivateConversations_shouldReturnNotEmptyConversations") {
+            let conversations = try await service.queryPrivateConversations([ConversationServiceTests.RELATED_USER_ID])
+            XCTAssertFalse(conversations.data.isEmpty)
+        }
+        try await assertCompleted("queryGroupConversations_shouldReturnNotEmptyConversations") {
+            let conversations = try await service.queryGroupConversations([ConversationServiceTests.GROUP_ID])
+            XCTAssertFalse(conversations.data.isEmpty)
+        }
 
         // Tear down
-        wait(turmsClient.driver.disconnect())
+        try await wait(await self.turmsClient.driver.disconnect())
     }
 }

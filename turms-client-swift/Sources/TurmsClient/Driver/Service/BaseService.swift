@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 public class BaseService {
     let stateStore: StateStore
@@ -8,9 +7,7 @@ public class BaseService {
         self.stateStore = stateStore
     }
 
-    func close() -> Promise<Void> {
-        return Promise.value(())
-    }
+    func close() async {}
 
     func onDisconnected(_: Error? = nil) {}
 }
