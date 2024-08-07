@@ -1,17 +1,16 @@
-import PromiseKit
 @testable import TurmsClient
 import XCTest
 
 class MessageServiceTests: XCTestCase {
-    static let SENDER_ID: Int64 = 1
-    static let RECIPIENT_ID: Int64 = 2
-    static let GROUP_MEMBER_ID: Int64 = 3
-    static let TARGET_GROUP_ID: Int64 = 1
-    var senderClient: TurmsClient!
-    var recipientClient: TurmsClient!
-    var groupMemberClient: TurmsClient!
+    private static let SENDER_ID: Int64 = 1
+    private static let RECIPIENT_ID: Int64 = 2
+    private static let GROUP_MEMBER_ID: Int64 = 3
+    private static let TARGET_GROUP_ID: Int64 = 1
+    private var senderClient: TurmsClient!
+    private var recipientClient: TurmsClient!
+    private var groupMemberClient: TurmsClient!
 
-    func test_e2e() {
+    func test_e2e() async throws {
         var privateMessageId: Int64?
         var groupMessageId: Int64?
 
@@ -20,38 +19,42 @@ class MessageServiceTests: XCTestCase {
         senderClient = TurmsClient(Config.HOST, Config.PORT)
         recipientClient = TurmsClient(Config.HOST, Config.PORT)
         groupMemberClient = TurmsClient(Config.HOST, Config.PORT)
-        wait(senderClient.userService.login(userId: MessageServiceTests.SENDER_ID, password: "123"))
-        wait(recipientClient.userService.login(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
-        wait(groupMemberClient.userService.login(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
+        try await wait(await self.senderClient.userService.login(userId: MessageServiceTests.SENDER_ID, password: "123"))
+        try await wait(await self.recipientClient.userService.login(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
+        try await wait(await self.groupMemberClient.userService.login(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
 
         let service = senderClient.messageService!
 
         // Create
-        assertCompleted("sendPrivateMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
-            privateMessageId = $0.data
-        })
-        assertCompleted("sendGroupMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
-            groupMessageId = $0.data
-        })
-        assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
-        assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
+        try await assertCompleted("sendPrivateMessage_shouldReturnMessageId") {
+            let result = try await service.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello")
+            privateMessageId = result.data
+        }
+        try await assertCompleted("sendGroupMessage_shouldReturnMessageId") {
+            let result = try await service.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello")
+            groupMessageId = result.data
+        }
+        try await assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", await service.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
+        try await assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", await service.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
 
         // Update
-        assertCompleted("recallMessage_shouldSucceed", service.recallMessage(messageId: groupMessageId!))
-        assertCompleted("updateSentMessage_shouldSucceed", service.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
+        try await assertCompleted("recallMessage_shouldSucceed", await service.recallMessage(messageId: groupMessageId!))
+        try await assertCompleted("updateSentMessage_shouldSucceed", await service.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
 
         // Query
-        assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 10).done {
-            XCTAssertFalse($0.data.isEmpty)
-        })
-        assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", service.queryMessagesWithTotal(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 1).done {
-            XCTAssertFalse($0.data.isEmpty)
-        })
+        try await assertCompleted("queryMessages_shouldReturnNotEmptyMessages") {
+            let messages = try await self.recipientClient.messageService.queryMessages(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 10)
+            XCTAssertFalse(messages.data.isEmpty)
+        }
+        try await assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal") {
+            let messages = try await service.queryMessagesWithTotal(areGroupMessages: false, fromIds: [MessageServiceTests.SENDER_ID], maxCount: 1)
+            XCTAssertFalse(messages.data.isEmpty)
+        }
 
         // Tear down
-        wait(senderClient.driver.disconnect())
-        wait(recipientClient.driver.disconnect())
-        wait(groupMemberClient.driver.disconnect())
+        try await wait(await self.senderClient.driver.disconnect())
+        try await wait(await self.recipientClient.driver.disconnect())
+        try await wait(await self.groupMemberClient.driver.disconnect())
     }
 
     // Util

@@ -35,7 +35,7 @@ struct MultipartFormDataRequest {
         let fieldData = NSMutableData()
         fieldData.appendString("--\(boundary)\r\n")
         fieldData.appendString("Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(fileName)\"\r\n")
-        if let mediaType = mediaType {
+        if let mediaType {
             fieldData.appendString("Content-Type: \(mediaType)\r\n")
         }
         fieldData.appendString("\r\n")

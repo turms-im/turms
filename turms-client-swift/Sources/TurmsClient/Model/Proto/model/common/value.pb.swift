@@ -170,7 +170,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 1: try {
                     var v: Int32?
                     try decoder.decodeSingularInt32Field(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .int32Value(v)
                     }
@@ -178,7 +178,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 2: try {
                     var v: Int64?
                     try decoder.decodeSingularInt64Field(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .int64Value(v)
                     }
@@ -186,7 +186,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 3: try {
                     var v: Float?
                     try decoder.decodeSingularFloatField(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .floatValue(v)
                     }
@@ -194,7 +194,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 4: try {
                     var v: Double?
                     try decoder.decodeSingularDoubleField(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .doubleValue(v)
                     }
@@ -202,7 +202,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 5: try {
                     var v: Bool?
                     try decoder.decodeSingularBoolField(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .boolValue(v)
                     }
@@ -210,7 +210,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 6: try {
                     var v: Data?
                     try decoder.decodeSingularBytesField(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .bytesValue(v)
                     }
@@ -218,7 +218,7 @@ extension Value: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
             case 7: try {
                     var v: String?
                     try decoder.decodeSingularStringField(value: &v)
-                    if let v = v {
+                    if let v {
                         if self.kind != nil { try decoder.handleConflictingOneOf() }
                         self.kind = .stringValue(v)
                     }

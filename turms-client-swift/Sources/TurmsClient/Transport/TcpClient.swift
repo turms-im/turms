@@ -1,15 +1,13 @@
 import Foundation
 import Network
-import PromiseKit
 
 public enum TCPTransportError: Error {
     case invalidRequest
 }
 
-@available(macOS 10.14, iOS 12.0, watchOS 5.0, tvOS 12.0, *)
 public class TcpClient {
     private var connection: NWConnection?
-    private let queue = DispatchQueue(label: "im.turms.turmsclient.transport", attributes: [])
+    private let queue = DispatchQueue(label: "im.turms.turmsclient.transport")
     private var isOpen = false
     private var metrics = TcpMetrics()
 
@@ -21,8 +19,8 @@ public class TcpClient {
         self.onDataReceived = onDataReceived
     }
 
-    public func connect(host: String, port: UInt16, useTls: Bool = false, timeout: Double? = nil, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
-        return Promise<Void> { seal in
+    public func connect(host: String, port: UInt16, useTls: Bool = false, timeout: Double? = nil, certificatePinning: CertificatePinning? = nil) async throws {
+        return try await withUnsafeThrowingContinuation { continuation in
             let options = NWProtocolTCP.Options()
             if let t = timeout {
                 options.connectionTimeout = Int(t.rounded(.up))
@@ -50,9 +48,8 @@ public class TcpClient {
             }
             let parameters = NWParameters(tls: tlsOptions, tcp: options)
             connection = NWConnection(host: NWEndpoint.Host.name(host, nil), port: NWEndpoint.Port(rawValue: port)!, using: parameters)
-            guard let connection = connection else {
-                seal.reject(RuntimeError("Connection is nil unexpectedly"))
-                return
+            guard let connection else {
+                return continuation.resume(throwing: RuntimeError("Connection is nil unexpectedly"))
             }
             connection.stateUpdateHandler = { [weak self] newState in
                 guard let s = self else {
@@ -60,30 +57,23 @@ public class TcpClient {
                 }
                 switch newState {
                 case .ready:
-                    if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *) {
-                        connection.requestEstablishmentReport(queue: s.queue) { report in
-                            guard let report = report else {
-                                s.isOpen = true
-                                s.readLoop()
-                                seal.fulfill_()
-                                return
-                            }
-                            s.metrics.connectTime = report.handshakes.max { handshake1, handshake2 in handshake1.handshakeDuration < handshake2.handshakeDuration }?.handshakeDuration
-                            s.metrics.addressResolverTime = report.resolutions.max { resolution1, resolution2 in resolution1.duration < resolution2.duration }?.duration
+                    connection.requestEstablishmentReport(queue: s.queue) { report in
+                        guard let report else {
                             s.isOpen = true
                             s.readLoop()
-                            seal.fulfill_()
+                            return continuation.resume()
                         }
-                    } else {
+                        s.metrics.connectTime = report.handshakes.max { handshake1, handshake2 in handshake1.handshakeDuration < handshake2.handshakeDuration }?.handshakeDuration
+                        s.metrics.addressResolverTime = report.resolutions.max { resolution1, resolution2 in resolution1.duration < resolution2.duration }?.duration
                         s.isOpen = true
                         s.readLoop()
-                        seal.fulfill_()
+                        continuation.resume()
                     }
                 case .cancelled:
-                    seal.reject(RuntimeError("\(newState)"))
+                    continuation.resume(throwing: RuntimeError("\(newState)"))
                     s.onClose()
                 case let .failed(error):
-                    seal.reject(RuntimeError("\(newState)"))
+                    continuation.resume(throwing: RuntimeError("\(newState)"))
                     s.onClose(error)
                 case .waiting, .setup, .preparing:
                     break
@@ -99,11 +89,14 @@ public class TcpClient {
         if !isOpen {
             return
         }
-        connection!.receive(minimumIncompleteLength: 1, maximumLength: 4096, completion: { [weak self] data, context, isComplete, error in
+        guard let connection else {
+            return
+        }
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 4096, completion: { [weak self] data, context, isComplete, error in
             guard let s = self else {
                 return
             }
-            if let data = data {
+            if let data {
                 s.metrics.dataReceived += data.count
                 do {
                     try s.onDataReceived(data)
@@ -112,7 +105,7 @@ public class TcpClient {
                     return
                 }
             }
-            if let context = context, context.isFinal, isComplete {
+            if let context, context.isFinal, isComplete {
                 s.close()
                 return
             }
@@ -124,24 +117,30 @@ public class TcpClient {
         })
     }
 
-    public func write(_ data: Data, _ completion: ((_ error: NWError?) -> Void)? = nil) {
-        connection!.send(content: data, completion: .contentProcessed { [weak self] error in
-            guard let s = self else {
-                return
-            }
-            if let e = error {
-                s.close(e)
-            } else {
-                s.metrics.dataSent += data.count
-            }
-            completion?(error)
-        })
+    public func write(_ data: Data) async throws {
+        guard let connection else {
+            throw RuntimeError("The connection is not open")
+        }
+        return try await withUnsafeThrowingContinuation { continuation in
+            connection.send(content: data, completion: .contentProcessed { [weak self] error in
+                guard let s = self else {
+                    return
+                }
+                if let e = error {
+                    s.close(e)
+                    continuation.resume(throwing: e)
+                } else {
+                    s.metrics.dataSent += data.count
+                    continuation.resume()
+                }
+            })
+        }
     }
 
-    public func writeVarIntLengthAndBytes(_ data: Data, completion: ((_ error: NWError?) -> Void)? = nil) {
+    public func writeVarIntLengthAndBytes(_ data: Data) async throws {
         var list = encodeVarInt(data.count)
         list.append(data)
-        write(list, completion)
+        try await write(list)
     }
 
     private func encodeVarInt(_ value: Int) -> Data {
@@ -166,11 +165,7 @@ public class TcpClient {
 
     private func onClose(_ error: Error? = nil) {
         if isOpen {
-            do {
-                onClosed(error)
-            } catch {
-                // TODO: log
-            }
+            onClosed(error)
         }
         metrics = TcpMetrics()
         isOpen = false

@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 public class TurmsClient {
     public private(set) var driver: TurmsDriver
@@ -29,7 +28,7 @@ public class TurmsClient {
         notificationService = NotificationService(self)
     }
 
-    public func close() -> Promise<Void> {
-        return driver.close()
+    public func close() async {
+        await driver.close()
     }
 }

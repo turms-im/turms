@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 public class TurmsDriver {
     let stateStore: StateStore
@@ -29,9 +28,8 @@ public class TurmsDriver {
         }
     }
 
-    public func close() -> Promise<Void> {
-        return when(resolved: connectionService.close(), heartbeatService.close(), messageService.close())
-            .asVoid()
+    public func close() async {
+        _ = await [connectionService.close(), heartbeatService.close(), messageService.close()]
     }
 
     // Heartbeat Service
@@ -44,8 +42,8 @@ public class TurmsDriver {
         heartbeatService.stop()
     }
 
-    public func sendHeartbeat() -> Promise<Void> {
-        return heartbeatService.send()
+    public func sendHeartbeat() async throws {
+        try await heartbeatService.send()
     }
 
     public var isHeartbeatRunning: Bool {
@@ -54,12 +52,12 @@ public class TurmsDriver {
 
     // Connection Service
 
-    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
-        return connectionService.connect(host: host, port: port, connectTimeout: connectTimeout, certificatePinning: certificatePinning)
+    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil, certificatePinning: CertificatePinning? = nil) async throws {
+        try await connectionService.connect(host: host, port: port, connectTimeout: connectTimeout, certificatePinning: certificatePinning)
     }
 
-    public func disconnect() -> Promise<Void> {
-        return connectionService.disconnect()
+    public func disconnect() async {
+        await connectionService.disconnect()
     }
 
     public var isConnected: Bool {
@@ -78,18 +76,12 @@ public class TurmsDriver {
 
     // Message Service
 
-    public func send(_ populator: (inout TurmsRequest) throws -> Void) -> Promise<TurmsNotification> {
+    public func send(_ populator: (inout TurmsRequest) throws -> Void) async throws -> TurmsNotification {
         var request = TurmsRequest()
-        do {
-            try populator(&request)
-        } catch {
-            return Promise(error: error)
-        }
-        let notification = messageService.sendRequest(&request)
+        try populator(&request)
+        let notification = try await messageService.sendRequest(&request)
         if case .createSessionRequest = request.kind {
-            notification.done { _ in
-                self.heartbeatService.start()
-            }
+            heartbeatService.start()
         }
         return notification
     }
@@ -108,24 +100,26 @@ public class TurmsDriver {
 
     private func onMessage(_ message: Data) {
         if message.isEmpty {
-            heartbeatService.fulfillHeartbeatPromises()
+            heartbeatService.fulfillHeartbeatContinuations()
         } else {
             var notification: TurmsNotification
             do {
-                notification = try TurmsNotification(serializedData: message)
+                notification = try TurmsNotification(serializedBytes: message)
             } catch {
                 Logger.error("Failed to parse TurmsNotification: %@", String(describing: error))
                 return
             }
-            if heartbeatService.rejectHeartbeatPromisesIfFail(notification) {
+            if heartbeatService.rejectHeartbeatContinuationsIfFail(notification) {
                 return
             }
             if notification.hasCloseStatus {
                 stateStore.isSessionOpen = false
                 messageService.didReceiveNotification(notification)
-                // We must close the connection after finishing handling the notification
-                // to ensure notification handlers will always be triggered before connection close handlers.
-                connectionService.disconnect()
+                Task {
+                    // We must close the connection after finishing handling the notification
+                    // to ensure notification handlers will always be triggered before connection close handlers.
+                    await connectionService.disconnect()
+                }
                 return
             }
             if notification.hasData, case .userSession = notification.data.kind! {

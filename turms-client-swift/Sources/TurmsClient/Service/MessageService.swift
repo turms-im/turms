@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 public class MessageService {
     /**
@@ -21,7 +20,7 @@ public class MessageService {
         return Array(NSOrderedSet(array: userIds)) as! [Int64]
     }
 
-    private weak var turmsClient: TurmsClient!
+    private unowned var turmsClient: TurmsClient
     private var mentionedUserIdsParser: ((Message) -> [Int64])?
     public var messageListeners: [(Message, MessageAddition) -> Void] = []
 
@@ -115,14 +114,14 @@ public class MessageService {
         records: [Data]? = nil,
         burnAfter: Int32? = nil,
         preMessageId: Int64? = nil
-    ) -> Promise<Response<Int64>> {
+    ) async throws -> Response<Int64> {
         if Validator.areAllNil(text, records) {
-            return Promise(error: ResponseError(
+            throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "text and records must not all be null"
-            ))
+            )
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.createMessageRequest = .with {
                     if isGroupMessage {
@@ -130,28 +129,25 @@ public class MessageService {
                     } else {
                         $0.recipientID = targetId
                     }
-                    if let v = deliveryDate {
-                        $0.deliveryDate = v.toMillis()
+                    if let deliveryDate {
+                        $0.deliveryDate = deliveryDate.toMillis()
                     }
-                    if let v = text {
-                        $0.text = v
+                    if let text {
+                        $0.text = text
                     }
-                    if let v = records {
-                        $0.records = v
+                    if let records {
+                        $0.records = records
                     }
-                    if let v = burnAfter {
-                        $0.burnAfter = v
+                    if let burnAfter {
+                        $0.burnAfter = burnAfter
                     }
-                    if let v = preMessageId {
-                        $0.preMessageID = v
+                    if let preMessageId {
+                        $0.preMessageID = preMessageId
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.getLongOrThrow()
-                }
-            }
+            }).toResponse {
+            try $0.getLongOrThrow()
+        }
     }
 
     /// Forward a message.
@@ -182,8 +178,8 @@ public class MessageService {
         messageId: Int64,
         isGroupMessage: Bool,
         targetId: Int64
-    ) -> Promise<Response<Int64>> {
-        return turmsClient.driver
+    ) async throws -> Response<Int64> {
+        return try (await turmsClient.driver
             .send {
                 $0.createMessageRequest = .with {
                     $0.messageID = messageId
@@ -193,12 +189,9 @@ public class MessageService {
                         $0.recipientID = targetId
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.getLongOrThrow()
-                }
-            }
+            }).toResponse {
+            try $0.getLongOrThrow()
+        }
     }
 
     /// Update a sent message.
@@ -233,25 +226,23 @@ public class MessageService {
         messageId: Int64,
         text: String? = nil,
         records: [Data]? = nil
-    ) -> Promise<Response<Void>> {
+    ) async throws -> Response<Void> {
         if Validator.areAllNil(text, records) {
-            return Promise.value(Response.empty())
+            return Response.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateMessageRequest = .with {
                     $0.messageID = messageId
-                    if let v = text {
-                        $0.text = v
+                    if let text {
+                        $0.text = text
                     }
-                    if let v = records {
-                        $0.records = v
+                    if let records {
+                        $0.records = records
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Find messages.
@@ -288,40 +279,37 @@ public class MessageService {
         deliveryDateEnd: Date? = nil,
         maxCount: Int32 = 50,
         descending: Bool? = nil
-    ) -> Promise<Response<[Message]>> {
-        return turmsClient.driver
+    ) async throws -> Response<[Message]> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
-                    if let v = ids {
-                        $0.ids = v
+                    if let ids {
+                        $0.ids = ids
                     }
-                    if let v = areGroupMessages {
-                        $0.areGroupMessages = v
+                    if let areGroupMessages {
+                        $0.areGroupMessages = areGroupMessages
                     }
-                    if let v = areSystemMessages {
-                        $0.areSystemMessages = v
+                    if let areSystemMessages {
+                        $0.areSystemMessages = areSystemMessages
                     }
-                    if let v = fromIds {
-                        $0.fromIds = v
+                    if let fromIds {
+                        $0.fromIds = fromIds
                     }
-                    if let v = deliveryDateStart {
-                        $0.deliveryDateStart = v.toMillis()
+                    if let deliveryDateStart {
+                        $0.deliveryDateStart = deliveryDateStart.toMillis()
                     }
-                    if let v = deliveryDateEnd {
-                        $0.deliveryDateEnd = v.toMillis()
+                    if let deliveryDateEnd {
+                        $0.deliveryDateEnd = deliveryDateEnd.toMillis()
                     }
                     $0.maxCount = maxCount
-                    if let v = descending, v {
+                    if let descending, descending {
                         $0.descending = true
                     }
                     $0.withTotal = false
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.messages.messages
-                }
-            }
+            }).toResponse {
+            $0.messages.messages
+        }
     }
 
     /// Find the pair of messages and the total count for each conversation.
@@ -358,40 +346,37 @@ public class MessageService {
         deliveryDateEnd: Date? = nil,
         maxCount: Int32 = 1,
         descending: Bool? = nil
-    ) -> Promise<Response<[MessagesWithTotal]>> {
-        return turmsClient.driver
+    ) async throws -> Response<[MessagesWithTotal]> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryMessagesRequest = .with {
-                    if let v = ids {
-                        $0.ids = v
+                    if let ids {
+                        $0.ids = ids
                     }
-                    if let v = areGroupMessages {
-                        $0.areGroupMessages = v
+                    if let areGroupMessages {
+                        $0.areGroupMessages = areGroupMessages
                     }
-                    if let v = areSystemMessages {
-                        $0.areSystemMessages = v
+                    if let areSystemMessages {
+                        $0.areSystemMessages = areSystemMessages
                     }
-                    if let v = fromIds {
-                        $0.fromIds = v
+                    if let fromIds {
+                        $0.fromIds = fromIds
                     }
-                    if let v = deliveryDateStart {
-                        $0.deliveryDateStart = v.toMillis()
+                    if let deliveryDateStart {
+                        $0.deliveryDateStart = deliveryDateStart.toMillis()
                     }
-                    if let v = deliveryDateEnd {
-                        $0.deliveryDateEnd = v.toMillis()
+                    if let deliveryDateEnd {
+                        $0.deliveryDateEnd = deliveryDateEnd.toMillis()
                     }
                     $0.maxCount = maxCount
-                    if let v = descending, v {
+                    if let descending, descending {
                         $0.descending = true
                     }
                     $0.withTotal = true
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.messagesWithTotalList.messagesWithTotalList
-                }
-            }
+            }).toResponse {
+            $0.messagesWithTotalList.messagesWithTotalList
+        }
     }
 
     /// Recall a message.
@@ -415,17 +400,15 @@ public class MessageService {
     ///     If null, the current date will be used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func recallMessage(messageId: Int64, recallDate: Date = Date()) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateMessageRequest = .with {
                     $0.messageID = messageId
                     $0.recallDate = recallDate.toMillis()
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     public func isMentionEnabled() -> Bool {
@@ -444,8 +427,8 @@ public class MessageService {
         return try! UserLocation.with {
             $0.latitude = latitude
             $0.longitude = longitude
-            if let v = details {
-                $0.details = v
+            if let details {
+                $0.details = details
             }
         }
         .serializedData()
@@ -454,14 +437,14 @@ public class MessageService {
     public static func generateAudioRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
         return try! AudioFile.with {
             $0.description_p.url = url
-            if let v = duration {
-                $0.description_p.duration = v
+            if let duration {
+                $0.description_p.duration = duration
             }
-            if let v = format {
-                $0.description_p.format = v
+            if let format {
+                $0.description_p.format = format
             }
-            if let v = size {
-                $0.description_p.size = v
+            if let size {
+                $0.description_p.size = size
             }
         }
         .serializedData()
@@ -477,14 +460,14 @@ public class MessageService {
     public static func generateVideoRecordByDescription(url: String, duration: Int32? = nil, format: String? = nil, size: Int32? = nil) -> Data {
         return try! VideoFile.with {
             $0.description_p.url = url
-            if let v = duration {
-                $0.description_p.duration = v
+            if let duration {
+                $0.description_p.duration = duration
             }
-            if let v = format {
-                $0.description_p.format = v
+            if let format {
+                $0.description_p.format = format
             }
-            if let v = size {
-                $0.description_p.size = v
+            if let size {
+                $0.description_p.size = size
             }
         }
         .serializedData()
@@ -507,14 +490,14 @@ public class MessageService {
     public static func generateImageRecordByDescription(url: String, fileSize: Int32? = nil, imageSize: Int32? = nil, original: Bool? = nil) -> Data {
         return try! ImageFile.with {
             $0.description_p.url = url
-            if let v = fileSize {
-                $0.description_p.fileSize = v
+            if let fileSize {
+                $0.description_p.fileSize = fileSize
             }
-            if let v = imageSize {
-                $0.description_p.imageSize = v
+            if let imageSize {
+                $0.description_p.imageSize = imageSize
             }
-            if let v = original {
-                $0.description_p.original = v
+            if let original {
+                $0.description_p.original = original
             }
         }
         .serializedData()
@@ -530,11 +513,11 @@ public class MessageService {
     public static func generateFileRecordByDescription(url: String, format: String? = nil, size: Int32? = nil) -> Data {
         return try! File.with {
             $0.description_p.url = url
-            if let v = format {
-                $0.description_p.format = v
+            if let format {
+                $0.description_p.format = format
             }
-            if let v = size {
-                $0.description_p.size = v
+            if let size {
+                $0.description_p.size = size
             }
         }
         .serializedData()
@@ -575,7 +558,7 @@ public class MessageService {
             if request.hasText {
                 $0.text = request.text
             }
-            if request.records.count > 0 {
+            if !request.records.isEmpty {
                 $0.records = request.records
             }
             $0.senderID = requesterId

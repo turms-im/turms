@@ -10,6 +10,7 @@ public enum ResponseStatusCode: Int {
     // Client - Common
     case connectTimeout = 1
     case dataNotFound = 10
+    case networkError = 80
     case httpError = 90
     case httpNotSuccessfulResponse
 

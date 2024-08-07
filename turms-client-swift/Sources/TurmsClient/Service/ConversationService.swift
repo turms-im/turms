@@ -1,8 +1,7 @@
 import Foundation
-import PromiseKit
 
 public class ConversationService {
-    private weak var turmsClient: TurmsClient!
+    private unowned var turmsClient: TurmsClient
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
@@ -30,21 +29,18 @@ public class ConversationService {
     /// these conversations will be filtered out on the server, and no error will be thrown.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryPrivateConversations(_ userIds: [Int64]) -> Promise<Response<[PrivateConversation]>> {
+    public func queryPrivateConversations(_ userIds: [Int64]) async throws -> Response<[PrivateConversation]> {
         if userIds.isEmpty {
-            return Promise.value(Response<[PrivateConversation]>.emptyArray())
+            return Response<[PrivateConversation]>.emptyArray()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.queryConversationsRequest = .with {
                     $0.userIds = userIds
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.conversations.privateConversations
-                }
-            }
+            }).toResponse {
+            $0.conversations.privateConversations
+        }
     }
 
     /// Find group conversations in which the logged-in user is a member.
@@ -69,21 +65,18 @@ public class ConversationService {
     /// these conversations will be filtered out on the server, and no error will be thrown.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryGroupConversations(_ groupIds: [Int64]) -> Promise<Response<[GroupConversation]>> {
+    public func queryGroupConversations(_ groupIds: [Int64]) async throws -> Response<[GroupConversation]> {
         if groupIds.isEmpty {
-            return Promise.value(Response<[GroupConversation]>.emptyArray())
+            return Response<[GroupConversation]>.emptyArray()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.queryConversationsRequest = .with {
                     $0.groupIds = groupIds
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.conversations.groupConversations
-                }
-            }
+            }).toResponse {
+            $0.conversations.groupConversations
+        }
     }
 
     /// Update the read date of the target private conversation.
@@ -110,17 +103,14 @@ public class ConversationService {
     ///     If null, the current time is used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updatePrivateConversationReadDate(_ userId: Int64, readDate: Date = Date()) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updatePrivateConversationReadDate(_ userId: Int64, readDate: Date = Date()) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateConversationRequest = .with {
                     $0.userID = userId
                     $0.readDate = readDate.toMillis()
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Update the read date of the target group conversation.
@@ -150,17 +140,14 @@ public class ConversationService {
     ///     If null, the current time is used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateConversationRequest = .with {
                     $0.groupID = groupId
                     $0.readDate = readDate.toMillis()
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Upsert private conversation settings, such as "sticky", "new message alert", etc.
@@ -178,20 +165,17 @@ public class ConversationService {
     /// * If trying to update any existing immutable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``
     /// * If trying to upsert an unknown setting and the server property `turms.service.conversation.settings.ignore-unknown-settings-on-upsert` is
     ///   false (false by default), throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
-    public func upsertPrivateConversationSettings(_ userId: Int64, _ settings: [String: Value]) -> Promise<Response<Void>> {
+    public func upsertPrivateConversationSettings(_ userId: Int64, _ settings: [String: Value]) async throws -> Response<Void> {
         if settings.isEmpty {
-            return Promise.value(Response<Void>.empty())
+            return Response<Void>.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateConversationSettingsRequest = .with {
                     $0.userID = userId
                     $0.settings = settings
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Upsert group conversation settings, such as "sticky", "new message alert", etc.
@@ -209,20 +193,17 @@ public class ConversationService {
     /// * If trying to update any existing immutable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``
     /// * If trying to upsert an unknown setting and the server property `turms.service.conversation.settings.ignore-unknown-settings-on-upsert` is
     ///   false (false by default), throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
-    public func upsertGroupConversationSettings(_ groupId: Int64, _ settings: [String: Value]) -> Promise<Response<Void>> {
+    public func upsertGroupConversationSettings(_ groupId: Int64, _ settings: [String: Value]) async throws -> Response<Void> {
         if settings.isEmpty {
-            return Promise.value(Response<Void>.empty())
+            return Response<Void>.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateConversationSettingsRequest = .with {
                     $0.groupID = groupId
                     $0.settings = settings
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Delete conversation settings.
@@ -240,24 +221,21 @@ public class ConversationService {
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If trying to delete any non-deletable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
-    public func deleteConversationSettings(userIds: [Int64]? = nil, groupIds: [Int64]? = nil, names: [String]? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func deleteConversationSettings(userIds: [Int64]? = nil, groupIds: [Int64]? = nil, names: [String]? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteConversationSettingsRequest = .with {
-                    if let v = userIds {
-                        $0.userIds = v
+                    if let userIds {
+                        $0.userIds = userIds
                     }
-                    if let v = groupIds {
-                        $0.groupIds = v
+                    if let groupIds {
+                        $0.groupIds = groupIds
                     }
-                    if let v = names {
-                        $0.names = v
+                    if let names {
+                        $0.names = names
                     }
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Find conversation settings.
@@ -270,29 +248,26 @@ public class ConversationService {
     ///     The server will only return conversation settings if a setting has been updated after `lastUpdatedDate`.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryConversationSettings(userIds: [Int64]? = nil, groupIds: [Int64]? = nil, names: [String]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<[ConversationSettings]>> {
-        return turmsClient.driver
+    public func queryConversationSettings(userIds: [Int64]? = nil, groupIds: [Int64]? = nil, names: [String]? = nil, lastUpdatedDate: Date? = nil) async throws -> Response<[ConversationSettings]> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryConversationSettingsRequest = .with {
-                    if let v = userIds {
-                        $0.userIds = v
+                    if let userIds {
+                        $0.userIds = userIds
                     }
-                    if let v = groupIds {
-                        $0.groupIds = v
+                    if let groupIds {
+                        $0.groupIds = groupIds
                     }
-                    if let v = names {
-                        $0.names = v
+                    if let names {
+                        $0.names = names
                     }
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDateStart = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDateStart = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.conversationSettingsList.conversationSettingsList
-                }
-            }
+            }).toResponse {
+            $0.conversationSettingsList.conversationSettingsList
+        }
     }
 
     /// Update the typing status of the target private conversation.
@@ -311,17 +286,14 @@ public class ConversationService {
     ///   - userId: The target user ID.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updatePrivateConversationTypingStatus(_ userId: Int64) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updatePrivateConversationTypingStatus(_ userId: Int64) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateTypingStatusRequest = .with {
                     $0.toID = userId
                     $0.isGroupMessage = false
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 
     /// Update the typing status of the target group conversation.
@@ -340,16 +312,13 @@ public class ConversationService {
     ///   - groupId: The target group ID.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateGroupConversationTypingStatus(_ groupId: Int64) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updateGroupConversationTypingStatus(_ groupId: Int64) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateTypingStatusRequest = .with {
                     $0.toID = groupId
                     $0.isGroupMessage = true
                 }
-            }
-            .map {
-                try $0.toResponse()
-            }
+            }).toResponse()
     }
 }

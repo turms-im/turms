@@ -1,5 +1,4 @@
 import Foundation
-import PromiseKit
 
 private class MessageDecoder {
     private static let maxReadBufferCapacity = 8 * 1024 * 1024
@@ -73,12 +72,13 @@ public class ConnectionService: BaseService {
     private let initialPort: UInt16
     private let initialConnectTimeout: TimeInterval
 
-    private var disconnectPromises: [Resolver<Void>] = []
+    private var disconnectContinuations: [UnsafeContinuation<Void, Never>] = []
 
     private var onConnectedListeners: [() -> Void] = []
     private var onDisconnectedListeners: [(Error?) -> Void] = []
     private var messageListeners: [(Data) -> Void] = []
 
+    private let lock = Lock()
     private let decoder = MessageDecoder()
 
     init(stateStore: StateStore, host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil) {
@@ -89,7 +89,7 @@ public class ConnectionService: BaseService {
     }
 
     private func resetStates() {
-        fulfillDisconnectPromises()
+        fulfillDisconnectContinuations()
     }
 
     // Listeners
@@ -124,48 +124,43 @@ public class ConnectionService: BaseService {
         }
     }
 
-    private func fulfillDisconnectPromises() {
-        repeat {
-            disconnectPromises.popLast()?.fulfill(())
-        } while !disconnectPromises.isEmpty
+    private func fulfillDisconnectContinuations() {
+        lock.locked {
+            repeat {
+                disconnectContinuations.popLast()?.resume()
+            } while !disconnectContinuations.isEmpty
+        }
     }
 
     // Connection
 
-    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout _: TimeInterval? = nil, useTls: Bool? = false, certificatePinning: CertificatePinning? = nil) -> Promise<Void> {
-        return Promise { seal in
-            if stateStore.isConnected {
-                seal.reject(ResponseError(code: .clientSessionAlreadyEstablished))
-                return
-            }
-            resetStates()
-            let tcp = TcpClient(onClosed: { [weak self] error in
-                self?.onSocketClosed(error)
-            }, onDataReceived: { [weak self] data in
-                guard let s = self else { return }
-                let messages = try s.decoder.decodeMessages(data)
-                for message in messages {
-                    s.notifyMessageListeners(message)
-                }
-            })
-            tcp.connect(host: host ?? initialHost, port: port ?? initialPort, useTls: useTls ?? false, certificatePinning: certificatePinning)
-                .done { [weak self] in
-                    self?.onSocketOpened()
-                    seal.fulfill_()
-                }.catch { error in
-                    seal.reject(error)
-                }
-            stateStore.tcp = tcp
+    public func connect(host: String? = nil, port: UInt16? = nil, connectTimeout _: TimeInterval? = nil, useTls: Bool? = false, certificatePinning: CertificatePinning? = nil) async throws {
+        if stateStore.isConnected {
+            throw ResponseError(code: .clientSessionAlreadyEstablished)
         }
+        resetStates()
+        let tcp = TcpClient(onClosed: { [weak self] error in
+            self?.onSocketClosed(error)
+        }, onDataReceived: { [weak self] data in
+            guard let s = self else { return }
+            let messages = try s.decoder.decodeMessages(data)
+            for message in messages {
+                s.notifyMessageListeners(message)
+            }
+        })
+        try await tcp.connect(host: host ?? initialHost, port: port ?? initialPort, useTls: useTls ?? false, certificatePinning: certificatePinning)
+        onSocketOpened()
+        stateStore.tcp = tcp
     }
 
-    public func disconnect() -> Promise<Void> {
-        return Promise { seal in
+    public func disconnect() async {
+        await withUnsafeContinuation { continuation in
             if !stateStore.isConnected {
-                seal.fulfill(())
-                return
+                return continuation.resume()
             }
-            disconnectPromises.append(seal)
+            lock.locked {
+                disconnectContinuations.append(continuation)
+            }
             stateStore.tcp!.close()
         }
     }
@@ -180,13 +175,13 @@ public class ConnectionService: BaseService {
     private func onSocketClosed(_ error: Error?) {
         decoder.clear()
         stateStore.isConnected = false
-        fulfillDisconnectPromises()
+        fulfillDisconnectContinuations()
         notifyOnDisconnectedListeners(error)
     }
 
     // Base methods
 
-    override func close() -> Promise<Void> {
-        return disconnect()
+    override func close() async {
+        return await disconnect()
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 
 public class NotificationService {
-    private weak var turmsClient: TurmsClient!
+    private unowned var turmsClient: TurmsClient
     public var notificationListeners: [(Notification) -> Void] = []
 
     init(_ turmsClient: TurmsClient) {

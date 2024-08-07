@@ -1,8 +1,7 @@
 import Foundation
-import PromiseKit
 
 public class UserService {
-    private weak var turmsClient: TurmsClient!
+    private unowned var turmsClient: TurmsClient
     public var userInfo: User?
     private var storePassword = false
 
@@ -84,7 +83,7 @@ public class UserService {
         location: Location? = nil,
         storePassword: Bool = false,
         certificatePinning: CertificatePinning? = nil
-    ) -> Promise<Response<Void>> {
+    ) async throws -> Response<Void> {
         var user = User(userId: userId)
         if storePassword {
             user.password = password
@@ -92,43 +91,39 @@ public class UserService {
         user.onlineStatus = onlineStatus ?? .available
         user.deviceType = deviceType ?? .ios
         user.location = location
-        let connect: Promise<Void> = turmsClient.driver.isConnected
-            ? Promise.value(())
-            : turmsClient.driver.connect(certificatePinning: certificatePinning)
-        return connect.then {
-            self.turmsClient.driver.send {
-                $0.createSessionRequest = .with {
-                    $0.version = 1
-                    $0.userID = userId
-                    if let v = password {
-                        $0.password = v
-                    }
-                    if let v = deviceType {
-                        $0.deviceType = v
-                    }
-                    if let v = deviceDetails {
-                        $0.deviceDetails = v
-                    }
-                    if let v = onlineStatus {
-                        $0.userStatus = v
-                    }
-                    if let v = location {
-                        $0.location = .with {
-                            $0.longitude = v.longitude
-                            $0.latitude = v.latitude
-                        }
+        if !turmsClient.driver.isConnected {
+            try await turmsClient.driver.connect(certificatePinning: certificatePinning)
+        }
+        let createSessionResponse = try await turmsClient.driver.send {
+            $0.createSessionRequest = .with {
+                $0.version = 1
+                $0.userID = userId
+                if let password {
+                    $0.password = password
+                }
+                if let deviceType {
+                    $0.deviceType = deviceType
+                }
+                if let deviceDetails {
+                    $0.deviceDetails = deviceDetails
+                }
+                if let onlineStatus {
+                    $0.userStatus = onlineStatus
+                }
+                if let location {
+                    $0.location = .with {
+                        $0.longitude = location.longitude
+                        $0.latitude = location.latitude
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
-            .get { _ in
-                self.changeToOnline()
-                self.userInfo = user
-                self.storePassword = storePassword
-            }
         }
+        defer {
+            changeToOnline()
+            self.userInfo = user
+            self.storePassword = storePassword
+        }
+        return try createSessionResponse.toResponse()
     }
 
     /// Log out.
@@ -141,19 +136,18 @@ public class UserService {
     ///     rather than sending a delete session request first and then closing the connection.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func logout(disconnect: Bool = true) -> Promise<Response<Void>> {
-        let d: Promise<Response<Void>> = disconnect
-            ? turmsClient.driver.disconnect().map {
-                Response.empty()
-            }
-            : turmsClient.driver.send {
+    public func logout(disconnect: Bool = true) async throws -> Response<Void> {
+        defer {
+            changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil, cause: nil))
+        }
+        if disconnect {
+            try await turmsClient.driver.disconnect()
+
+            return Response.empty()
+        } else {
+            return try (await turmsClient.driver.send {
                 $0.deleteSessionRequest = DeleteSessionRequest()
-            }
-            .map {
-                try $0.toResponse()
-            }
-        return d.get { _ in
-            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(SessionCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil, cause: nil))
+            }).toResponse()
         }
     }
 
@@ -171,22 +165,20 @@ public class UserService {
     ///   - onlineStatus: The new online status.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Response<Void>> {
+    public func updateUserOnlineStatus(_ onlineStatus: UserStatus) async throws -> Response<Void> {
         if onlineStatus == .offline {
-            return Promise(error: ResponseError(
+            throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "The online status must not be OFFLINE"
-            ))
+            )
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserOnlineStatusRequest = .with {
                     $0.userStatus = onlineStatus
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Disconnect the online devices of the logged-in user.
@@ -198,17 +190,15 @@ public class UserService {
     ///   - deviceTypes: The device types to disconnect.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func disconnectOnlineDevices(_ deviceTypes: [DeviceType]) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func disconnectOnlineDevices(_ deviceTypes: [DeviceType]) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserOnlineStatusRequest = .with {
                     $0.userStatus = UserStatus.offline
                     $0.deviceTypes = deviceTypes
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Update the password of the logged-in user.
@@ -217,16 +207,14 @@ public class UserService {
     ///   - password: The new password.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updatePassword(_ password: String) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updatePassword(_ password: String) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserRequest = .with {
                     $0.password = password
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Update the profile of the logged-in user.
@@ -250,27 +238,25 @@ public class UserService {
         name: String? = nil,
         intro: String? = nil,
         profileAccessStrategy: ProfileAccessStrategy? = nil
-    ) -> Promise<Response<Void>> {
+    ) async throws -> Response<Void> {
         if Validator.areAllNil(name, intro, profileAccessStrategy) {
-            return Promise.value(Response.empty())
+            return Response.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserRequest = .with {
-                    if let v = name {
-                        $0.name = v
+                    if let name {
+                        $0.name = name
                     }
-                    if let v = intro {
-                        $0.intro = v
+                    if let intro {
+                        $0.intro = intro
                     }
-                    if let v = profileAccessStrategy {
-                        $0.profileAccessStrategy = v
+                    if let profileAccessStrategy {
+                        $0.profileAccessStrategy = profileAccessStrategy
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Find user profiles.
@@ -284,24 +270,21 @@ public class UserService {
     /// - Returns: A list of user profiles.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryUserProfiles(userIds: [Int64], lastUpdatedDate: Date? = nil) -> Promise<Response<[UserInfo]>> {
+    public func queryUserProfiles(userIds: [Int64], lastUpdatedDate: Date? = nil) async throws -> Response<[UserInfo]> {
         if userIds.isEmpty {
-            return Promise.value(Response.emptyArray())
+            return Response.emptyArray()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.queryUserProfilesRequest = .with {
                     $0.userIds = userIds
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDate = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDate = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.userInfosWithVersion.userInfos
-                }
-            }
+            }).toResponse {
+            $0.userInfosWithVersion.userInfos
+        }
     }
 
     /// Search for user profiles.
@@ -319,31 +302,28 @@ public class UserService {
     public func searchUserProfiles(name: String,
                                    highlight: Bool = false,
                                    skip: Int32? = nil,
-                                   limit: Int32? = nil) -> Promise<Response<[UserInfo]>>
+                                   limit: Int32? = nil) async throws -> Response<[UserInfo]>
     {
         if name.isEmpty {
-            return Promise.value(Response.emptyArray())
+            return Response.emptyArray()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.queryUserProfilesRequest = .with {
                     $0.name = name
                     if highlight {
                         $0.fieldsToHighlight = [1]
                     }
-                    if let v = skip {
-                        $0.skip = v
+                    if let skip {
+                        $0.skip = skip
                     }
-                    if let v = limit {
-                        $0.limit = v
+                    if let limit {
+                        $0.limit = limit
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.userInfosWithVersion.userInfos
-                }
-            }
+            }).toResponse {
+            $0.userInfosWithVersion.userInfos
+        }
     }
 
     /// Upsert user settings, such as "preferred language", "new message alert", etc.
@@ -360,19 +340,17 @@ public class UserService {
     /// * If trying to update any existing immutable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``
     /// * If trying to upsert an unknown setting and the server property `turms.service.user.settings.ignore-unknown-settings-on-upsert` is
     ///   false (false by default), throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
-    public func upsertUserSettings(_ settings: [String: Value]) -> Promise<Response<Void>> {
+    public func upsertUserSettings(_ settings: [String: Value]) async throws -> Response<Void> {
         if settings.isEmpty {
-            return Promise.value(Response<Void>.empty())
+            return Response.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserSettingsRequest = .with {
                     $0.settings = settings
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Delete user settings.
@@ -386,18 +364,16 @@ public class UserService {
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If trying to delete any non-deletable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
-    public func deleteUserSettings(names: [String]? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func deleteUserSettings(names: [String]? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteUserSettingsRequest = .with {
-                    if let v = names {
-                        $0.names = v
+                    if let names {
+                        $0.names = names
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Find user settings.
@@ -408,23 +384,20 @@ public class UserService {
     ///     The server will only return user settings if a setting has been updated after `lastUpdatedDate`.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryUserSettings(names: [String]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserSettings?>> {
-        return turmsClient.driver
+    public func queryUserSettings(names: [String]? = nil, lastUpdatedDate: Date? = nil) async throws -> Response<UserSettings?> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryUserSettingsRequest = .with {
-                    if let v = names {
-                        $0.names = v
+                    if let names {
+                        $0.names = names
                     }
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDateStart = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDateStart = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.kind?.getKindData(UserSettings.self)
-                }
-            }
+            }).toResponse {
+            try $0.kind?.getKindData(UserSettings.self)
+        }
     }
 
     /// Find nearby users.
@@ -441,34 +414,31 @@ public class UserService {
     /// - Returns: A list of nearby users.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryNearbyUsers(latitude: Float, longitude: Float, maxCount: Int32? = nil, maxDistance: Int32? = nil, withCoordinates: Bool? = nil, withDistance: Bool? = nil, withUserInfo: Bool? = nil) -> Promise<Response<[NearbyUser]>> {
-        return turmsClient.driver
+    public func queryNearbyUsers(latitude: Float, longitude: Float, maxCount: Int32? = nil, maxDistance: Int32? = nil, withCoordinates: Bool? = nil, withDistance: Bool? = nil, withUserInfo: Bool? = nil) async throws -> Response<[NearbyUser]> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryNearbyUsersRequest = .with {
                     $0.latitude = latitude
                     $0.longitude = longitude
-                    if let v = maxCount {
-                        $0.maxCount = v
+                    if let maxCount {
+                        $0.maxCount = maxCount
                     }
-                    if let v = maxDistance {
-                        $0.maxDistance = v
+                    if let maxDistance {
+                        $0.maxDistance = maxDistance
                     }
-                    if let v = withCoordinates {
-                        $0.withCoordinates = v
+                    if let withCoordinates {
+                        $0.withCoordinates = withCoordinates
                     }
-                    if let v = withDistance {
-                        $0.withDistance = v
+                    if let withDistance {
+                        $0.withDistance = withDistance
                     }
-                    if let v = withUserInfo {
-                        $0.withUserInfo = v
+                    if let withUserInfo {
+                        $0.withUserInfo = withUserInfo
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.nearbyUsers.nearbyUsers
-                }
-            }
+            }).toResponse {
+            $0.nearbyUsers.nearbyUsers
+        }
     }
 
     /// Find online status of users.
@@ -479,18 +449,15 @@ public class UserService {
     /// - Returns: A list of online status of users.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) -> Promise<Response<[UserOnlineStatus]>> {
-        return turmsClient.driver
+    public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) async throws -> Response<[UserOnlineStatus]> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryUserOnlineStatusesRequest = .with {
                     $0.userIds = userIds
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    $0.userOnlineStatuses.statuses
-                }
-            }
+            }).toResponse {
+            $0.userOnlineStatuses.statuses
+        }
     }
 
     // Relationship
@@ -517,29 +484,26 @@ public class UserService {
         isBlocked: Bool? = nil,
         groupIndexes: [Int32]? = nil,
         lastUpdatedDate: Date? = nil
-    ) -> Promise<Response<UserRelationshipsWithVersion?>> {
-        return turmsClient.driver
+    ) async throws -> Response<UserRelationshipsWithVersion?> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryRelationshipsRequest = .with {
-                    if let v = relatedUserIds {
-                        $0.userIds = v
+                    if let relatedUserIds {
+                        $0.userIds = relatedUserIds
                     }
-                    if let v = isBlocked {
-                        $0.blocked = v
+                    if let isBlocked {
+                        $0.blocked = isBlocked
                     }
-                    if let v = groupIndexes {
-                        $0.groupIndexes = v
+                    if let groupIndexes {
+                        $0.groupIndexes = groupIndexes
                     }
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDate = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDate = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.kind?.getKindData(UserRelationshipsWithVersion.self)
-                }
-            }
+            }).toResponse {
+            try $0.kind?.getKindData(UserRelationshipsWithVersion.self)
+        }
     }
 
     /// Find related user IDs.
@@ -558,26 +522,23 @@ public class UserService {
     /// Note: The version can be used to update the last updated date stored locally.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<LongsWithVersion?>> {
-        return turmsClient.driver
+    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) async throws -> Response<LongsWithVersion?> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryRelatedUserIdsRequest = .with {
-                    if let v = isBlocked {
-                        $0.blocked = v
+                    if let isBlocked {
+                        $0.blocked = isBlocked
                     }
-                    if let v = groupIndexes {
-                        $0.groupIndexes = v
+                    if let groupIndexes {
+                        $0.groupIndexes = groupIndexes
                     }
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDate = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDate = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.kind?.getKindData(LongsWithVersion.self)
-                }
-            }
+            }).toResponse {
+            try $0.kind?.getKindData(LongsWithVersion.self)
+        }
     }
 
     /// Find friends.
@@ -592,8 +553,8 @@ public class UserService {
     /// Note: The version can be used to update the last updated date stored locally.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryFriends(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
-        return queryRelationships(
+    public func queryFriends(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) async throws -> Response<UserRelationshipsWithVersion?> {
+        return try await queryRelationships(
             isBlocked: false,
             groupIndexes: groupIndexes,
             lastUpdatedDate: lastUpdatedDate
@@ -612,8 +573,8 @@ public class UserService {
     /// Note: The version can be used to update the last updated date stored locally.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryBlockedUsers(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipsWithVersion?>> {
-        return queryRelationships(
+    public func queryBlockedUsers(groupIndexes: [Int32]? = nil, lastUpdatedDate: Date? = nil) async throws -> Response<UserRelationshipsWithVersion?> {
+        return try await queryRelationships(
             isBlocked: true,
             groupIndexes: groupIndexes,
             lastUpdatedDate: lastUpdatedDate
@@ -637,20 +598,18 @@ public class UserService {
     ///     If null, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.createRelationshipRequest = .with {
                     $0.userID = userId
                     $0.blocked = isBlocked
-                    if let v = groupIndex {
-                        $0.groupIndex = v
+                    if let groupIndex {
+                        $0.groupIndex = groupIndex
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Create a friend (non-blocked) relationship.
@@ -667,8 +626,8 @@ public class UserService {
     ///     If null, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func createFriendRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Response<Void>> {
-        return createRelationship(
+    public func createFriendRelationship(userId: Int64, groupIndex: Int32? = nil) async throws -> Response<Void> {
+        return try await createRelationship(
             userId: userId,
             isBlocked: false,
             groupIndex: groupIndex
@@ -689,8 +648,8 @@ public class UserService {
     ///     If null, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func createBlockedUserRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Response<Void>> {
-        return createRelationship(
+    public func createBlockedUserRelationship(userId: Int64, groupIndex: Int32? = nil) async throws -> Response<Void> {
+        return try await createRelationship(
             userId: userId,
             isBlocked: true,
             groupIndex: groupIndex
@@ -712,22 +671,20 @@ public class UserService {
     ///   - targetGroupIndex: TODO: not implemented yet.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func deleteRelationship(relatedUserId: Int64, deleteGroupIndex: Int32? = nil, targetGroupIndex: Int32? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func deleteRelationship(relatedUserId: Int64, deleteGroupIndex: Int32? = nil, targetGroupIndex: Int32? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteRelationshipRequest = .with {
                     $0.userID = relatedUserId
-                    if let v = deleteGroupIndex {
-                        $0.groupIndex = v
+                    if let deleteGroupIndex {
+                        $0.groupIndex = deleteGroupIndex
                     }
-                    if let v = targetGroupIndex {
-                        $0.targetGroupIndex = v
+                    if let targetGroupIndex {
+                        $0.targetGroupIndex = targetGroupIndex
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Update a relationship.
@@ -744,25 +701,23 @@ public class UserService {
     ///     If null, the relationship will not be updated.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateRelationship(relatedUserId: Int64, isBlocked: Bool? = nil, groupIndex: Int32? = nil) -> Promise<Response<Void>> {
+    public func updateRelationship(relatedUserId: Int64, isBlocked: Bool? = nil, groupIndex: Int32? = nil) async throws -> Response<Void> {
         if Validator.areAllNil(isBlocked, groupIndex) {
-            return Promise.value(Response.empty())
+            return Response.empty()
         }
-        return turmsClient.driver
+        return try (await turmsClient.driver
             .send {
                 $0.updateRelationshipRequest = .with {
                     $0.userID = relatedUserId
-                    if let v = isBlocked {
-                        $0.blocked = v
+                    if let isBlocked {
+                        $0.blocked = isBlocked
                     }
-                    if let v = groupIndex {
-                        $0.newGroupIndex = v
+                    if let groupIndex {
+                        $0.newGroupIndex = groupIndex
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Send a friend request.
@@ -780,19 +735,16 @@ public class UserService {
     /// - Returns: The request ID.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func sendFriendRequest(recipientId: Int64, content: String) -> Promise<Response<Int64>> {
-        return turmsClient.driver
+    public func sendFriendRequest(recipientId: Int64, content: String) async throws -> Response<Int64> {
+        return try (await turmsClient.driver
             .send {
                 $0.createFriendRequestRequest = .with {
                     $0.recipientID = recipientId
                     $0.content = content
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.getLongOrThrow()
-                }
-            }
+            }).toResponse {
+            try $0.getLongOrThrow()
+        }
     }
 
     /// Delete/Recall a friend request.
@@ -813,16 +765,14 @@ public class UserService {
     ///   is true (true by default), the server will send a delete friend request notification to the recipient of the friend request actively.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func deleteFriendRequest(_ requestId: Int64) -> Promise<Response<Int64>> {
-        return turmsClient.driver
+    public func deleteFriendRequest(_ requestId: Int64) async throws -> Response<Int64> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteFriendRequestRequest = .with {
                     $0.requestID = requestId
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Reply to a friend request.
@@ -848,20 +798,18 @@ public class UserService {
     ///   - reason: The reason of the response.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func replyFriendRequest(requestId: Int64, responseAction: ResponseAction, reason: String? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func replyFriendRequest(requestId: Int64, responseAction: ResponseAction, reason: String? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateFriendRequestRequest = .with {
                     $0.requestID = requestId
                     $0.responseAction = responseAction
-                    if let v = reason {
-                        $0.reason = v
+                    if let reason {
+                        $0.reason = reason
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Find friend requests.
@@ -878,21 +826,18 @@ public class UserService {
     /// Note: The version can be used to update the last updated date stored locally.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryFriendRequests(_ areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<Response<UserFriendRequestsWithVersion?>> {
-        return turmsClient.driver
+    public func queryFriendRequests(_ areSentByMe: Bool, lastUpdatedDate: Date? = nil) async throws -> Response<UserFriendRequestsWithVersion?> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryFriendRequestsRequest = .with {
                     $0.areSentByMe = areSentByMe
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDate = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDate = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.kind?.getKindData(UserFriendRequestsWithVersion.self)
-                }
-            }
+            }).toResponse {
+            try $0.kind?.getKindData(UserFriendRequestsWithVersion.self)
+        }
     }
 
     /// Create a relationship group.
@@ -903,18 +848,15 @@ public class UserService {
     /// - Returns: The index of the created group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func createRelationshipGroup(_ name: String) -> Promise<Response<Int32>> {
-        return turmsClient.driver
+    public func createRelationshipGroup(_ name: String) async throws -> Response<Int32> {
+        return try (await turmsClient.driver
             .send {
                 $0.createRelationshipGroupRequest = .with {
                     $0.name = name
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try Int32($0.getLongOrThrow())
-                }
-            }
+            }).toResponse {
+            try Int32($0.getLongOrThrow())
+        }
     }
 
     /// Delete relationship groups.
@@ -932,19 +874,17 @@ public class UserService {
     ///     If null, the group members of `groupIndex` will be moved to the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.deleteRelationshipGroupRequest = .with {
                     $0.groupIndex = groupIndex
-                    if let v = targetGroupIndex {
-                        $0.targetGroupIndex = v
+                    if let targetGroupIndex {
+                        $0.targetGroupIndex = targetGroupIndex
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Update a relationship group.
@@ -960,17 +900,15 @@ public class UserService {
     ///   - newName: The new name of the group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateRelationshipGroup(groupIndex: Int32, newName: String) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updateRelationshipGroup(groupIndex: Int32, newName: String) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateRelationshipGroupRequest = .with {
                     $0.groupIndex = groupIndex
                     $0.newName = newName
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Find relationship groups.
@@ -984,20 +922,17 @@ public class UserService {
     /// Note: The version can be used to update the last updated date stored locally.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<Response<UserRelationshipGroupsWithVersion?>> {
-        return turmsClient.driver
+    public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) async throws -> Response<UserRelationshipGroupsWithVersion?> {
+        return try (await turmsClient.driver
             .send {
                 $0.queryRelationshipGroupsRequest = .with {
-                    if let v = lastUpdatedDate {
-                        $0.lastUpdatedDate = v.toMillis()
+                    if let lastUpdatedDate {
+                        $0.lastUpdatedDate = lastUpdatedDate.toMillis()
                     }
                 }
-            }
-            .map {
-                try $0.toResponse {
-                    try $0.kind?.getKindData(UserRelationshipGroupsWithVersion.self)
-                }
-            }
+            }).toResponse {
+            try $0.kind?.getKindData(UserRelationshipGroupsWithVersion.self)
+        }
     }
 
     /// Move a related user to a group.
@@ -1013,17 +948,15 @@ public class UserService {
     ///   - groupIndex: The target group index to which move the user.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func moveRelatedUserToGroup(relatedUserId: Int64, groupIndex: Int32) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func moveRelatedUserToGroup(relatedUserId: Int64, groupIndex: Int32) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateRelationshipRequest = .with {
                     $0.userID = relatedUserId
                     $0.newGroupIndex = groupIndex
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     /// Update the location of the logged-in user.
@@ -1042,20 +975,18 @@ public class UserService {
     ///   - details: The location details
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
-    public func updateLocation(latitude: Float, longitude: Float, details: [String: String]? = nil) -> Promise<Response<Void>> {
-        return turmsClient.driver
+    public func updateLocation(latitude: Float, longitude: Float, details: [String: String]? = nil) async throws -> Response<Void> {
+        return try (await turmsClient.driver
             .send {
                 $0.updateUserLocationRequest = .with {
                     $0.latitude = latitude
                     $0.longitude = longitude
-                    if let v = details {
-                        $0.details = v
+                    if let details {
+                        $0.details = details
                     }
                 }
             }
-            .map {
-                try $0.toResponse()
-            }
+        ).toResponse()
     }
 
     private func changeToOnline() {
