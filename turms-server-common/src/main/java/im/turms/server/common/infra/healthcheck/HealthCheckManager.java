@@ -44,6 +44,7 @@ public class HealthCheckManager {
     private final CpuHealthChecker cpuHealthChecker;
     private final MemoryHealthChecker memoryHealthChecker;
     private long lastUpdateTimestamp;
+    private static final long MILLISECONDS_IN_SECOND = 1000L;
 
     public HealthCheckManager(@Lazy Node node, TurmsPropertiesManager propertiesManager) {
         this.node = node;
@@ -70,26 +71,34 @@ public class HealthCheckManager {
     }
 
     private void startHealthCheck(int intervalSeconds) {
-        long intervalMillis = intervalSeconds * 1000L;
+        long intervalMillis = intervalSeconds * MILLISECONDS_IN_SECOND;
         DefaultThreadFactory threadFactory =
                 new DefaultThreadFactory(ThreadNameConst.HEALTH_CHECKER, true);
         new ScheduledThreadPoolExecutor(1, threadFactory).scheduleWithFixedDelay(() -> {
-            cpuHealthChecker.updateHealthStatus();
-            memoryHealthChecker.updateHealthStatus();
-            node.getDiscoveryService()
-                    .getLocalNodeStatusManager()
-                    .updateHealthStatus(isHealthy());
-            long now = System.currentTimeMillis();
-            long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
-            lastUpdateTimestamp = now;
-            if (previousUpdateTimestamp > now) {
-                // There are a lof of modules heavily depending on the system time, e.g. logging,
-                // snowflake ID.
-                // So we log a warning message for troubleshooting if the time goes backwards.
-                LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
-                        previousUpdateTimestamp - now);
-            }
+           try {
+               cpuHealthChecker.updateHealthStatus();
+               memoryHealthChecker.updateHealthStatus();
+               node.getDiscoveryService()
+                       .getLocalNodeStatusManager()
+                       .updateHealthStatus(isHealthy());
+
+
+               this.checkAndUpdateTimestamp(System.currentTimeMillis(), intervalMillis);
+           }catch (Exception e){
+               LOGGER.error("Failed to update health status", e);
+           }
         }, 0, intervalSeconds, TimeUnit.SECONDS);
+    }
+
+    private void checkAndUpdateTimestamp(long now, long intervalMillis) {
+        long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
+        lastUpdateTimestamp = now;
+        if (previousUpdateTimestamp > now) {
+            long timeDrift = previousUpdateTimestamp - now;
+            if (timeDrift > MILLISECONDS_IN_SECOND) { // 增加条件以减少不必要的日志
+                LOGGER.warn("The system time goes backwards. The time drift is ({}) millis", timeDrift);
+            }
+        }
     }
 
 }
