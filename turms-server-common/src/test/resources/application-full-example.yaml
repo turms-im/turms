@@ -1,0 +1,2493 @@
+# These property values are the default values of Turms servers for the production environment.
+
+turms:
+  ai-serving:
+    admin-api:
+      address:
+        # The advertise address of the local node exposed to admins. (e.g. 100.131.251.96).
+        # global property: false
+        # mutable property: true
+        advertise-host: ""
+        # The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs.
+        # global property: false
+        # mutable property: true
+        # enum values: [advertise_address, bind_address, private_address, public_address]
+        advertise-strategy: private_address
+        # Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510.
+        # global property: false
+        # mutable property: true
+        attach-port-to-host: true
+      debug:
+        # Whether to enable debug APIs.
+        # global property: true
+        # mutable property: true
+        enabled: false
+      # Whether to enable the APIs for administrators.
+      # global property: false
+      # mutable property: false
+      enabled: true
+      http:
+        # The connect timeout.
+        # global property: false
+        # mutable property: false
+        connect-timeout-millis: 30000
+        # The bind host.
+        # global property: false
+        # mutable property: false
+        host: "0.0.0.0"
+        # The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        idle-timeout-millis: 180000
+        # The max request body size in bytes.
+        # global property: false
+        # mutable property: false
+        max-request-body-size-bytes: 10485760
+        # The bind port.
+        # global property: false
+        # mutable property: false
+        port: 5510
+        # The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        request-read-timeout-millis: 180000
+      log:
+        # Whether to log API calls.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        # Whether to log the parameters of requests.
+        # global property: true
+        # mutable property: true
+        log-request-params: true
+      rate-limiting:
+        # The maximum number of tokens that the bucket can hold.
+        # global property: true
+        # mutable property: true
+        capacity: 50
+        # The initial number of tokens for new session.
+        # global property: true
+        # mutable property: true
+        initial-tokens: 50
+        # The time interval to refill. 0 means never refill.
+        # global property: true
+        # mutable property: true
+        refill-interval-millis: 1000
+        # Refills the bucket with the specified number of tokens per period if the bucket is not full.
+        # global property: true
+        # mutable property: true
+        tokens-per-period: 50
+      # Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc.
+      # global property: false
+      # mutable property: false
+      use-authentication: true
+    mongo:
+      admin: {}
+    ocr:
+      # global property: false
+      # mutable property: false
+      orientation-possibility-threshold: 0.8
+      # global property: false
+      # mutable property: false
+      preferred-fonts:
+        - family-name: "Noto Sans CJK SC"
+          style: "BOLD"
+        - family-name: "Noto Sans"
+          style: "BOLD"
+  cluster:
+    connection:
+      client:
+        # global property: false
+        # mutable property: false
+        keepalive-interval-seconds: 5
+        # global property: false
+        # mutable property: false
+        keepalive-timeout-seconds: 15
+        # global property: false
+        # mutable property: false
+        reconnect-interval-seconds: 15
+      server:
+        # global property: false
+        # mutable property: false
+        host: "0.0.0.0"
+        # global property: false
+        # mutable property: false
+        port: 7510
+        # global property: false
+        # mutable property: false
+        port-auto-increment: false
+        # global property: false
+        # mutable property: false
+        port-count: 100
+    discovery:
+      address:
+        # The advertise address of the local node exposed to admins. (e.g. 100.131.251.96).
+        # global property: false
+        # mutable property: true
+        advertise-host: ""
+        # The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs.
+        # global property: false
+        # mutable property: true
+        # enum values: [advertise_address, bind_address, private_address, public_address]
+        advertise-strategy: private_address
+        # Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510.
+        # global property: false
+        # mutable property: true
+        attach-port-to-host: true
+      # Delay notifying listeners on members change. Waits for seconds to avoid thundering herd.
+      # global property: false
+      # mutable property: false
+      delay-to-notify-members-change-seconds: 3
+      # global property: false
+      # mutable property: false
+      heartbeat-interval-seconds: 10
+      # global property: false
+      # mutable property: false
+      heartbeat-timeout-seconds: 30
+    # global property: false
+    # mutable property: false
+    id: "turms"
+    node:
+      # global property: false
+      # mutable property: false
+      active-by-default: true
+      # The node ID must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002". A node must have a unique ID. If not specified, Turms server will generate a random unique ID.
+      # global property: false
+      # mutable property: false
+      id: ""
+      # Only works when it is a turms-service node.
+      # global property: false
+      # mutable property: false
+      leader-eligible: true
+      # The node name must start with a letter or underscore, and matches zero or more of characters [a-zA-Z0-9_] after the beginning. e.g. "turms001", "turms_002". The node name can be duplicate in the cluster. If not specified, Turms server will use the node ID as the node name.
+      # global property: false
+      # mutable property: false
+      name: ""
+      # The priority to be a leader.
+      # global property: false
+      # mutable property: false
+      priority: 0
+      # e.g. "us-east-1" and "ap-east-1".
+      # global property: false
+      # mutable property: false
+      zone: ""
+    rpc:
+      # The timeout for RPC requests in milliseconds.
+      # global property: false
+      # mutable property: false
+      request-timeout-millis: 30000
+    shared-config: {}
+  flight-recorder:
+    # A closed recording will be retained for the given period and will be removed from the file system after the retention period. 0 means no retention. -1 means unlimited retention.
+    # global property: false
+    # mutable property: false
+    closed-recording-retention-period: 0
+  gateway:
+    admin-api:
+      address:
+        # The advertise address of the local node exposed to admins. (e.g. 100.131.251.96).
+        # global property: false
+        # mutable property: true
+        advertise-host: ""
+        # The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs.
+        # global property: false
+        # mutable property: true
+        # enum values: [advertise_address, bind_address, private_address, public_address]
+        advertise-strategy: private_address
+        # Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510.
+        # global property: false
+        # mutable property: true
+        attach-port-to-host: true
+      debug:
+        # Whether to enable debug APIs.
+        # global property: true
+        # mutable property: true
+        enabled: false
+      # Whether to enable the APIs for administrators.
+      # global property: false
+      # mutable property: false
+      enabled: true
+      http:
+        # The connect timeout.
+        # global property: false
+        # mutable property: false
+        connect-timeout-millis: 30000
+        # The bind host.
+        # global property: false
+        # mutable property: false
+        host: "0.0.0.0"
+        # The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        idle-timeout-millis: 180000
+        # The max request body size in bytes.
+        # global property: false
+        # mutable property: false
+        max-request-body-size-bytes: 10485760
+        # The bind port.
+        # global property: false
+        # mutable property: false
+        port: 9510
+        # The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        request-read-timeout-millis: 180000
+      log:
+        # Whether to log API calls.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        # Whether to log the parameters of requests.
+        # global property: true
+        # mutable property: true
+        log-request-params: true
+      rate-limiting:
+        # The maximum number of tokens that the bucket can hold.
+        # global property: true
+        # mutable property: true
+        capacity: 50
+        # The initial number of tokens for new session.
+        # global property: true
+        # mutable property: true
+        initial-tokens: 50
+        # The time interval to refill. 0 means never refill.
+        # global property: true
+        # mutable property: true
+        refill-interval-millis: 1000
+        # Refills the bucket with the specified number of tokens per period if the bucket is not full.
+        # global property: true
+        # mutable property: true
+        tokens-per-period: 50
+      # Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc.
+      # global property: false
+      # mutable property: false
+      use-authentication: true
+    client-api:
+      logging:
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [all, none, create, delete, update, query, storage, conversation, message, user, user_relationship, group, group_blocklist, group_enrollment, group_member]
+        excluded-notification-categories: []
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [create_session_request, delete_session_request, query_conversations_request, update_conversation_request, update_typing_status_request, create_message_request, query_messages_request, update_message_request, create_group_members_request, delete_group_members_request, query_group_members_request, update_group_member_request, query_user_profiles_request, query_nearby_users_request, query_user_online_statuses_request, update_user_location_request, update_user_online_status_request, update_user_request, update_user_settings_request, delete_user_settings_request, query_user_settings_request, create_friend_request_request, create_relationship_group_request, create_relationship_request, delete_friend_request_request, delete_relationship_group_request, delete_relationship_request, query_friend_requests_request, query_related_user_ids_request, query_relationship_groups_request, query_relationships_request, update_friend_request_request, update_relationship_group_request, update_relationship_request, create_group_request, delete_group_request, query_groups_request, query_joined_group_ids_request, query_joined_group_infos_request, update_group_request, create_group_blocked_user_request, delete_group_blocked_user_request, query_group_blocked_user_ids_request, query_group_blocked_user_infos_request, check_group_join_questions_answers_request, create_group_invitation_request, create_group_join_request_request, create_group_join_questions_request, delete_group_invitation_request, delete_group_join_request_request, delete_group_join_questions_request, query_group_invitations_request, query_group_join_requests_request, query_group_join_questions_request, update_group_invitation_request, update_group_join_question_request, update_group_join_request_request, create_meeting_request, delete_meeting_request, query_meetings_request, update_meeting_request, update_meeting_invitation_request, delete_resource_request, query_resource_download_info_request, query_resource_upload_info_request, query_message_attachment_infos_request, update_message_attachment_info_request, delete_conversation_settings_request, query_conversation_settings_request, update_conversation_settings_request, create_message_reactions_request, delete_message_reactions_request, kind_not_set]
+        excluded-notification-types: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [all, none, create, delete, update, query, storage, conversation, message, user, user_relationship, group, group_blocklist, group_enrollment, group_member]
+        excluded-request-categories: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [create_session_request, delete_session_request, query_conversations_request, update_conversation_request, update_typing_status_request, create_message_request, query_messages_request, update_message_request, create_group_members_request, delete_group_members_request, query_group_members_request, update_group_member_request, query_user_profiles_request, query_nearby_users_request, query_user_online_statuses_request, update_user_location_request, update_user_online_status_request, update_user_request, update_user_settings_request, delete_user_settings_request, query_user_settings_request, create_friend_request_request, create_relationship_group_request, create_relationship_request, delete_friend_request_request, delete_relationship_group_request, delete_relationship_request, query_friend_requests_request, query_related_user_ids_request, query_relationship_groups_request, query_relationships_request, update_friend_request_request, update_relationship_group_request, update_relationship_request, create_group_request, delete_group_request, query_groups_request, query_joined_group_ids_request, query_joined_group_infos_request, update_group_request, create_group_blocked_user_request, delete_group_blocked_user_request, query_group_blocked_user_ids_request, query_group_blocked_user_infos_request, check_group_join_questions_answers_request, create_group_invitation_request, create_group_join_request_request, create_group_join_questions_request, delete_group_invitation_request, delete_group_join_request_request, delete_group_join_questions_request, query_group_invitations_request, query_group_join_requests_request, query_group_join_questions_request, update_group_invitation_request, update_group_join_question_request, update_group_join_request_request, create_meeting_request, delete_meeting_request, query_meetings_request, update_meeting_request, update_meeting_invitation_request, delete_resource_request, query_resource_download_info_request, query_resource_upload_info_request, query_message_attachment_infos_request, update_message_attachment_info_request, delete_conversation_settings_request, query_conversation_settings_request, update_conversation_settings_request, create_message_reactions_request, delete_message_reactions_request, kind_not_set]
+        excluded-request-types: []
+        # global property: false
+        # mutable property: false
+        heartbeat-sample-rate: 0.0
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        included-notification-categories: []
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        included-notifications: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        included-request-categories:
+          - category: "ALL"
+            sample-rate: 1.0
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        included-requests: []
+      # The client session will be closed and may be blocked if it tries to send a request larger than the size. Note: The average size of turms requests is 16~64 bytes.
+      # global property: false
+      # mutable property: false
+      max-request-size-bytes: 16384
+      rate-limiting:
+        # The maximum number of tokens that the bucket can hold.
+        # global property: true
+        # mutable property: true
+        capacity: 50
+        # The initial number of tokens for new session.
+        # global property: true
+        # mutable property: true
+        initial-tokens: 50
+        # The time interval to refill. 0 means never refill.
+        # global property: true
+        # mutable property: true
+        refill-interval-millis: 1000
+        # Refills the bucket with the specified number of tokens per period if the bucket is not full.
+        # global property: true
+        # mutable property: true
+        tokens-per-period: 1
+      # Whether to return the reason for the server error to the client. Note: 1. It may reveal sensitive data like the IP of internal servers if true; 2. turms-gateway never return the information of stack traces no matter it is true or false.
+      # global property: false
+      # mutable property: false
+      return-reason-for-server-error: false
+    fake:
+      # Whether to fake clients. Note that faking only works in non-production environments.
+      # global property: false
+      # mutable property: false
+      enabled: false
+      # global property: false
+      # mutable property: false
+      first-user-id: 100
+      # The number of requests to send per interval. If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact.
+      # global property: false
+      # mutable property: false
+      request-count-per-interval: 10
+      # The interval to send request.
+      # global property: false
+      # mutable property: false
+      request-interval-millis: 1000
+      # Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) to connect to turms-gateway. So please ensure you have set "turms.service.fake.userCount" to a number larger than or equal to (firstUserId + userCount).
+      # global property: false
+      # mutable property: false
+      user-count: 10
+    mongo:
+      admin: {}
+      user: {}
+    notification-logging:
+      # Whether to parse the buffer of TurmsNotification to log. Note that the property has an impact on performance.
+      # global property: false
+      # mutable property: false
+      enabled: false
+    redis: {}
+    service-discovery:
+      # The advertise address of the local node exposed to the public. The property can be used to advertise the DDoS Protected IP address to hide the origin IP address (e.g. 100.131.251.96).
+      # global property: false
+      # mutable property: true
+      advertise-host: ""
+      # The advertise strategy is used to help clients or load balancing servers to access the local node. Note: For security, do NOT use "PUBLIC_ADDRESS" in production to prevent from exposing the origin IP address for DDoS attack.
+      # global property: false
+      # mutable property: true
+      # enum values: [advertise_address, bind_address, private_address, public_address]
+      advertise-strategy: private_address
+      # Whether to attach the local port to the host. For example, if the local host is 100.131.251.96, and the port is 10510, so the service address will be 100.131.251.96:10510.
+      # global property: false
+      # mutable property: true
+      attach-port-to-host: true
+      # The identity of the local node will be sent to clients as a notification if identity is not blank and "turms.gateway.session.notifyClientsOfSessionInfoAfterConnected" is true (e.g. "turms-east-0001").
+      # global property: false
+      # mutable property: true
+      identity: ""
+    session:
+      # The client heartbeat interval. Note that the value will NOT change the actual heartbeat behavior of clients, and the value is only used to facilitate related operations of turms-gateway.
+      # global property: true
+      # mutable property: true
+      client-heartbeat-interval-seconds: 60
+      # A session will be closed if turms server does not receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd.
+      # global property: true
+      # mutable property: true
+      close-idle-session-after-seconds: 180
+      device-details:
+        # Device details information will expire after the specified time has elapsed. 0 means never expire.
+        # global property: false
+        # mutable property: false
+        expire-after-seconds: 2592000
+        # global property: true
+        # mutable property: true
+        items: []
+      identity-access-management:
+        # Whether to authenticate and authorize users when logging in. Note that user ID is always required even if enabled is false. If false at startup, turms-gateway will not connect to the MongoDB server for user records.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        http:
+          authentication:
+            response-expectation:
+              # global property: false
+              # mutable property: false
+              body-fields:
+                - authenticated: true
+              # global property: false
+              # mutable property: false
+              headers: {}
+              # global property: false
+              # mutable property: false
+              status-codes:
+                - "2??"
+          request:
+            # global property: false
+            # mutable property: false
+            headers: {}
+            # global property: false
+            # mutable property: false
+            # enum values: [post, get, put, patch, delete, head]
+            http-method: get
+            # global property: false
+            # mutable property: false
+            timeout-millis: 30000
+            # global property: false
+            # mutable property: false
+            url: ""
+        jwt:
+          algorithm:
+            ecdsa256:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            ecdsa384:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            ecdsa512:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            hmac256:
+              # global property: false
+              # mutable property: false
+              file-path: ""
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+            hmac384:
+              # global property: false
+              # mutable property: false
+              file-path: ""
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+            hmac512:
+              # global property: false
+              # mutable property: false
+              file-path: ""
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+            ps256:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            ps384:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            ps512:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            rsa256:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            rsa384:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+            rsa512:
+              p12:
+                # global property: false
+                # mutable property: false
+                file-path: ""
+                # global property: false
+                # mutable property: false
+                key-alias: ""
+                # global property: false
+                # mutable property: false
+                password: ""
+              # global property: false
+              # mutable property: false
+              pem-file-path: ""
+          authentication:
+            expectation:
+              # global property: false
+              # mutable property: false
+              custom-payload-claims:
+                - authenticated: true
+          verification:
+            # global property: false
+            # mutable property: false
+            audience: ""
+            # global property: false
+            # mutable property: false
+            custom-payload-claims: {}
+            # global property: false
+            # mutable property: false
+            issuer: ""
+        ldap:
+          admin:
+            # The host of LDAP server for admin.
+            # global property: false
+            # mutable property: false
+            host: "localhost"
+            # The administrator's password for binding.
+            # global property: false
+            # mutable property: false
+            password: ""
+            # The port of LDAP server for admin.
+            # global property: false
+            # mutable property: false
+            port: 389
+            # The administrator's username for binding.
+            # global property: false
+            # mutable property: false
+            username: ""
+          # The base DN from which all operations originate.
+          # global property: false
+          # mutable property: false
+          base-dn: ""
+          user:
+            # The host of LDAP server for user.
+            # global property: false
+            # mutable property: false
+            host: "localhost"
+            # The port of LDAP server for user.
+            # global property: false
+            # mutable property: false
+            port: 389
+            # The search filter to find the user entry. "${userId}" is a placeholder and will be replaced with the user ID passed in the login request.
+            # global property: false
+            # mutable property: false
+            search-filter: "uid=${userId}"
+        # Note that if the type is not PASSWORD, turms-gateway will not connect to the MongoDB server for user records.
+        # global property: false
+        # mutable property: false
+        # enum values: [noop, http, jwt, password, ldap]
+        type: password
+      # The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently.
+      # global property: true
+      # mutable property: true
+      min-heartbeat-interval-seconds: 18
+      # Whether to notify clients of the session information after connected with the server.
+      # global property: true
+      # mutable property: true
+      notify-clients-of-session-info-after-connected: true
+      # If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, the TCP/WebSocket connection will be closed with the close status "SWITCH" to indicate the client should keep sending heartbeat requests over UDP if they want to keep online. Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP is not supported.
+      # global property: true
+      # mutable property: true
+      switch-protocol-after-seconds: 540
+    simultaneous-login:
+      # Whether to allow the devices of DeviceType.OTHERS to login.
+      # global property: true
+      # mutable property: true
+      allow-device-type-others-login: true
+      # Whether to allow the devices of DeviceType.UNKNOWN to login.
+      # global property: true
+      # mutable property: true
+      allow-device-type-unknown-login: true
+      # The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices.
+      # global property: true
+      # mutable property: true
+      # enum values: [disconnect_logged_in_devices, disconnect_logging_in_device]
+      login-conflict-strategy: disconnect_logged_in_devices
+      # The simultaneous login strategy is used to control which devices can be online at the same time.
+      # global property: true
+      # mutable property: true
+      # enum values: [allow_one_device_of_each_device_type_online, allow_one_device_for_all_device_types_online, allow_one_device_of_desktop_and_one_device_of_mobile_online, allow_one_device_of_desktop_or_browser_and_one_device_of_mobile_online, allow_one_device_of_desktop_and_one_device_of_browser_and_one_device_of_mobile_online, allow_one_device_of_desktop_or_mobile_online, allow_one_device_of_desktop_or_browser_or_mobile_online]
+      strategy: allow_one_device_of_each_device_type_online
+    tcp:
+      # The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks.
+      # global property: false
+      # mutable property: false
+      backlog: 4096
+      # Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake.
+      # global property: false
+      # mutable property: false
+      connect-timeout-millis: 30000
+      # global property: false
+      # mutable property: false
+      enabled: true
+      # global property: false
+      # mutable property: false
+      host: "0.0.0.0"
+      # global property: false
+      # mutable property: false
+      port: -1
+      remote-address-source:
+        # global property: false
+        # mutable property: false
+        # enum values: [required, optional, disabled]
+        proxy-protocol-mode: optional
+      session:
+        # turms-gateway will send a TCP RST packet to the connection if the client has not closed the TCP connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout.
+        # global property: false
+        # mutable property: false
+        close-timeout-millis: 120000
+        # turms-gateway will close the TCP connection if the client has not established a user session within the specified time. 0 means no timeout.
+        # global property: false
+        # mutable property: false
+        establish-timeout-millis: 300000
+      # global property: false
+      # mutable property: false
+      wiretap: false
+    udp:
+      # global property: false
+      # mutable property: false
+      enabled: true
+      # global property: false
+      # mutable property: false
+      host: "0.0.0.0"
+      # global property: false
+      # mutable property: false
+      port: -1
+    websocket:
+      # The maximum number of connection requests waiting in the backlog queue. Large enough to handle bursts and GC pauses but do not set too large to prevent SYN-Flood attacks.
+      # global property: false
+      # mutable property: false
+      backlog: 4096
+      # Used to mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake.
+      # global property: false
+      # mutable property: false
+      connect-timeout-millis: 30000
+      # global property: false
+      # mutable property: false
+      enabled: true
+      # global property: false
+      # mutable property: false
+      host: "0.0.0.0"
+      # global property: false
+      # mutable property: false
+      port: -1
+      remote-address-source:
+        # global property: false
+        # mutable property: false
+        # enum values: [required, optional, disabled]
+        http-header-mode: optional
+        # global property: false
+        # mutable property: false
+        # enum values: [required, optional, disabled]
+        proxy-protocol-mode: optional
+      session:
+        # turms-gateway will send and flush a WebSocket close frame, and then send a TCP RST packet to the connection if the client has not closed the WebSocket connection within the specified time after turms-gateway has sent and flushed the session close notification. 0 means sending and flushing a WebSocket close frame, and then sending a TCP RST packet immediately after flushing the session close notification, and you should use 0 if you prefer fast connection close, but the client may never receive the last data sent by turms-gateway. -1 means no timeout and waiting for the client to close the connection forever. Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data and only close the connection when it exceeds the timeout.
+        # global property: false
+        # mutable property: false
+        close-timeout-millis: 120000
+        # turms-gateway will close the WebSocket connection if the client has not established a user session within the specified time. 0 means no timeout.
+        # global property: false
+        # mutable property: false
+        establish-timeout-millis: 300000
+  health-check:
+    # global property: false
+    # mutable property: false
+    check-interval-seconds: 3
+    cpu:
+      # global property: false
+      # mutable property: false
+      retries: 5
+      # global property: false
+      # mutable property: false
+      unhealthy-load-threshold-percentage: 95
+    memory:
+      # Log warning messages if the used direct memory exceeds the max direct memory of the percentage.
+      # global property: false
+      # mutable property: false
+      direct-memory-warning-threshold-percentage: 50
+      # If the used memory has used the reserved memory specified by maxAvailableMemoryPercentage and minFreeSystemMemoryBytes, try to start GC when the used heap memory exceeds the max heap memory of the percentage.
+      # global property: false
+      # mutable property: false
+      heap-memory-gc-threshold-percentage: 60
+      # Log warning messages if the used heap memory exceeds the max heap memory of the percentage.
+      # global property: false
+      # mutable property: false
+      heap-memory-warning-threshold-percentage: 95
+      # The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage to try to avoid OutOfMemoryError.
+      # global property: false
+      # mutable property: false
+      max-available-direct-memory-percentage: 95
+      # The server will refuse to serve when the used memory (heap memory + JVM internal non-heap memory + direct buffer pool) exceeds the physical memory of the percentage. The server will try to reserve max(maxAvailableMemoryPercentage of the physical memory, minFreeSystemMemoryBytes) for kernel and other processes. Note that the max available memory percentage does not conflict with the usage of limiting memory in docker because docker limits the memory of the container, while this memory percentage only limits the available memory for JVM.
+      # global property: false
+      # mutable property: false
+      max-available-memory-percentage: 95
+      # The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes.
+      # global property: false
+      # mutable property: false
+      min-free-system-memory-bytes: 134217728
+      # global property: false
+      # mutable property: false
+      min-heap-memory-gc-interval-seconds: 10
+      # global property: false
+      # mutable property: false
+      min-memory-warning-interval-seconds: 10
+  ip:
+    # The cached private IP will expire after the specified time has elapsed. 0 means no cache.
+    # global property: false
+    # mutable property: true
+    cached-private-ip-expire-after-millis: 60000
+    # The cached public IP will expire after the specified time has elapsed. 0 means no cache.
+    # global property: false
+    # mutable property: true
+    cached-public-ip-expire-after-millis: 60000
+    # The public IP detectors will only be used to query the public IP of the local node if needed (e.g. If the node discovery property "advertiseStrategy" is "PUBLIC_ADDRESS". Note that the HTTP response body must be a string of IP instead of a JSON.
+    # global property: false
+    # mutable property: true
+    public-ip-detector-addresses:
+      - "https://checkip.amazonaws.com"
+      - "https://whatismyip.akamai.com"
+      - "https://ifconfig.me/ip"
+      - "https://myip.dnsomatic.com"
+  location:
+    # Whether to handle users' locations.
+    # global property: false
+    # mutable property: false
+    enabled: true
+    nearby-user-request:
+      # The default maximum allowed distance in meters.
+      # global property: true
+      # mutable property: true
+      default-max-distance-meters: 10000
+      # The default maximum allowed number of nearby users.
+      # global property: true
+      # mutable property: true
+      default-max-nearby-user-count: 20
+      # The maximum allowed distance in meters.
+      # global property: true
+      # mutable property: true
+      max-distance-meters: 10000
+      # The maximum allowed number of nearby users.
+      # global property: true
+      # mutable property: true
+      max-nearby-user-count: 100
+    # Whether to treat the pair of user ID and device type as a unique user when querying users nearby. If false, only the user ID is used to identify a unique user.
+    # global property: false
+    # mutable property: false
+    treat-user-id-and-device-type-as-unique-user: false
+  logging:
+    console:
+      # global property: false
+      # mutable property: false
+      enabled: false
+      # global property: false
+      # mutable property: false
+      # enum values: [trace, debug, info, warn, error, fatal]
+      level: info
+    file:
+      compression:
+        # global property: false
+        # mutable property: false
+        enabled: true
+      # global property: false
+      # mutable property: false
+      enabled: true
+      # global property: false
+      # mutable property: false
+      file-path: "@HOME/log/.log"
+      # global property: false
+      # mutable property: false
+      # enum values: [trace, debug, info, warn, error, fatal]
+      level: info
+      # global property: false
+      # mutable property: false
+      max-file-size-mb: 32
+      # global property: false
+      # mutable property: false
+      max-files: 320
+  mock-node:
+    admin-api:
+      address:
+        # The advertise address of the local node exposed to admins. (e.g. 100.131.251.96).
+        # global property: false
+        # mutable property: true
+        advertise-host: ""
+        # The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs.
+        # global property: false
+        # mutable property: true
+        # enum values: [advertise_address, bind_address, private_address, public_address]
+        advertise-strategy: private_address
+        # Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510.
+        # global property: false
+        # mutable property: true
+        attach-port-to-host: true
+      debug:
+        # Whether to enable debug APIs.
+        # global property: true
+        # mutable property: true
+        enabled: false
+      # Whether to enable the APIs for administrators.
+      # global property: false
+      # mutable property: false
+      enabled: true
+      http:
+        # The connect timeout.
+        # global property: false
+        # mutable property: false
+        connect-timeout-millis: 30000
+        # The bind host.
+        # global property: false
+        # mutable property: false
+        host: "0.0.0.0"
+        # The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        idle-timeout-millis: 180000
+        # The max request body size in bytes.
+        # global property: false
+        # mutable property: false
+        max-request-body-size-bytes: 10485760
+        # The bind port.
+        # global property: false
+        # mutable property: false
+        port: 21510
+        # The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        request-read-timeout-millis: 180000
+      log:
+        # Whether to log API calls.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        # Whether to log the parameters of requests.
+        # global property: true
+        # mutable property: true
+        log-request-params: true
+      rate-limiting:
+        # The maximum number of tokens that the bucket can hold.
+        # global property: true
+        # mutable property: true
+        capacity: 50
+        # The initial number of tokens for new session.
+        # global property: true
+        # mutable property: true
+        initial-tokens: 50
+        # The time interval to refill. 0 means never refill.
+        # global property: true
+        # mutable property: true
+        refill-interval-millis: 1000
+        # Refills the bucket with the specified number of tokens per period if the bucket is not full.
+        # global property: true
+        # mutable property: true
+        tokens-per-period: 50
+      # Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc.
+      # global property: false
+      # mutable property: false
+      use-authentication: true
+    mongo:
+      admin: {}
+  plugin:
+    # The relative path of plugins.
+    # global property: false
+    # mutable property: false
+    dir: "plugins"
+    # Whether to enable plugins.
+    # global property: false
+    # mutable property: false
+    enabled: true
+    java:
+      # Whether to allow saving plugins using HTTP API.
+      # global property: false
+      # mutable property: false
+      allow-save: false
+    js:
+      # Whether to allow saving plugins using HTTP API.
+      # global property: false
+      # mutable property: false
+      allow-save: false
+      debug:
+        # Whether to enable debugging.
+        # global property: false
+        # mutable property: false
+        enabled: false
+        # The inspect host.
+        # global property: false
+        # mutable property: false
+        inspect-host: "localhost"
+        # The inspect port.
+        # global property: false
+        # mutable property: false
+        inspect-port: 24242
+      # The sandbox policy to use when running plugins.
+      # global property: false
+      # mutable property: false
+      # enum values: [trusted, constrained, isolated, untrusted]
+      sandbox-policy: trusted
+    network:
+      # global property: false
+      # mutable property: false
+      plugins: []
+      proxy:
+        # The HTTP proxy connect timeout in millis.
+        # global property: false
+        # mutable property: false
+        connect-timeout-millis: 60000
+        # Whether to enable HTTP proxy.
+        # global property: false
+        # mutable property: false
+        enabled: false
+        # The HTTP proxy host.
+        # global property: false
+        # mutable property: false
+        host: ""
+        # The HTTP proxy password.
+        # global property: false
+        # mutable property: false
+        password: ""
+        # The HTTP proxy port.
+        # global property: false
+        # mutable property: false
+        port: 8080
+        # The HTTP proxy username.
+        # global property: false
+        # mutable property: false
+        username: ""
+  security:
+    blocklist:
+      ip:
+        auto-block:
+          corrupted-frame:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+          corrupted-request:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+          frequent-request:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+        # global property: false
+        # mutable property: false
+        enabled: true
+        # global property: false
+        # mutable property: false
+        sync-blocklist-interval-millis: 10000
+      user-id:
+        auto-block:
+          corrupted-frame:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+          corrupted-request:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+          frequent-request:
+            # global property: false
+            # mutable property: false
+            block-levels:
+              - block-duration-seconds: 600
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 1800
+                go-next-level-trigger-times: 1
+                reduce-one-trigger-time-interval-millis: 60000
+              - block-duration-seconds: 3600
+                go-next-level-trigger-times: 0
+                reduce-one-trigger-time-interval-millis: 60000
+            # Block the client when the block condition is triggered the times.
+            # global property: false
+            # mutable property: false
+            block-trigger-times: 5
+            # global property: false
+            # mutable property: false
+            enabled: false
+        # global property: false
+        # mutable property: false
+        enabled: true
+        # global property: false
+        # mutable property: false
+        sync-blocklist-interval-millis: 10000
+    password:
+      # The password encoding algorithm for admins.
+      # global property: false
+      # mutable property: false
+      # enum values: [bcrypt, salted_sha256, noop]
+      admin-password-encoding-algorithm: bcrypt
+      # The initial password of the root user.
+      # global property: false
+      # mutable property: false
+      initial-root-password: ""
+      # The password encoding algorithm for users.
+      # global property: false
+      # mutable property: false
+      # enum values: [bcrypt, salted_sha256, noop]
+      user-password-encoding-algorithm: salted_sha256
+  service:
+    admin-api:
+      address:
+        # The advertise address of the local node exposed to admins. (e.g. 100.131.251.96).
+        # global property: false
+        # mutable property: true
+        advertise-host: ""
+        # The advertise strategy is used to decide which type of address should be used so that admins can access admin APIs and metrics APIs.
+        # global property: false
+        # mutable property: true
+        # enum values: [advertise_address, bind_address, private_address, public_address]
+        advertise-strategy: private_address
+        # Whether to attach the local port to the host. e.g. The local host is 100.131.251.96, and the port is 9510 so the service address will be 100.131.251.96:9510.
+        # global property: false
+        # mutable property: true
+        attach-port-to-host: true
+      # Whether to allow administrators to delete data without any filter. Better false to prevent administrators from deleting all data by accident.
+      # global property: true
+      # mutable property: true
+      allow-delete-without-filter: false
+      debug:
+        # Whether to enable debug APIs.
+        # global property: true
+        # mutable property: true
+        enabled: false
+      # The default available records per query request.
+      # global property: true
+      # mutable property: true
+      default-available-records-per-request: 10
+      # Whether to enable the APIs for administrators.
+      # global property: false
+      # mutable property: false
+      enabled: true
+      http:
+        # The connect timeout.
+        # global property: false
+        # mutable property: false
+        connect-timeout-millis: 30000
+        # The bind host.
+        # global property: false
+        # mutable property: false
+        host: "0.0.0.0"
+        # The idle timeout on the connection when it is waiting for an HTTP request to come. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        idle-timeout-millis: 180000
+        # The max request body size in bytes.
+        # global property: false
+        # mutable property: false
+        max-request-body-size-bytes: 10485760
+        # The bind port.
+        # global property: false
+        # mutable property: false
+        port: 8510
+        # The read timeout on the connection when it is waiting for an HTTP request to be fully read. Once the timeout is reached, the connection will be closed.
+        # global property: false
+        # mutable property: false
+        request-read-timeout-millis: 180000
+      log:
+        # Whether to log API calls.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        # Whether to log the parameters of requests.
+        # global property: true
+        # mutable property: true
+        log-request-params: true
+      # The maximum available online users' status per query request.
+      # global property: true
+      # mutable property: true
+      max-available-online-users-status-per-request: 20
+      # The maximum available records per query request.
+      # global property: true
+      # mutable property: true
+      max-available-records-per-request: 1000
+      # The maximum day difference per count request.
+      # global property: true
+      # mutable property: true
+      max-day-difference-per-count-request: 31
+      # The maximum day difference per query request.
+      # global property: true
+      # mutable property: true
+      max-day-difference-per-request: 90
+      # The maximum hour difference per count request.
+      # global property: true
+      # mutable property: true
+      max-hour-difference-per-count-request: 24
+      # The maximum month difference per count request.
+      # global property: true
+      # mutable property: true
+      max-month-difference-per-count-request: 12
+      rate-limiting:
+        # The maximum number of tokens that the bucket can hold.
+        # global property: true
+        # mutable property: true
+        capacity: 50
+        # The initial number of tokens for new session.
+        # global property: true
+        # mutable property: true
+        initial-tokens: 50
+        # The time interval to refill. 0 means never refill.
+        # global property: true
+        # mutable property: true
+        refill-interval-millis: 1000
+        # Refills the bucket with the specified number of tokens per period if the bucket is not full.
+        # global property: true
+        # mutable property: true
+        tokens-per-period: 50
+      # Whether to use authentication. If false, all HTTP requesters will personate the root user and all HTTP requests will be passed. You may set it to false when you want to manage authentication via security groups, NACL, etc.
+      # global property: false
+      # mutable property: false
+      use-authentication: true
+    client-api:
+      # The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them.
+      # global property: false
+      # mutable property: false
+      # enum values: [create_session_request, delete_session_request, query_conversations_request, update_conversation_request, update_typing_status_request, create_message_request, query_messages_request, update_message_request, create_group_members_request, delete_group_members_request, query_group_members_request, update_group_member_request, query_user_profiles_request, query_nearby_users_request, query_user_online_statuses_request, update_user_location_request, update_user_online_status_request, update_user_request, update_user_settings_request, delete_user_settings_request, query_user_settings_request, create_friend_request_request, create_relationship_group_request, create_relationship_request, delete_friend_request_request, delete_relationship_group_request, delete_relationship_request, query_friend_requests_request, query_related_user_ids_request, query_relationship_groups_request, query_relationships_request, update_friend_request_request, update_relationship_group_request, update_relationship_request, create_group_request, delete_group_request, query_groups_request, query_joined_group_ids_request, query_joined_group_infos_request, update_group_request, create_group_blocked_user_request, delete_group_blocked_user_request, query_group_blocked_user_ids_request, query_group_blocked_user_infos_request, check_group_join_questions_answers_request, create_group_invitation_request, create_group_join_request_request, create_group_join_questions_request, delete_group_invitation_request, delete_group_join_request_request, delete_group_join_questions_request, query_group_invitations_request, query_group_join_requests_request, query_group_join_questions_request, update_group_invitation_request, update_group_join_question_request, update_group_join_request_request, create_meeting_request, delete_meeting_request, query_meetings_request, update_meeting_request, update_meeting_invitation_request, delete_resource_request, query_resource_download_info_request, query_resource_upload_info_request, query_message_attachment_infos_request, update_message_attachment_info_request, delete_conversation_settings_request, query_conversation_settings_request, update_conversation_settings_request, create_message_reactions_request, delete_message_reactions_request, kind_not_set]
+      disabled-endpoints: []
+      logging:
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [all, none, create, delete, update, query, storage, conversation, message, user, user_relationship, group, group_blocklist, group_enrollment, group_member]
+        excluded-notification-categories: []
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [create_session_request, delete_session_request, query_conversations_request, update_conversation_request, update_typing_status_request, create_message_request, query_messages_request, update_message_request, create_group_members_request, delete_group_members_request, query_group_members_request, update_group_member_request, query_user_profiles_request, query_nearby_users_request, query_user_online_statuses_request, update_user_location_request, update_user_online_status_request, update_user_request, update_user_settings_request, delete_user_settings_request, query_user_settings_request, create_friend_request_request, create_relationship_group_request, create_relationship_request, delete_friend_request_request, delete_relationship_group_request, delete_relationship_request, query_friend_requests_request, query_related_user_ids_request, query_relationship_groups_request, query_relationships_request, update_friend_request_request, update_relationship_group_request, update_relationship_request, create_group_request, delete_group_request, query_groups_request, query_joined_group_ids_request, query_joined_group_infos_request, update_group_request, create_group_blocked_user_request, delete_group_blocked_user_request, query_group_blocked_user_ids_request, query_group_blocked_user_infos_request, check_group_join_questions_answers_request, create_group_invitation_request, create_group_join_request_request, create_group_join_questions_request, delete_group_invitation_request, delete_group_join_request_request, delete_group_join_questions_request, query_group_invitations_request, query_group_join_requests_request, query_group_join_questions_request, update_group_invitation_request, update_group_join_question_request, update_group_join_request_request, create_meeting_request, delete_meeting_request, query_meetings_request, update_meeting_request, update_meeting_invitation_request, delete_resource_request, query_resource_download_info_request, query_resource_upload_info_request, query_message_attachment_infos_request, update_message_attachment_info_request, delete_conversation_settings_request, query_conversation_settings_request, update_conversation_settings_request, create_message_reactions_request, delete_message_reactions_request, kind_not_set]
+        excluded-notification-types: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [all, none, create, delete, update, query, storage, conversation, message, user, user_relationship, group, group_blocklist, group_enrollment, group_member]
+        excluded-request-categories: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        # enum values: [create_session_request, delete_session_request, query_conversations_request, update_conversation_request, update_typing_status_request, create_message_request, query_messages_request, update_message_request, create_group_members_request, delete_group_members_request, query_group_members_request, update_group_member_request, query_user_profiles_request, query_nearby_users_request, query_user_online_statuses_request, update_user_location_request, update_user_online_status_request, update_user_request, update_user_settings_request, delete_user_settings_request, query_user_settings_request, create_friend_request_request, create_relationship_group_request, create_relationship_request, delete_friend_request_request, delete_relationship_group_request, delete_relationship_request, query_friend_requests_request, query_related_user_ids_request, query_relationship_groups_request, query_relationships_request, update_friend_request_request, update_relationship_group_request, update_relationship_request, create_group_request, delete_group_request, query_groups_request, query_joined_group_ids_request, query_joined_group_infos_request, update_group_request, create_group_blocked_user_request, delete_group_blocked_user_request, query_group_blocked_user_ids_request, query_group_blocked_user_infos_request, check_group_join_questions_answers_request, create_group_invitation_request, create_group_join_request_request, create_group_join_questions_request, delete_group_invitation_request, delete_group_join_request_request, delete_group_join_questions_request, query_group_invitations_request, query_group_join_requests_request, query_group_join_questions_request, update_group_invitation_request, update_group_join_question_request, update_group_join_request_request, create_meeting_request, delete_meeting_request, query_meetings_request, update_meeting_request, update_meeting_invitation_request, delete_resource_request, query_resource_download_info_request, query_resource_upload_info_request, query_message_attachment_infos_request, update_message_attachment_info_request, delete_conversation_settings_request, query_conversation_settings_request, update_conversation_settings_request, create_message_reactions_request, delete_message_reactions_request, kind_not_set]
+        excluded-request-types: []
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        included-notification-categories: []
+        # Turms will get the notifications to log from the union of "includedNotificationCategories" and "includedNotifications" except the notifications included in "excludedNotificationCategories" and "excludedNotificationTypes".
+        # global property: false
+        # mutable property: false
+        included-notifications: []
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        included-request-categories:
+          - category: "ALL"
+            sample-rate: 1.0
+        # Turms will get the requests to log from the union of "includedRequestCategories" and "includedRequests" except the requests included in "excludedRequestCategories" and "excludedRequestTypes".
+        # global property: false
+        # mutable property: false
+        included-requests: []
+    conference:
+      meeting:
+        id:
+          # The ID type.
+          # global property: true
+          # mutable property: true
+          # enum values: [digit_9, digit_10]
+          type: digit_9
+        intro:
+          # The maximum length of the intro. 0 means no maximum length.
+          # global property: true
+          # mutable property: true
+          max-length: 200
+          # The minimum length of the intro. 0 means no minimum length.
+          # global property: true
+          # mutable property: true
+          min-length: 0
+        name:
+          # The maximum length of the name. 0 means no maximum length.
+          # global property: true
+          # mutable property: true
+          max-length: 20
+          # The minimum length of the name. 0 means no minimum length.
+          # global property: true
+          # mutable property: true
+          min-length: 0
+        password:
+          # The maximum length of the password.
+          # global property: true
+          # mutable property: true
+          max-length: 6
+          # The minimum length of the password.
+          # global property: true
+          # mutable property: true
+          min-length: 6
+          # The password policy.
+          # global property: true
+          # mutable property: true
+          # enum values: [user_input_required, user_input_optional, user_input_or_system_generated, system_generated, prohibited]
+          policy: prohibited
+          # The password type.
+          # global property: true
+          # mutable property: true
+          # enum values: [numeric, alphabetic, alphanumeric]
+          type: numeric
+        quota:
+          # The maximum number of active meetings per user.
+          # global property: true
+          # mutable property: true
+          max-active-meeting-count-per-user: 1
+        scheduling:
+          # Whether to allow users to cancel the meeting.
+          # global property: true
+          # mutable property: true
+          allow-cancel: true
+          # The maximum allowed meeting start date offset in seconds. 0 means no offset allowed.
+          # global property: true
+          # mutable property: true
+          max-allowed-start-date-offset-seconds: 0
+    conversation:
+      read-receipt:
+        # Whether to allow moving the last read date forward.
+        # global property: true
+        # mutable property: true
+        allow-move-read-date-forward: false
+        # Whether to allow updating the last read date.
+        # global property: true
+        # mutable property: true
+        enabled: true
+        # Whether to update the read date after a user sent a message.
+        # global property: true
+        # mutable property: true
+        update-read-date-after-message-sent: true
+        # Whether to update the read date when a user queries messages.
+        # global property: true
+        # mutable property: true
+        update-read-date-when-user-querying-message: false
+        # Whether to use the server time to set the last read date when updating.
+        # global property: true
+        # mutable property: true
+        use-server-time: true
+      settings:
+        # The list of allowed settings.
+        # global property: true
+        # mutable property: true
+        allowed-settings: []
+        # Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request.
+        # global property: true
+        # mutable property: true
+        ignore-unknown-settings-on-delete: false
+        # Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request.
+        # global property: true
+        # mutable property: true
+        ignore-unknown-settings-on-upsert: false
+      typing-status:
+        # Whether to notify users of typing statuses sent by other users.
+        # global property: true
+        # mutable property: true
+        enabled: true
+    elasticsearch:
+      # Whether to enable Elasticsearch.
+      # global property: false
+      # mutable property: false
+      enabled: false
+      use-case:
+        group:
+          client:
+            # Elasticsearch password.
+            # global property: false
+            # mutable property: false
+            password: ""
+            # Elasticsearch HTTP request headers.
+            # global property: false
+            # mutable property: false
+            request-headers: []
+            # Elasticsearch URI.
+            # global property: false
+            # mutable property: false
+            uri: "http://localhost:9200"
+            # Elasticsearch username.
+            # global property: false
+            # mutable property: false
+            username: "elastic"
+          # Whether to enable this use case.
+          # global property: false
+          # mutable property: false
+          enabled: true
+          # global property: false
+          # mutable property: false
+          indexes:
+            - code: "NONE"
+              number-of-replicas: -1
+              number-of-shards: -1
+              properties:
+                - name:
+                  - text-fields:
+                    - analyzer: ""
+                      field-name: ""
+                      search-analyzer: ""
+          mongo:
+            # Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors.
+            # global property: false
+            # mutable property: false
+            enable-transaction: false
+          sync:
+            # Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet.
+            # global property: false
+            # mutable property: false
+            perform-full-sync-at-startup: true
+        user:
+          client:
+            # Elasticsearch password.
+            # global property: false
+            # mutable property: false
+            password: ""
+            # Elasticsearch HTTP request headers.
+            # global property: false
+            # mutable property: false
+            request-headers: []
+            # Elasticsearch URI.
+            # global property: false
+            # mutable property: false
+            uri: "http://localhost:9200"
+            # Elasticsearch username.
+            # global property: false
+            # mutable property: false
+            username: "elastic"
+          # Whether to enable this use case.
+          # global property: false
+          # mutable property: false
+          enabled: true
+          # global property: false
+          # mutable property: false
+          indexes:
+            - code: "NONE"
+              number-of-replicas: -1
+              number-of-shards: -1
+              properties:
+                - name:
+                  - text-fields:
+                    - analyzer: ""
+                      field-name: ""
+                      search-analyzer: ""
+          mongo:
+            # Whether to enable transaction for MongoDB. If enabled, MongoDB will use transactions when upserting data into both MongoDB and Elasticsearch, and will roll back data if an error occurs, no matter they are MongoDB or Elasticsearch errors.
+            # global property: false
+            # mutable property: false
+            enable-transaction: false
+          sync:
+            # Whether to sync existing data from MongoDB to Elasticsearch. If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet.
+            # global property: false
+            # mutable property: false
+            perform-full-sync-at-startup: true
+    fake:
+      # Whether to clear all collections before faking on startup.
+      # global property: false
+      # mutable property: false
+      clear-all-collections-before-faking: false
+      # Whether to fake data. Note that faking only works in non-production environments.
+      # global property: false
+      # mutable property: false
+      enabled: false
+      # Whether to fake data even if the collection has already existed.
+      # global property: false
+      # mutable property: false
+      fake-if-collection-exists: false
+      # the total number of users to fake.
+      # global property: false
+      # mutable property: false
+      user-count: 1000
+    group:
+      # Whether to activate a group when created by default.
+      # global property: true
+      # mutable property: true
+      activate-group-when-created: true
+      # Whether to allow the group owner to change the group type.
+      # global property: true
+      # mutable property: true
+      allow-group-owner-change-group-type: false
+      # Whether to delete groups logically by default.
+      # global property: true
+      # mutable property: true
+      delete-group-logically-by-default: true
+      invitation:
+        # Whether to allow the owner and managers of a group to recall pending group invitations.
+        # global property: true
+        # mutable property: true
+        allow-recall-pending-invitation-by-owner-and-manager: false
+        # Whether to allow the sender to recall the pending group invitation sent by themselves.
+        # global property: true
+        # mutable property: true
+        allow-recall-pending-invitation-by-sender: false
+        # Whether to delete expired group invitations when the cron expression is triggered.
+        # global property: true
+        # mutable property: true
+        delete-expired-invitations-when-cron-triggered: false
+        # A group invitation will become expired after the specified time has passed.
+        # global property: true
+        # mutable property: true
+        expire-after-seconds: 2592000
+        # Clean the expired group invitations when the cron expression is triggered if "deleteExpiredInvitationsWhenCronTriggered" is true.
+        # global property: false
+        # mutable property: false
+        expired-invitations-cleanup-cron: "0 15 2 * * *"
+        # The maximum allowed length for the text of a group invitation.
+        # global property: true
+        # mutable property: true
+        max-content-length: 200
+        # The maximum allowed length for the response reason of a group invitation.
+        # global property: true
+        # mutable property: true
+        max-response-reason-length: 200
+      join-request:
+        # Whether to allow users to recall the join requests sent by themselves.
+        # global property: true
+        # mutable property: true
+        allow-recall-pending-join-request-by-sender: false
+        # Whether to delete expired group join requests when the cron expression is triggered.
+        # global property: true
+        # mutable property: true
+        delete-expired-join-requests-when-cron-triggered: false
+        # A group join request will become expired after the specified time has elapsed.
+        # global property: true
+        # mutable property: true
+        expire-after-seconds: 2592000
+        # Clean the expired group join requests when the cron expression is triggered if "deleteExpiredJoinRequestsWhenCronTriggered" is true.
+        # global property: false
+        # mutable property: false
+        expired-join-requests-cleanup-cron: "0 30 2 * * *"
+        # The maximum allowed length for the text of a group join request.
+        # global property: true
+        # mutable property: true
+        max-content-length: 200
+        # The maximum allowed length for the response reason of a group join request.
+        # global property: true
+        # mutable property: true
+        max-response-reason-length: 200
+      # The group member cache will expire after the specified seconds. If 0, no group member cache.
+      # global property: true
+      # mutable property: false
+      member-cache-expire-after-seconds: 15
+      question:
+        # The maximum allowed length for the text of a group question's answer.
+        # global property: true
+        # mutable property: true
+        answer-content-limit: 50
+        # The maximum number of answers for a group question.
+        # global property: true
+        # mutable property: true
+        max-answer-count: 10
+        # The maximum allowed length for the text of a group question.
+        # global property: true
+        # mutable property: true
+        question-content-limit: 200
+    message:
+      # Whether to allow the sender of a message to edit the message.
+      # global property: true
+      # mutable property: true
+      allow-edit-message-by-sender: true
+      # Whether to allow users to recall messages. Note: To recall messages, more system resources are needed.
+      # global property: true
+      # mutable property: true
+      allow-recall-message: true
+      # Whether to allow users to send messages to themselves.
+      # global property: true
+      # mutable property: true
+      allow-send-messages-to-oneself: false
+      # Whether to allow users to send messages to a stranger.
+      # global property: true
+      # mutable property: true
+      allow-send-messages-to-stranger: true
+      # The available recall duration for the sender of a message.
+      # global property: true
+      # mutable property: true
+      available-recall-duration-seconds: 300
+      cache:
+        # The maximum size of the cache of sent messages.
+        # global property: false
+        # mutable property: false
+        sent-message-cache-max-size: 10240
+        # The retention period of sent messages in the cache. For a better performance, it is a good practice to keep the value greater than the allowed recall duration.
+        # global property: false
+        # mutable property: false
+        sent-message-expire-after: 30
+      # Whether to check if the target (recipient or group) of a message is active and not deleted.
+      # global property: true
+      # mutable property: true
+      check-if-target-active-and-not-deleted: true
+      # The default available messages number with the "total" field for a message query request.
+      # global property: true
+      # mutable property: true
+      default-available-messages-number-with-total: 1
+      # The default available messages number without the "total" field for a message query request.
+      # global property: true
+      # mutable property: true
+      default-available-messages-number-without-total: 1000
+      # Whether to delete messages logically by default.
+      # global property: true
+      # mutable property: true
+      delete-message-logically-by-default: true
+      # Clean the expired messages when the cron expression is triggered.
+      # global property: false
+      # mutable property: false
+      expired-messages-cleanup-cron: "0 45 2 * * *"
+      # Whether to respond with recalled messages to clients' message query requests.
+      # global property: true
+      # mutable property: true
+      is-recalled-message-visible: false
+      # The max available messages number with the "total" field that a message query request can request.
+      # global property: true
+      # mutable property: true
+      max-available-messages-number-with-total: 1000
+      # The max available messages number without the "total" field that a message query request can request.
+      # global property: true
+      # mutable property: true
+      max-available-messages-number-without-total: 1000
+      # The maximum allowed size for the records of a message.
+      # global property: true
+      # mutable property: true
+      max-records-size-bytes: 15728640
+      # The maximum allowed length for the text of a message.
+      # global property: true
+      # mutable property: true
+      max-text-limit: 500
+      # A message will be retained for the given period and will be removed from the database after the retention period.
+      # global property: true
+      # mutable property: true
+      message-retention-period-hours: 0
+      # Whether to persist messages in databases. Note: If false, senders will not get the message ID after the message has sent and cannot edit it.
+      # global property: true
+      # mutable property: true
+      persist-message: true
+      # Whether to persist the previous message ID of messages in databases.
+      # global property: true
+      # mutable property: true
+      persist-pre-message-id: false
+      # Whether to persist the records of messages in databases.
+      # global property: true
+      # mutable property: true
+      persist-record: false
+      # Whether to persist the sender IP of messages in databases.
+      # global property: true
+      # mutable property: true
+      persist-sender-ip: false
+      sequence-id:
+        # Whether to use the sequence ID for group conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance.
+        # global property: true
+        # mutable property: false
+        use-sequence-id-for-group-conversation: false
+        # Whether to use the sequence ID for private conversations so that the client can be aware of the loss of messages. Note that the property has a significant impact on performance.
+        # global property: true
+        # mutable property: false
+        use-sequence-id-for-private-conversation: false
+      # The time type for the delivery time of message.
+      # global property: true
+      # mutable property: true
+      # enum values: [client_time, local_server_time]
+      time-type: local_server_time
+      # Whether to use conversation ID so that a user can query the messages sent by themselves in a conversation quickly.
+      # global property: true
+      # mutable property: false
+      use-conversation-id: false
+    mongo:
+      admin:
+        optional-index:
+          admin:
+            # global property: false
+            # mutable property: false
+            registration-date: false
+            # global property: false
+            # mutable property: false
+            role-id: false
+      conference:
+        optional-index:
+          meeting:
+            # global property: false
+            # mutable property: false
+            group-id: true
+            # global property: false
+            # mutable property: false
+            user-id: true
+      conversation: {}
+      group:
+        optional-index:
+          group:
+            # global property: false
+            # mutable property: false
+            creation-date: false
+            # global property: false
+            # mutable property: false
+            creator-id: false
+            # global property: false
+            # mutable property: false
+            deletion-date: true
+            # global property: false
+            # mutable property: false
+            mute-end-date: false
+            # global property: false
+            # mutable property: false
+            owner-id: true
+            # global property: false
+            # mutable property: false
+            type-id: false
+          group-blocked-user:
+            # global property: false
+            # mutable property: false
+            block-date: false
+            # global property: false
+            # mutable property: false
+            requester-id: false
+          group-invitation:
+            # global property: false
+            # mutable property: false
+            group-id: true
+            # global property: false
+            # mutable property: false
+            inviter-id: false
+            # global property: false
+            # mutable property: false
+            response-date: false
+          group-join-request:
+            # global property: false
+            # mutable property: false
+            creation-date: false
+            # global property: false
+            # mutable property: false
+            group-id: true
+            # global property: false
+            # mutable property: false
+            responder-id: false
+            # global property: false
+            # mutable property: false
+            response-date: false
+          group-member:
+            # global property: false
+            # mutable property: false
+            join-date: false
+            # global property: false
+            # mutable property: false
+            mute-end-date: false
+      message:
+        optional-index:
+          message:
+            # global property: false
+            # mutable property: false
+            deletion-date: true
+            # global property: false
+            # mutable property: false
+            reference-id: false
+            # global property: false
+            # mutable property: false
+            sender-id: false
+            # global property: false
+            # mutable property: false
+            sender-ip: true
+            # global property: false
+            # mutable property: false
+            sender-ip-v6: true
+        tiered-storage:
+          auto-range-updater:
+            # global property: false
+            # mutable property: false
+            cron: "0 0 3 * * *"
+            # global property: true
+            # mutable property: true
+            enabled: true
+          # global property: false
+          # mutable property: false
+          enabled: true
+          # The storage properties for tiers from hot to cold. Note that the order of the tiers is important.
+          # global property: false
+          # mutable property: false
+          tiers:
+            - hot:
+              - days: 30
+              - enabled: true
+              - shards:
+                - ""
+            - warm:
+              - days: 60
+              - enabled: true
+              - shards:
+                - ""
+            - cold:
+              - days: 270
+              - enabled: true
+              - shards:
+                - ""
+            - frozen:
+              - days: 0
+              - enabled: true
+              - shards:
+                - ""
+      user:
+        optional-index:
+          user-friend-request:
+            # global property: false
+            # mutable property: false
+            recipient-id: false
+            # global property: false
+            # mutable property: false
+            requester-id: false
+            # global property: false
+            # mutable property: false
+            response-date: false
+          user-relationship:
+            # global property: false
+            # mutable property: false
+            establishment-date: false
+          user-relationship-group-member:
+            # global property: false
+            # mutable property: false
+            group-index: false
+            # global property: false
+            # mutable property: false
+            join-date: false
+            # global property: false
+            # mutable property: false
+            related-user-id: false
+    notification:
+      friend-request-created:
+        # Whether to notify the recipient when the requester has created a friend request.
+        # global property: true
+        # mutable property: true
+        notify-friend-request-recipient: true
+        # Whether to notify the requester's other online sessions when they have created a friend request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      friend-request-recalled:
+        # Whether to notify the recipient when the requester has recalled a friend request.
+        # global property: true
+        # mutable property: true
+        notify-friend-request-recipient: true
+        # Whether to notify the requester's other online sessions when they have recalled a friend request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      friend-request-replied:
+        # Whether to notify the sender of the friend request when the recipient has replied to the friend request sent by them.
+        # global property: true
+        # mutable property: true
+        notify-friend-request-sender: true
+        # Whether to notify the requester's other online sessions when they have replied to a friend request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-blocked-user-added:
+        # Whether to notify the user when they have been blocked by a group.
+        # global property: true
+        # mutable property: true
+        notify-blocked-user: false
+        # Whether to notify group members when a user has been blocked by a group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the requester's other online sessions when they have added a blocked user to a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-blocked-user-removed:
+        # Whether to notify group members when a user is unblocked by a group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the requester's other online sessions when they have removed a blocked user from a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+        # Whether to notify the user when they are unblocked by a group.
+        # global property: true
+        # mutable property: true
+        notify-unblocked-user: false
+      group-conversation-read-date-updated:
+        # Whether to notify other group members when a group member has updated their read date in a group conversation.
+        # global property: true
+        # mutable property: true
+        notify-other-group-members: false
+        # Whether to notify the requester's other online sessions when they have updated the read date in a group conversation.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-conversation-setting-deleted:
+        # Whether to notify the requester's other online sessions when they have deleted their group conversation settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-conversation-setting-updated:
+        # Whether to notify the requester's other online sessions when they have updated their group conversation settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-created:
+        # Whether to notify the requester's other online sessions when they have created a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-deleted:
+        # Whether to notify group members when a group owner has updated their group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: true
+        # Whether to notify the requester's other online sessions when they have deleted a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-invitation-added:
+        # Whether to notify group members when a user has been invited.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when a user has been invited.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the user when they have been invited by a group member.
+        # global property: true
+        # mutable property: true
+        notify-invitee: true
+        # Whether to notify the requester's other online sessions when they have invited a user to a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-invitation-recalled:
+        # Whether to notify group members when an invitation has been recalled.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when an invitation has been recalled.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the invitee when a group member has recalled their received group invitation.
+        # global property: true
+        # mutable property: true
+        notify-invitee: true
+        # Whether to notify the requester's other online sessions when they have recalled a group invitation.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-invitation-replied:
+        # Whether to notify the inviter of the group invitation when their group invitations have been replied.
+        # global property: true
+        # mutable property: true
+        notify-group-invitation-inviter: true
+        # Whether to notify group members when a group invitation has been replied.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when a group invitation has been replied.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the requester's other online sessions when they have replied to a group invitation.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-join-request-created:
+        # Whether to notify group members when a user has created a group join request for their group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when a user has created a group join request for their group.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the requester's other online sessions when they have created a group join request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-join-request-recalled:
+        # Whether to notify group members when a user has recalled a group join request for their group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when a user has recalled a group join request for their group.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the requester's other online sessions when they have recalled a group join request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-join-request-replied:
+        # Whether to notify the sender of the group join request when the group owner or manager has replied to the friend request sent by them.
+        # global property: true
+        # mutable property: true
+        notify-group-join-request-sender: true
+        # Whether to notify group members when a group join request has been replied.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+        # Whether to notify the group owner and managers when a group join request has been replied.
+        # global property: true
+        # mutable property: true
+        notify-group-owner-and-managers: true
+        # Whether to notify the requester's other online sessions when they have replied to a group join request.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-member-added:
+        # Whether to notify the group member when added by others.
+        # global property: true
+        # mutable property: true
+        notify-added-group-member: true
+        # Whether to notify other group members when a group member has been added.
+        # global property: true
+        # mutable property: true
+        notify-other-group-members: true
+        # Whether to notify the requester's other online sessions when they have added a group member.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-member-info-updated:
+        # Whether to notify other group members when a group member's information has been updated.
+        # global property: true
+        # mutable property: true
+        notify-other-group-members: false
+        # Whether to notify the requester's other online sessions when they have updated their group member information.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+        # Whether to notify the group member when others have updated their group member information.
+        # global property: true
+        # mutable property: true
+        notify-updated-group-member: false
+      group-member-online-status-updated:
+        # Whether to notify other group members when a member's online status has been updated.
+        # global property: true
+        # mutable property: true
+        notify-group-members: false
+      group-member-removed:
+        # Whether to notify other group members when a group member has been removed.
+        # global property: true
+        # mutable property: true
+        notify-other-group-members: true
+        # Whether to notify the group member when removed by others.
+        # global property: true
+        # mutable property: true
+        notify-removed-group-member: true
+        # Whether to notify the requester's other online sessions when they removed a group member.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      group-updated:
+        # Whether to notify group members when the group owner or managers have updated their group.
+        # global property: true
+        # mutable property: true
+        notify-group-members: true
+        # Whether to notify the requester's other online sessions when they have updated a group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      meeting-canceled:
+        # Whether to notify the meeting participants when the creator has canceled a meeting.
+        # global property: true
+        # mutable property: true
+        notify-meeting-participants: false
+        # Whether to notify the requester's other online sessions when they have canceled a meeting.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: false
+      meeting-invitation-updated:
+        # Whether to notify the meeting participants when the requester has updated a meeting invitation.
+        # global property: true
+        # mutable property: true
+        notify-meeting-participants: true
+        # Whether to notify the requester's other online sessions when they have updated a meeting invitation.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      meeting-updated:
+        # Whether to notify the meeting participants when the creator has updated a meeting.
+        # global property: true
+        # mutable property: true
+        notify-meeting-participants: false
+        # Whether to notify the requester's other online sessions when they have updated a meeting.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: false
+      message-created:
+        # Whether to notify the message recipients when a sender has created a message to them.
+        # global property: true
+        # mutable property: true
+        notify-message-recipients: true
+        # Whether to notify the requester's other online sessions when they have created a message.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      message-updated:
+        # Whether to notify the message recipients when a sender has updated a message sent to them.
+        # global property: true
+        # mutable property: true
+        notify-message-recipients: true
+        # Whether to notify the requester's other online sessions when they have updated a message.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      one-sided-relationship-group-deleted:
+        # Whether to notify members when a one-side relationship group owner has deleted the group.
+        # global property: true
+        # mutable property: true
+        notify-relationship-group-members: false
+        # Whether to notify the requester's other online sessions when they have deleted a relationship group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      one-sided-relationship-group-member-added:
+        # Whether to notify the new member when a user has added them to their one-sided relationship group.
+        # global property: true
+        # mutable property: true
+        notify-new-relationship-group-member: false
+        # Whether to notify the requester's other online sessions when they have added a new member to their one-sided relationship group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      one-sided-relationship-group-member-removed:
+        # Whether to notify the removed member when a user has removed them from their one-sided relationship group.
+        # global property: true
+        # mutable property: true
+        notify-removed-relationship-group-member: false
+        # Whether to notify the requester's other online sessions when they have removed a new member from their one-sided relationship group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      one-sided-relationship-group-updated:
+        # Whether to notify members when a one-side relationship group owner has updated the group.
+        # global property: true
+        # mutable property: true
+        notify-relationship-group-members: false
+        # Whether to notify the requester's other online sessions when they have updated a relationship group.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      one-sided-relationship-updated:
+        # Whether to notify the related user when a user has updated a one-sided relationship with them.
+        # global property: true
+        # mutable property: true
+        notify-related-user: false
+        # Whether to notify the requester's other online sessions when they have updated a one-sided relationship.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      private-conversation-read-date-updated:
+        # Whether to notify another contact when a contact has updated their read date in a private conversation.
+        # global property: true
+        # mutable property: true
+        notify-contact: false
+        # Whether to notify the requester's other online sessions when they have updated the read date in a private conversation.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      private-conversation-setting-deleted:
+        # Whether to notify the requester's other online sessions when they have deleted their private conversation settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      private-conversation-setting-updated:
+        # Whether to notify the requester's other online sessions when they have updated their private conversation settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      user-info-updated:
+        # Whether to notify non-blocked related users when a user has updated their information.
+        # global property: true
+        # mutable property: true
+        notify-non-blocked-related-users: false
+        # Whether to notify the requester's other online sessions when they have updated their information.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      user-online-status-updated:
+        # Whether to notify non-blocked related users when a user has updated their online status.
+        # global property: true
+        # mutable property: true
+        notify-non-blocked-related-users: false
+        # Whether to notify the requester's other online sessions when they have updated their online status.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      user-setting-deleted:
+        # Whether to notify the requester's other online sessions when they have deleted their settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+      user-setting-updated:
+        # Whether to notify the requester's other online sessions when they have updated their settings.
+        # global property: true
+        # mutable property: true
+        notify-requester-other-online-sessions: true
+    push-notification:
+      apns:
+        # global property: false
+        # mutable property: false
+        bundle-id: ""
+        # global property: false
+        # mutable property: false
+        enabled: false
+        # global property: false
+        # mutable property: false
+        key-id: ""
+        # global property: false
+        # mutable property: false
+        sandbox-enabled: false
+        # global property: false
+        # mutable property: false
+        signing-key: ""
+        # global property: false
+        # mutable property: false
+        team-id: ""
+      fcm:
+        # global property: false
+        # mutable property: false
+        credentials: ""
+        # global property: false
+        # mutable property: false
+        enabled: false
+    redis:
+      sequence-id: {}
+    statistics:
+      # Whether to log online users number.
+      # global property: true
+      # mutable property: true
+      log-online-users-number: true
+      # The cron expression to specify the time to log online users' number.
+      # global property: false
+      # mutable property: false
+      online-users-number-logging-cron: "0/15 * * * * *"
+    storage:
+      group-profile-picture:
+        # The allowed "Content-Type" of the resource that the client can upload.
+        # global property: false
+        # mutable property: false
+        allowed-content-type: "image/*"
+        # Restrict access to the resource to only allow the specific referrers (e.g. "https://github.com/turms-im/turms/*").
+        # global property: false
+        # mutable property: false
+        allowed-referrers: []
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        download-url-expire-after-seconds: 300
+        # Delete the resource the specific days after creation. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        expire-after-days: 0
+        # The maximum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        max-size-bytes: 1048576
+        # The minimum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        min-size-bytes: 0
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        upload-url-expire-after-seconds: 300
+      message-attachment:
+        # The allowed "Content-Type" of the resource that the client can upload.
+        # global property: false
+        # mutable property: false
+        allowed-content-type: "*/*"
+        # Restrict access to the resource to only allow the specific referrers (e.g. "https://github.com/turms-im/turms/*").
+        # global property: false
+        # mutable property: false
+        allowed-referrers: []
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        download-url-expire-after-seconds: 300
+        # Delete the resource the specific days after creation. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        expire-after-days: 0
+        # The maximum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        max-size-bytes: 1048576
+        # The minimum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        min-size-bytes: 0
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        upload-url-expire-after-seconds: 300
+      user-profile-picture:
+        # The allowed "Content-Type" of the resource that the client can upload.
+        # global property: false
+        # mutable property: false
+        allowed-content-type: "image/*"
+        # Restrict access to the resource to only allow the specific referrers (e.g. "https://github.com/turms-im/turms/*").
+        # global property: false
+        # mutable property: false
+        allowed-referrers: []
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        download-url-expire-after-seconds: 300
+        # Delete the resource the specific days after creation. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        expire-after-days: 0
+        # The maximum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        max-size-bytes: 1048576
+        # The minimum size of the resource that the client can upload. 0 means no limit.
+        # global property: false
+        # mutable property: false
+        min-size-bytes: 0
+        # The presigned URLs are valid only for the specified duration. 0 means no expiration.
+        # global property: false
+        # mutable property: false
+        upload-url-expire-after-seconds: 300
+    user:
+      # Whether to activate a user when added by default.
+      # global property: true
+      # mutable property: true
+      activate-user-when-added: true
+      # Whether to delete the two-sided relationships when a user requests to delete a relationship.
+      # global property: true
+      # mutable property: true
+      delete-two-sided-relationships: false
+      # Whether to delete a user logically.
+      # global property: true
+      # mutable property: true
+      delete-user-logically: true
+      friend-request:
+        # Whether to allow the sender to recall the pending friend request sent by themselves.
+        # global property: true
+        # mutable property: true
+        allow-recall-pending-friend-request-by-sender: false
+        # Whether to allow sending a friend request again after the previous request has been declined, ignored, or expired.
+        # global property: true
+        # mutable property: true
+        allow-send-request-after-declined-or-ignored-or-expired: false
+        # Whether to delete expired when the cron expression is triggered.
+        # global property: true
+        # mutable property: true
+        delete-expired-requests-when-cron-triggered: false
+        # Clean expired friend requests when the cron expression is triggered if deleteExpiredRequestsWhenCronTriggered is true.
+        # global property: false
+        # mutable property: false
+        expired-user-friend-requests-cleanup-cron: "0 0 2 * * *"
+        # A friend request will become expired after the specified time has elapsed.
+        # global property: true
+        # mutable property: true
+        friend-request-expire-after-seconds: 2592000
+        # The maximum allowed length for the text of a friend request.
+        # global property: true
+        # mutable property: true
+        max-content-length: 200
+        # The maximum allowed length for the response reason of a friend request.
+        # global property: true
+        # mutable property: true
+        max-response-reason-length: 200
+      # The maximum allowed length for a user's intro.
+      # global property: true
+      # mutable property: true
+      max-intro-length: 100
+      # The maximum allowed length for a user's name.
+      # global property: true
+      # mutable property: true
+      max-name-length: 20
+      # The maximum allowed length for a user's password.
+      # global property: true
+      # mutable property: true
+      max-password-length: 16
+      # The maximum allowed length for a user's profile picture.
+      # global property: true
+      # mutable property: true
+      max-profile-picture-length: 100
+      # The minimum allowed length for a user's password. If 0, it means the password can be an empty string "". If -1, it means the password can be null.
+      # global property: true
+      # mutable property: true
+      min-password-length: -1
+      # Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status.
+      # global property: true
+      # mutable property: true
+      respond-offline-if-invisible: false
+      settings:
+        # The list of allowed settings.
+        # global property: true
+        # mutable property: true
+        allowed-settings: []
+        # Whether to ignore unknown settings on delete. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request.
+        # global property: true
+        # mutable property: true
+        ignore-unknown-settings-on-delete: false
+        # Whether to ignore unknown settings on upsert. If false, the server will throw if the request specifies an unknown setting. If true, the server will ignore the unknown settings, and continue to process the request.
+        # global property: true
+        # mutable property: true
+        ignore-unknown-settings-on-upsert: false
+  shutdown:
+    # Wait for a job 2 minutes at most for extreme cases by default. Though it is a long time, graceful shutdown is usually better than force shutdown.
+    # global property: false
+    # mutable property: false
+    job-timeout-millis: 120000
+  user-status:
+    # Whether to cache the user sessions status.
+    # global property: false
+    # mutable property: false
+    cache-user-sessions-status: true
+    # The maximum size of the cache of users' sessions status.
+    # global property: false
+    # mutable property: false
+    user-sessions-status-cache-max-size: -1
+    # The life duration of each remote user's sessions status in the cache. Note that the cache will make the presentation of users' sessions status inconsistent during the time.
+    # global property: false
+    # mutable property: false
+    user-sessions-status-expire-after: 60
