@@ -74,20 +74,24 @@ public class HealthCheckManager {
         DefaultThreadFactory threadFactory =
                 new DefaultThreadFactory(ThreadNameConst.HEALTH_CHECKER, true);
         new ScheduledThreadPoolExecutor(1, threadFactory).scheduleWithFixedDelay(() -> {
-            cpuHealthChecker.updateHealthStatus();
-            memoryHealthChecker.updateHealthStatus();
-            node.getDiscoveryService()
-                    .getLocalNodeStatusManager()
-                    .updateHealthStatus(isHealthy());
-            long now = System.currentTimeMillis();
-            long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
-            lastUpdateTimestamp = now;
-            if (previousUpdateTimestamp > now) {
-                // There are a lof of modules heavily depending on the system time, e.g. logging,
-                // snowflake ID.
-                // So we log a warning message for troubleshooting if the time goes backwards.
-                LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
-                        previousUpdateTimestamp - now);
+            try{
+                cpuHealthChecker.updateHealthStatus();
+                memoryHealthChecker.updateHealthStatus();
+                node.getDiscoveryService()
+                        .getLocalNodeStatusManager()
+                        .updateHealthStatus(isHealthy());
+                long now = System.currentTimeMillis();
+                long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
+                lastUpdateTimestamp = now;
+                if (previousUpdateTimestamp > now) {
+                    // There are a lof of modules heavily depending on the system time, e.g. logging,
+                    // snowflake ID.
+                    // So we log a warning message for troubleshooting if the time goes backwards.
+                    LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
+                            previousUpdateTimestamp - now);
+                }
+            }catch (Exception e){
+                LOGGER.error("Failed to update the health status", e);
             }
         }, 0, intervalSeconds, TimeUnit.SECONDS);
     }
