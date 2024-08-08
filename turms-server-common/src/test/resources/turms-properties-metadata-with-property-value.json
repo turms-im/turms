@@ -4792,20 +4792,6 @@
             "sensitive": false,
             "type": "java.util.LinkedHashMap",
             "value": {
-              "cold": {
-                "days": 270,
-                "enabled": true,
-                "shards": [
-                  ""
-                ]
-              },
-              "frozen": {
-                "days": 0,
-                "enabled": true,
-                "shards": [
-                  ""
-                ]
-              },
               "hot": {
                 "days": 30,
                 "enabled": true,
@@ -4815,6 +4801,20 @@
               },
               "warm": {
                 "days": 60,
+                "enabled": true,
+                "shards": [
+                  ""
+                ]
+              },
+              "cold": {
+                "days": 270,
+                "enabled": true,
+                "shards": [
+                  ""
+                ]
+              },
+              "frozen": {
+                "days": 0,
                 "enabled": true,
                 "shards": [
                   ""

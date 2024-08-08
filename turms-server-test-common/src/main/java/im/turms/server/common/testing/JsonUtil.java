@@ -19,13 +19,17 @@ package im.turms.server.common.testing;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SequencedMap;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.ser.std.MapSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,8 +40,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public final class JsonUtil {
 
     private static final ObjectMapper MAPPER = JsonMapper.builder()
-            // Order map entries so that we can use the consistent output for comparison
-            .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
             .enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
             .serializationInclusion(JsonInclude.Include.NON_NULL)
             .addModule(new JavaTimeModule())
@@ -46,18 +48,42 @@ public final class JsonUtil {
     private JsonUtil() {
     }
 
-    public static void assertEqual(Object actual, InputStream expected) {
+    public static void assertEqual(Map<String, Object> actual, InputStream expected) {
         // We use String instead of byte[] for test debugging
         JsonNode expectedJson;
         JsonNode actualJson;
         try {
-            String json = MAPPER.writeValueAsString(actual);
+            Map<String, Object> sortedMap = sortMapEntries(actual);
+            String json = MAPPER.writeValueAsString(sortedMap);
             actualJson = MAPPER.readTree(json);
             expectedJson = MAPPER.readTree(expected);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         assertThat(actualJson).isEqualTo(expectedJson);
+    }
+
+    /**
+     * @implNote 1. Sort map entries so that we can use the consistent output for comparison.
+     *           <p>
+     *           2. We don't use
+     *           {@link com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS}
+     *           because {@link MapSerializer#_orderEntries} in jackson-databind-2.17.1 will sort
+     *           {@link LinkedHashMap}, which is unexpected for our use cases.
+     */
+    public static Map<String, Object> sortMapEntries(Map<String, Object> map) {
+        Map<String, Object> newMap = LinkedHashMap.newLinkedHashMap(map.size());
+        if (!(map instanceof SequencedMap<String, Object>)) {
+            map = new TreeMap<>(map);
+        }
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            Object entryValue = entry.getValue();
+            if (entryValue instanceof Map<?, ?> entryValueMap) {
+                entryValue = sortMapEntries((Map<String, Object>) entryValueMap);
+            }
+            newMap.put(entry.getKey(), entryValue);
+        }
+        return newMap;
     }
 
 }
