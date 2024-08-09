@@ -24,6 +24,7 @@ import jakarta.annotation.Nullable;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import reactor.core.scheduler.Schedulers;
 
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.logging.core.logger.Logger;
@@ -43,6 +44,9 @@ public class HealthCheckManager {
     private final Node node;
     private final CpuHealthChecker cpuHealthChecker;
     private final MemoryHealthChecker memoryHealthChecker;
+
+    private final long intervalMillis;
+
     private long lastUpdateTimestamp;
 
     public HealthCheckManager(@Lazy Node node, TurmsPropertiesManager propertiesManager) {
@@ -52,7 +56,9 @@ public class HealthCheckManager {
         cpuHealthChecker = new CpuHealthChecker(properties.getCpu());
         memoryHealthChecker = new MemoryHealthChecker(properties.getMemory());
 
-        startHealthCheck(properties.getCheckIntervalSeconds());
+        intervalMillis = properties.getCheckIntervalSeconds() * 1000L;
+
+        startHealthCheck();
     }
 
     @Nullable
@@ -69,27 +75,34 @@ public class HealthCheckManager {
         return cpuHealthChecker.isHealthy() && memoryHealthChecker.isHealthy();
     }
 
-    private void startHealthCheck(int intervalSeconds) {
-        long intervalMillis = intervalSeconds * 1000L;
+    private void startHealthCheck() {
         DefaultThreadFactory threadFactory =
                 new DefaultThreadFactory(ThreadNameConst.HEALTH_CHECKER, true);
         new ScheduledThreadPoolExecutor(1, threadFactory).scheduleWithFixedDelay(() -> {
-            cpuHealthChecker.updateHealthStatus();
-            memoryHealthChecker.updateHealthStatus();
-            node.getDiscoveryService()
-                    .getLocalNodeStatusManager()
-                    .updateHealthStatus(isHealthy());
-            long now = System.currentTimeMillis();
-            long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
-            lastUpdateTimestamp = now;
-            if (previousUpdateTimestamp > now) {
-                // There are a lof of modules heavily depending on the system time, e.g. logging,
-                // snowflake ID.
-                // So we log a warning message for troubleshooting if the time goes backwards.
-                LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
-                        previousUpdateTimestamp - now);
+            try {
+                checkHealth();
+            } catch (Exception e) {
+                LOGGER.error("Caught an exception while running health check", e);
             }
-        }, 0, intervalSeconds, TimeUnit.SECONDS);
+        }, 0, intervalMillis, TimeUnit.MILLISECONDS);
+    }
+
+    private void checkHealth() {
+        cpuHealthChecker.updateHealthStatus();
+        memoryHealthChecker.updateHealthStatus();
+        node.getDiscoveryService()
+                .getLocalNodeStatusManager()
+                .updateHealthStatus(isHealthy());
+        long now = System.currentTimeMillis();
+        long previousUpdateTimestamp = lastUpdateTimestamp + intervalMillis;
+        lastUpdateTimestamp = now;
+        if (previousUpdateTimestamp > now) {
+            // A lof of modules heavily depend on the system time, e.g. logging,
+            // snowflake ID.
+            // So we log a warning message for troubleshooting if the time goes backwards.
+            LOGGER.warn("The system time goes backwards. The time drift is ({}) millis",
+                    previousUpdateTimestamp - now);
+        }
     }
 
 }
