@@ -140,11 +140,23 @@ public class TurmsRedisClient {
     }
 
     public Mono<Long> del(Collection<ByteBuf> keys) {
-        return commands.del(keys);
+        return Mono.defer(() -> {
+            ByteBuf[] keyBuffers = new ByteBuf[keys.size()];
+            int i = 0;
+            for (ByteBuf key : keys) {
+                keyBuffers[i++] = ByteBufUtil.ensureByteBufRefCnfCorrect(key);
+            }
+            return commands.del(keyBuffers)
+                    .doFinally(signal -> ReferenceCountUtil.ensureReleased(keyBuffers));
+        });
     }
 
     public Mono<Long> incr(ByteBuf key) {
-        return commands.incr(key);
+        return Mono.defer(() -> {
+            ByteBuf keyBuffer = ByteBufUtil.ensureByteBufRefCnfCorrect(key);
+            return commands.incr(keyBuffer)
+                    .doFinally(signal -> ReferenceCountUtil.ensureReleased(keyBuffer));
+        });
     }
 
     // Hashes
@@ -162,7 +174,15 @@ public class TurmsRedisClient {
     }
 
     public Mono<Long> hincr(ByteBuf key, ByteBuf field) {
-        return commands.hincrby(key, field, 1);
+        return Mono.defer(() -> {
+            ByteBuf keyBuffer = ByteBufUtil.ensureByteBufRefCnfCorrect(key);
+            ByteBuf fieldBuffer = ByteBufUtil.ensureByteBufRefCnfCorrect(field);
+            return commands.hincrby(keyBuffer, fieldBuffer, 1)
+                    .doFinally(signal -> {
+                        ReferenceCountUtil.ensureReleased(keyBuffer);
+                        ReferenceCountUtil.ensureReleased(fieldBuffer);
+                    });
+        });
     }
 
     public <K, V> Flux<Map.Entry<K, V>> hgetall(K key) {
@@ -273,7 +293,7 @@ public class TurmsRedisClient {
                     .createFlux(() -> commandBuilder
                             .evalsha(script.digest(), script.outputType(), keys, keyLength))
                     .onErrorResume(e -> {
-                        if (exceptionContainsNoScriptException(e)) {
+                        if (ThrowableUtil.contains(e, RedisNoScriptException.class)) {
                             return commands.createFlux(() -> commandBuilder
                                     .eval(script.script(), script.outputType(), keys, keyLength));
                         }
@@ -282,20 +302,6 @@ public class TurmsRedisClient {
                     .doFinally(signal -> ReferenceCountUtil.ensureReleased(keys))
                     .single();
         });
-    }
-
-    private boolean exceptionContainsNoScriptException(Throwable e) {
-        if (e instanceof RedisNoScriptException) {
-            return true;
-        }
-        Throwable current = e.getCause();
-        while (current != null) {
-            if (current instanceof RedisNoScriptException) {
-                return true;
-            }
-            current = current.getCause();
-        }
-        return false;
     }
 
 }

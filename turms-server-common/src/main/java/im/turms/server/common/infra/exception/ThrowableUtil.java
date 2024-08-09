@@ -115,6 +115,13 @@ public final class ThrowableUtil {
         if (classToFind.isAssignableFrom(throwable.getClass())) {
             return true;
         }
-        return contains(throwable.getCause(), classToFind);
+        Throwable current = throwable.getCause();
+        while (current != null) {
+            if (classToFind.isAssignableFrom(current.getClass())) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 }
