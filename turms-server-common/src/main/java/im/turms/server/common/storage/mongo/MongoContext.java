@@ -48,6 +48,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.lang.StringUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
@@ -122,7 +123,7 @@ public class MongoContext {
         client.close();
         Future<?> future =
                 eventLoopGroup.shutdownGracefully(0, timeoutMillis, TimeUnit.MILLISECONDS);
-        return Mono.fromCompletionStage(Futures.toCompletionStage(future))
+        return PublisherUtil.fromFuture(future)
                 .then();
     }
 

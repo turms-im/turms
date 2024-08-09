@@ -46,8 +46,10 @@ import lombok.Data;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
+import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
@@ -122,19 +124,19 @@ public class TurmsRedisClient {
     }
 
     public Mono<Void> destroy(long timeoutMillis) {
-        long startTime = System.currentTimeMillis();
-        return Mono.fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS))
-                .doFinally(signalType -> {
-                    long timestamp = System.currentTimeMillis();
-                    long elapsedTime = timestamp - startTime;
-                    eventExecutorGroup.shutdownGracefully(0,
-                            Math.max(1, timeoutMillis - elapsedTime),
-                            TimeUnit.MILLISECONDS);
-                    elapsedTime = System.currentTimeMillis() - timestamp;
-                    eventLoopGroupProvider.shutdown(0,
-                            Math.max(1, timeoutMillis - elapsedTime),
-                            TimeUnit.MILLISECONDS);
-                });
+        return Mono.defer(() -> {
+            long startTime = System.currentTimeMillis();
+            return Mono
+                    .fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS))
+                    .then(Mono.defer(() -> {
+                        long elapsedTime = System.currentTimeMillis() - startTime;
+                        long timeout = timeoutMillis - elapsedTime;
+                        return PublisherUtil.whenDelayError(eventExecutorGroup
+                                .shutdownGracefully(0, Math.max(1, timeout), TimeUnit.MILLISECONDS),
+                                eventLoopGroupProvider
+                                        .shutdown(0, Math.max(1, timeout), TimeUnit.MILLISECONDS));
+                    }));
+        });
     }
 
     public Mono<Long> del(Collection<ByteBuf> keys) {

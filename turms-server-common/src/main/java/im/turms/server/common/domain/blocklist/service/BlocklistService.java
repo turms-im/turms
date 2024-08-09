@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import io.lettuce.core.ScriptOutputType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +56,7 @@ import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.thread.ThreadUtil;
 import im.turms.server.common.storage.redis.TurmsRedisClient;
 import im.turms.server.common.storage.redis.script.RedisScript;
 
@@ -256,13 +256,7 @@ public class BlocklistService extends BaseService {
     }
 
     private Mono<Void> destroy(long timeoutMillis) {
-        threadPoolExecutor.shutdown();
-        try {
-            threadPoolExecutor.awaitTermination(timeoutMillis, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            // ignore
-        }
-        return Mono.empty();
+        return ThreadUtil.shutdown(threadPoolExecutor, timeoutMillis);
     }
 
     // Block

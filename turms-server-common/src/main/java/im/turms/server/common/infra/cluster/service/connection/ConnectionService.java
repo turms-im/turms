@@ -63,6 +63,7 @@ import im.turms.server.common.infra.property.env.common.cluster.connection.Conne
 import im.turms.server.common.infra.property.env.common.cluster.connection.ConnectionServerProperties;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.thread.TurmsThread;
 
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.NODE_TCP_CLIENT;
 
@@ -100,7 +101,7 @@ public class ConnectionService implements ClusterService {
     // Thread resources
     private final ScheduledExecutorService connectionRetryScheduler;
     private final NioEventLoopGroup eventLoopGroupForClients;
-    private final Thread keepaliveThread;
+    private final TurmsThread keepaliveThread;
 
     /**
      * Note that: 1. It is allowed to connect to non-member turms servers. 2. Only after handshake
@@ -140,8 +141,8 @@ public class ConnectionService implements ClusterService {
                 new DefaultThreadFactory(ThreadNameConst.NODE_CONNECTION_CLIENT_IO));
         connectionRetryScheduler = Executors.newScheduledThreadPool(1,
                 new NamedThreadFactory(ThreadNameConst.NODE_CONNECTION_RETRY, true));
-        keepaliveThread = NamedThreadFactory
-                .newThread(ThreadNameConst.NODE_CONNECTION_KEEPALIVE, true, () -> {
+        keepaliveThread =
+                TurmsThread.create(ThreadNameConst.NODE_CONNECTION_KEEPALIVE, true, () -> {
                     sendKeepaliveToConnectionsForever();
                     LOGGER.warn("The node keepalive thread has been stopped");
                 });
@@ -152,7 +153,7 @@ public class ConnectionService implements ClusterService {
     @Override
     public Mono<Void> stop(long timeoutMillis) {
         List<Mono<Void>> monos = new LinkedList<>();
-        keepaliveThread.interrupt();
+        monos.add(keepaliveThread.terminate());
         if (server != null) {
             monos.add(server.dispose()
                     .onErrorMap(
@@ -183,11 +184,6 @@ public class ConnectionService implements ClusterService {
             }
         }
         nodeIdToConnection.clear();
-        try {
-            keepaliveThread.join(timeoutMillis);
-        } catch (InterruptedException e) {
-            // ignored
-        }
         return Mono.whenDelayError(monos);
     }
 

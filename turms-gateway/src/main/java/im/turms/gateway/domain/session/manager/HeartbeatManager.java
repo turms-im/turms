@@ -23,8 +23,8 @@ import java.util.Map;
 import jakarta.annotation.Nullable;
 
 import io.lettuce.core.protocol.LongKeyGenerator;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
+import reactor.core.publisher.Mono;
 
 import im.turms.gateway.access.client.common.UserSession;
 import im.turms.gateway.access.client.udp.UdpRequestDispatcher;
@@ -35,6 +35,7 @@ import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.thread.TurmsThread;
 
 /**
  * @author James Chen
@@ -63,7 +64,7 @@ public class HeartbeatManager {
     private final SessionService sessionService;
     private final UserStatusService userStatusService;
     private final Map<Long, UserSessionsManager> userIdToSessionsManager;
-    private final Thread workerThread;
+    private final TurmsThread workerThread;
     private int closeIdleSessionAfterSeconds;
     private int closeIdleSessionAfterMillis;
     private int expectedFractionPerSecond;
@@ -87,9 +88,7 @@ public class HeartbeatManager {
         setCloseIdleSessionAfterSeconds(closeIdleSessionAfterSeconds);
         this.minHeartbeatIntervalMillis = minHeartbeatIntervalSeconds * 1000;
         this.switchProtocolAfterMillis = switchProtocolAfterSeconds * 1000;
-        DefaultThreadFactory factory =
-                new DefaultThreadFactory(ThreadNameConst.CLIENT_HEARTBEAT_REFRESHER, true);
-        workerThread = factory.newThread(() -> {
+        workerThread = TurmsThread.create(ThreadNameConst.CLIENT_HEARTBEAT_REFRESHER, true, () -> {
             Thread thread = Thread.currentThread();
             while (!thread.isInterrupted()) {
                 try {
@@ -118,13 +117,8 @@ public class HeartbeatManager {
                 : 30;
     }
 
-    public void destroy(long timeoutMillis) {
-        workerThread.interrupt();
-        try {
-            workerThread.join(timeoutMillis);
-        } catch (InterruptedException e) {
-            // ignore
-        }
+    public Mono<Void> destroy() {
+        return workerThread.terminate();
     }
 
     private void updateOnlineUsersTtl() {

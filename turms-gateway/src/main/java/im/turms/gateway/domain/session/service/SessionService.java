@@ -191,7 +191,7 @@ public class SessionService extends BaseService implements RpcSessionService {
         loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER);
         registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), userIdToSessionsManager);
 
-        context.addShutdownHook(JobShutdownOrder.CLOSE_SESSIONS, this::destroy);
+        context.addShutdownHook(JobShutdownOrder.CLOSE_SESSIONS, timeoutMillis -> destroy());
     }
 
     private void updateGlobalProperties(TurmsProperties properties) {
@@ -210,12 +210,15 @@ public class SessionService extends BaseService implements RpcSessionService {
                 .getIdentity();
     }
 
-    public Mono<Void> destroy(long timeoutMillis) {
-        heartbeatManager.destroy(timeoutMillis);
+    public Mono<Void> destroy() {
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
-        return closeAllLocalSessions(closeReason).onErrorMap(
-                t -> new RuntimeException("Caught an error while closing local sessions", t))
-                .then();
+        return heartbeatManager.destroy()
+                .then(Mono
+                        .defer(() -> closeAllLocalSessions(closeReason)
+                                .onErrorMap(t -> new RuntimeException(
+                                        "Caught an error while closing local sessions",
+                                        t)))
+                        .then());
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {

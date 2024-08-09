@@ -133,12 +133,10 @@ public class LoggerFactory {
     }
 
     public static void bindContext(TurmsApplicationContext context) {
-        context.addShutdownHook(JobShutdownOrder.CLOSE_LOG_PROCESSOR, timeoutMillis -> {
-            if (processor == null) {
-                return Mono.empty();
-            }
-            return Mono.fromRunnable(() -> processor.waitClose(timeoutMillis));
-        });
+        context.addShutdownHook(JobShutdownOrder.CLOSE_LOG_PROCESSOR,
+                timeoutMillis -> processor == null
+                        ? Mono.empty()
+                        : processor.close());
     }
 
     private static synchronized void initForTest() {
@@ -174,8 +172,8 @@ public class LoggerFactory {
                         .build());
     }
 
-    public static void waitClose(long timeoutMillis) {
-        processor.waitClose(timeoutMillis);
+    public static Mono<Void> close() {
+        return processor.close();
     }
 
     public static Logger getLogger(String name) {

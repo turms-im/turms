@@ -20,6 +20,7 @@ package im.turms.server.common.infra.logging.core.processor;
 import java.util.List;
 
 import org.jctools.queues.MpscUnboundedArrayQueue;
+import reactor.core.publisher.Mono;
 
 import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.idle.BackoffIdleStrategy;
@@ -28,6 +29,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogRecord;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.thread.TurmsThread;
 
 /**
  * Note that we only use one thread to process logs, which means that we don't need to consider the
@@ -37,29 +39,29 @@ import im.turms.server.common.infra.thread.ThreadNameConst;
  */
 public final class LogProcessor {
 
-    private final Thread thread;
+    private final TurmsThread thread;
     private volatile boolean active;
 
     public LogProcessor(MpscUnboundedArrayQueue<LogRecord> recordQueue) {
-        thread = new Thread(() -> drainLogsForever(recordQueue), ThreadNameConst.LOG_PROCESSOR);
-        active = true;
+        thread = TurmsThread
+                .create(ThreadNameConst.LOG_PROCESSOR, false, () -> drainLogsForever(recordQueue));
     }
 
-    public void start() {
+    public synchronized void start() {
         if (thread.getState() == Thread.State.NEW) {
+            active = true;
             thread.start();
         }
     }
 
-    public void waitClose(long timeoutMillis) {
-        active = false;
-        try {
-            thread.join(timeoutMillis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(
-                    "Caught an error while waiting for the log processor to close",
-                    e);
-        }
+    public Mono<Void> close() {
+        return Mono.defer(() -> {
+            active = false;
+            return thread.terminate();
+        })
+                .onErrorMap(t -> new RuntimeException(
+                        "Caught an error while closing the log processor",
+                        t));
     }
 
     private void drainLogsForever(MpscUnboundedArrayQueue<LogRecord> recordQueue) {

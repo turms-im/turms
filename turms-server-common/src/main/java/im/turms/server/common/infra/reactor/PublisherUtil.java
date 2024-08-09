@@ -17,10 +17,12 @@
 
 package im.turms.server.common.infra.reactor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import jakarta.validation.constraints.NotNull;
 
+import io.netty.util.concurrent.Future;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,6 +35,30 @@ import im.turms.server.common.infra.function.ThrowingSupplier;
 public final class PublisherUtil {
 
     private PublisherUtil() {
+    }
+
+    public static <T> Mono<T> fromFuture(Future<T> future) {
+        if (future.isDone()) {
+            T returnValue = future.getNow();
+            if (returnValue == null) {
+                return Mono.empty();
+            }
+            return future.isSuccess()
+                    ? Mono.just(returnValue)
+                    : Mono.error(future.cause());
+        }
+        return Mono.create(sink -> future.addListener(f -> {
+            if (f.isSuccess()) {
+                Object returnValue = f.getNow();
+                if (returnValue == null) {
+                    sink.success();
+                    return;
+                }
+                sink.success((T) returnValue);
+            } else {
+                sink.error(f.cause());
+            }
+        }));
     }
 
     public static <T> Mono<T> fromFuture(ThrowingSupplier<CompletableFuture<T>> future) {
@@ -89,6 +115,18 @@ public final class PublisherUtil {
                     }
                     return false;
                 });
+    }
+
+    public static Mono<Void> whenDelayError(Future<?>... futures) {
+        int count = futures.length;
+        if (count == 0) {
+            return Mono.empty();
+        }
+        List<Mono<?>> monos = new ArrayList<>(count);
+        for (Future<?> future : futures) {
+            monos.add(fromFuture(future));
+        }
+        return Mono.whenDelayError(monos);
     }
 
 }

@@ -52,7 +52,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.FakeProperties;
 import im.turms.server.common.infra.proto.ProtoFormatter;
-import im.turms.server.common.infra.thread.NamedThreadFactory;
+import im.turms.server.common.infra.thread.TurmsThread;
 
 /**
  * @author James Chen
@@ -66,7 +66,7 @@ public class ClientFakingManager {
     private final boolean enabled;
     private final FakeProperties fakeProperties;
     private final TcpUserSessionAssembler tcpUserSessionDispatcher;
-    private Thread thread;
+    private TurmsThread thread;
 
     public ClientFakingManager(
             TcpUserSessionAssembler tcpUserSessionDispatcher,
@@ -84,10 +84,7 @@ public class ClientFakingManager {
             throw new FeatureDisabledException(
                     "Cannot run clients because the TCP server is disabled");
         }
-        context.addShutdownHook(JobShutdownOrder.CLOSE_FAKE_CLIENTS, timeoutMillis -> {
-            shutdown(timeoutMillis);
-            return Mono.empty();
-        });
+        context.addShutdownHook(JobShutdownOrder.CLOSE_FAKE_CLIENTS, timeoutMillis -> shutdown());
     }
 
     @PostConstruct
@@ -104,15 +101,12 @@ public class ClientFakingManager {
         }
     }
 
-    private void shutdown(long timeoutMillis) {
-        if (thread != null) {
-            thread.interrupt();
-            try {
-                thread.join(timeoutMillis);
-            } catch (InterruptedException e) {
-                // ignore
-            }
+    private Mono<Void> shutdown() {
+        TurmsThread localThread = thread;
+        if (localThread != null) {
+            return localThread.terminate();
         }
+        return Mono.empty();
     }
 
     /**
@@ -177,7 +171,7 @@ public class ClientFakingManager {
         Range<Long> fakedNumberRange =
                 Range.between(Math.max(0, firstUserId - jitter), firstUserId + userCount + jitter);
         GeneratorOptions generatorOptions = new GeneratorOptions(0.8F, 0.8F, fakedNumberRange);
-        thread = NamedThreadFactory.newThread(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
+        thread = TurmsThread.create(ThreadNameConst.FAKE_CLIENT_MANAGER, true, () -> {
             CyclicIterator<TurmsClient> clientIterator = new CyclicIterator<>(clients);
             Set<String> excludedRequestNames =
                     Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,

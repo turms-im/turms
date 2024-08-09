@@ -19,6 +19,7 @@ package im.turms.server.common;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.time.Duration;
 import java.util.TimeZone;
 
 import org.springframework.boot.SpringApplication;
@@ -28,6 +29,7 @@ import im.turms.server.common.infra.exception.IncompatibleJvmException;
 import im.turms.server.common.infra.lang.ClassUtil;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.time.TimeZoneConst;
 
 /**
@@ -61,7 +63,8 @@ public abstract class BaseTurmsApplication {
                     // 2. Don't log startup error here because
                     // "org.springframework.boot.SpringApplication.reportFailure"
                     // should have logged.
-                    LoggerFactory.waitClose(60 * 1000L);
+                    LoggerFactory.close()
+                            .block(DurationConst.ONE_MINUTE);
                 } catch (Exception ignored) {
                     e.printStackTrace();
                 }
