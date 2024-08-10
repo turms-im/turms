@@ -17,6 +17,7 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -136,7 +137,7 @@ public class LoggerFactory {
         context.addShutdownHook(JobShutdownOrder.CLOSE_LOG_PROCESSOR,
                 timeoutMillis -> processor == null
                         ? Mono.empty()
-                        : processor.close());
+                        : processor.close(Duration.ofMillis(timeoutMillis)));
     }
 
     private static synchronized void initForTest() {
@@ -172,8 +173,8 @@ public class LoggerFactory {
                         .build());
     }
 
-    public static Mono<Void> close() {
-        return processor.close();
+    public static Mono<Void> close(Duration timeout) {
+        return processor.close(timeout);
     }
 
     public static Logger getLogger(String name) {

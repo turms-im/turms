@@ -63,7 +63,7 @@ public abstract class BaseTurmsApplication {
                     // 2. Don't log startup error here because
                     // "org.springframework.boot.SpringApplication.reportFailure"
                     // should have logged.
-                    LoggerFactory.close()
+                    LoggerFactory.close(Duration.ofSeconds(50))
                             .block(DurationConst.ONE_MINUTE);
                 } catch (Exception ignored) {
                     e.printStackTrace();

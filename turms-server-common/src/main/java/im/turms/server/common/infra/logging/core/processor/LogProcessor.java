@@ -17,7 +17,10 @@
 
 package im.turms.server.common.infra.logging.core.processor;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.LockSupport;
 
 import org.jctools.queues.MpscUnboundedArrayQueue;
 import reactor.core.publisher.Mono;
@@ -54,10 +57,17 @@ public final class LogProcessor {
         }
     }
 
-    public Mono<Void> close() {
+    public Mono<Void> close(Duration timeout) {
+        if (!thread.isAlive()) {
+            return Mono.empty();
+        }
         return Mono.defer(() -> {
             active = false;
-            return thread.terminate();
+            // If idle, wake it up to take the last chance to write logs.
+            LockSupport.unpark(thread);
+            return thread.onTerminated()
+                    .timeout(timeout)
+                    .onErrorResume(TimeoutException.class, e -> thread.terminate());
         })
                 .onErrorMap(t -> new RuntimeException(
                         "Caught an error while closing the log processor",
@@ -85,6 +95,8 @@ public final class LogProcessor {
                 break;
             }
             idleStrategy.idle();
+            // Don't check if it is active here so that we can have
+            // the last chance to output remaining logs after waking up.
         }
         for (Appender appender : LoggerFactory.getAllAppenders()) {
             try {
