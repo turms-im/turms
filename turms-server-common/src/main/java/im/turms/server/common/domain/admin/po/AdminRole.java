@@ -40,6 +40,8 @@ import im.turms.server.common.storage.mongo.entity.annotation.Id;
  * </pre>
  *
  * @author James Chen
+ * @implSpec <a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=916402">The NIST Model
+ *           for Role Based Access Control</a>
  */
 @Data
 @Document(AdminRole.COLLECTION_NAME)
@@ -57,7 +59,9 @@ public final class AdminRole extends BaseEntity {
     private final Set<AdminPermission> permissions;
 
     /**
-     * Only the higher-ranking admins can add/delete/update lower-ranking admins' information.
+     * Only the higher-rank admins can add/delete/update lower-rank admins' information.
+     *
+     * @implNote We don't use the term “level” as we reserve it for the hierarchical RBAC.
      */
     @Field(Fields.RANK)
     private final Integer rank;

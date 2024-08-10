@@ -18,7 +18,10 @@
         "bsonType": "binData"
       },
       "rid": {
-        "bsonType": "long"
+        "bsonType": "array",
+        "items": {
+          "bsonType": "long"
+        }
       },
       "n": {
         "bsonType": "string"

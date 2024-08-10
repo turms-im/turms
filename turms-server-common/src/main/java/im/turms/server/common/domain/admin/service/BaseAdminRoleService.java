@@ -17,12 +17,18 @@
 
 package im.turms.server.common.domain.admin.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import jakarta.validation.constraints.NotNull;
 
 import com.mongodb.client.model.changestream.FullDocument;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.admin.permission.AdminPermission;
@@ -30,9 +36,11 @@ import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateConst;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.Validator;
@@ -53,7 +61,7 @@ public abstract class BaseAdminRoleService extends BaseService {
             Integer.MAX_VALUE,
             DateConst.EPOCH);
 
-    private final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
+    protected final Map<Long, AdminRole> idToRole = new ConcurrentHashMap<>(16);
     private final BaseRepository<AdminRole, Long> adminRoleRepository;
 
     protected BaseAdminRoleService(BaseRepository<AdminRole, Long> adminRoleRepository) {
@@ -103,38 +111,95 @@ public abstract class BaseAdminRoleService extends BaseService {
         return ROOT_ROLE;
     }
 
-    public Mono<AdminRole> queryAndCacheRole(@NotNull Long roleId) {
+    public Flux<AdminRole> queryAndCacheRolesByRoleIds(@NotNull Collection<Long> roleIds) {
         try {
-            Validator.notNull(roleId, "roleId");
+            Validator.notNull(roleIds, "roleIds");
+        } catch (ResponseException e) {
+            return Flux.error(e);
+        }
+        if (roleIds.isEmpty()) {
+            return Flux.empty();
+        }
+        if (roleIds.contains(ADMIN_ROLE_ROOT_ID)) {
+            if (roleIds.size() == 1) {
+                return Flux.just(getRootRole());
+            }
+            roleIds = new UnifiedSet<>(roleIds);
+            roleIds.remove(ADMIN_ROLE_ROOT_ID);
+            return adminRoleRepository.findByIds(roleIds)
+                    .doOnNext(role -> idToRole.put(role.getId(), role))
+                    .startWith(getRootRole());
+        }
+        return adminRoleRepository.findByIds(roleIds)
+                .doOnNext(role -> idToRole.put(role.getId(), role));
+    }
+
+    public Mono<Set<AdminPermission>> queryPermissions(@NotNull Set<Long> roleIds) {
+        try {
+            Validator.notNull(roleIds, "roleIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return roleId.equals(ADMIN_ROLE_ROOT_ID)
-                ? Mono.just(getRootRole())
-                : adminRoleRepository.findById(roleId)
-                        .doOnNext(role -> idToRole.put(roleId, role));
-    }
-
-    public Mono<Set<AdminPermission>> queryPermissions(@NotNull Long roleId) {
-        try {
-            Validator.notNull(roleId, "roleId");
-        } catch (ResponseException e) {
-            return Mono.error(e);
+        List<Long> cachedRoleIds = null;
+        Set<AdminPermission> cachedPermissions = null;
+        for (Long roleId : roleIds) {
+            AdminRole adminRole = idToRole.get(roleId);
+            if (adminRole != null) {
+                if (cachedRoleIds == null) {
+                    cachedRoleIds = new ArrayList<>(roleIds.size());
+                    cachedPermissions = new UnifiedSet<>(50);
+                }
+                cachedRoleIds.add(roleId);
+                cachedPermissions.addAll(adminRole.getPermissions());
+            }
         }
-        AdminRole role = idToRole.get(roleId);
-        return role == null
-                ? queryAndCacheRole(roleId).map(AdminRole::getPermissions)
-                : Mono.just(role.getPermissions());
+        int cachedRoleIdCount = CollectionUtil.getSize(cachedRoleIds);
+        if (cachedRoleIdCount == 0) {
+            return queryAndCacheRolesByRoleIds(roleIds).collectList()
+                    .map(adminRoles -> {
+                        if (adminRoles.isEmpty()) {
+                            return Collections.emptySet();
+                        }
+                        Set<AdminPermission> permissions = new UnifiedSet<>(50);
+                        for (AdminRole adminRole : adminRoles) {
+                            permissions.addAll(adminRole.getPermissions());
+                        }
+                        return permissions;
+                    });
+        } else if (cachedRoleIdCount == roleIds.size()) {
+            return Mono.just(cachedPermissions);
+        } else {
+            roleIds = new UnifiedSet<>(roleIds);
+            roleIds.removeAll(cachedRoleIds);
+            Set<AdminPermission> finalCachedPermissions = cachedPermissions;
+            return queryAndCacheRolesByRoleIds(roleIds).collectList()
+                    .map(adminRoles -> {
+                        if (adminRoles.isEmpty()) {
+                            return Collections.emptySet();
+                        }
+                        Set<AdminPermission> permissions = new UnifiedSet<>(50);
+                        for (AdminRole adminRole : adminRoles) {
+                            permissions.addAll(adminRole.getPermissions());
+                        }
+                        permissions.addAll(finalCachedPermissions);
+                        return permissions;
+                    });
+        }
     }
 
-    public Mono<Boolean> hasPermission(@NotNull Long roleId, @NotNull AdminPermission permission) {
+    public Mono<Boolean> hasPermission(
+            @NotNull Set<Long> roleIds,
+            @NotNull AdminPermission permission) {
         try {
-            Validator.notNull(roleId, "roleId");
+            Validator.notNull(roleIds, "roleIds");
             Validator.notNull(permission, "permission");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryPermissions(roleId).map(permissions -> permissions.contains(permission))
+        if (roleIds.isEmpty()) {
+            return PublisherPool.FALSE;
+        }
+        return queryPermissions(roleIds).map(permissions -> permissions.contains(permission))
                 .defaultIfEmpty(false);
     }
 

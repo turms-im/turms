@@ -18,7 +18,9 @@
 package im.turms.server.common.domain.admin.service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import jakarta.validation.constraints.NotNull;
 
@@ -78,8 +80,8 @@ public abstract class BaseAdminService extends BaseService {
                         accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
                     }
                     for (Admin admin : admins) {
-                        if (admin.getRoleId()
-                                .equals(ADMIN_ROLE_ROOT_ID)) {
+                        if (admin.getRoleIds()
+                                .contains(ADMIN_ROLE_ROOT_ID)) {
                             break;
                         }
                     }
@@ -120,8 +122,8 @@ public abstract class BaseAdminService extends BaseService {
         return Mono.empty();
     }
 
-    public Mono<Long> queryRoleId(@NotNull String account) {
-        return queryAdmin(account).map(Admin::getRoleId);
+    public Mono<Set<Long>> queryRoleIds(@NotNull String account) {
+        return queryAdmin(account).map(Admin::getRoleIds);
     }
 
     public Mono<Boolean> isAdminAuthorized(
@@ -133,8 +135,8 @@ public abstract class BaseAdminService extends BaseService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRoleId(account)
-                .flatMap(roleId -> adminRoleService.hasPermission(roleId, permission))
+        return queryRoleIds(account)
+                .flatMap(roleIds -> adminRoleService.hasPermission(roleIds, permission))
                 .switchIfEmpty(PublisherPool.FALSE);
     }
 

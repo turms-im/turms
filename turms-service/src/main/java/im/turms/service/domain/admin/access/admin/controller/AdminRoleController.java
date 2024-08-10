@@ -114,7 +114,7 @@ public class AdminRoleController extends BaseController {
             RequestContext requestContext,
             Set<Long> ids,
             @RequestBody UpdateAdminRoleDTO updateAdminRoleDTO) {
-        Mono<UpdateResult> updateMono = adminRoleService.authAndUpdateAdminRole(
+        Mono<UpdateResult> updateMono = adminRoleService.authAndUpdateAdminRoles(
                 requestContext.getAccount(),
                 ids,
                 updateAdminRoleDTO.name(),

@@ -18,6 +18,7 @@
 package im.turms.server.common.domain.admin.po;
 
 import java.util.Date;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,9 +58,9 @@ public final class Admin extends BaseEntity {
     @Field(Fields.NAME)
     private final String name;
 
-    @Field(Fields.ROLE_ID)
+    @Field(Fields.ROLE_IDS)
     @Indexed(optional = true, value = HASH, reason = SMALL_COLLECTION)
-    private final Long roleId;
+    private final Set<Long> roleIds;
 
     @Field(Fields.REGISTRATION_DATE)
     @Indexed(optional = true, reason = SMALL_COLLECTION)
@@ -68,7 +69,7 @@ public final class Admin extends BaseEntity {
     public static final class Fields {
         public static final String PASSWORD = "pw";
         public static final String NAME = "n";
-        public static final String ROLE_ID = "rid";
+        public static final String ROLE_IDS = "rid";
         public static final String REGISTRATION_DATE = "rd";
 
         private Fields() {

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo.codec;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -59,19 +60,32 @@ public class TurmsIterableCodec<I, E> extends MongoCodec<Iterable<E>> {
 
     @Override
     public Iterable<E> decode(final BsonReader reader, final DecoderContext decoderContext) {
-        reader.readStartArray();
+        BsonType currentBsonType = reader.getCurrentBsonType();
+        if (currentBsonType == BsonType.ARRAY) {
+            reader.readStartArray();
+            Collection<E> collection;
+            if (Set.class.isAssignableFrom(iterableClass)) {
+                collection = LinkedHashSet.class.isAssignableFrom(iterableClass)
+                        ? new LinkedHashSet<>()
+                        : UnifiedSet.newSet(8);
+            } else {
+                collection = new ChunkedArrayList<>();
+            }
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                collection.add(elementCodec.decode(reader, decoderContext));
+            }
+            reader.readEndArray();
+            return collection;
+        }
         Collection<E> collection;
         if (Set.class.isAssignableFrom(iterableClass)) {
             collection = LinkedHashSet.class.isAssignableFrom(iterableClass)
                     ? new LinkedHashSet<>()
-                    : UnifiedSet.newSet(8);
+                    : UnifiedSet.newSet(1);
         } else {
-            collection = new ChunkedArrayList<>();
+            collection = new ArrayList<>(1);
         }
-        while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            collection.add(elementCodec.decode(reader, decoderContext));
-        }
-        reader.readEndArray();
+        collection.add(elementCodec.decode(reader, decoderContext));
         return collection;
     }
 

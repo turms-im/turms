@@ -79,7 +79,7 @@ public class AdminController extends BaseController {
         Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(requestContext.getAccount(),
                 addAdminDTO.account(),
                 addAdminDTO.password(),
-                addAdminDTO.roleId(),
+                addAdminDTO.roleIds(),
                 addAdminDTO.name(),
                 new Date(),
                 false);
@@ -133,7 +133,7 @@ public class AdminController extends BaseController {
                         accounts,
                         updateAdminDTO.password(),
                         updateAdminDTO.name(),
-                        updateAdminDTO.roleId());
+                        updateAdminDTO.roleIds());
         return HttpHandlerResult.updateResult(updateMono);
     }
 

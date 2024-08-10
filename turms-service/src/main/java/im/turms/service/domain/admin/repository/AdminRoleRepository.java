@@ -17,8 +17,10 @@
 
 package im.turms.service.domain.admin.repository;
 
+import java.util.Collection;
 import java.util.Set;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +31,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.domain.admin.po.AdminRole;
 import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
@@ -73,14 +76,6 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
         return mongoClient.count(entityClass, filter);
     }
 
-    public Flux<AdminRole> findAdminRoles(Set<Long> roleIds) {
-        Filter query = Filter.newBuilder(1)
-                .in(DomainFieldName.ID, roleIds);
-        QueryOptions options = QueryOptions.newBuilder(1)
-                .include(AdminRole.Fields.RANK);
-        return mongoClient.findMany(entityClass, query, options);
-    }
-
     public Flux<AdminRole> findAdminRoles(
             @Nullable Set<Long> roleIds,
             @Nullable Set<String> names,
@@ -98,12 +93,34 @@ public class AdminRoleRepository extends BaseRepository<AdminRole, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Mono<Integer> findRank(Long roleId) {
+    public Flux<AdminRole> findAdminRolesByIdsAndRankGreaterThan(
+            @NotNull Collection<Long> roleIds,
+            @Nullable Integer rankGreaterThan) {
+        Filter filter = Filter.newBuilder(2)
+                .in(DomainFieldName.ID, roleIds)
+                .gtIfNotNull(AdminRole.Fields.RANK, rankGreaterThan);
+        return mongoClient.findMany(entityClass, filter);
+    }
+
+    public Mono<Integer> findHighestRankByRoleIds(Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(1)
-                .eq(DomainFieldName.ID, roleId);
+                .in(DomainFieldName.ID, roleIds);
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(AdminRole.Fields.RANK);
-        return mongoClient.findOne(entityClass, filter, options)
-                .map(AdminRole::getRank);
+        return mongoClient.findMany(entityClass, filter, options)
+                .collect(CollectorUtil.toList(roleIds.size()))
+                .flatMap(roles -> {
+                    if (roles.isEmpty()) {
+                        return Mono.empty();
+                    }
+                    int highestRank = 0;
+                    for (AdminRole role : roles) {
+                        Integer rank = role.getRank();
+                        if (rank > highestRank) {
+                            highestRank = rank;
+                        }
+                    }
+                    return Mono.just(highestRank);
+                });
     }
 }

@@ -160,12 +160,13 @@ public final class MongoFakingManager {
         // Admin
         // "2000-01-01:00:00:00Z"
         final Date epoch = new Date(946684800000L);
+        final long adminRoleId = 1L;
         final long guestRoleId = 2L;
         Admin guest = new Admin(
                 "guest",
                 passwordManager.encodeAdminPassword("guest"),
                 "guest",
-                guestRoleId,
+                Set.of(guestRoleId),
                 epoch);
         adminRelatedObjs.add(guest);
         for (int i = 1; i <= adminCount; i++) {
@@ -174,11 +175,11 @@ public final class MongoFakingManager {
                             + i,
                     passwordManager.encodeAdminPassword("123"),
                     "my-name",
-                    1L,
+                    Set.of(adminRoleId),
                     DateUtils.addDays(epoch, i));
             adminRelatedObjs.add(admin);
         }
-        AdminRole adminRole = new AdminRole(1L, "ADMIN", AdminPermission.ALL, 0, epoch);
+        AdminRole adminRole = new AdminRole(adminRoleId, "ADMIN", AdminPermission.ALL, 0, epoch);
         AdminRole guestRole = new AdminRole(
                 guestRoleId,
                 "GUEST",

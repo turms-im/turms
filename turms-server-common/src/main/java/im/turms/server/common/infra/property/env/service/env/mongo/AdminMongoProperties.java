@@ -51,7 +51,7 @@ public class AdminMongoProperties extends MongoProperties {
 
     @Data
     public static class AdminOptionalIndexProperties {
-        private boolean roleId;
+        private boolean roleIds;
         private boolean registrationDate;
     }
 

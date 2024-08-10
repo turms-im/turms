@@ -17,6 +17,7 @@
 
 package im.turms.service.domain.admin.repository;
 
+import java.util.Collection;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 
@@ -49,31 +50,31 @@ public class AdminRepository extends BaseRepository<Admin, String> {
             Set<String> targetAccounts,
             @Nullable byte[] password,
             @Nullable String name,
-            @Nullable Long roleId) {
+            @Nullable Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, targetAccounts);
         Update update = Update.newBuilder(3)
                 .setIfNotNull(Admin.Fields.PASSWORD, password)
                 .setIfNotNull(Admin.Fields.NAME, name)
-                .setIfNotNull(Admin.Fields.ROLE_ID, roleId);
+                .setIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         return mongoClient.updateMany(entityClass, filter, update);
     }
 
     public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DomainFieldName.ID, accounts)
-                .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
+                .inIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         return mongoClient.count(entityClass, filter);
     }
 
     public Flux<Admin> findAdmins(
-            @Nullable Set<String> accounts,
-            @Nullable Set<Long> roleIds,
+            @Nullable Collection<String> accounts,
+            @Nullable Collection<Long> roleIds,
             @Nullable Integer page,
             @Nullable Integer size) {
         Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DomainFieldName.ID, accounts)
-                .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
+                .inIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(entityClass, filter, options);
