@@ -17,8 +17,10 @@
 
 package im.turms.gateway.domain.session.manager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 
@@ -33,9 +35,11 @@ import im.turms.gateway.infra.thread.ThreadNameConst;
 import im.turms.server.common.domain.session.bo.CloseReason;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.session.service.UserStatusService;
+import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.thread.TurmsThread;
+import im.turms.server.common.infra.time.DurationConst;
 
 /**
  * @author James Chen
@@ -94,7 +98,10 @@ public class HeartbeatManager {
                 try {
                     updateOnlineUsersTtl();
                 } catch (Exception e) {
-                    LOGGER.error("Failed to update the TTL of users in Redis", e);
+                    if (ThrowableUtil.contains(e, InterruptedException.class)) {
+                        break;
+                    }
+                    LOGGER.error(e);
                 }
                 try {
                     Thread.sleep(UPDATE_HEARTBEAT_INTERVAL_MILLIS);
@@ -123,23 +130,34 @@ public class HeartbeatManager {
 
     private void updateOnlineUsersTtl() {
         Collection<UserSessionsManager> managers = userIdToSessionsManager.values();
+        if (managers.isEmpty()) {
+            return;
+        }
         LongKeyGenerator userIds = collectOnlineUsersAndUpdateStatus(managers);
-        userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
-                .subscribe(nonexistentUserIds -> {
-                    for (Long nonexistentUserId : nonexistentUserIds) {
-                        sessionService
-                                .closeLocalSession(nonexistentUserId,
-                                        SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
-                                .subscribe(null,
-                                        t -> LOGGER.error(
-                                                "Caught an error while closing the user session with the user ID: "
-                                                        + nonexistentUserId,
-                                                t));
-                    }
-                },
-                        t -> LOGGER.error(
-                                "Caught an error while refreshing online users' TTL in Redis",
-                                t));
+        try {
+            userStatusService.updateOnlineUsersTtl(userIds, closeIdleSessionAfterSeconds)
+                    .flatMap(nonexistentUserIds -> {
+                        if (nonexistentUserIds.isEmpty()) {
+                            return Mono.empty();
+                        }
+                        List<Mono<Integer>> closeLocalSessions =
+                                new ArrayList<>(nonexistentUserIds.size());
+                        for (Long nonexistentUserId : nonexistentUserIds) {
+                            closeLocalSessions.add(sessionService
+                                    .closeLocalSession(nonexistentUserId,
+                                            SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
+                                    .onErrorMap(t -> new RuntimeException(
+                                            "Caught an error while closing the session of the user: "
+                                                    + nonexistentUserId)));
+                        }
+                        return Mono.whenDelayError(closeLocalSessions);
+                    })
+                    .block(DurationConst.ONE_MINUTE);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Caught an error while refreshing online users' sessions in Redis",
+                    e);
+        }
     }
 
     private LongKeyGenerator collectOnlineUsersAndUpdateStatus(
