@@ -759,7 +759,11 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         }
         return collectionExists(clazz).flatMap(exists -> {
             if (exists) {
-                return PublisherPool.TRUE;
+                // Always update the JSON schema to ensure the schema is up to date.
+                return updateJsonSchema(clazz,
+                        jsonSchema,
+                        ValidationAction.ERROR,
+                        ValidationLevel.STRICT).then(PublisherPool.TRUE);
             }
             CreateCollectionOptions options = new CreateCollectionOptions()
                     .validationOptions(new ValidationOptions().validator(jsonSchema)
@@ -804,6 +808,35 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                         .limit(1));
         return Mono.from(publisher)
                 .hasElement();
+    }
+
+    @Override
+    public Mono<Void> updateJsonSchema(
+            Class<?> clazz,
+            BsonDocument jsonSchema,
+            ValidationAction action,
+            ValidationLevel level) {
+        String collectionName = context.getEntity(clazz)
+                .collectionName();
+        Publisher<BsonDocument> publisher = context.getDatabase()
+                .runCommand(
+                        new BsonDocument("collMod", new BsonString(collectionName))
+                                .append("validator", jsonSchema)
+                                .append("validationAction", new BsonString(action.getValue()))
+                                .append("validationLevel", new BsonString(level.getValue())),
+                        BsonDocument.class);
+        return Mono.from(publisher)
+                .flatMap(document -> {
+                    int ok = document.get("ok")
+                            .asNumber()
+                            .intValue();
+                    return 1 == ok
+                            ? Mono.empty()
+                            : Mono.error(new RuntimeException(
+                                    "Failed to update the JSON schema of the collection \""
+                                            + collectionName
+                                            + "\""));
+                });
     }
 
     // Transaction

@@ -25,11 +25,14 @@ import java.util.function.Function;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.client.model.IndexModel;
+import com.mongodb.client.model.ValidationAction;
+import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -165,6 +168,12 @@ public interface MongoOperationsSupport {
     Mono<Void> dropDatabase();
 
     Mono<Boolean> validate(Class<?> clazz, String jsonSchema);
+
+    Mono<Void> updateJsonSchema(
+            Class<?> clazz,
+            BsonDocument jsonSchema,
+            ValidationAction action,
+            ValidationLevel level);
 
     <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> execute);
 
