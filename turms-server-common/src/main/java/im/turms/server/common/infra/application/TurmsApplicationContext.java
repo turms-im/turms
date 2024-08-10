@@ -85,7 +85,8 @@ public class TurmsApplicationContext {
     private final String activeEnvProfile;
     private final BuildProperties buildProperties;
 
-    private long shutdownJobTimeoutMillis;
+    private long shutdownJobGracefulTimeoutMillis;
+    private long shutdownJobForcedTimeoutMillis;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
     public TurmsApplicationContext(Environment environment) {
@@ -175,7 +176,9 @@ public class TurmsApplicationContext {
                 .getBean(TurmsPropertiesManager.class);
         ShutdownProperties properties = propertiesManager.getLocalProperties()
                 .getShutdown();
-        shutdownJobTimeoutMillis = properties.getJobTimeoutMillis();
+        shutdownJobGracefulTimeoutMillis = properties.getJobGracefulTimeoutMillis();
+        shutdownJobForcedTimeoutMillis =
+                Math.max(properties.getJobForcedTimeoutMillis(), shutdownJobGracefulTimeoutMillis);
     }
 
     @EventListener(classes = ContextClosedEvent.class)
@@ -188,18 +191,18 @@ public class TurmsApplicationContext {
             String jobName = key.name();
             boolean isClosingLogProcessor = key == JobShutdownOrder.CLOSE_LOG_PROCESSOR;
             Future<Mono<Void>> shutdownFuture = executor.submit(() -> orderAndJob.getValue()
-                    .run(shutdownJobTimeoutMillis));
+                    .run(shutdownJobGracefulTimeoutMillis));
             try {
                 long time = System.currentTimeMillis();
                 Mono<Void> mono =
-                        shutdownFuture.get(shutdownJobTimeoutMillis, TimeUnit.MILLISECONDS);
+                        shutdownFuture.get(shutdownJobForcedTimeoutMillis, TimeUnit.MILLISECONDS);
                 if (mono == null) {
                     throw new IllegalArgumentException(
                             "The result of the job \""
                                     + jobName
                                     + "\" must not be null");
                 }
-                time = shutdownJobTimeoutMillis - (System.currentTimeMillis() - time);
+                time = shutdownJobForcedTimeoutMillis - (System.currentTimeMillis() - time);
                 if (time <= 0) {
                     throw new TimeoutException();
                 }

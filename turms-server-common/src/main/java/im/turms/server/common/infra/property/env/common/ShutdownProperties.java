@@ -35,9 +35,15 @@ import im.turms.server.common.infra.property.metadata.Description;
 @NoArgsConstructor
 public class ShutdownProperties {
 
-    @Description("Wait for a job 2 minutes at most for extreme cases by default. "
-            + "Though it is a long time, graceful shutdown is usually better than force shutdown.")
+    @Description("The graceful shutdown timeout in milliseconds. After the timeout, the job will try to shut down gracefully in a more aggressive way "
+            + "before being forced to be shutdown when reaching \"jobForcedTimeoutMillis\"")
     @Min(0)
-    private long jobTimeoutMillis = 120 * 1000;
+    private long jobGracefulTimeoutMillis = 60 * 1000;
+
+    @Description("The forced shutdown timeout in milliseconds. After the timeout, the job will be forced to be shutdown immediately no matter "
+            + "whether it is running or not. If this value is equal to or less than \"jobGracefulTimeoutMillis\", the job will be forced to be shutdown when "
+            + "reaching \"jobGracefulTimeoutMillis\"")
+    @Min(0)
+    private long jobForcedTimeoutMillis = 90 * 1000;
 
 }

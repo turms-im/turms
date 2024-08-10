@@ -2474,10 +2474,14 @@ turms:
         # mutable property: true
         ignore-unknown-settings-on-upsert: false
   shutdown:
-    # Wait for a job 2 minutes at most for extreme cases by default. Though it is a long time, graceful shutdown is usually better than force shutdown.
+    # The forced shutdown timeout in milliseconds. After the timeout, the job will be forced to be shutdown immediately no matter whether it is running or not. If this value is equal to or less than "jobGracefulTimeoutMillis", the job will be forced to be shutdown when reaching "jobGracefulTimeoutMillis".
     # global property: false
     # mutable property: false
-    job-timeout-millis: 120000
+    job-forced-timeout-millis: 90000
+    # The graceful shutdown timeout in milliseconds. After the timeout, the job will try to shut down gracefully in a more aggressive way before being forced to be shutdown when reaching "jobForcedTimeoutMillis".
+    # global property: false
+    # mutable property: false
+    job-graceful-timeout-millis: 60000
   user-status:
     # Whether to cache the user sessions status.
     # global property: false

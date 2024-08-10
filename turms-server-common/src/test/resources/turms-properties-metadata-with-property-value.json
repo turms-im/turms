@@ -4528,7 +4528,7 @@
               "type": "boolean",
               "value": false
             },
-            "roleId": {
+            "roleIds": {
               "deprecated": false,
               "global": false,
               "mutable": false,
@@ -6189,14 +6189,23 @@
     }
   },
   "shutdown": {
-    "jobTimeoutMillis": {
+    "jobForcedTimeoutMillis": {
       "deprecated": false,
-      "description": "Wait for a job 2 minutes at most for extreme cases by default. Though it is a long time, graceful shutdown is usually better than force shutdown.",
+      "description": "The forced shutdown timeout in milliseconds. After the timeout, the job will be forced to be shutdown immediately no matter whether it is running or not. If this value is equal to or less than \"jobGracefulTimeoutMillis\", the job will be forced to be shutdown when reaching \"jobGracefulTimeoutMillis\"",
       "global": false,
       "mutable": false,
       "sensitive": false,
       "type": "long",
-      "value": 120000
+      "value": 90000
+    },
+    "jobGracefulTimeoutMillis": {
+      "deprecated": false,
+      "description": "The graceful shutdown timeout in milliseconds. After the timeout, the job will try to shut down gracefully in a more aggressive way before being forced to be shutdown when reaching \"jobForcedTimeoutMillis\"",
+      "global": false,
+      "mutable": false,
+      "sensitive": false,
+      "type": "long",
+      "value": 60000
     }
   },
   "userStatus": {
