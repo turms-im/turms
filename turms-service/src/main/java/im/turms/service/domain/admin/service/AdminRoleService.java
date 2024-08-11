@@ -283,17 +283,22 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Flux.empty();
         }
         if (roleIds.contains(ADMIN_ROLE_ROOT_ID)) {
+            AdminRole rootRole = getRootRole();
             if (roleIds.size() == 1) {
-                return Flux.just(getRootRole());
+                return rootRole.getRank() > rankGreaterThan
+                        ? Flux.just(rootRole)
+                        : Flux.empty();
             }
             roleIds = new UnifiedSet<>(roleIds);
             roleIds.remove(ADMIN_ROLE_ROOT_ID);
-            return adminRoleRepository
+            Flux<AdminRole> adminRoleFlux = adminRoleRepository
                     .findAdminRolesByIdsAndRankGreaterThan(roleIds, rankGreaterThan)
-                    .doOnNext(role -> idToRole.put(role.getId(), role))
-                    .startWith(getRootRole());
+                    .doOnNext(role -> idToRole.put(role.getId(), role));
+            return rootRole.getRank() > rankGreaterThan
+                    ? adminRoleFlux.startWith(rootRole)
+                    : adminRoleFlux;
         }
-        return adminRoleRepository.findByIds(roleIds)
+        return adminRoleRepository.findAdminRolesByIdsAndRankGreaterThan(roleIds, rankGreaterThan)
                 .doOnNext(role -> idToRole.put(role.getId(), role));
     }
 
