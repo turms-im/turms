@@ -7,7 +7,7 @@
         :format="isMonthMode ? 'YYYY/MM' : showTime ? 'YYYY/MM/DD HH:mm:ss' : 'YYYY/MM/DD'"
         :placeholder="computedPlaceholder"
         :mode="isMonthMode ? ['month', 'month'] : ['date', 'date']"
-        :ranges="presets"
+        :presets="presets"
         :show-time="showTime"
         @change="onRangeChange"
         @panelChange="onPanelChange"
@@ -89,18 +89,45 @@ export default {
             return [...this.value];
         },
         presets() {
-            const presets = {};
+            let presets;
             if (this.isMonthMode) {
-                presets[this.$t('lastThreeMonths')] = this.getLastMonthRange(3);
-                presets[this.$t('lastSixMonths')] = this.getLastMonthRange(6);
-                presets[this.$t('januaryToLastMonth')] = this.getJanuaryToLastMonthRange();
+                presets = [
+                    {
+                        label: this.$t('lastThreeMonths'),
+                        value: this.getLastMonthRange(3)
+                    },
+                    {
+                        label: this.$t('lastSixMonths'),
+                        value: this.getLastMonthRange(6)
+                    },
+                    {
+                        label: this.$t('januaryToLastMonth'),
+                        value: this.getJanuaryToLastMonthRange()
+                    }
+                ];
             } else {
                 if (this.includeToday) {
-                    presets[this.$t('lastMonthToToday')] = this.getLastMonthToTodayRange();
-                    presets[this.$t('firstToToday')] = this.getFirstToToday();
+                    presets = [
+                        {
+                            label: this.$t('lastMonthToToday'),
+                            value: this.getLastMonthToTodayRange()
+                        },
+                        {
+                            label: this.$t('firstToToday'),
+                            value: this.getFirstToToday()
+                        }
+                    ];
                 } else {
-                    presets[this.$t('lastMonthToYesterday')] = this.getLastMonthToYesterdayRange();
-                    presets[this.$t('firstToYesterday')] = this.getFirstToYesterday();
+                    presets = [
+                        {
+                            label: this.$t('lastMonthToYesterday'),
+                            value: this.getLastMonthToYesterdayRange()
+                        },
+                        {
+                            label: this.$t('firstToYesterday'),
+                            value: this.getFirstToYesterday()
+                        }
+                    ];
                 }
             }
             return presets;

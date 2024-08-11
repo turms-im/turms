@@ -37,7 +37,7 @@
                         <a-tree-select
                             v-model:value="selectedMetrics"
                             class="cluster-dashboard-server-details__metrics-select"
-                            dropdown-class-name="cluster-dashboard-server-details__metrics-select-dropdown"
+                            popup-class-name="cluster-dashboard-server-details__metrics-select-dropdown"
                             :tree-data="metricsTree"
                             tree-checkable
                             allow-clear
