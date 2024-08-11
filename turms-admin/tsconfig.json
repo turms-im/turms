@@ -32,7 +32,7 @@
     "target": "ES2020"
   },
   "include": [
-    ".eslintrc.js",
+    ".eslintrc.cjs",
     "vite.config.ts",
     "cypress.config.ts",
     "server/src/**/*",

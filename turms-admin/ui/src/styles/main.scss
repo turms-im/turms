@@ -1,8 +1,8 @@
 body {
-    overflow-y: hidden;
-    margin: 0;
-    padding: 0;
     height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
 }
 
 /* Targets on Chrome. Avoid "-internal-autofill-selected" style to be applied */
@@ -27,8 +27,8 @@ td {
         white-space: normal !important;
 
         > label{
-            margin-right: 8px !important;
             height: unset !important;
+            margin-right: 8px !important;
 
             &::after {
                 content: none !important;
