@@ -35,6 +35,14 @@ class CommonUtil {
                 : t1.getTime() - t2.getTime();
         } else if (typeof a === 'number' && typeof b === 'number') {
             result = a - b;
+        } else if (a == null) {
+            if (b == null) {
+                result = 0;
+            } else {
+                result = -1;
+            }
+        } else if (b == null) {
+            result = 1;
         } else {
             throw new Error(`Unknown value type: ${typeof a}`);
         }
