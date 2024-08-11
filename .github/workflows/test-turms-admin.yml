@@ -10,6 +10,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
+      - name: Install dependencies
+        working-directory: turms-admin
+        run: npm install
+
+      - name: Verify formatting
+        working-directory: turms-admin
+        run: npm run lint
+
       - name: Cypress run
         uses: cypress-io/github-action@v6.5.0
         with:
