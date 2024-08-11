@@ -401,6 +401,7 @@ const zh_CN = {
     'resume': '恢复',
     'role': '角色',
     'roleId': '角色ID',
+    'roleIds': '角色IDs',
     'rpc': 'RPC',
     'save': '保存',
     'score': '分值',

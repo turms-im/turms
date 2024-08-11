@@ -401,6 +401,7 @@ const en_US = {
     'resume': 'Resume',
     'role': 'Role',
     'roleId': 'Role ID',
+    'roleIds': 'Role IDs',
     'rpc': 'RPC',
     'save': 'Save',
     'score': 'Score',

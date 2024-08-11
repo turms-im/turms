@@ -72,8 +72,9 @@ export default {
                             rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
-                            id: 'roleId',
+                            id: 'roleIds',
                             type: 'SELECT',
+                            mode: 'multiple',
                             rules: this.$validator.create({required: true})
                         }
                     ]
@@ -93,8 +94,9 @@ export default {
                             rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
                         {
-                            id: 'roleId',
-                            type: 'SELECT'
+                            id: 'roleIds',
+                            type: 'SELECT',
+                            mode: 'multiple'
                         }
                     ]
                 }
@@ -113,7 +115,7 @@ export default {
                     width: '15%'
                 },
                 {
-                    key: 'roleId',
+                    key: 'roleIds',
                     width: '15%'
                 },
                 {

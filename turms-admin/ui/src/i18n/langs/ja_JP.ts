@@ -404,6 +404,7 @@ const ja_JP = {
     'resume': '再開',
     'role': 'ロール',
     'roleId': 'ロールID',
+    'roleIds': 'ロールIDs',
     'rpc': 'RPC',
     'save': '保存',
     'score': 'スコア',

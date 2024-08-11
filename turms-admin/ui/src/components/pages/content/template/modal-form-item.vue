@@ -51,6 +51,7 @@
             class="content-modal-form__item"
             :allow-clear="true"
             :date-id="field.id"
+            :mode="field.mode"
         >
             <template
                 v-if="!field.options?.values"
