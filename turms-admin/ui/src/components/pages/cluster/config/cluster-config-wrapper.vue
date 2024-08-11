@@ -38,7 +38,7 @@ export default {
         position: absolute;
         top: -14px;
         width: auto;
-        padding: 1px 8px;
+        padding: 0 8px;
         margin-left: -8px;
         font-size: 14px;
         color: #777;

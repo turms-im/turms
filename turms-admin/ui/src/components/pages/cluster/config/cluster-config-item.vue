@@ -135,9 +135,10 @@ export default {
 <style lang="scss">
 .cluster-config-item {
     display: flex;
+    align-items: center;
 
     &:not(:last-child) {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
 
     &__info {
