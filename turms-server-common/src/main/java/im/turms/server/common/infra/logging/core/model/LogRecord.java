@@ -19,13 +19,13 @@ package im.turms.server.common.infra.logging.core.model;
 
 import io.netty.buffer.ByteBuf;
 
-import im.turms.server.common.infra.logging.core.logger.AsyncLogger;
+import im.turms.server.common.infra.logging.core.logger.Logger;
 
 /**
  * @author James Chen
  */
 public record LogRecord(
-        AsyncLogger logger,
+        Logger logger,
         LogLevel level,
         long timestamp,
         ByteBuf data

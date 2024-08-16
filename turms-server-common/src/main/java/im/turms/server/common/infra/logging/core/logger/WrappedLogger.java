@@ -17,11 +17,13 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.util.List;
 import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
 import lombok.Setter;
 
+import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
@@ -140,5 +142,10 @@ public class WrappedLogger implements Logger {
     @Override
     public void fatal(String message) {
         logger.fatal(message);
+    }
+
+    @Override
+    public List<Appender> getAppenders() {
+        return logger.getAppenders();
     }
 }

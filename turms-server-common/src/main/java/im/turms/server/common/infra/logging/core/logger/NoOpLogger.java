@@ -17,10 +17,13 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.util.Collections;
+import java.util.List;
 import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
 
+import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
@@ -126,5 +129,10 @@ public class NoOpLogger implements Logger {
 
     @Override
     public void fatal(String message) {
+    }
+
+    @Override
+    public List<Appender> getAppenders() {
+        return Collections.emptyList();
     }
 }

@@ -86,7 +86,9 @@ public final class LogProcessor {
                     try {
                         appender.append(logRecord);
                     } catch (Exception e) {
-                        InternalLogger.printException(e);
+                        InternalLogger.INSTANCE
+                                .error("Caught an error while appending the log record: "
+                                        + logRecord, e);
                     }
                 }
                 ReferenceCountUtil.safeEnsureReleased(logRecord.data());
@@ -102,7 +104,8 @@ public final class LogProcessor {
             try {
                 appender.close();
             } catch (Exception e) {
-                InternalLogger.printException(e);
+                InternalLogger.INSTANCE.error("Caught an error while closing the appender: "
+                        + appender, e);
             }
         }
     }

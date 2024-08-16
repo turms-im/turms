@@ -121,9 +121,8 @@ public class LoggerFactory {
             DEFAULT_APPENDERS.add(fileAppender);
         }
         layout = new TurmsTemplateLayout(nodeType, nodeId);
+        InternalLogger.init(DEFAULT_APPENDERS, layout);
         initialized = true;
-
-        InternalLogger.INSTANCE.init();
         Pair<LoggerOptions, WrappedLogger> pair;
         while ((pair = UNINITIALIZED_LOGGERS.poll()) != null) {
             pair.second()

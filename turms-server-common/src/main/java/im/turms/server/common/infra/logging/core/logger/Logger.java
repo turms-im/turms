@@ -17,10 +17,12 @@
 
 package im.turms.server.common.infra.logging.core.logger;
 
+import java.util.List;
 import jakarta.annotation.Nullable;
 
 import io.netty.buffer.ByteBuf;
 
+import im.turms.server.common.infra.logging.core.appender.Appender;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 
 /**
@@ -70,4 +72,6 @@ public interface Logger {
     void fatal(String message, Throwable throwable);
 
     void fatal(String message);
+
+    List<Appender> getAppenders();
 }
