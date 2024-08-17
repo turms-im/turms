@@ -25,6 +25,7 @@ import java.util.SequencedMap;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,16 +52,24 @@ public final class JsonUtil {
     public static void assertEqual(Map<String, Object> actual, InputStream expected) {
         // We use String instead of byte[] for test debugging
         JsonNode expectedJson;
-        JsonNode actualJson;
+        JsonNode actualJson = getSortedMapJsonNode(actual);
         try {
-            Map<String, Object> sortedMap = sortMapEntries(actual);
-            String json = MAPPER.writeValueAsString(sortedMap);
-            actualJson = MAPPER.readTree(json);
             expectedJson = MAPPER.readTree(expected);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         assertThat(actualJson).isEqualTo(expectedJson);
+    }
+
+    public static JsonNode getSortedMapJsonNode(Map<String, Object> map) {
+        Map<String, Object> sortedMap = sortMapEntries(map);
+        String json = null;
+        try {
+            json = MAPPER.writeValueAsString(sortedMap);
+            return MAPPER.readTree(json);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

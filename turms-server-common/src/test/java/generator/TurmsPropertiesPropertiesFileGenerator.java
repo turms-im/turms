@@ -19,7 +19,6 @@ package generator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,10 +27,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.SequencedMap;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import helper.ResourceUtil;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.lang.StringUtil;
@@ -44,37 +43,18 @@ import im.turms.server.common.infra.property.TurmsProperties;
 class TurmsPropertiesPropertiesFileGenerator {
 
     public static void main(String[] args) {
-        // 1. Prepare properties metadata
-        Path basePath;
-        try {
-            basePath = Path.of(TurmsPropertiesPropertiesFileGenerator.class.getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Failed to get the output path", e);
-        }
-        basePath = basePath.resolve("../../src/test/resources");
+        generate();
+    }
 
-        Path propertiesMetadataPath =
-                basePath.resolve("turms-properties-metadata-with-property-value.json");
-        InputStream propertiesMetadataInputStream;
-        try {
-            propertiesMetadataInputStream = Files.newInputStream(propertiesMetadataPath);
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Failed to read the properties metadata: "
-                            + propertiesMetadataPath.normalize(),
-                    e);
-        }
+    public static void generate() {
+        // 1. Prepare properties metadata
+        InputStream propertiesMetadataInputStream =
+                ResourceUtil.findTestResource("turms-properties-metadata-with-property-value.json");
         Map<String, Object> propertiesMap;
         try {
             propertiesMap = new ObjectMapper().readValue(propertiesMetadataInputStream, Map.class);
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Failed to parse the properties metadata: "
-                            + propertiesMetadataPath.normalize(),
-                    e);
+            throw new RuntimeException("Failed to parse the properties metadata", e);
         }
         propertiesMap = Map.of(TurmsProperties.PROPERTIES_PREFIX, propertiesMap);
 
@@ -89,7 +69,7 @@ class TurmsPropertiesPropertiesFileGenerator {
 
         // 4. Write to file
         String yaml = builder.toString();
-        Path path = basePath.resolve("application-full-example.yaml")
+        Path path = ResourceUtil.TEST_RESOURCES_PATH.resolve("application-full-example.yaml")
                 .toAbsolutePath()
                 .normalize();
         try {
