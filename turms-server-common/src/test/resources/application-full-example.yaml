@@ -1028,6 +1028,10 @@ turms:
         # global property: false
         # mutable property: false
         username: ""
+    # Whether to watch the plugin directory. If enabled, the server will load and unload plugins automatically when a plugin is added or removed from the directory.
+    # global property: false
+    # mutable property: false
+    watch-dir: false
   security:
     blocklist:
       ip:

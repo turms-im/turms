@@ -40,6 +40,9 @@ public class PluginProperties {
     @Description("The relative path of plugins")
     private String dir = "plugins";
 
+    @Description("Whether to watch the plugin directory. If enabled, the server will load and unload plugins automatically when a plugin is added or removed from the directory")
+    private boolean watchDir;
+
     @NestedConfigurationProperty
     private JavaPluginProperties java = new JavaPluginProperties();
 

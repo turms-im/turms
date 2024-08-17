@@ -2647,6 +2647,15 @@
           "value": ""
         }
       }
+    },
+    "watchDir": {
+      "deprecated": false,
+      "description": "Whether to watch the plugin directory. If enabled, the server will load and unload plugins automatically when a plugin is added or removed from the directory",
+      "global": false,
+      "mutable": false,
+      "sensitive": false,
+      "type": "boolean",
+      "value": false
     }
   },
   "security": {

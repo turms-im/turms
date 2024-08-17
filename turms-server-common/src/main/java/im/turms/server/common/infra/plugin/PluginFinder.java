@@ -36,65 +36,79 @@ import im.turms.server.common.infra.io.InputOutputException;
  */
 public class PluginFinder {
 
+    private static final String JAR_EXTENSIONS = ".jar";
+    private static final String JAVASCRIPT_EXTENSION = ".js";
+
     private PluginFinder() {
     }
 
-    public static FindResult find(Path dir, boolean isJsScriptEnabled) {
+    public static FindResult find(Path dir, boolean isJsEnabled) {
         List<Path> files = listFiles(dir);
         if (files.isEmpty()) {
             return new FindResult(Collections.emptyList(), Collections.emptyList());
         }
         int size = files.size();
         List<ZipFile> zipFiles = new ArrayList<>(size);
-        List<JsFile> jsFiles = isJsScriptEnabled
+        List<JsFile> jsFiles = isJsEnabled
                 ? new ArrayList<>(size)
                 : Collections.emptyList();
         for (Path path : files) {
-            String pathStr = path.toString();
-            if (pathStr.endsWith(".jar")) {
-                ZipFile file;
-                try {
-                    file = new ZipFile(path.toFile());
-                } catch (Exception e) {
-                    for (ZipFile zipFile : zipFiles) {
-                        try {
-                            zipFile.close();
-                        } catch (IOException ex) {
-                            e.addSuppressed(new InputOutputException(
-                                    "Caught an error while closing the zip file: "
-                                            + pathStr,
-                                    ex));
-                        }
+            try {
+                Object file = find(isJsEnabled, path);
+                if (file != null) {
+                    if (file instanceof ZipFile zipFile) {
+                        zipFiles.add(zipFile);
+                    } else if (file instanceof JsFile jsFile) {
+                        jsFiles.add(jsFile);
                     }
-                    throw new InputOutputException(
-                            "Failed to load the JAR file: "
-                                    + path.toAbsolutePath(),
-                            e);
                 }
-                zipFiles.add(file);
-            } else if (isJsScriptEnabled && pathStr.endsWith(".js")) {
-                try (FileInputStream stream = new FileInputStream(path.toFile())) {
-                    String script = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-                    jsFiles.add(new JsFile(script, path));
-                } catch (Exception e) {
-                    for (ZipFile zipFile : zipFiles) {
-                        try {
-                            zipFile.close();
-                        } catch (IOException ex) {
-                            e.addSuppressed(new InputOutputException(
-                                    "Caught an error while closing the zip file: "
-                                            + pathStr,
-                                    ex));
-                        }
+            } catch (Exception e) {
+                for (ZipFile zipFile : zipFiles) {
+                    try {
+                        zipFile.close();
+                    } catch (IOException ex) {
+                        e.addSuppressed(new InputOutputException(
+                                "Caught an error while closing the zip file: "
+                                        + zipFile.getName(),
+                                ex));
                     }
-                    throw new InputOutputException(
-                            "Failed to load the JavaScript file: "
-                                    + path.toAbsolutePath(),
-                            e);
                 }
+                throw new InputOutputException(
+                        "Failed to load the JAR file: "
+                                + path.toAbsolutePath()
+                                        .normalize(),
+                        e);
             }
         }
         return new FindResult(zipFiles, jsFiles);
+    }
+
+    public static Object find(boolean isJsEnabled, Path path) {
+        String pathStr = path.toString();
+        if (pathStr.endsWith(JAR_EXTENSIONS)) {
+            try {
+                return new ZipFile(path.toFile());
+            } catch (Exception e) {
+                throw new InputOutputException(
+                        "Failed to load the JAR file: "
+                                + path.toAbsolutePath()
+                                        .normalize(),
+                        e);
+            }
+        } else if (isJsEnabled && pathStr.endsWith(JAVASCRIPT_EXTENSION)) {
+            try (FileInputStream stream = new FileInputStream(path.toFile())) {
+                String script = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+                return new JsFile(script, path);
+            } catch (Exception e) {
+                throw new InputOutputException(
+                        "Failed to load the JavaScript file: "
+                                + path.toAbsolutePath()
+                                        .normalize(),
+                        e);
+            }
+        } else {
+            return null;
+        }
     }
 
     private static List<Path> listFiles(Path dir) {
