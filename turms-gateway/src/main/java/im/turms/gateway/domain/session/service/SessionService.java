@@ -85,8 +85,8 @@ import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 
-import static im.turms.gateway.infra.metrics.MetricNameConst.LOGGED_IN_USERS_COUNTER;
-import static im.turms.gateway.infra.metrics.MetricNameConst.ONLINE_USERS_GAUGE;
+import static im.turms.gateway.infra.metrics.MetricNameConst.TURMS_BUSINESS_USER_LOGGED_IN;
+import static im.turms.gateway.infra.metrics.MetricNameConst.TURMS_BUSINESS_USER_ONLINE;
 
 /**
  * @author James Chen
@@ -188,8 +188,8 @@ public class SessionService extends BaseService implements RpcSessionService {
         propertiesManager.addLocalPropertiesChangeListener(this::updateLocalProperties);
 
         MeterRegistry registry = metricsService.getRegistry();
-        loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER);
-        registry.gaugeMapSize(ONLINE_USERS_GAUGE, Tags.empty(), userIdToSessionsManager);
+        loggedInUsersCounter = registry.counter(TURMS_BUSINESS_USER_LOGGED_IN);
+        registry.gaugeMapSize(TURMS_BUSINESS_USER_ONLINE, Tags.empty(), userIdToSessionsManager);
 
         context.addShutdownHook(JobShutdownOrder.CLOSE_SESSIONS, timeoutMillis -> destroy());
     }

@@ -25,14 +25,10 @@ import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Timer;
 import reactor.netty.channel.ChannelMetricsRecorder;
 
-import static reactor.netty.Metrics.ADDRESS_RESOLVER;
-import static reactor.netty.Metrics.CONNECT_TIME;
 import static reactor.netty.Metrics.DATA_RECEIVED;
 import static reactor.netty.Metrics.DATA_SENT;
 import static reactor.netty.Metrics.ERRORS;
 import static reactor.netty.Metrics.REGISTRY;
-import static reactor.netty.Metrics.TLS_HANDSHAKE_TIME;
-import static reactor.netty.Metrics.URI;
 
 /**
  * @author James Chen
@@ -40,42 +36,44 @@ import static reactor.netty.Metrics.URI;
  */
 public class TurmsMicrometerChannelMetricsRecorder implements ChannelMetricsRecorder {
 
+    private static final String ADDRESS_RESOLVE_DURATION = ".address.resolve.duration";
+    private static final String CONNECT_DURATION = ".connect.duration";
+    private static final String ERROR = ".error";
+    private static final String TLS_HANDSHAKE_DURATION = ".tls.handshake.duration";
+
     private final DistributionSummary dataReceived;
     private final DistributionSummary dataSent;
 
     private final Counter errorCount;
 
-    private final Timer connectTime;
-    private final Timer tlsHandshakeTime;
-    private final Timer addressResolverTime;
+    private final Timer connectDurationTimer;
+    private final Timer tlsHandshakeDurationTimer;
+    private final Timer addressResolveDurationTimer;
 
-    public TurmsMicrometerChannelMetricsRecorder(String name, String protocol) {
+    public TurmsMicrometerChannelMetricsRecorder(String name) {
         dataReceived = DistributionSummary.builder(name + DATA_RECEIVED)
                 .baseUnit("bytes")
                 .description("Amount of the data received, in bytes")
-                .tag(URI, protocol)
                 .register(REGISTRY);
 
         dataSent = DistributionSummary.builder(name + DATA_SENT)
                 .baseUnit("bytes")
                 .description("Amount of the data sent, in bytes")
-                .tag(URI, protocol)
                 .register(REGISTRY);
 
-        errorCount = Counter.builder(name + ERRORS)
+        errorCount = Counter.builder(name + ERROR)
                 .description("Number of errors that occurred")
-                .tag(URI, protocol)
                 .register(REGISTRY);
 
-        connectTime = Timer.builder(name + CONNECT_TIME)
+        connectDurationTimer = Timer.builder(name + CONNECT_DURATION)
                 .description("Time spent for connecting to the remote address")
                 .register(REGISTRY);
 
-        tlsHandshakeTime = Timer.builder(name + TLS_HANDSHAKE_TIME)
+        tlsHandshakeDurationTimer = Timer.builder(name + TLS_HANDSHAKE_DURATION)
                 .description("Time spent for TLS handshake")
                 .register(REGISTRY);
 
-        addressResolverTime = Timer.builder(name + ADDRESS_RESOLVER)
+        addressResolveDurationTimer = Timer.builder(name + ADDRESS_RESOLVE_DURATION)
                 .description("Time spent for resolving the address")
                 .register(REGISTRY);
     }
@@ -97,12 +95,12 @@ public class TurmsMicrometerChannelMetricsRecorder implements ChannelMetricsReco
 
     @Override
     public void recordTlsHandshakeTime(SocketAddress remoteAddress, Duration time, String status) {
-        tlsHandshakeTime.record(time);
+        tlsHandshakeDurationTimer.record(time);
     }
 
     @Override
     public void recordConnectTime(SocketAddress remoteAddress, Duration time, String status) {
-        connectTime.record(time);
+        connectDurationTimer.record(time);
     }
 
     @Override
@@ -110,7 +108,7 @@ public class TurmsMicrometerChannelMetricsRecorder implements ChannelMetricsReco
             SocketAddress remoteAddress,
             Duration time,
             String status) {
-        addressResolverTime.record(time);
+        addressResolveDurationTimer.record(time);
     }
 
 }

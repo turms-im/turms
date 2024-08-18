@@ -19,6 +19,12 @@ package im.turms.server.common.infra.metrics;
 
 /**
  * @author James Chen
+ * @implNote 1. A metric name must start with "turms" if it belongs to a component specific to
+ *           Turms. If a component is just used by Turms (e.g. Lettuce, LDAP client, JVM), their
+ *           metric names should not start with "turms".
+ *           <p>
+ *           2. Always use singular nouns.
+ * @see <a href="https://prometheus.io/docs/practices/naming">Metric and label naming</a>
  */
 public final class CommonMetricNameConst {
 
@@ -27,16 +33,18 @@ public final class CommonMetricNameConst {
 
     // Admin API
 
-    public static final String ADMIN_API = "admin.api";
+    public static final String TURMS_ADMIN_API_SERVER_HTTP = "turms.admin.api.server.http";
 
-    // Node connection
+    // RPC
 
-    public static final String NODE_TCP_SERVER = "turms.node.tcp.server";
-    public static final String NODE_TCP_CLIENT = "turms.node.tcp.client";
+    public static final String TURMS_RPC_SERVER_TCP = "turms.rpc.server.tcp";
+    public static final String TURMS_RPC_CLIENT_TCP = "turms.rpc.client.tcp";
 
-    // Client requests
+    // Client Request
 
-    public static final String CLIENT_REQUEST = "turms.client.request";
-    public static final String CLIENT_REQUEST_TAG_TYPE = "type";
+    public static final String TURMS_CLIENT_REQUEST = "turms.client.request";
+    public static final String TURMS_CLIENT_REQUEST_PENDING = TURMS_CLIENT_REQUEST
+            + ".pending";
+    public static final String TURMS_CLIENT_REQUEST_TAG_TYPE = "type";
 
 }

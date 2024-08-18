@@ -24,13 +24,13 @@ import reactor.core.publisher.Mono;
 import reactor.netty.ChannelBindException;
 import reactor.netty.DisposableServer;
 import reactor.netty.channel.ChannelOperations;
-import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpServer;
 
 import im.turms.server.common.access.common.LoopResourcesFactory;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.BindException;
 import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
@@ -38,7 +38,7 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.time.DurationConst;
 
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.NODE_TCP_SERVER;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_RPC_SERVER_TCP;
 
 /**
  * @author James Chen
@@ -89,7 +89,8 @@ public class ConnectionServer {
                         .host(host)
                         .port(currentPort)
                         .metrics(true,
-                                () -> new MicrometerChannelMetricsRecorder(NODE_TCP_SERVER, "tcp"))
+                                () -> new TurmsMicrometerChannelMetricsRecorder(
+                                        TURMS_RPC_SERVER_TCP))
                         .doOnConnection(connection -> connectionConsumer
                                 .accept((ChannelOperations<?, ?>) connection));
                 if (ssl.isEnabled()) {

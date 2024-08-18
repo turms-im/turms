@@ -73,8 +73,9 @@ import im.turms.service.infra.plugin.extension.RequestHandlerResultHandler;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST;
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST_TAG_TYPE;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_CLIENT_REQUEST;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_CLIENT_REQUEST_PENDING;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_CLIENT_REQUEST_TAG_TYPE;
 
 /**
  * @author James Chen
@@ -310,8 +311,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                             Mono.defer(() -> requestHandler.handle(lastClientRequest))));
             result = result.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             // 5. Metrics and transform to ServiceResponse
-            return result.name(CLIENT_REQUEST)
-                    .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
+            return result.name(TURMS_CLIENT_REQUEST)
+                    .tag(TURMS_CLIENT_REQUEST_TAG_TYPE, requestType.name())
                     .metrics()
                     .defaultIfEmpty(RequestHandlerResult.NO_CONTENT)
                     .doOnEach(signal -> {

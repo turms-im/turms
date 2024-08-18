@@ -37,7 +37,6 @@ import lombok.Getter;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.channel.ChannelOperations;
-import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.tcp.TcpClient;
 
 import im.turms.server.common.infra.cluster.service.ClusterService;
@@ -55,6 +54,7 @@ import im.turms.server.common.infra.exception.ThrowableUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
+import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
@@ -65,7 +65,7 @@ import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.thread.TurmsThread;
 
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.NODE_TCP_CLIENT;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_RPC_CLIENT_TCP;
 
 /**
  * Responsibilities: Focus on endpoint communication (including network transport) 1. Requested by
@@ -247,7 +247,8 @@ public class ConnectionService implements ClusterService {
         TcpClient client = TcpClient.newConnection()
                 .host(host)
                 .port(port)
-                .metrics(true, () -> new MicrometerChannelMetricsRecorder(NODE_TCP_CLIENT, "tcp"))
+                .metrics(true,
+                        () -> new TurmsMicrometerChannelMetricsRecorder(TURMS_RPC_CLIENT_TCP))
                 .runOn(eventLoopGroupForClients);
         if (clientSsl.isEnabled()) {
             client = client.secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec,

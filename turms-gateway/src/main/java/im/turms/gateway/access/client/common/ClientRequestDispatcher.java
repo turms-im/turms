@@ -52,8 +52,8 @@ import im.turms.server.common.infra.tracing.TracingContext;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
 import static im.turms.server.common.access.client.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST;
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.CLIENT_REQUEST_TAG_TYPE;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_CLIENT_REQUEST;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_CLIENT_REQUEST_TAG_TYPE;
 
 /**
  * @author James Chen
@@ -170,8 +170,8 @@ public class ClientRequestDispatcher {
         }
         return notificationMono
                 // Metrics and logging
-                .name(CLIENT_REQUEST)
-                .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
+                .name(TURMS_CLIENT_REQUEST)
+                .tag(TURMS_CLIENT_REQUEST_TAG_TYPE, requestType.name())
                 .metrics()
                 .onErrorResume(throwable -> {
                     ThrowableInfo info = ThrowableInfo.get(throwable);

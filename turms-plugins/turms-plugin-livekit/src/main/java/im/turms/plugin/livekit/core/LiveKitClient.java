@@ -79,8 +79,7 @@ public class LiveKitClient {
                 .baseUrl(properties.getUrl())
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
-                                MetricNameConst.CLIENT,
-                                "http"));
+                                MetricNameConst.LIVEKIT_CLIENT_HTTP));
         String apiKey = properties.getApiKey();
         String secretKey = properties.getSecretKey();
         if (StringUtil.isBlank(apiKey)) {

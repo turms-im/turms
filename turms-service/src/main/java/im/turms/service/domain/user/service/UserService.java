@@ -159,9 +159,9 @@ public class UserService implements RpcUserService {
         this.messageService = messageService;
 
         registeredUsersCounter = metricsService.getRegistry()
-                .counter(MetricNameConst.REGISTERED_USERS_COUNTER);
+                .counter(MetricNameConst.TURMS_BUSINESS_USER_REGISTERED);
         deletedUsersCounter = metricsService.getRegistry()
-                .counter(MetricNameConst.DELETED_USERS_COUNTER);
+                .counter(MetricNameConst.TURMS_BUSINESS_USER_DELETED);
 
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
     }

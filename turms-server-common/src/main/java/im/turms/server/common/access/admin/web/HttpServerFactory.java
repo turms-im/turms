@@ -33,7 +33,7 @@ import static io.netty.channel.ChannelOption.SO_LINGER;
 import static io.netty.channel.ChannelOption.SO_REUSEADDR;
 import static io.netty.channel.ChannelOption.TCP_NODELAY;
 
-import static im.turms.server.common.infra.metrics.CommonMetricNameConst.ADMIN_API;
+import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_ADMIN_API_SERVER_HTTP;
 
 /**
  * @author James Chen
@@ -55,7 +55,9 @@ public final class HttpServerFactory {
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, true)
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.ADMIN_HTTP_PREFIX))
-                .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(ADMIN_API, "http"));
+                .metrics(true,
+                        () -> new TurmsMicrometerChannelMetricsRecorder(
+                                TURMS_ADMIN_API_SERVER_HTTP));
         int connectTimeoutMillis = httpProperties.getConnectTimeoutMillis();
         int idleTimeoutMillis = httpProperties.getIdleTimeoutMillis();
         int requestReadTimeoutMillis = httpProperties.getRequestReadTimeoutMillis();

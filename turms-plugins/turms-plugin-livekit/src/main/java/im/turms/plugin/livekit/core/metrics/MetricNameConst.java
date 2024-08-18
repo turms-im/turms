@@ -25,7 +25,7 @@ public final class MetricNameConst {
     private MetricNameConst() {
     }
 
-    public static final String WEBHOOK = "turms.livekit.webhook";
-    public static final String CLIENT = "turms.livekit.client";
+    public static final String LIVEKIT_WEBHOOK_SERVER_HTTP = "livekit.webhook.server.http";
+    public static final String LIVEKIT_CLIENT_HTTP = "livekit.client.http";
 
 }

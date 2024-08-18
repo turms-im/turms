@@ -28,7 +28,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.SignalType;
 import reactor.core.publisher.Sinks;
 import reactor.netty.channel.ChannelOperations;
-import reactor.netty.channel.MicrometerChannelMetricsRecorder;
 import reactor.netty.tcp.TcpClient;
 
 import im.turms.gateway.infra.ldap.element.common.Attribute;
@@ -52,6 +51,7 @@ import im.turms.gateway.infra.ldap.handler.LdapMessageDecoder;
 import im.turms.gateway.infra.ldap.handler.LdapMessageEncoder;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.metrics.TurmsMicrometerChannelMetricsRecorder;
 import im.turms.server.common.infra.net.SslContextSpecType;
 import im.turms.server.common.infra.net.SslUtil;
 import im.turms.server.common.infra.property.env.common.SslProperties;
@@ -112,7 +112,7 @@ public class LdapClient {
             TcpClient client = TcpClient.newConnection()
                     .host(host)
                     .port(port)
-                    .metrics(true, () -> new MicrometerChannelMetricsRecorder(LDAP_CLIENT, "ldap"));
+                    .metrics(true, () -> new TurmsMicrometerChannelMetricsRecorder(LDAP_CLIENT));
             if (sslProperties != null && sslProperties.isEnabled()) {
                 client = client
                         .secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec,

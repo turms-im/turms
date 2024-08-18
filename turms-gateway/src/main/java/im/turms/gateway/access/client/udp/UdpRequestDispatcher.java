@@ -93,8 +93,7 @@ public class UdpRequestDispatcher {
                     .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_UDP_PREFIX))
                     .metrics(true,
                             () -> new TurmsMicrometerChannelMetricsRecorder(
-                                    MetricNameConst.CLIENT_NETWORK,
-                                    "udp"))
+                                    MetricNameConst.TURMS_GATEWAY_SERVER_UDP))
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()
                                 .cast(DatagramPacket.class)

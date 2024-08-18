@@ -25,10 +25,12 @@ public final class MetricNameConst {
     private MetricNameConst() {
     }
 
-    public static final String CLIENT_NETWORK = "turms.client.network";
+    public static final String TURMS_GATEWAY_SERVER_UDP = "turms.gateway.server.udp";
+    public static final String TURMS_GATEWAY_SERVER_TCP = "turms.gateway.server.tcp";
+    public static final String TURMS_GATEWAY_SERVER_WEBSOCKET = "turms.gateway.server.websocket";
 
-    public static final String LDAP_CLIENT = "turms.ldap.client";
+    public static final String TURMS_BUSINESS_USER_LOGGED_IN = "turms.business.user.logged_in";
+    public static final String TURMS_BUSINESS_USER_ONLINE = "turms.business.user.online";
 
-    public static final String LOGGED_IN_USERS_COUNTER = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE = "user.online";
+    public static final String LDAP_CLIENT = "ldap.client";
 }

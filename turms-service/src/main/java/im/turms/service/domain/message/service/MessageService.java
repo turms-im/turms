@@ -116,7 +116,7 @@ import static im.turms.server.common.access.common.ResponseStatusCode.UPDATING_G
 import static im.turms.server.common.access.common.ResponseStatusCode.UPDATING_MESSAGE_BY_SENDER_IS_DISABLED;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_REQUESTER_ID;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_REQUEST_ID;
-import static im.turms.service.infra.metrics.MetricNameConst.SENT_MESSAGES_COUNTER;
+import static im.turms.service.infra.metrics.MetricNameConst.TURMS_BUSINESS_MESSAGE_SENT;
 
 /**
  * @author James Chen
@@ -261,7 +261,7 @@ public class MessageService extends BaseService {
             sentMessageCache = null;
         }
         sentMessageCounter = metricsService.getRegistry()
-                .counter(SENT_MESSAGES_COUNTER);
+                .counter(TURMS_BUSINESS_MESSAGE_SENT);
         propertiesManager.notifyAndAddGlobalPropertiesChangeListener(this::updateProperties);
         // Set up the checker for expired messages join requests
         taskManager.reschedule("expiredMessagesCleanup",

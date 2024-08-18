@@ -90,8 +90,7 @@ public final class TcpServerFactory {
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_TCP_PREFIX))
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
-                                MetricNameConst.CLIENT_NETWORK,
-                                "tcp"))
+                                MetricNameConst.TURMS_GATEWAY_SERVER_TCP))
                 // Called for every new connection that is opened.
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> {
                     ChannelPipeline pipeline = channel.pipeline();

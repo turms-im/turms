@@ -90,8 +90,8 @@ import im.turms.service.storage.elasticsearch.model.doc.GroupDoc;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
-import static im.turms.service.infra.metrics.MetricNameConst.CREATED_GROUPS_COUNTER;
-import static im.turms.service.infra.metrics.MetricNameConst.DELETED_GROUPS_COUNTER;
+import static im.turms.service.infra.metrics.MetricNameConst.TURMS_BUSINESS_GROUP_CREATED;
+import static im.turms.service.infra.metrics.MetricNameConst.TURMS_BUSINESS_GROUP_DELETED;
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
 /**
@@ -151,9 +151,9 @@ public class GroupService extends BaseService {
         this.messageService = messageService;
 
         createdGroupsCounter = metricsService.getRegistry()
-                .counter(CREATED_GROUPS_COUNTER);
+                .counter(TURMS_BUSINESS_GROUP_CREATED);
         deletedGroupsCounter = metricsService.getRegistry()
-                .counter(DELETED_GROUPS_COUNTER);
+                .counter(TURMS_BUSINESS_GROUP_DELETED);
 
         // TODO: make configurable
         groupIdToGroupTypeCache = Caffeine.newBuilder()

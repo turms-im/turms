@@ -118,8 +118,7 @@ public final class WebSocketServerFactory {
                 .runOn(LoopResourcesFactory.createForServer(ThreadNameConst.GATEWAY_WS_PREFIX))
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
-                                MetricNameConst.CLIENT_NETWORK,
-                                "websocket"))
+                                MetricNameConst.TURMS_GATEWAY_SERVER_WEBSOCKET))
                 .handle((request, response) -> handleHttpRequest(blocklistService,
                         request,
                         response,

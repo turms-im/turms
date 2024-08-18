@@ -66,8 +66,7 @@ public class WebhookServer {
                 .port(properties.getPort())
                 .metrics(true,
                         () -> new TurmsMicrometerChannelMetricsRecorder(
-                                MetricNameConst.WEBHOOK,
-                                "http"))
+                                MetricNameConst.LIVEKIT_WEBHOOK_SERVER_HTTP))
                 .handle((request, response) -> {
                     handleRequest(request, response);
                     return Mono.never();
