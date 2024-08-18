@@ -17,11 +17,14 @@
 
 package im.turms.gateway.access.client.common;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
 import im.turms.gateway.domain.session.access.client.controller.SessionClientController;
 import im.turms.gateway.domain.session.service.SessionService;
@@ -43,6 +46,7 @@ import im.turms.server.common.infra.healthcheck.ServerStatusManager;
 import im.turms.server.common.infra.healthcheck.ServiceAvailability;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
+import im.turms.server.common.infra.metrics.CommonMetricNameConst;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
@@ -84,6 +88,8 @@ public class ClientRequestDispatcher {
     private final ServiceRequestService serviceRequestService;
     private final ServerStatusManager serverStatusManager;
 
+    private final AtomicInteger pendingRequestCount;
+
     public ClientRequestDispatcher(
             ApiLoggingContext apiLoggingContext,
             BlocklistService blocklistService,
@@ -92,6 +98,7 @@ public class ClientRequestDispatcher {
             SessionService sessionService,
             ServiceRequestService serviceRequestService,
             ServerStatusManager serverStatusManager,
+            MetricsService metricsService,
             TurmsPropertiesManager propertiesManager) {
         this.apiLoggingContext = apiLoggingContext;
         this.blocklistService = blocklistService;
@@ -100,6 +107,8 @@ public class ClientRequestDispatcher {
         this.sessionService = sessionService;
         this.serviceRequestService = serviceRequestService;
         this.serverStatusManager = serverStatusManager;
+        pendingRequestCount = metricsService.getRegistry()
+                .gauge(CommonMetricNameConst.TURMS_CLIENT_REQUEST_PENDING, new AtomicInteger());
         NotificationFactory.init(propertiesManager);
     }
 
@@ -111,6 +120,19 @@ public class ClientRequestDispatcher {
      *           1
      */
     public Mono<ByteBuf> handleRequest(
+            UserSessionWrapper sessionWrapper,
+            ByteBuf serviceRequestBuffer) {
+        pendingRequestCount.incrementAndGet();
+        try {
+            return handleRequest0(sessionWrapper, serviceRequestBuffer)
+                    .doFinally(signalType -> pendingRequestCount.decrementAndGet());
+        } catch (Exception e) {
+            pendingRequestCount.decrementAndGet();
+            return Mono.error(e);
+        }
+    }
+
+    public Mono<ByteBuf> handleRequest0(
             UserSessionWrapper sessionWrapper,
             ByteBuf serviceRequestBuffer) {
         // Check if it is a heartbeat request

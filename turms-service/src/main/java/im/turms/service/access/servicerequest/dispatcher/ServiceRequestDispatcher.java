@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 
@@ -65,6 +66,7 @@ import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
+import im.turms.service.domain.observation.service.MetricsService;
 import im.turms.service.infra.logging.ApiLoggingContext;
 import im.turms.service.infra.logging.ClientApiLogging;
 import im.turms.service.infra.plugin.extension.ClientRequestTransformer;
@@ -98,6 +100,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> requestTypeToHandler;
 
+    private final AtomicInteger pendingRequestCount;
+
     static {
         try {
             REQUEST_TRANSFORM_METHOD = ClientRequestTransformer.class.getDeclaredMethod("transform",
@@ -124,6 +128,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             ApiLoggingContext apiLoggingContext,
             ApplicationContext context,
             BlocklistService blocklistService,
+            MetricsService metricsService,
             OutboundMessageManager outboundMessageManager,
             ServerStatusManager serverStatusManager,
             PluginManager pluginManager,
@@ -147,6 +152,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 + requestType);
             }
         }
+        pendingRequestCount = metricsService.getRegistry()
+                .gauge(TURMS_CLIENT_REQUEST_PENDING, new AtomicInteger());
     }
 
     private FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> getMappings(
@@ -194,10 +201,13 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     @Override
     public Mono<ServiceResponse> dispatch(TracingContext context, ServiceRequest serviceRequest) {
         ByteBuf requestBuffer = serviceRequest.getTurmsRequestBuffer();
+        pendingRequestCount.incrementAndGet();
         try {
             requestBuffer.touch(serviceRequest);
-            return dispatch0(context, serviceRequest);
+            return dispatch0(context, serviceRequest)
+                    .doFinally(unused -> pendingRequestCount.decrementAndGet());
         } catch (Exception e) {
+            pendingRequestCount.decrementAndGet();
             LOGGER.error("Failed to handle the request: {}", serviceRequest, e);
             return Mono.just(
                     ServiceResponse.of(ResponseStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
