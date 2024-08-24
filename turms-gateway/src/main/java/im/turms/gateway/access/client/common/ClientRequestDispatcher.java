@@ -23,6 +23,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import im.turms.gateway.domain.observation.service.MetricsService;
 import im.turms.gateway.domain.servicerequest.service.ServiceRequestService;
@@ -40,6 +41,8 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.application.JobShutdownOrder;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.exception.ResponseException;
 import im.turms.server.common.infra.exception.ThrowableInfo;
 import im.turms.server.common.infra.healthcheck.ServerStatusManager;
@@ -89,8 +92,10 @@ public class ClientRequestDispatcher {
     private final ServerStatusManager serverStatusManager;
 
     private final AtomicInteger pendingRequestCount;
+    private volatile Runnable onAllRequestsHandled;
 
     public ClientRequestDispatcher(
+            TurmsApplicationContext applicationContext,
             ApiLoggingContext apiLoggingContext,
             BlocklistService blocklistService,
             IpRequestThrottler ipRequestThrottler,
@@ -110,6 +115,18 @@ public class ClientRequestDispatcher {
         pendingRequestCount = metricsService.getRegistry()
                 .gauge(CommonMetricNameConst.TURMS_CLIENT_REQUEST_PENDING, new AtomicInteger());
         NotificationFactory.init(propertiesManager);
+        applicationContext.addShutdownHook(JobShutdownOrder.WAIT_FOR_PENDING_REQUESTS,
+                timeoutMillis -> {
+                    if (pendingRequestCount.get() == 0) {
+                        return Mono.empty();
+                    }
+                    Sinks.One<Void> sink = Sinks.one();
+                    this.onAllRequestsHandled = sink::tryEmitEmpty;
+                    if (pendingRequestCount.get() == 0) {
+                        return Mono.empty();
+                    }
+                    return sink.asMono();
+                });
     }
 
     /**
@@ -125,9 +142,9 @@ public class ClientRequestDispatcher {
         pendingRequestCount.incrementAndGet();
         try {
             return handleRequest0(sessionWrapper, serviceRequestBuffer)
-                    .doFinally(signalType -> pendingRequestCount.decrementAndGet());
+                    .doFinally(signalType -> onPendingRequestHandled());
         } catch (Exception e) {
-            pendingRequestCount.decrementAndGet();
+            onPendingRequestHandled();
             return Mono.error(e);
         }
     }
@@ -379,6 +396,16 @@ public class ClientRequestDispatcher {
             builder.setReason(reason);
         }
         return builder.build();
+    }
+
+    private void onPendingRequestHandled() {
+        int count = pendingRequestCount.decrementAndGet();
+        if (count == 0) {
+            Runnable handler = onAllRequestsHandled;
+            if (handler != null) {
+                handler.run();
+            }
+        }
     }
 
     /**

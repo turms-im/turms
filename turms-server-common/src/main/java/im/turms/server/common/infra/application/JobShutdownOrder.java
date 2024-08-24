@@ -23,7 +23,7 @@ package im.turms.server.common.infra.application;
 public enum JobShutdownOrder {
     CLOSE_FAKE_CLIENTS,
 //    DECLINE_NEW_CONNECTIONS,
-//    DECLINE_NEW_REQUESTS,
+    WAIT_FOR_PENDING_REQUESTS,
     CLOSE_SESSIONS,
 
     CLOSE_GATEWAY_UDP_SERVER,

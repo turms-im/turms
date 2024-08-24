@@ -35,6 +35,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Sinks;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
@@ -47,6 +48,8 @@ import im.turms.server.common.access.servicerequest.dispatcher.IServiceRequestDi
 import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.domain.blocklist.service.BlocklistService;
+import im.turms.server.common.infra.application.JobShutdownOrder;
+import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.FastEnumMap;
 import im.turms.server.common.infra.exception.IncompatibleInternalChangeException;
@@ -101,6 +104,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> requestTypeToHandler;
 
     private final AtomicInteger pendingRequestCount;
+    private volatile Runnable onAllRequestsHandled;
 
     static {
         try {
@@ -125,6 +129,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     public ServiceRequestDispatcher(
+            TurmsApplicationContext applicationContext,
             ApiLoggingContext apiLoggingContext,
             ApplicationContext context,
             BlocklistService blocklistService,
@@ -154,6 +159,18 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         pendingRequestCount = metricsService.getRegistry()
                 .gauge(TURMS_CLIENT_REQUEST_PENDING, new AtomicInteger());
+        applicationContext.addShutdownHook(JobShutdownOrder.WAIT_FOR_PENDING_REQUESTS,
+                timeoutMillis -> {
+                    if (pendingRequestCount.get() == 0) {
+                        return Mono.empty();
+                    }
+                    Sinks.One<Void> sink = Sinks.one();
+                    this.onAllRequestsHandled = sink::tryEmitEmpty;
+                    if (pendingRequestCount.get() == 0) {
+                        return Mono.empty();
+                    }
+                    return sink.asMono();
+                });
     }
 
     private FastEnumMap<TurmsRequest.KindCase, ClientRequestHandler> getMappings(
@@ -205,9 +222,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         try {
             requestBuffer.touch(serviceRequest);
             return dispatch0(context, serviceRequest)
-                    .doFinally(unused -> pendingRequestCount.decrementAndGet());
+                    .doFinally(unused -> onPendingRequestHandled());
         } catch (Exception e) {
-            pendingRequestCount.decrementAndGet();
+            onPendingRequestHandled();
             LOGGER.error("Failed to handle the request: {}", serviceRequest, e);
             return Mono.just(
                     ServiceResponse.of(ResponseStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
@@ -483,6 +500,16 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                         requesterDevice,
                                         offlineRecipientIds))))
                 .then();
+    }
+
+    private void onPendingRequestHandled() {
+        int count = pendingRequestCount.decrementAndGet();
+        if (count == 0) {
+            Runnable handler = onAllRequestsHandled;
+            if (handler != null) {
+                handler.run();
+            }
+        }
     }
 
 }

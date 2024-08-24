@@ -74,7 +74,7 @@ public class TurmsApplicationContext {
     private static final String PROPERTY_COMMIT_ID = "git.commit.id.full";
     private static final String DEFAULT_VERSION = "0.0.0";
 
-    private boolean isClosing;
+    private volatile boolean isClosing;
 
     private final Path home;
     private final String configDir;
