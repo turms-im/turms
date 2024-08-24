@@ -58,7 +58,7 @@ x-logging-turms: &logging-turms
 services:
   # MongoDB
   mongodb-config:
-    image: mongo:6.0.13-jammy
+    image: mongo:7.0.12-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--configsvr", "--replSet", "rs-config", "--bind_ip_all" ]
@@ -75,7 +75,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-shard:
-    image: mongo:6.0.13-jammy
+    image: mongo:7.0.12-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongod", "--port", "27017", "--shardsvr", "--replSet", "shard01", "--bind_ip_all" ]
@@ -92,7 +92,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-router:
-    image: mongo:6.0.13-jammy
+    image: mongo:7.0.12-jammy
 #    depends_on:
 #      - loki
     entrypoint: [ "mongos", "--port", "27017", "--configdb", "rs-config/mongodb-config:27017", "--bind_ip_all" ]
@@ -111,7 +111,7 @@ services:
 #    <<: *logging-mongo
 
   mongodb-setup:
-    image: mongo:6.0.13-jammy
+    image: mongo:7.0.12-jammy
     depends_on:
       mongodb-config:
         condition: service_healthy
@@ -133,7 +133,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.2.4-alpine
+    image: redis:7.4.0-alpine
 #    depends_on:
 #      - loki
     healthcheck:
@@ -150,7 +150,7 @@ services:
 
   # MinIO
   minio:
-    image: minio/minio:RELEASE.2024-03-21T23-13-43Z
+    image: minio/minio:RELEASE.2024-08-17T01-24-54Z
     # https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#environment-variables
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
@@ -173,7 +173,7 @@ services:
 #      - ./minio_storage:/data
 
   elasticsearch:
-    image: 'elasticsearch:8.13.0'
+    image: 'elasticsearch:8.15.0'
     profiles:
       - elasticsearch
     environment:
@@ -191,7 +191,7 @@ services:
     # to install optional analysis plugins.
 
     # Plugins for Chinese analysis
-    # echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
+    # echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.15.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
 
     # Plugins for Japanese analysis
     # echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install --batch analysis-icu || (echo "failed to the plugin: analysis-icu" && exit 1)
@@ -228,7 +228,7 @@ services:
 
   # LiveKit
   livekit:
-    image: livekit/livekit-server:v1.6.1
+    image: livekit/livekit-server:v1.7.2
     command: --config /etc/livekit.yaml
     ports:
       - "7880:7880/tcp"
@@ -249,9 +249,9 @@ services:
 
   # Rasa
   rasa:
-    image: rasa/rasa:3.6.19-full
+    image: rasa/rasa:3.6.20-full
     ports:
-      - 5005:5005
+      - "5005:5005"
     profiles:
       - chatbot
 #    volumes:
@@ -404,7 +404,7 @@ services:
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:10.0.12-ubuntu
+    image: grafana/grafana:11.1.4-ubuntu
     depends_on:
       - prometheus
     environment:
@@ -419,7 +419,7 @@ services:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
 
   prometheus:
-    image: prom/prometheus:v2.50.1
+    image: prom/prometheus:v2.54.0
     ports:
       - "9090:9090"
     profiles:
@@ -429,7 +429,7 @@ services:
       - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   node-exporter:
-    image: prom/node-exporter:v1.7.0
+    image: prom/node-exporter:v1.8.2
     ports:
       - "9100:9100"
     profiles:
@@ -461,7 +461,7 @@ services:
       - monitoring
 
   redis-exporter:
-    image: oliver006/redis_exporter:v1.58.0
+    image: oliver006/redis_exporter:v1.62.0
     depends_on:
       - redis
     environment:

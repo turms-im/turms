@@ -3,7 +3,7 @@
 services:
   # MongoDB
   mongodb-router:
-    image: "bitnami/mongodb-sharded:6.0.13"
+    image: "bitnami/mongodb-sharded:7.0.12"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
       - MONGODB_SHARDING_MODE=mongos
@@ -19,7 +19,7 @@ services:
       retries: 5
 
   mongodb-shard:
-    image: "bitnami/mongodb-sharded:6.0.13"
+    image: "bitnami/mongodb-sharded:7.0.12"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard
       - MONGODB_SHARDING_MODE=shardsvr
@@ -30,7 +30,7 @@ services:
       - MONGODB_REPLICA_SET_NAME=shard01
 
   mongodb-config:
-    image: "bitnami/mongodb-sharded:6.0.13"
+    image: "bitnami/mongodb-sharded:7.0.12"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-config
       - MONGODB_SHARDING_MODE=configsvr
@@ -41,7 +41,7 @@ services:
 
   # Redis
   redis:
-    image: redis:7.2.4-alpine
+    image: redis:7.4.0-alpine
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -63,7 +63,7 @@ services:
 
   # Elasticsearch
   elasticsearch:
-    image: 'elasticsearch:8.13.0'
+    image: 'elasticsearch:8.15.0'
     environment:
       cluster.routing.allocation.disk.threshold_enabled: false
       discovery.type: single-node
@@ -74,7 +74,7 @@ services:
       - |
         PLUGINS=$(bin/elasticsearch-plugin list)
         echo "Installed plugins: ${PLUGINS}"
-        echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch --verbose "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
+        echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch --verbose "https://get.infini.cloud/elasticsearch/analysis-ik/8.15.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
         echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install --batch --verbose analysis-icu || (echo "failed to the plugin: analysis-icu" && exit 1)
         echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install --batch --verbose analysis-kuromoji || (echo "failed to the plugin: analysis-kuromoji" && exit 1)
         /usr/local/bin/docker-entrypoint.sh
