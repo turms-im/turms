@@ -94,13 +94,18 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
                 verifyServers(descriptions, name, requiredClusterTypes);
                 connect.tryEmitValue(null);
             } catch (Exception e) {
-                Sinks.EmitResult result = connect.tryEmitError(e);
-                if (result.isFailure()) {
-                    LOGGER.fatal(e.getMessage());
-                }
+                connect.tryEmitError(e);
             }
         });
         operations = new TurmsMongoOperations(context);
+        // Ping the server to check if the connection is available, and the server is alive quickly.
+        operations.ping()
+                .subscribe(null,
+                        t -> connect.tryEmitError(new RuntimeException(
+                                "Failed to ping the server for the mongo client: \""
+                                        + name
+                                        + "\"",
+                                t)));
     }
 
     public Mono<Void> destroy(long timeoutMillis) {

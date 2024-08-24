@@ -179,10 +179,11 @@ public interface MongoOperationsSupport {
 
     <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> execute);
 
+    Mono<Boolean> ping();
+
     Mono<Void> disableBalancing(String collectionName);
 
     Mono<Void> enableBalancing(String collectionName);
 
     Mono<Boolean> isBalancerRunning();
-
 }

@@ -146,6 +146,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                     .append("as", new BsonString("a"))
                     .append("in", new BsonString("$$a.k")));
 
+    // Diagnostics
+    private static final BsonDocument PING_COMMAND =
+            new BsonDocument("ping", BsonPool.BSON_INT32_1);
+
     private final MongoContext context;
     private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap =
             new NonBlockingIdentityHashMap<>(32);
@@ -889,6 +893,16 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ClientSession::commitTransaction,
                 (session, t) -> session.abortTransaction(),
                 ClientSession::commitTransaction);
+    }
+
+    // Health Check
+
+    @Override
+    public Mono<Boolean> ping() {
+        return Mono.from(context.getDatabase()
+                .runCommand(PING_COMMAND, BsonDocument.class))
+                .map(document -> document.getNumber("ok")
+                        .intValue() == 1);
     }
 
     // Balancer
