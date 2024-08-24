@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-package integration.im.turms.service.storage.elasticsearch;
+package unit.im.turms.service.storage.elasticsearch;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import helper.SpringAwareIntegrationTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
@@ -42,9 +41,7 @@ import im.turms.server.common.infra.property.env.service.env.elasticsearch.Elast
 import im.turms.server.common.infra.property.env.service.env.elasticsearch.ElasticsearchUserUseCaseProperties;
 import im.turms.server.common.infra.property.env.service.env.elasticsearch.LanguageCode;
 import im.turms.server.common.infra.property.env.service.env.elasticsearch.TurmsElasticsearchProperties;
-import im.turms.server.common.testing.environment.ServiceTestEnvironmentType;
-import im.turms.server.common.testing.properties.ElasticsearchTestEnvironmentProperties;
-import im.turms.server.common.testing.properties.TestProperties;
+import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.service.domain.group.po.Group;
 import im.turms.service.domain.group.repository.GroupRepository;
 import im.turms.service.domain.user.repository.UserRepository;
@@ -61,7 +58,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author James Chen
  */
-class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
+class ElasticsearchManagerTests extends BaseIntegrationTest {
 
     private static final List<String> NAMES = List.of("hello world", "你好，世界", "こんにちは、世界");
     private static final List<TestCase> TEST_CASES = List.of(new TestCase(
@@ -83,11 +80,7 @@ class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
 
     @BeforeAll
     static void setup() {
-        setupTestEnvironment(new TestProperties().toBuilder()
-                .elasticsearch(new ElasticsearchTestEnvironmentProperties().toBuilder()
-                        .type(ServiceTestEnvironmentType.CONTAINER)
-                        .build())
-                .build());
+        setupTestEnvironment();
     }
 
     @Test
