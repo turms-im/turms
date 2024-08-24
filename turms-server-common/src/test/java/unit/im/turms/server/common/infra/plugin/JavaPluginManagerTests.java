@@ -17,13 +17,17 @@
 
 package unit.im.turms.server.common.infra.plugin;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Stream;
 
+import helper.ClassResource;
 import helper.JarUtil;
+import helper.ResourceUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import im.turms.plugin.MyExtensionPoint;
@@ -31,6 +35,8 @@ import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.cluster.node.NodeType;
 import im.turms.server.common.infra.cluster.service.rpc.RpcService;
+import im.turms.server.common.infra.plugin.ConflictedClassException;
+import im.turms.server.common.infra.plugin.PluginClassLoader;
 import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;
@@ -38,6 +44,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,29 +55,35 @@ class JavaPluginManagerTests {
 
     private static final String JAR_NAME = "MyPluginForTest.jar";
     private static final Path JAR_FILE;
-    private static final ClassLoader SYSTEM_CLASS_LOADER = ClassLoader.getSystemClassLoader();
+    private static final String MY_EXTENSION_CLASS =
+            "unit.im.turms.server.common.infra.plugin.hidden.MyExtension";
+    private static final List<ClassResource> PLUGIN_CLASS_RESOURCES;
+    private static final List<String> PLUGIN_RESOURCES = List.of("plugin.yaml");
 
     static {
-        JAR_FILE = JarUtil.createJarFile(JAR_NAME,
-                List.of(SpringApplication.class,
-                        MyExtension.class,
-                        MyExtensionPoint.class,
-                        MyPlugin.class),
-                List.of("plugin.yaml"));
+        PLUGIN_CLASS_RESOURCES = Stream
+                .of(MY_EXTENSION_CLASS,
+                        "unit.im.turms.server.common.infra.plugin.hidden.MyPlugin",
+                        // Used to test class conflict.
+                        "im.turms.server.common.infra.thread.ThreadUtil")
+                .map(ResourceUtil::findTestClass)
+                .toList();
+        JAR_FILE = JarUtil.createJarFile(JAR_NAME, PLUGIN_RESOURCES, PLUGIN_CLASS_RESOURCES);
     }
 
     @Test
-    void shouldLoadPluginWithSystemClassLoader() {
+    void shouldLoadClasses_absentFromTurmsServer_definedInPluginJar_withPluginClassLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
 
-        assertThat(myExtensionPoint.getClass()).isEqualTo(MyExtension.class);
         assertThat(myExtensionPoint.getClass()
-                .getClassLoader()).isEqualTo(SYSTEM_CLASS_LOADER);
+                .getName()).isEqualTo(MY_EXTENSION_CLASS);
+        assertThat(myExtensionPoint.getClass()
+                .getClassLoader()).isInstanceOf(PluginClassLoader.class);
     }
 
     @SneakyThrows
     @Test
-    void shouldLoadTurmsClassInPluginWithSystemLoader() {
+    void shouldLoadClasses_definedInTurmsServer_usedInPluginJar_withSystemLoader() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
         // We don't declare "MyExtension" here because
         // "MyExtension" will be loaded by the system class loader
@@ -87,17 +100,14 @@ class JavaPluginManagerTests {
 
     @SneakyThrows
     @Test
-    void shouldPreferClassesInParentClassLoader() {
+    void shouldThrow_ifSameClassDefinedInBothTurmsServerAndPluginJar() {
         MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
         TurmsExtension myExtension = (TurmsExtension) myExtensionPoint;
-        Object application = myExtension.getClass()
-                .getDeclaredField("application")
-                .get(myExtension);
-
-        assertThat(application.getClass()).isEqualTo(SpringApplication.class);
-        assertThat(application.getClass()
-                // Should not be an instance of PluginClassLoader.
-                .getClassLoader()).isEqualTo(SYSTEM_CLASS_LOADER);
+        assertThatThrownBy(() -> {
+            myExtension.getClass()
+                    .getDeclaredMethod("getThreadUtilClass")
+                    .invoke(myExtension);
+        }).hasRootCauseExactlyInstanceOf(ConflictedClassException.class);
     }
 
     @SneakyThrows
@@ -109,6 +119,39 @@ class JavaPluginManagerTests {
                 .getDeclaredMethod("testBool")
                 .invoke(myExtension);
         assertThat(testMethodRetVal).isTrue();
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldFindResourceInPluginSuccessfully() {
+        MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
+        ClassLoader classLoader = myExtensionPoint.getClass()
+                .getClassLoader();
+        for (ClassResource resource : PLUGIN_CLASS_RESOURCES) {
+            URL url = classLoader.getResource(resource.binaryName());
+            assertThat(url).isNotNull();
+        }
+        for (String resource : PLUGIN_RESOURCES) {
+            URL url = classLoader.getResource(resource);
+            assertThat(url).isNotNull();
+
+            InputStream inputStream = classLoader.getResourceAsStream(resource);
+            assertThat(inputStream).isNotEmpty();
+        }
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldFindResourceInTurmsServerSuccessfully() {
+        MyExtensionPoint myExtensionPoint = getMyExtensionPoint();
+        ClassLoader classLoader = myExtensionPoint.getClass()
+                .getClassLoader();
+
+        URL url = classLoader.getResource("plugin.js");
+        assertThat(url).isNotNull();
+
+        InputStream inputStream = classLoader.getResourceAsStream("plugin.yaml");
+        assertThat(inputStream).isNotEmpty();
     }
 
     private MyExtensionPoint getMyExtensionPoint() {

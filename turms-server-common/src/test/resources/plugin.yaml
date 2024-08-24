@@ -1,5 +1,5 @@
-id: unit.im.turms.server.common.infra.plugin.MyPlugin
-class: unit.im.turms.server.common.infra.plugin.MyPlugin
+id: unit.im.turms.server.common.infra.plugin.hidden.MyPlugin
+class: unit.im.turms.server.common.infra.plugin.hidden.MyPlugin
 compatible-servers:
   - type: turms-gateway
   - type: turms-service

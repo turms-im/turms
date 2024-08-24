@@ -15,21 +15,13 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.infra.plugin;
-
-import java.util.Set;
-
-import im.turms.server.common.infra.plugin.TurmsExtension;
-import im.turms.server.common.infra.plugin.TurmsPlugin;
+package im.turms.server.common.infra.plugin;
 
 /**
  * @author James Chen
  */
-public class MyPlugin extends TurmsPlugin {
-
-    @Override
-    public Set<Class<? extends TurmsExtension>> getExtensions() {
-        return Set.of(MyExtension.class);
+public class ConflictedClassException extends RuntimeException {
+    public ConflictedClassException(String message) {
+        super(message);
     }
-
 }

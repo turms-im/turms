@@ -15,28 +15,13 @@
  * limitations under the License.
  */
 
-package unit.im.turms.server.common.infra.plugin;
-
-import org.springframework.boot.SpringApplication;
-
-import im.turms.plugin.MyExtensionPoint;
-import im.turms.server.common.infra.cluster.service.rpc.RpcService;
-import im.turms.server.common.infra.plugin.ExtensionPointMethod;
-import im.turms.server.common.infra.plugin.TurmsExtension;
+package im.turms.server.common.infra.thread;
 
 /**
+ * The class is used to test class conflict.
+ *
  * @author James Chen
+ * @see unit.im.turms.server.common.infra.plugin.JavaPluginManagerTests#shouldThrowIfSameClassPresentInBothPluginAndTurmsServer()
  */
-public class MyExtension extends TurmsExtension implements MyExtensionPoint {
-
-    // Used for tests
-    public Class<RpcService> rpcServiceClass = RpcService.class;
-    public SpringApplication application = new SpringApplication();
-
-    @ExtensionPointMethod
-    @Override
-    public boolean testBool() {
-        return true;
-    }
-
+public final class ThreadUtil {
 }

@@ -45,8 +45,8 @@ public final class JarUtil {
     @SneakyThrows
     public static Path createJarFile(
             String outputFile,
-            List<Class<?>> classEntries,
-            List<String> resources) {
+            List<String> resources,
+            List<ClassResource> classResources) {
         ClassLoader loader = JarUtil.class.getClassLoader();
         URI jarFileUri = loader.getResource(".")
                 .toURI()
@@ -58,11 +58,8 @@ public final class JarUtil {
                 .put(Attributes.Name.MANIFEST_VERSION, "1.0");
         try (FileOutputStream fos = new FileOutputStream(jarFile, false);
                 JarOutputStream output = new JarOutputStream(fos, manifest)) {
-            for (Class<?> classEntry : classEntries) {
-                String classFileName = classEntry.getName()
-                        .replace('.', '/')
-                        + ".class";
-                addZipEntry(loader, classFileName, output);
+            for (ClassResource resource : classResources) {
+                addZipEntry(resource, output);
             }
             for (String resource : resources) {
                 addZipEntry(loader, resource, output);
@@ -79,7 +76,19 @@ public final class JarUtil {
                     "Could not find the resource: "
                             + resource);
         }
-        ZipEntry entry = new ZipEntry(resource);
+        addZipEntry(output, resource, source);
+    }
+
+    private static void addZipEntry(ClassResource resource, JarOutputStream output)
+            throws IOException {
+        String name = resource.binaryName();
+        InputStream source = resource.inputStream();
+        addZipEntry(output, name, source);
+    }
+
+    private static void addZipEntry(JarOutputStream output, String name, InputStream source)
+            throws IOException {
+        ZipEntry entry = new ZipEntry(name);
         output.putNextEntry(entry);
         source.transferTo(output);
         output.closeEntry();

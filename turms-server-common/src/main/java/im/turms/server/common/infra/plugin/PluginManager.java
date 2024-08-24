@@ -132,7 +132,22 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         pluginDir = ensurePluginDirExists(applicationContext.getHome(), pluginProperties.getDir());
         isJsEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsEnabled);
-        loadJavaPlugins(findResult.zipFiles());
+        List<ZipFile> zipFiles = findResult.zipFiles();
+        try {
+            loadJavaPlugins(zipFiles);
+        } catch (Exception e) {
+            RuntimeException exception = new RuntimeException("Failed to load Java plugins", e);
+            for (ZipFile zipFile : zipFiles) {
+                try {
+                    zipFile.close();
+                } catch (IOException ex) {
+                    exception.addSuppressed(new InputOutputException(
+                            "Caught an error while closing the zip file",
+                            ex));
+                }
+            }
+            throw exception;
+        }
         allowSaveJavaPlugins = pluginProperties.getJava()
                 .isAllowSave();
         if (isJsEnabled) {
@@ -220,7 +235,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             Object file = PluginFinder.find(isJsEnabled, path);
             if (file != null) {
                 if (file instanceof ZipFile zipFile) {
-                    loadJavaPlugin(zipFile);
+                    loadJavaPluginOrCloseFile(zipFile);
                 } else if (file instanceof JsFile jsFile) {
                     loadJsPlugin(jsFile.script(), jsFile.path());
                 }
@@ -232,7 +247,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             Object file = PluginFinder.find(isJsEnabled, path);
             if (file != null) {
                 if (file instanceof ZipFile zipFile) {
-                    loadJavaPlugin(zipFile);
+                    loadJavaPluginOrCloseFile(zipFile);
                 } else if (file instanceof JsFile jsFile) {
                     loadJsPlugin(jsFile.script(), jsFile.path());
                 }
@@ -400,7 +415,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                                             + path,
                                     e);
                         }
-                        loadJavaPlugin(zipFile);
+                        loadJavaPluginOrCloseFile(zipFile);
                     } else {
                         if (isJsEnabled) {
                             String script = ByteBufUtil.readString(buffer);
@@ -420,7 +435,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         for (MultipartFile file : files) {
             String fileName = file.name();
-            ZipFile zipFile;
+            ZipFile zipFile = null;
             File jarFile;
             if (save) {
                 fileName = file.basename()
@@ -471,22 +486,35 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                                 + fileName,
                         e);
             }
-            JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
-            if (descriptor == null) {
-                throw new MalformedPluginArchiveException(
-                        "Could not load a Java plugin from the file ("
-                                + fileName
-                                + ") because it is not a Java plugin JAR file");
+            try {
+                JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
+                if (descriptor == null) {
+                    throw new MalformedPluginArchiveException(
+                            "Could not load a Java plugin from the file ("
+                                    + fileName
+                                    + ") because it is not a Java plugin JAR file");
+                }
+                Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
+                initAndRegisterPlugin(plugin);
+            } catch (Exception e) {
+                try {
+                    zipFile.close();
+                } catch (IOException closeException) {
+                    e.addSuppressed(
+                            new RuntimeException("Caught an error while closing the zip file", e));
+                }
+                throw e;
             }
-            Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
-            initAndRegisterPlugin(plugin);
         }
     }
 
     private void loadJavaPlugins(List<ZipFile> zipFiles) {
-        List<JavaPluginDescriptor> descriptors = JavaPluginDescriptorFactory.load(zipFiles);
-        for (JavaPluginDescriptor descriptor : descriptors) {
-            Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
+        for (ZipFile zipFile : zipFiles) {
+            JavaPluginDescriptor descriptor = JavaPluginDescriptorFactory.load(zipFile);
+            if (descriptor == null) {
+                continue;
+            }
+            Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
             initAndRegisterPlugin(plugin);
         }
     }
@@ -496,9 +524,30 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         if (descriptor == null) {
             return false;
         }
-        Plugin plugin = JavaPluginFactory.create(descriptor, nodeType, context);
+        Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
         initAndRegisterPlugin(plugin);
         return true;
+    }
+
+    private void loadJavaPluginOrCloseFile(ZipFile zipFile) {
+        boolean loaded = false;
+        try {
+            loaded = loadJavaPlugin(zipFile);
+        } catch (Exception e) {
+            try {
+                zipFile.close();
+            } catch (IOException ex) {
+                e.addSuppressed(
+                        new InputOutputException("Caught an error while closing the zip file", ex));
+            }
+        }
+        if (!loaded) {
+            try {
+                zipFile.close();
+            } catch (IOException ex) {
+                throw new InputOutputException("Caught an error while closing the zip file", ex);
+            }
+        }
     }
 
     public void loadJsPlugins(Collection<JsFile> files) {
@@ -678,16 +727,47 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             }
             for (Plugin plugin : plugins) {
                 try {
-                    Path path = plugin.descriptor()
-                            .getPath();
-                    if (path != null) {
-                        Files.deleteIfExists(path);
-                    }
+                    destroyPlugin(plugin);
                 } catch (Exception e) {
-                    // ignored
+                    LOGGER.error("Caught an error while deleting the plugin: {}",
+                            plugin.descriptor()
+                                    .getId(),
+                            e);
                 }
             }
         }));
+    }
+
+    private void destroyPlugin(Plugin plugin) throws Exception {
+        Exception exception = null;
+        PluginDescriptor descriptor = plugin.descriptor();
+        Path path = descriptor.getPath();
+        try {
+            plugin.close();
+        } catch (Exception e) {
+            exception = new RuntimeException(
+                    "Caught an error while closing the plugin: "
+                            + descriptor.getId(),
+                    e);
+        }
+        if (path != null) {
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                e = new IOException(
+                        "Caught an error while deleting the plugin file: "
+                                + path,
+                        e);
+                if (exception == null) {
+                    throw e;
+                } else {
+                    exception.addSuppressed(e);
+                }
+            }
+        }
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     public <T extends ExtensionPoint> boolean hasRunningExtensions(Class<T> extensionPointClass) {

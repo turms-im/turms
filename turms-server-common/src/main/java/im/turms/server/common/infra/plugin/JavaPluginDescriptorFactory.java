@@ -29,7 +29,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import jakarta.annotation.Nullable;
 
-import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.yaml.YamlUtil;
 
 /**
@@ -61,18 +60,11 @@ public class JavaPluginDescriptorFactory extends PluginDescriptorFactory {
     @Nullable
     public static JavaPluginDescriptor load(ZipFile file) {
         String name = file.getName();
-        try (file) {
-            try {
-                return tryCreatePluginDescriptor(file, name);
-            } catch (Exception e) {
-                throw new MalformedPluginArchiveException(
-                        "Failed to create plugin descriptor for the JAR file: "
-                                + name,
-                        e);
-            }
-        } catch (IOException e) {
-            throw new InputOutputException(
-                    "Caught an error while closing the JAR file: "
+        try {
+            return tryCreatePluginDescriptor(file, name);
+        } catch (Exception e) {
+            throw new MalformedPluginArchiveException(
+                    "Failed to create plugin descriptor for the JAR file: "
                             + name,
                     e);
         }

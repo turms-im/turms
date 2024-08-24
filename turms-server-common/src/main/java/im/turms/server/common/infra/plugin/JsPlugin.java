@@ -42,7 +42,7 @@ public class JsPlugin extends Plugin {
     }
 
     @Override
-    void closeContext() {
+    public void close() {
         try {
             context.close(true);
         } catch (Exception e) {

@@ -41,7 +41,7 @@ public class JavaPlugin extends Plugin {
     }
 
     @Override
-    void closeContext() {
+    public void close() {
         try {
             pluginClassLoader.close();
         } catch (Exception e) {
