@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,9 +135,12 @@ public final class ClassUtil {
 
     @Nullable
     public static Class<?> getElementClass(Type type) {
-        return type instanceof ParameterizedType parameterizedType
-                ? (Class<?>) parameterizedType.getActualTypeArguments()[0]
-                : null;
+        if (type instanceof ParameterizedType parameterizedType) {
+            Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+            return getClass(actualTypeArgument);
+        } else {
+            return null;
+        }
     }
 
     @Nullable
@@ -147,7 +151,14 @@ public final class ClassUtil {
     public static Pair<Class<?>, Class<?>> getMapKeyClassAndElementClass(Field field) {
         ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
         Type[] actualTypes = parameterizedType.getActualTypeArguments();
-        return Pair.of((Class<?>) actualTypes[0], (Class<?>) actualTypes[1]);
+        return Pair.of(getClass(actualTypes[0]), getClass(actualTypes[1]));
+    }
+
+    private static Class<?> getClass(Type actualTypeArgument) {
+        if (actualTypeArgument instanceof TypeVariable<?> typeVariable) {
+            return (Class<?>) typeVariable.getBounds()[0];
+        }
+        return (Class<?>) actualTypeArgument;
     }
 
     public static <T extends Enum<T>> T[] getSharedEnumConstants(Class<T> clazz) {

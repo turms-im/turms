@@ -17,6 +17,9 @@
 
 package system.im.turms.service.domain.user.access.servicerequest.controller;
 
+import java.util.Map;
+
+import helper.SharedBusinessDataConst;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -27,6 +30,8 @@ import system.im.turms.service.domain.common.access.servicerequest.controller.Ba
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.common.Value;
+import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.access.client.dto.request.user.QueryNearbyUsersRequest;
 import im.turms.server.common.access.client.dto.request.user.QueryUserOnlineStatusesRequest;
@@ -34,6 +39,7 @@ import im.turms.server.common.access.client.dto.request.user.QueryUserProfilesRe
 import im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.server.common.access.client.dto.request.user.UpdateUserRequest;
+import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 import im.turms.service.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.service.domain.user.access.servicerequest.controller.UserServiceController;
@@ -72,11 +78,51 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
 
     @Test
     @Order(ORDER_HIGH_PRIORITY)
+    void handleUpdateUserRequest_updateProfileWithWrongAttributeType_shouldThrow() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setUpdateUserRequest(UpdateUserRequest.newBuilder()
+                        .setName("123")
+                        .setIntro("123")
+                        .putAllUserDefinedAttributes(Map.of("key-bool",
+                                Value.newBuilder()
+                                        .setStringValue("A wrong value")
+                                        .build())))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleUpdateUserRequest()
+                .handle(clientRequest);
+        assertResultCodes(resultMono, ResponseStatusCode.ILLEGAL_ARGUMENT);
+    }
+
+    @Test
+    @Order(ORDER_HIGH_PRIORITY)
+    void handleUpdateUserRequest_updateProfileWithUnknownAttribute_shouldThrow() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setUpdateUserRequest(UpdateUserRequest.newBuilder()
+                        .setName("123")
+                        .setIntro("123")
+                        .putAllUserDefinedAttributes(Map.of("key-unknown",
+                                Value.newBuilder()
+                                        .setStringValue("A wrong value")
+                                        .build())))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleUpdateUserRequest()
+                .handle(clientRequest);
+        assertResultCodes(resultMono, ResponseStatusCode.ILLEGAL_ARGUMENT);
+    }
+
+    @Test
+    @Order(ORDER_HIGH_PRIORITY)
     void handleUpdateUserRequest_updateProfile_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateUserRequest(UpdateUserRequest.newBuilder()
                         .setName("123")
-                        .setIntro("123"))
+                        .setIntro("123")
+                        .putAllUserDefinedAttributes(
+                                SharedBusinessDataConst.USER_DEFINED_ATTRIBUTES_FOR_UPSERT))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
@@ -111,10 +157,15 @@ class UserServiceControllerST extends BaseServiceControllerTest<UserServiceContr
                 new ClientRequest(USER_ID, USER_DEVICE_TYPE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryUserProfilesRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono,
-                result -> assertThat(result.response()
-                        .getUserInfosWithVersion()
-                        .getUserInfosCount()).isEqualTo(1));
+        assertResultIsOk(resultMono, result -> {
+            UserInfosWithVersion userInfosWithVersion = result.response()
+                    .getUserInfosWithVersion();
+            assertThat(userInfosWithVersion.getUserInfosCount()).isEqualTo(1);
+            assertThat(userInfosWithVersion.getUserInfosList()
+                    .getFirst()
+                    .getUserDefinedAttributesMap()).containsExactlyInAnyOrderEntriesOf(
+                            SharedBusinessDataConst.EXPECTED_FOUND_USER_DEFINED_ATTRIBUTES);
+        });
     }
 
     @Test

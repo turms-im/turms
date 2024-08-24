@@ -193,6 +193,16 @@ public final class MongoFakingManager {
         adminRelatedObjs.add(guestRole);
 
         // Group
+        Map<String, Object> userDefinedAttributes = Map.of("k1",
+                1,
+                "k2",
+                "v2",
+                "k3",
+                List.of(3, "v3"),
+                "k4",
+                List.of(List.of("v4", "v4"), List.of("v4", "v4")),
+                "k5",
+                List.of(Map.of("v5", 5)));
         Group group = new Group(
                 1L,
                 DEFAULT_GROUP_TYPE_ID,
@@ -206,7 +216,8 @@ public final class MongoFakingManager {
                 null,
                 epoch,
                 null,
-                true);
+                true,
+                userDefinedAttributes);
         groupRelatedObjs.add(group);
         GroupVersion groupVersion = new GroupVersion(1L, epoch, epoch, epoch, epoch, epoch);
         groupRelatedObjs.add(groupVersion);
@@ -400,7 +411,8 @@ public final class MongoFakingManager {
                     userDate,
                     null,
                     userDate,
-                    true);
+                    true,
+                    userDefinedAttributes);
             UserVersion userVersion = new UserVersion(
                     (long) i,
                     userDate,

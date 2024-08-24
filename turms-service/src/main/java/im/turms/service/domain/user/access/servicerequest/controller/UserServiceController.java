@@ -20,6 +20,7 @@ package im.turms.service.domain.user.access.servicerequest.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ import reactor.core.publisher.Mono;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.access.client.dto.constant.UserStatus;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.model.user.NearbyUsers;
 import im.turms.server.common.access.client.dto.model.user.UserInfosWithVersion;
 import im.turms.server.common.access.client.dto.model.user.UserOnlineStatuses;
@@ -361,6 +363,9 @@ public class UserServiceController extends BaseServiceController {
                     ? request.getProfilePicture()
                     : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
+            Map<String, Value> userDefinedAttributes = request.getUserDefinedAttributesCount() > 0
+                    ? request.getUserDefinedAttributesMap()
+                    : null;
             return userService
                     .updateUser(clientRequest.userId(),
                             password,
@@ -370,14 +375,18 @@ public class UserServiceController extends BaseServiceController {
                             profileAccessStrategy,
                             null,
                             null,
-                            null)
+                            null,
+                            userDefinedAttributes)
                     .flatMap(changed -> {
                         if (!changed) {
                             return Mono.just(RequestHandlerResult.OK);
                         }
                         if (!notifyNonBlockedRelatedUsersOfUserInfoUpdated
                                 // TODO: make configurable.
-                                || (name == null && intro == null && profilePicture == null)) {
+                                || (name == null
+                                        && intro == null
+                                        && profilePicture == null
+                                        && userDefinedAttributes == null)) {
                             return Mono.just(RequestHandlerResult.of(
                                     notifyRequesterOtherOnlineSessionsOfUserInfoUpdated,
                                     clientRequest.turmsRequest()));

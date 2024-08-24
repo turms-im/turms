@@ -48,6 +48,7 @@ import reactor.core.publisher.Signal;
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
 import im.turms.server.common.access.client.dto.model.common.LongsWithVersion;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.model.group.GroupsWithVersion;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.common.service.BaseService;
@@ -106,6 +107,8 @@ public class GroupService extends BaseService {
     private final Node node;
     private final ElasticsearchManager elasticsearchManager;
     private final GroupRepository groupRepository;
+
+    private final GroupInfoUserCustomAttributesService groupInfoUserCustomAttributesService;
     private final GroupTypeService groupTypeService;
     private final GroupMemberService groupMemberService;
     private final GroupVersionService groupVersionService;
@@ -131,10 +134,11 @@ public class GroupService extends BaseService {
             ElasticsearchManager elasticsearchManager,
             TurmsPropertiesManager propertiesManager,
             GroupRepository groupRepository,
-            GroupMemberService groupMemberService,
+            GroupInfoUserCustomAttributesService groupInfoUserCustomAttributesService,
             GroupTypeService groupTypeService,
-            UserVersionService userVersionService,
+            GroupMemberService groupMemberService,
             GroupVersionService groupVersionService,
+            UserVersionService userVersionService,
             UserPermissionGroupService userPermissionGroupService,
             ConversationService conversationService,
             @Lazy MessageService messageService,
@@ -142,6 +146,7 @@ public class GroupService extends BaseService {
         this.node = node;
         this.elasticsearchManager = elasticsearchManager;
         this.groupRepository = groupRepository;
+        this.groupInfoUserCustomAttributesService = groupInfoUserCustomAttributesService;
         this.groupTypeService = groupTypeService;
         this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
@@ -216,7 +221,8 @@ public class GroupService extends BaseService {
                 deletionDate,
                 now,
                 muteEndDate,
-                isActive);
+                isActive,
+                null);
 
         Boolean putEsDocInTransaction =
                 elasticsearchManager.isGroupUseCaseEnabled() && StringUtil.isNotBlank(groupName)
@@ -628,6 +634,7 @@ public class GroupService extends BaseService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
+            @Nullable Map<String, Object> userDefinedAttributes,
             @Nullable ClientSession session) {
         try {
             Validator.notNull(groupId, "groupId");
@@ -646,6 +653,7 @@ public class GroupService extends BaseService {
                 creationDate,
                 deletionDate,
                 muteEndDate,
+                userDefinedAttributes,
                 session).then();
     }
 
@@ -662,6 +670,7 @@ public class GroupService extends BaseService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
+            @Nullable Map<String, Object> userDefinedAttributes,
             @Nullable ClientSession session) {
         try {
             Validator.notEmpty(groupIds, "groupIds");
@@ -682,7 +691,8 @@ public class GroupService extends BaseService {
                 isActive,
                 creationDate,
                 deletionDate,
-                muteEndDate)) {
+                muteEndDate)
+                && (userDefinedAttributes == null || userDefinedAttributes.isEmpty())) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         if (!elasticsearchManager.isGroupUseCaseEnabled() || name == null) {
@@ -699,6 +709,7 @@ public class GroupService extends BaseService {
                     deletionDate,
                     muteEndDate,
                     new Date(),
+                    userDefinedAttributes,
                     session);
         }
         if (elasticsearchManager.isTransactionWithMongoEnabledForGroup()) {
@@ -717,6 +728,7 @@ public class GroupService extends BaseService {
                                 deletionDate,
                                 muteEndDate,
                                 new Date(),
+                                userDefinedAttributes,
                                 clientSession)
                         .flatMap(updateResult -> (StringUtil.isBlank(name)
                                 ? elasticsearchManager.deleteGroupDocs(groupIds)
@@ -737,6 +749,7 @@ public class GroupService extends BaseService {
                                 deletionDate,
                                 muteEndDate,
                                 new Date(),
+                                userDefinedAttributes,
                                 session)
                         .flatMap(updateResult -> (StringUtil.isBlank(name)
                                 ? elasticsearchManager.deleteGroupDocs(groupIds)
@@ -758,6 +771,7 @@ public class GroupService extends BaseService {
                         deletionDate,
                         muteEndDate,
                         new Date(),
+                        userDefinedAttributes,
                         session)
                 .doOnSuccess(updateResult -> (StringUtil.isBlank(name)
                         ? elasticsearchManager.deleteGroupDocs(groupIds)
@@ -780,6 +794,7 @@ public class GroupService extends BaseService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
+            @Nullable Map<String, Value> userDefinedAttributes,
             @Nullable ClientSession session) {
         try {
             Validator.notNull(requesterId, "requesterId");
@@ -809,6 +824,8 @@ public class GroupService extends BaseService {
                         ResponseException.get(ResponseStatusCode.UPDATING_GROUP_TYPE_IS_DISABLED));
             }
         }
+        boolean noUserDefinedAttribute =
+                userDefinedAttributes == null || userDefinedAttributes.isEmpty();
         if (Validator.areAllNull(creatorId,
                 ownerId,
                 name,
@@ -818,7 +835,7 @@ public class GroupService extends BaseService {
                 isActive,
                 creationDate,
                 deletionDate,
-                muteEndDate)) {
+                muteEndDate) && noUserDefinedAttribute) {
             return checkIfAllowedToUpdateTypeId;
         }
         return checkIfAllowedToUpdateTypeId
@@ -845,13 +862,14 @@ public class GroupService extends BaseService {
                                                 ? ResponseStatusCode.OK
                                                 : ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO);
                                 case ALL -> Mono.just(ResponseStatusCode.OK);
-                                default -> Mono.error(new RuntimeException(
-                                        "Unexpected group update strategy: "
-                                                + groupUpdateStrategy));
                             };
                         })
-                        .flatMap(code -> code == ResponseStatusCode.OK
-                                ? updateGroupInformation(groupId,
+                        .flatMap(code -> {
+                            if (code != ResponseStatusCode.OK) {
+                                return Mono.error(ResponseException.get(code));
+                            }
+                            if (noUserDefinedAttribute) {
+                                return updateGroupInformation(groupId,
                                         typeId,
                                         creatorId,
                                         ownerId,
@@ -863,8 +881,26 @@ public class GroupService extends BaseService {
                                         creationDate,
                                         deletionDate,
                                         muteEndDate,
-                                        session)
-                                : Mono.error(ResponseException.get(code)))));
+                                        null,
+                                        session);
+                            }
+                            return groupInfoUserCustomAttributesService
+                                    .parseAttributesForUpsert(userDefinedAttributes)
+                                    .flatMap(attributes -> updateGroupInformation(groupId,
+                                            typeId,
+                                            creatorId,
+                                            ownerId,
+                                            name,
+                                            intro,
+                                            announcement,
+                                            minimumScore,
+                                            isActive,
+                                            creationDate,
+                                            deletionDate,
+                                            muteEndDate,
+                                            attributes,
+                                            session));
+                        })));
     }
 
     public Mono<List<Group>> authAndQueryGroups(

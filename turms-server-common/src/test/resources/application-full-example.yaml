@@ -1565,6 +1565,16 @@ turms:
       # global property: true
       # mutable property: true
       delete-group-logically-by-default: true
+      info:
+        user-defined-attributes:
+          # The list of allowed attributes.
+          # global property: true
+          # mutable property: true
+          allowed-attributes: []
+          # Whether to ignore unknown attributes on upsert. If false, the server will throw if the request specifies an unknown attribute. If true, the server will ignore the unknown attributes, and continue to process the request.
+          # global property: true
+          # mutable property: true
+          ignore-unknown-attributes-on-upsert: false
       invitation:
         # Whether to allow the owner and managers of a group to recall pending group invitations.
         # global property: true
@@ -1753,7 +1763,7 @@ turms:
             registration-date: false
             # global property: false
             # mutable property: false
-            role-id: false
+            role-ids: false
       conference:
         optional-index:
           meeting:
@@ -2440,26 +2450,36 @@ turms:
         # global property: true
         # mutable property: true
         max-response-reason-length: 200
-      # The maximum allowed length for a user's intro.
-      # global property: true
-      # mutable property: true
-      max-intro-length: 100
-      # The maximum allowed length for a user's name.
-      # global property: true
-      # mutable property: true
-      max-name-length: 20
-      # The maximum allowed length for a user's password.
-      # global property: true
-      # mutable property: true
-      max-password-length: 16
-      # The maximum allowed length for a user's profile picture.
-      # global property: true
-      # mutable property: true
-      max-profile-picture-length: 100
-      # The minimum allowed length for a user's password. If 0, it means the password can be an empty string "". If -1, it means the password can be null.
-      # global property: true
-      # mutable property: true
-      min-password-length: -1
+      info:
+        # The maximum allowed length for a user's intro.
+        # global property: true
+        # mutable property: true
+        max-intro-length: 100
+        # The maximum allowed length for a user's name.
+        # global property: true
+        # mutable property: true
+        max-name-length: 20
+        # The maximum allowed length for a user's password.
+        # global property: true
+        # mutable property: true
+        max-password-length: 16
+        # The maximum allowed length for a user's profile picture.
+        # global property: true
+        # mutable property: true
+        max-profile-picture-length: 100
+        # The minimum allowed length for a user's password. If 0, it means the password can be an empty string "". If -1, it means the password can be null.
+        # global property: true
+        # mutable property: true
+        min-password-length: -1
+        user-defined-attributes:
+          # The list of allowed attributes.
+          # global property: true
+          # mutable property: true
+          allowed-attributes: []
+          # Whether to ignore unknown attributes on upsert. If false, the server will throw if the request specifies an unknown attribute. If true, the server will ignore the unknown attributes, and continue to process the request.
+          # global property: true
+          # mutable property: true
+          ignore-unknown-attributes-on-upsert: false
       # Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status.
       # global property: true
       # mutable property: true

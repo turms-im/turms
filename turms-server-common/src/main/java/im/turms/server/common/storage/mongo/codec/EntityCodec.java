@@ -42,6 +42,9 @@ import im.turms.server.common.storage.mongo.entity.EntityField;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 
+import static im.turms.server.common.storage.mongo.DomainFieldName.USER_DEFINED_ATTRIBUTE_PREFIX;
+import static im.turms.server.common.storage.mongo.DomainFieldName.USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH;
+
 /**
  * @author James Chen
  * @see org.bson.codecs.pojo.PojoCodecImpl
@@ -49,19 +52,6 @@ import im.turms.server.common.storage.mongo.entity.MongoEntityFactory;
 public class EntityCodec<T> extends MongoCodec<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityCodec.class);
-
-    /**
-     * @implNote Don't use "_" because:
-     *           <p>
-     *           1. MongoDB has use "_" for "_id";
-     *           <p>
-     *           2. To not mix with the default index name (The default index name uses "_" as
-     *           separator);
-     *           <p>
-     *           Don't use "$" because MongoDB uses it for internal operators (e.g., "$set").
-     */
-    private static final String USER_DEFINED_ATTRIBUTE_PREFIX = "#";
-    private static final int USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH = 1;
 
     private static final Map<IterableCodecKey<?, ?>, TurmsIterableCodec<?, ?>> KEY_TO_ITERABLE_CODEC =
             new ConcurrentHashMap<>(32);
@@ -141,7 +131,6 @@ public class EntityCodec<T> extends MongoCodec<T> {
                     if (userDefinedAttributes == null) {
                         continue;
                     }
-                    writer.writeStartDocument();
                     for (Map.Entry<String, Object> entry : userDefinedAttributes.entrySet()) {
                         Object entryValue = entry.getValue();
                         if (entryValue == null) {
@@ -154,7 +143,6 @@ public class EntityCodec<T> extends MongoCodec<T> {
                             CodecUtil.write(writer, entryValue);
                         }
                     }
-                    writer.writeEndDocument();
                 }
                 case NORMAL -> {
                     if (fieldValue == null) {

@@ -17,6 +17,8 @@
 
 package im.turms.server.common.infra.property.env.service.business.user;
 
+import jakarta.validation.constraints.Min;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +28,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.validation.LessThanOrEqualTo;
 
 /**
  * @author James Chen
@@ -34,35 +37,43 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class UserProperties {
+public class UserInfoProperties {
+
+    @Description("The minimum allowed length for a user's password. "
+            + "If 0, it means the password can be an empty string \"\". "
+            + "If -1, it means the password can be null")
+    @GlobalProperty
+    @MutableProperty
+    @Min(-1)
+    @LessThanOrEqualTo("maxPasswordLength")
+    private int minPasswordLength = -1;
+
+    @Description("The maximum allowed length for a user's password")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxPasswordLength = 16;
+
+    @Description("The maximum allowed length for a user's name")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxNameLength = 20;
+
+    @Description("The maximum allowed length for a user's intro")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxIntroLength = 100;
+
+    @Description("The maximum allowed length for a user's profile picture")
+    @GlobalProperty
+    @MutableProperty
+    @Min(0)
+    private int maxProfilePictureLength = 100;
 
     @NestedConfigurationProperty
-    private FriendRequestProperties friendRequest = new FriendRequestProperties();
-
-    @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
-    @GlobalProperty
-    @MutableProperty
-    private boolean respondOfflineIfInvisible;
-
-    @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
-    @GlobalProperty
-    @MutableProperty
-    private boolean deleteTwoSidedRelationships;
-
-    @Description("Whether to delete a user logically")
-    @GlobalProperty
-    @MutableProperty
-    private boolean deleteUserLogically = true;
-
-    @Description("Whether to activate a user when added by default")
-    @GlobalProperty
-    @MutableProperty
-    private boolean activateUserWhenAdded = true;
-
-    @NestedConfigurationProperty
-    private UserInfoProperties info = new UserInfoProperties();
-
-    @NestedConfigurationProperty
-    private UserSettingsProperties settings = new UserSettingsProperties();
+    private UserInfoUserDefinedAttributesProperties userDefinedAttributes =
+            new UserInfoUserDefinedAttributesProperties();
 
 }

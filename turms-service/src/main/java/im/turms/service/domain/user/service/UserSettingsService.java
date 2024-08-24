@@ -89,7 +89,8 @@ public class UserSettingsService extends CustomSettingService {
             }
         }
         if (immutableSettingsForUpsert == null) {
-            Map<String, Object> parsedSettings = parseSettings(settings);
+            Map<String, Object> parsedSettings =
+                    parseSettings(ignoreUnknownSettingsOnUpsert, settings);
             return userSettingsRepository.upsertSettings(userId, parsedSettings)
                     .map(updateResult -> updateResult.getModifiedCount() > 0
                             || updateResult.getUpsertedId() != null);
@@ -102,13 +103,15 @@ public class UserSettingsService extends CustomSettingService {
                 .collect(CollectorUtil.toSet(immutableSettingsForUpsert.size()))
                 .flatMap(existingSettings -> {
                     if (existingSettings.isEmpty()) {
-                        Map<String, Object> parsedSettings = parseSettings(settings);
+                        Map<String, Object> parsedSettings =
+                                parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                         return userSettingsRepository.upsertSettings(userId, parsedSettings);
                     }
                     finalImmutableSettingsForUpsert
                             .removeIf(settingName -> !existingSettings.contains(settingName));
                     if (finalImmutableSettingsForUpsert.isEmpty()) {
-                        Map<String, Object> parsedSettings = parseSettings(settings);
+                        Map<String, Object> parsedSettings =
+                                parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                         return userSettingsRepository.upsertSettings(userId, parsedSettings);
                     }
                     List<String> sortedConflictedSettings =

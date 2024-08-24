@@ -438,6 +438,22 @@ public final class CollectionUtil {
         return new ArrayList<>(collection);
     }
 
+    public static <T> List<T> toMutableList(List<T> list) {
+        return isImmutable(list)
+                ? new ArrayList<>(list)
+                : list;
+    }
+
+    public static <T> List<T> toMutableList(Collection<T> collection) {
+        if (isImmutable(collection)) {
+            return new ArrayList<>(collection);
+        }
+        if (collection instanceof List<T> list) {
+            return list;
+        }
+        return new ArrayList<>(collection);
+    }
+
     public static <T> Set<T> toSet(Collection<T> values) {
         if (values instanceof Set<T> set) {
             return set;

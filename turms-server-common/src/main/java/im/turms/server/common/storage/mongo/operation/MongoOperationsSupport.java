@@ -67,6 +67,8 @@ public interface MongoOperationsSupport {
 
     <T> Flux<T> findIds(Class<T> clazz, Filter filter);
 
+    <T> Mono<List<String>> findFields(Class<T> clazz, Collection<String> includedFields);
+
     Flux<String> findObjectFields(
             Class<?> clazz,
             Filter filter,

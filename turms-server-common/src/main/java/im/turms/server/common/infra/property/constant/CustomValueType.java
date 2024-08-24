@@ -15,28 +15,17 @@
  * limitations under the License.
  */
 
-package org.bson;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+package im.turms.server.common.infra.property.constant;
 
 /**
  * @author James Chen
  */
-public final class BsonArrayUtil {
-
-    private BsonArrayUtil() {
-    }
-
-    public static BsonArray newArray(List<BsonValue> values) {
-        return new BsonArray(values, false);
-    }
-
-    public static BsonArray newArray(Collection<String> values) {
-        List<BsonValue> bsonValues = new ArrayList<>(values.size());
-        values.forEach(s -> bsonValues.add(new BsonString(s)));
-        return new BsonArray(bsonValues, false);
-    }
-
+public enum CustomValueType {
+    INT,
+    LONG,
+    DOUBLE,
+    BOOL,
+    STRING,
+    LANGUAGE,
+    ARRAY
 }

@@ -329,7 +329,6 @@ public class GroupBlocklistService extends BaseService {
                                 recyclableList.recycle();
                                 recyclableSet.recycle();
                             });
-
                 })
                 .switchIfEmpty(ResponseExceptionPublisherPool.alreadyUpToUpdate());
     }

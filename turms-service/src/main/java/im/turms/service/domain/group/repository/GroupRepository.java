@@ -19,6 +19,7 @@ package im.turms.service.domain.group.repository;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 import jakarta.annotation.Nullable;
 
@@ -72,6 +73,7 @@ public class GroupRepository extends BaseRepository<Group, Long> {
             @Nullable Date deletionDate,
             @Nullable Date muteEndDate,
             @Nullable Date lastUpdatedDate,
+            @Nullable Map<String, Object> userDefinedAttributes,
             @Nullable ClientSession session) {
         Filter filter = Filter.newBuilder(1)
                 .in(DomainFieldName.ID, groupIds);
@@ -87,7 +89,8 @@ public class GroupRepository extends BaseRepository<Group, Long> {
                 .setIfNotNull(Group.Fields.CREATION_DATE, creationDate)
                 .setIfNotNull(Group.Fields.DELETION_DATE, deletionDate)
                 .setIfNotNull(Group.Fields.LAST_UPDATED_DATE, lastUpdatedDate)
-                .setIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDate);
+                .setIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDate)
+                .setUserDefinedAttributesIfNotEmpty(userDefinedAttributes);
         return mongoClient.updateMany(session, entityClass, filter, update);
     }
 

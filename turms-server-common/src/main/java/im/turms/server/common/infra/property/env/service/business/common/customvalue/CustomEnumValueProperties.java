@@ -15,15 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
+package im.turms.server.common.infra.property.env.service.business.common.customvalue;
 
-import jakarta.validation.constraints.Min;
+import java.util.Collections;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import lombok.experimental.SuperBuilder;
 
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
@@ -33,33 +33,14 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
  * @author James Chen
  */
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CustomSettingArrayValueProperties extends CustomSettingEnumValueProperties<String> {
+@SuperBuilder(toBuilder = true)
+public abstract class CustomEnumValueProperties<T> {
 
-    @Description("The minimum allowed number of elements")
+    @Description("Allowed values")
     @GlobalProperty
     @MutableProperty
-    @Min(0)
-    private int minElementCount = 0;
-
-    @Description("The maximum allowed number of elements")
-    @GlobalProperty
-    @MutableProperty
-    private int maxElementCount = 10;
-
-    @Description("Whether the elements are unique. If true, the Turms server will deduplicate the elements")
-    @GlobalProperty
-    @MutableProperty
-    private boolean unique;
-
-    @Description("Whether the array element can be null")
-    @GlobalProperty
-    @MutableProperty
-    private boolean allowNullElement;
-
-    @NestedConfigurationProperty
-    private CustomSettingValueOneOfProperties element = new CustomSettingValueOneOfProperties();
+    private Set<T> allowedValues = Collections.emptySet();
 
 }

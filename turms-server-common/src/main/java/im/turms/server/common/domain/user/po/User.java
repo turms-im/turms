@@ -18,12 +18,14 @@
 package im.turms.server.common.domain.user.po;
 
 import java.util.Date;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
 import im.turms.server.common.domain.common.po.BaseEntity;
+import im.turms.server.common.domain.common.po.Customizable;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
@@ -37,7 +39,7 @@ import im.turms.server.common.storage.mongo.entity.annotation.Sharded;
 @Data
 @Document(User.COLLECTION_NAME)
 @Sharded
-public final class User extends BaseEntity {
+public final class User extends BaseEntity implements Customizable {
 
     public static final String COLLECTION_NAME = "user";
 
@@ -78,6 +80,8 @@ public final class User extends BaseEntity {
 
     @Field(Fields.IS_ACTIVE)
     private final Boolean isActive;
+
+    private final Map<String, Object> userDefinedAttributes;
 
     public static final class Fields {
 

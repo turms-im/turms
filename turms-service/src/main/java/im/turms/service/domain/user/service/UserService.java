@@ -41,6 +41,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.constant.ProfileAccessStrategy;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.session.bo.SessionCloseStatus;
 import im.turms.server.common.domain.user.po.User;
@@ -58,6 +59,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.gateway.GatewayProperties;
 import im.turms.server.common.infra.property.env.service.business.message.MessageProperties;
+import im.turms.server.common.infra.property.env.service.business.user.UserInfoProperties;
 import im.turms.server.common.infra.property.env.service.business.user.UserProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.security.password.PasswordManager;
@@ -94,6 +96,7 @@ public class UserService implements RpcUserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     private final GroupMemberService groupMemberService;
+    private final UserInfoUserCustomAttributesService userInfoUserDefinedAttributesService;
     private final UserRelationshipService userRelationshipService;
     private final UserRelationshipGroupService userRelationshipGroupService;
     private final UserSettingsService userSettingsService;
@@ -133,11 +136,12 @@ public class UserService implements RpcUserService {
             TurmsPropertiesManager propertiesManager,
             PasswordManager passwordManager,
             UserRepository userRepository,
-            UserRelationshipService userRelationshipService,
             GroupMemberService groupMemberService,
-            UserVersionService userVersionService,
+            UserInfoUserCustomAttributesService userInfoUserDefinedAttributesService,
+            UserRelationshipService userRelationshipService,
             UserRelationshipGroupService userRelationshipGroupService,
             UserSettingsService userSettingsService,
+            UserVersionService userVersionService,
             SessionService sessionService,
             ConversationService conversationService,
             ConversationSettingsService conversationSettingsService,
@@ -148,11 +152,12 @@ public class UserService implements RpcUserService {
         this.passwordManager = passwordManager;
         this.userRepository = userRepository;
 
-        this.userRelationshipService = userRelationshipService;
         this.groupMemberService = groupMemberService;
-        this.userVersionService = userVersionService;
+        this.userInfoUserDefinedAttributesService = userInfoUserDefinedAttributesService;
+        this.userRelationshipService = userRelationshipService;
         this.userRelationshipGroupService = userRelationshipGroupService;
         this.userSettingsService = userSettingsService;
+        this.userVersionService = userVersionService;
         this.sessionService = sessionService;
         this.conversationService = conversationService;
         this.conversationSettingsService = conversationSettingsService;
@@ -169,14 +174,20 @@ public class UserService implements RpcUserService {
     private void updateProperties(TurmsProperties properties) {
         UserProperties userProperties = properties.getService()
                 .getUser();
+
         activateUserWhenAdded = userProperties.isActivateUserWhenAdded();
         deleteUserLogically = userProperties.isDeleteUserLogically();
 
-        int localMinPasswordLength = userProperties.getMinPasswordLength();
-        int localMaxPasswordLength = userProperties.getMaxPasswordLength();
-        int localMaxIntroLength = userProperties.getMaxIntroLength();
-        int localMaxNameLength = userProperties.getMaxNameLength();
-        int localMaxProfilePictureLength = userProperties.getMaxProfilePictureLength();
+        UserInfoProperties infoProperties = userProperties.getInfo();
+
+        userInfoUserDefinedAttributesService
+                .updateGlobalProperties(infoProperties.getUserDefinedAttributes());
+
+        int localMinPasswordLength = infoProperties.getMinPasswordLength();
+        int localMaxPasswordLength = infoProperties.getMaxPasswordLength();
+        int localMaxIntroLength = infoProperties.getMaxIntroLength();
+        int localMaxNameLength = infoProperties.getMaxNameLength();
+        int localMaxProfilePictureLength = infoProperties.getMaxProfilePictureLength();
         minPasswordLengthForCreate = localMinPasswordLength;
         minPasswordLengthForUpdate = Math.max(0, localMinPasswordLength);
         maxPasswordLength = localMaxPasswordLength > 0
@@ -346,7 +357,8 @@ public class UserService implements RpcUserService {
                 date,
                 null,
                 now,
-                isActive);
+                isActive,
+                null);
         Long finalId = id;
         String finalName = name;
         Boolean putEsDocInTransaction =
@@ -451,8 +463,11 @@ public class UserService implements RpcUserService {
             return PublisherPool.emptyList();
         }
         // we don't need to call "isAllowToQueryUserProfile" to check the permissions
-        // because we only provide basic user info that don't need access control currently.
-        return userRepository.findNotDeletedUserProfiles(userIds, lastUpdatedDate)
+        // because we only provide basic user info that doesn't need access control currently.
+        return userRepository
+                .findNotDeletedUserProfiles(userIds,
+                        userInfoUserDefinedAttributesService.knownAttributes,
+                        lastUpdatedDate)
                 .collect(CollectorUtil.toList(userIds.size()));
     }
 
@@ -473,7 +488,9 @@ public class UserService implements RpcUserService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        return userRepository.findUsersProfile(userIds, queryDeletedRecords);
+        return userRepository.findUsersProfile(userIds,
+                userInfoUserDefinedAttributesService.knownAttributes,
+                queryDeletedRecords);
     }
 
     public Mono<Long> queryUserPermissionGroupId(@NotNull Long userId) {
@@ -585,21 +602,36 @@ public class UserService implements RpcUserService {
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable Boolean isActive,
-            @Nullable @PastOrPresent Date registrationDate) {
+            @Nullable @PastOrPresent Date registrationDate,
+            @Nullable Map<String, Value> userDefinedAttributes) {
         try {
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return updateUsers(Collections.singleton(userId),
-                rawPassword,
-                name,
-                intro,
-                profilePicture,
-                profileAccessStrategy,
-                permissionGroupId,
-                registrationDate,
-                isActive).map(result -> result.getModifiedCount() > 0);
+        if (userDefinedAttributes == null || userDefinedAttributes.isEmpty()) {
+            return updateUsers(Collections.singleton(userId),
+                    rawPassword,
+                    name,
+                    intro,
+                    profilePicture,
+                    profileAccessStrategy,
+                    permissionGroupId,
+                    registrationDate,
+                    isActive,
+                    null).map(result -> result.getModifiedCount() > 0);
+        }
+        return userInfoUserDefinedAttributesService.parseAttributesForUpsert(userDefinedAttributes)
+                .flatMap(attributes -> updateUsers(Collections.singleton(userId),
+                        rawPassword,
+                        name,
+                        intro,
+                        profilePicture,
+                        profileAccessStrategy,
+                        permissionGroupId,
+                        registrationDate,
+                        isActive,
+                        attributes).map(result -> result.getModifiedCount() > 0));
     }
 
     public Flux<User> queryUsers(
@@ -651,7 +683,8 @@ public class UserService implements RpcUserService {
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable @PastOrPresent Date registrationDate,
-            @Nullable Boolean isActive) {
+            @Nullable Boolean isActive,
+            @Nullable Map<String, Object> userDefinedAttributes) {
         try {
             Validator.notEmpty(userIds, "userIds");
             Validator.length(rawPassword,
@@ -673,7 +706,8 @@ public class UserService implements RpcUserService {
                 profileAccessStrategy,
                 permissionGroupId,
                 registrationDate,
-                isActive)) {
+                isActive,
+                userDefinedAttributes)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
         // Save an empty string "" is supported if it passes validation
@@ -691,6 +725,7 @@ public class UserService implements RpcUserService {
                     registrationDate,
                     isActive,
                     password,
+                    userDefinedAttributes,
                     null);
         }
         if (elasticsearchManager.isTransactionWithMongoEnabledForUser()) {
@@ -703,11 +738,16 @@ public class UserService implements RpcUserService {
                     registrationDate,
                     isActive,
                     password,
-                    session).flatMap(
-                            updateResult -> (name.isBlank()
-                                    ? elasticsearchManager.deleteUserDocs(userIds)
-                                    : elasticsearchManager.putUserDocs(userIds, name))
-                                    .thenReturn(updateResult)));
+                    userDefinedAttributes,
+                    session).flatMap(updateResult -> {
+                        if (updateResult.getModifiedCount() == 0) {
+                            return Mono.just(updateResult);
+                        }
+                        Mono<?> syncUserDocs = name.isBlank()
+                                ? elasticsearchManager.deleteUserDocs(userIds)
+                                : elasticsearchManager.putUserDocs(userIds, name);
+                        return syncUserDocs.thenReturn(updateResult);
+                    }));
         }
         return updateUsers(userIds,
                 name,
@@ -718,6 +758,7 @@ public class UserService implements RpcUserService {
                 registrationDate,
                 isActive,
                 password,
+                userDefinedAttributes,
                 null).doOnSuccess(ignored -> {
                     if (name.isBlank()) {
                         elasticsearchManager.deleteUserDocs(userIds)
@@ -747,6 +788,7 @@ public class UserService implements RpcUserService {
             @Nullable Date registrationDate,
             @Nullable Boolean isActive,
             @Nullable byte[] password,
+            @Nullable Map<String, Object> userDefinedAttributes,
             @Nullable ClientSession session) {
         return userRepository
                 .updateUsers(userIds,
@@ -758,17 +800,18 @@ public class UserService implements RpcUserService {
                         permissionGroupId,
                         registrationDate,
                         isActive,
+                        userDefinedAttributes,
                         session)
                 .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
                         ? sessionService
                                 .disconnect(userIds,
                                         SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
-                                .onErrorResume(t -> {
+                                .onErrorComplete(t -> {
                                     LOGGER.error(
                                             "Caught an error while closing the sessions of the users {} after inactivating the users",
                                             userIds,
                                             t);
-                                    return Mono.empty();
+                                    return true;
                                 })
                                 .thenReturn(result)
                         : Mono.just(result));
@@ -811,7 +854,10 @@ public class UserService implements RpcUserService {
                             }
                             ids.add(id);
                         }
-                        Mono<List<User>> mono = userRepository.findNotDeletedUserProfiles(ids, null)
+                        Mono<List<User>> mono = userRepository
+                                .findNotDeletedUserProfiles(ids,
+                                        userInfoUserDefinedAttributesService.knownAttributes,
+                                        null)
                                 .collect(CollectorUtil.toList(count));
                         return mono.map(users -> {
                             if (users.isEmpty()) {
@@ -836,7 +882,10 @@ public class UserService implements RpcUserService {
                         for (Hit<UserDoc> hit : hits) {
                             ids.add(Long.parseLong(hit.id()));
                         }
-                        return userRepository.findNotDeletedUserProfiles(ids, null)
+                        return userRepository
+                                .findNotDeletedUserProfiles(ids,
+                                        userInfoUserDefinedAttributesService.knownAttributes,
+                                        null)
                                 .collect(CollectorUtil.toList(count));
                     }
                 });

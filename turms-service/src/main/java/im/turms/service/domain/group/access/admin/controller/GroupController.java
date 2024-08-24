@@ -249,6 +249,7 @@ public class GroupController extends BaseController {
                         updateGroupDTO.creationDate(),
                         updateGroupDTO.deletionDate(),
                         updateGroupDTO.muteEndDate(),
+                        null,
                         null)
                 : groupService.checkAndTransferGroupOwnership(ids,
                         successorId,

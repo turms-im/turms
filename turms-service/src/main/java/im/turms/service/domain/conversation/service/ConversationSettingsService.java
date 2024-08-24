@@ -110,7 +110,8 @@ public class ConversationSettingsService extends CustomSettingService {
                             return Mono.error(ResponseException.get(
                                     ResponseStatusCode.NOT_RELATED_USER_TO_UPDATE_PRIVATE_CONVERSATION_SETTING));
                         }
-                        Map<String, Object> parsedSettings = parseSettings(settings);
+                        Map<String, Object> parsedSettings =
+                                parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                         return conversationSettingsRepository
                                 .upsertSettings(ownerId, userId, parsedSettings)
                                 .map(updateResult -> updateResult.getModifiedCount() > 0
@@ -129,14 +130,16 @@ public class ConversationSettingsService extends CustomSettingService {
                             .collect(CollectorUtil.toSet(finalImmutableSettingsForUpsert.size()))
                             .flatMap(existingSettings -> {
                                 if (existingSettings.isEmpty()) {
-                                    Map<String, Object> parsedSettings = parseSettings(settings);
+                                    Map<String, Object> parsedSettings =
+                                            parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                                     return conversationSettingsRepository
                                             .upsertSettings(ownerId, userId, parsedSettings);
                                 }
                                 finalImmutableSettingsForUpsert.removeIf(
                                         settingName -> !existingSettings.contains(settingName));
                                 if (finalImmutableSettingsForUpsert.isEmpty()) {
-                                    Map<String, Object> parsedSettings = parseSettings(settings);
+                                    Map<String, Object> parsedSettings =
+                                            parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                                     return conversationSettingsRepository
                                             .upsertSettings(ownerId, userId, parsedSettings);
                                 }
@@ -185,7 +188,8 @@ public class ConversationSettingsService extends CustomSettingService {
                             return Mono.error(ResponseException.get(
                                     ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_CONVERSATION_SETTING));
                         }
-                        Map<String, Object> parsedSettings = parseSettings(settings);
+                        Map<String, Object> parsedSettings =
+                                parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                         return conversationSettingsRepository
                                 .upsertSettings(ownerId,
                                         getTargetIdFromGroupId(groupId),
@@ -208,7 +212,8 @@ public class ConversationSettingsService extends CustomSettingService {
                             .collect(CollectorUtil.toSet(finalImmutableSettingsForUpsert.size()))
                             .flatMap(existingSettings -> {
                                 if (existingSettings.isEmpty()) {
-                                    Map<String, Object> parsedSettings = parseSettings(settings);
+                                    Map<String, Object> parsedSettings =
+                                            parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                                     return conversationSettingsRepository.upsertSettings(ownerId,
                                             getTargetIdFromGroupId(groupId),
                                             parsedSettings);
@@ -216,7 +221,8 @@ public class ConversationSettingsService extends CustomSettingService {
                                 finalImmutableSettingsForUpsert.removeIf(
                                         settingName -> !existingSettings.contains(settingName));
                                 if (finalImmutableSettingsForUpsert.isEmpty()) {
-                                    Map<String, Object> parsedSettings = parseSettings(settings);
+                                    Map<String, Object> parsedSettings =
+                                            parseSettings(ignoreUnknownSettingsOnUpsert, settings);
                                     return conversationSettingsRepository.upsertSettings(ownerId,
                                             getTargetIdFromGroupId(groupId),
                                             parsedSettings);

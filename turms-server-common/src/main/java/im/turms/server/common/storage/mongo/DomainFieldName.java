@@ -27,4 +27,17 @@ public final class DomainFieldName {
 
     public static final String ID = "_id";
 
+    /**
+     * @implNote Don't use "_" because:
+     *           <p>
+     *           1. MongoDB has use "_" for "_id";
+     *           <p>
+     *           2. To not mix with the default index name (The default index name uses "_" as
+     *           separator);
+     *           <p>
+     *           Don't use "$" because MongoDB uses it for internal operators (e.g., "$set").
+     */
+    public static final String USER_DEFINED_ATTRIBUTE_PREFIX = "#";
+    public static final int USER_DEFINED_ATTRIBUTE_PREFIX_LENGTH = 1;
+
 }

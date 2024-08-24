@@ -30,6 +30,7 @@ import org.bson.BsonValue;
 
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.storage.mongo.BsonPool;
+import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.codec.CodecUtil;
 
 /**
@@ -164,11 +165,12 @@ public final class Update extends BaseBson {
 
     // region special values
 
-    public Update setUserDefinedAttributesIfNotNull(
+    public Update setUserDefinedAttributesIfNotEmpty(
             @Nullable Map<String, Object> userDefinedAttributes) {
         if (userDefinedAttributes != null) {
             for (Map.Entry<String, Object> entry : userDefinedAttributes.entrySet()) {
-                appendSet(entry.getKey(), CodecUtil.encode(entry.getValue()));
+                appendSet(DomainFieldName.USER_DEFINED_ATTRIBUTE_PREFIX + entry.getKey(),
+                        CodecUtil.encode(entry.getValue()));
             }
         }
         return this;

@@ -15,32 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
-
-import java.util.Collections;
-import java.util.Set;
+package im.turms.server.common.infra.property.env.service.business.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.property.env.service.business.common.userdefinedattribute.UserDefinedAttributesProperties;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public abstract class CustomSettingEnumValueProperties<T> {
-
-    @Description("Allowed values")
-    @GlobalProperty
-    @MutableProperty
-    private Set<T> allowedValues = Collections.emptySet();
-
+public class GroupInfoUserDefinedAttributesProperties extends UserDefinedAttributesProperties {
 }

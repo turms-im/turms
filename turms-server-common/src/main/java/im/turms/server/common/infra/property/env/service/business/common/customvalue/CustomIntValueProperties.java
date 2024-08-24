@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
+package im.turms.server.common.infra.property.env.service.business.common.customvalue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,16 +35,16 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class CustomSettingDoubleValueProperties extends CustomSettingEnumValueProperties<Double> {
+public class CustomIntValueProperties extends CustomEnumValueProperties<Integer> {
 
     @Description("The minimum allowed value")
     @GlobalProperty
     @MutableProperty
-    private double min = Double.MIN_VALUE;
+    private int min = Integer.MIN_VALUE;
 
     @Description("The maximum allowed value")
     @GlobalProperty
     @MutableProperty
-    private double max = Double.MAX_VALUE;
+    private int max = Integer.MAX_VALUE;
 
 }

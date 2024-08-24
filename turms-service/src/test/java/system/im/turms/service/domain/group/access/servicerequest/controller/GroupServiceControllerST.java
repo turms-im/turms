@@ -19,11 +19,13 @@ package system.im.turms.service.domain.group.access.servicerequest.controller;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import helper.NotificationUtil;
+import helper.SharedBusinessDataConst;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,8 @@ import system.im.turms.service.domain.common.access.servicerequest.controller.Ba
 
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.model.common.Value;
+import im.turms.server.common.access.client.dto.model.group.Group;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -393,12 +397,54 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
 
     @Test
     @Order(ORDER_MIDDLE_PRIORITY)
+    void handleUpdateGroupRequest_updateGroupWithWrongAttributeType_shouldSucceed() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
+                        .setName("new name")
+                        .setIntro("new intro")
+                        .putAllUserDefinedAttributes(Map.of("key-bool",
+                                Value.newBuilder()
+                                        .setStringValue("A wrong value")
+                                        .build())))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID_1, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
+                .handle(clientRequest);
+        assertResultCodes(resultMono, ResponseStatusCode.ILLEGAL_ARGUMENT);
+    }
+
+    @Test
+    @Order(ORDER_MIDDLE_PRIORITY)
+    void handleUpdateGroupRequest_updateGroupWithUnknownAttribute_shouldSucceed() {
+        TurmsRequest request = TurmsRequest.newBuilder()
+                .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
+                        .setGroupId(groupIdWithInvitationStrategyOwnerManager)
+                        .setName("new name")
+                        .setIntro("new intro")
+                        .putAllUserDefinedAttributes(Map.of("key-unknown",
+                                Value.newBuilder()
+                                        .setStringValue("A wrong value")
+                                        .build())))
+                .build();
+        ClientRequest clientRequest =
+                new ClientRequest(USER_ID_1, USER_DEVICE, USER_IP, REQUEST_ID, request);
+        Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
+                .handle(clientRequest);
+        assertResultCodes(resultMono, ResponseStatusCode.ILLEGAL_ARGUMENT);
+    }
+
+    @Test
+    @Order(ORDER_MIDDLE_PRIORITY)
     void handleUpdateGroupRequest_updateGroup_shouldSucceed() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setUpdateGroupRequest(UpdateGroupRequest.newBuilder()
                         .setGroupId(groupIdWithInvitationStrategyOwnerManager)
                         .setName("new name")
-                        .setIntro("new intro"))
+                        .setIntro("new intro")
+                        .putAllUserDefinedAttributes(
+                                SharedBusinessDataConst.USER_DEFINED_ATTRIBUTES_FOR_UPSERT))
                 .build();
         ClientRequest clientRequest =
                 new ClientRequest(USER_ID_1, USER_DEVICE, USER_IP, REQUEST_ID, request);
@@ -543,11 +589,14 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 new ClientRequest(USER_ID_1, USER_DEVICE, USER_IP, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupsRequest()
                 .handle(clientRequest);
-        assertResultIsOk(resultMono,
-                result -> assertThat(result.response()
-                        .getGroupsWithVersion()
-                        .getGroups(0)
-                        .getId()).isEqualTo(groupIdWithInvitationStrategyOwnerManager));
+        assertResultIsOk(resultMono, result -> {
+            Group group = result.response()
+                    .getGroupsWithVersion()
+                    .getGroups(0);
+            assertThat(group.getId()).isEqualTo(groupIdWithInvitationStrategyOwnerManager);
+            assertThat(group.getUserDefinedAttributesMap()).containsExactlyInAnyOrderEntriesOf(
+                    SharedBusinessDataConst.EXPECTED_FOUND_USER_DEFINED_ATTRIBUTES);
+        });
     }
 
     @Test

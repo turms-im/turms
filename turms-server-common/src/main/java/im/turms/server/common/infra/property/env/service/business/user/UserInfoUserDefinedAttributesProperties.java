@@ -15,28 +15,20 @@
  * limitations under the License.
  */
 
-package org.bson;
+package im.turms.server.common.infra.property.env.service.business.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
+import im.turms.server.common.infra.property.env.service.business.common.userdefinedattribute.UserDefinedAttributesProperties;
 
 /**
  * @author James Chen
  */
-public final class BsonArrayUtil {
-
-    private BsonArrayUtil() {
-    }
-
-    public static BsonArray newArray(List<BsonValue> values) {
-        return new BsonArray(values, false);
-    }
-
-    public static BsonArray newArray(Collection<String> values) {
-        List<BsonValue> bsonValues = new ArrayList<>(values.size());
-        values.forEach(s -> bsonValues.add(new BsonString(s)));
-        return new BsonArray(bsonValues, false);
-    }
-
+@AllArgsConstructor
+@Data
+//@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+public class UserInfoUserDefinedAttributesProperties extends UserDefinedAttributesProperties {
 }

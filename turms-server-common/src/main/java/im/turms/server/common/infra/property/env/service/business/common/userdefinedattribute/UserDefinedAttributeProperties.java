@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.user;
+package im.turms.server.common.infra.property.env.service.business.common.userdefinedattribute;
+
+import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,9 +25,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.lang.StringPattern;
+import im.turms.server.common.infra.property.env.service.business.common.customvalue.CustomValueOneOfProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
+import im.turms.server.common.infra.validation.MatchesStringPattern;
 
 /**
  * @author James Chen
@@ -34,35 +39,34 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class UserProperties {
+public class UserDefinedAttributeProperties {
+
+    @Description("The source name of the attribute")
+    @GlobalProperty
+    @MutableProperty
+    @Size(min = 1)
+    @MatchesStringPattern(StringPattern.ALPHANUMERIC)
+    private String sourceName = "";
+
+    @Description("The stored name of the attribute. If empty, the source name will be used as both the source name and the stored name")
+    @GlobalProperty
+    @MutableProperty
+    @MatchesStringPattern(StringPattern.ALPHANUMERIC)
+    private String storedName = "";
+
+    @Description("Whether the attribute is immutable")
+    @GlobalProperty
+    @MutableProperty
+    private boolean immutable;
+
+//    @Description("Whether the attribute is deletable")
+//    @GlobalProperty
+//    @MutableProperty
+//    private boolean deletable = true;
+
+    // TODO: "visibility"
 
     @NestedConfigurationProperty
-    private FriendRequestProperties friendRequest = new FriendRequestProperties();
-
-    @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
-    @GlobalProperty
-    @MutableProperty
-    private boolean respondOfflineIfInvisible;
-
-    @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
-    @GlobalProperty
-    @MutableProperty
-    private boolean deleteTwoSidedRelationships;
-
-    @Description("Whether to delete a user logically")
-    @GlobalProperty
-    @MutableProperty
-    private boolean deleteUserLogically = true;
-
-    @Description("Whether to activate a user when added by default")
-    @GlobalProperty
-    @MutableProperty
-    private boolean activateUserWhenAdded = true;
-
-    @NestedConfigurationProperty
-    private UserInfoProperties info = new UserInfoProperties();
-
-    @NestedConfigurationProperty
-    private UserSettingsProperties settings = new UserSettingsProperties();
+    private CustomValueOneOfProperties value = new CustomValueOneOfProperties();
 
 }

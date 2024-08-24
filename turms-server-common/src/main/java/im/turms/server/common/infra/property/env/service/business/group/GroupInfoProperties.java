@@ -15,17 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.constant;
+package im.turms.server.common.infra.property.env.service.business.group;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
-public enum CustomSettingType {
-    INT,
-    LONG,
-    DOUBLE,
-    BOOL,
-    STRING,
-    LANGUAGE,
-    ARRAY
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class GroupInfoProperties {
+
+    @NestedConfigurationProperty
+    private GroupInfoUserDefinedAttributesProperties userDefinedAttributes =
+            new GroupInfoUserDefinedAttributesProperties();
+
 }

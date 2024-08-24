@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
+package im.turms.server.common.infra.property.env.service.business.common.customvalue;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import im.turms.server.common.infra.property.constant.CustomValueType;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -31,20 +32,29 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
  * @author James Chen
  */
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class CustomSettingIntValueProperties extends CustomSettingEnumValueProperties<Integer> {
+public class CustomValueOneOfProperties {
 
-    @Description("The minimum allowed value")
+    @Description("The value type")
     @GlobalProperty
     @MutableProperty
-    private int min = Integer.MIN_VALUE;
+    private CustomValueType type = CustomValueType.STRING;
 
-    @Description("The maximum allowed value")
-    @GlobalProperty
-    @MutableProperty
-    private int max = Integer.MAX_VALUE;
+    @NestedConfigurationProperty
+    private CustomIntValueProperties intValue = new CustomIntValueProperties();
+
+    @NestedConfigurationProperty
+    private CustomLongValueProperties longValue = new CustomLongValueProperties();
+
+    @NestedConfigurationProperty
+    private CustomDoubleValueProperties doubleValue = new CustomDoubleValueProperties();
+
+    @NestedConfigurationProperty
+    private CustomStringValueProperties stringValue = new CustomStringValueProperties();
+
+    @NestedConfigurationProperty
+    private CustomArrayValueProperties arrayValue = new CustomArrayValueProperties();
 
 }

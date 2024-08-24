@@ -60,6 +60,9 @@ public class GroupProperties {
     private int memberCacheExpireAfterSeconds = 15;
 
     @NestedConfigurationProperty
+    private GroupInfoProperties info = new GroupInfoProperties();
+
+    @NestedConfigurationProperty
     private GroupInvitationProperties invitation = new GroupInvitationProperties();
 
     @NestedConfigurationProperty

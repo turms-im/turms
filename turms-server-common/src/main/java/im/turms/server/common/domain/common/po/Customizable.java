@@ -19,6 +19,8 @@ package im.turms.server.common.domain.common.po;
 
 import java.util.Map;
 
+import im.turms.server.common.storage.mongo.DomainFieldName;
+
 /**
  * @author James Chen
  * @implNote We use interface instead of abstract class to make the classe hierarchy flat, and not
@@ -30,9 +32,11 @@ public interface Customizable {
 
     /**
      * @implNote 1. The user-defined attributes will be flattened, and the top-level keys/fields
-     *           will be prefixed with "_" to be stored in MongoDB. For example, if the user-defined
-     *           attributes are {"a": 1, "b": 2}, the fields of "_a" with int value 1 and "_b" with
-     *           int value 2 will be stored in MongoDB.
+     *           will be prefixed with {@link DomainFieldName#USER_DEFINED_ATTRIBUTE_PREFIX} to be
+     *           stored in MongoDB. For example, if the user-defined attributes are {"a": 1, "b":
+     *           2}, the fields of "#a" with int value 1 and "#b" with int value 2 will be stored in
+     *           MongoDB. In this way, developers have a fine-grained control over the user-defined
+     *           attributes (e.g., adding different indexes on them).
      *           <p>
      *           2. We name it "attributes" instead of "properties" because we have used
      *           "properties" to refer to custom settings.

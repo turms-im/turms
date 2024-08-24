@@ -3608,6 +3608,27 @@
         "sensitive": false,
         "type": "boolean"
       },
+      "info": {
+        "userDefinedAttributes": {
+          "allowedAttributes": {
+            "deprecated": false,
+            "description": "The list of allowed attributes",
+            "elementType": "im.turms.server.common.infra.property.env.service.business.common.userdefinedattribute.UserDefinedAttributeProperties",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "java.util.List"
+          },
+          "ignoreUnknownAttributesOnUpsert": {
+            "deprecated": false,
+            "description": "Whether to ignore unknown attributes on upsert. If false, the server will throw if the request specifies an unknown attribute. If true, the server will ignore the unknown attributes, and continue to process the request",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "boolean"
+          }
+        }
+      },
       "invitation": {
         "allowRecallPendingInvitationByOwnerAndManager": {
           "deprecated": false,
@@ -5365,45 +5386,66 @@
           "type": "int"
         }
       },
-      "maxIntroLength": {
-        "deprecated": false,
-        "description": "The maximum allowed length for a user's intro",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "int"
-      },
-      "maxNameLength": {
-        "deprecated": false,
-        "description": "The maximum allowed length for a user's name",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "int"
-      },
-      "maxPasswordLength": {
-        "deprecated": false,
-        "description": "The maximum allowed length for a user's password",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "int"
-      },
-      "maxProfilePictureLength": {
-        "deprecated": false,
-        "description": "The maximum allowed length for a user's profile picture",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "int"
-      },
-      "minPasswordLength": {
-        "deprecated": false,
-        "description": "The minimum allowed length for a user's password. If 0, it means the password can be an empty string \"\". If -1, it means the password can be null",
-        "global": true,
-        "mutable": true,
-        "sensitive": false,
-        "type": "int"
+      "info": {
+        "maxIntroLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for a user's intro",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxNameLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for a user's name",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxPasswordLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for a user's password",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "maxProfilePictureLength": {
+          "deprecated": false,
+          "description": "The maximum allowed length for a user's profile picture",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "minPasswordLength": {
+          "deprecated": false,
+          "description": "The minimum allowed length for a user's password. If 0, it means the password can be an empty string \"\". If -1, it means the password can be null",
+          "global": true,
+          "mutable": true,
+          "sensitive": false,
+          "type": "int"
+        },
+        "userDefinedAttributes": {
+          "allowedAttributes": {
+            "deprecated": false,
+            "description": "The list of allowed attributes",
+            "elementType": "im.turms.server.common.infra.property.env.service.business.common.userdefinedattribute.UserDefinedAttributeProperties",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "java.util.List"
+          },
+          "ignoreUnknownAttributesOnUpsert": {
+            "deprecated": false,
+            "description": "Whether to ignore unknown attributes on upsert. If false, the server will throw if the request specifies an unknown attribute. If true, the server will ignore the unknown attributes, and continue to process the request",
+            "global": true,
+            "mutable": true,
+            "sensitive": false,
+            "type": "boolean"
+          }
+        }
       },
       "respondOfflineIfInvisible": {
         "deprecated": false,

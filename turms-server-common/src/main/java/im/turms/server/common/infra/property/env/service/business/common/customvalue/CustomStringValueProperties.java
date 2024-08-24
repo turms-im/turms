@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
+package im.turms.server.common.infra.property.env.service.business.common.customvalue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,7 @@ import im.turms.server.common.infra.validation.ValidRegex;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class CustomSettingStringValueProperties extends CustomSettingEnumValueProperties<String> {
+public class CustomStringValueProperties extends CustomEnumValueProperties<String> {
 
     @Description("The minimum allowed length")
     @GlobalProperty

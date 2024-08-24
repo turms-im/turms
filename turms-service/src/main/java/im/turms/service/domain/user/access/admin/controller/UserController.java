@@ -208,7 +208,8 @@ public class UserController extends BaseController {
                         updateUserDTO.profileAccessStrategy(),
                         updateUserDTO.permissionGroupId(),
                         updateUserDTO.registrationDate(),
-                        updateUserDTO.isActive())
+                        updateUserDTO.isActive(),
+                        null)
                 .map(UpdateResultDTO::get);
         return HttpHandlerResult.okIfTruthy(updateMono);
     }

@@ -212,7 +212,7 @@ class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
     }
 
     private static User buildUser(long id, String name) {
-        return new User(id, null, name, null, null, null, null, null, null, null, null);
+        return new User(id, null, name, null, null, null, null, null, null, null, null, null);
     }
 
     private static Group buildGroup(long id, String name) {
@@ -222,6 +222,7 @@ class ElasticsearchManagerTests extends SpringAwareIntegrationTest {
                 null,
                 null,
                 name,
+                null,
                 null,
                 null,
                 null,

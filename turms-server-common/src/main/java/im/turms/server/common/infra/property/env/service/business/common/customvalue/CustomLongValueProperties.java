@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.infra.property.env.service.business.common.setting;
+package im.turms.server.common.infra.property.env.service.business.common.customvalue;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +35,7 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class CustomSettingLongValueProperties extends CustomSettingEnumValueProperties<Long> {
+public class CustomLongValueProperties extends CustomEnumValueProperties<Long> {
 
     @Description("The minimum allowed value")
     @GlobalProperty

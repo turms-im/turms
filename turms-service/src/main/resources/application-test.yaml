@@ -25,6 +25,44 @@ turms:
       clear-all-collections-before-faking: true
     message:
       check-if-target-active-and-not-deleted: false
+    group:
+      info:
+        user-defined-attributes:
+          allowed-attributes:
+            - source-name: "key-string"
+              value:
+                type: string
+            - source-name: "key-int"
+              value:
+                type: int
+            - source-name: "key-double"
+              value:
+                type: double
+            - source-name: "key-bool"
+              value:
+                type: bool
+            - source-name: "key-array"
+              value:
+                type: array
+    user:
+      info:
+        user-defined-attributes:
+          allowed-attributes:
+            - source-name: "key-string"
+              value:
+                type: string
+            - source-name: "key-int"
+              value:
+                type: int
+            - source-name: "key-double"
+              value:
+                type: double
+            - source-name: "key-bool"
+              value:
+                type: bool
+            - source-name: "key-array"
+              value:
+                type: array
 turms-plugin:
   minio:
     retry:

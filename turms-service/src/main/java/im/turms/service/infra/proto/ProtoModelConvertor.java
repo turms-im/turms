@@ -18,8 +18,10 @@
 package im.turms.service.infra.proto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +81,45 @@ public final class ProtoModelConvertor {
             list.add(entry.getValue());
         }
         return list;
+    }
+
+    public static Value value2proto(Value.Builder builder, Object object) {
+        if (object instanceof Value value) {
+            return value;
+        }
+        switch (object) {
+            case Integer value -> builder.setInt32Value(value);
+            case Long value -> builder.setInt64Value(value);
+            case Float value -> builder.setFloatValue(value);
+            case Double value -> builder.setDoubleValue(value);
+            case Boolean value -> builder.setBoolValue(value);
+            case byte[] value -> builder.setBytesValue(ByteStringUtil.wrap(value));
+            case String value -> builder.setStringValue(value);
+            case Collection<?> value -> {
+                int size = value.size();
+                if (size == 0) {
+                    return builder.getDefaultInstanceForType();
+                }
+                List<Value> list = new ArrayList<>(size);
+                Value.Builder elementBuilder = Value.newBuilder();
+                for (Object element : value) {
+                    list.add(value2proto(elementBuilder, element));
+                    elementBuilder.clear();
+                }
+                builder.addAllListValue(list);
+            }
+            case Map<?, ?> ignored -> {
+                // A map user-defined attribute is allowed to be stored,
+                // but we don't support it to pass to the client currently,
+                // so we ignore it.
+                // We can support it if any client needs to support it.
+                return builder.build();
+            }
+            default -> throw new IllegalArgumentException(
+                    "Unsupported value type: "
+                            + object.getClass());
+        }
+        return builder.build();
     }
 
     public static im.turms.server.common.access.client.dto.model.conference.Meeting.Builder meeting2proto(
@@ -193,6 +234,7 @@ public final class ProtoModelConvertor {
         Boolean active = user.getIsActive();
         ProfileAccessStrategy profileAccessStrategy = user.getProfileAccessStrategy();
         Date lastUpdatedDate = user.getLastUpdatedDate();
+        Map<String, Object> userDefinedAttributes = user.getUserDefinedAttributes();
         if (userId != null) {
             builder.setId(userId);
         }
@@ -216,6 +258,14 @@ public final class ProtoModelConvertor {
         }
         if (lastUpdatedDate != null) {
             builder.setLastUpdatedDate(lastUpdatedDate.getTime());
+        }
+        if (userDefinedAttributes != null && !userDefinedAttributes.isEmpty()) {
+            Value.Builder valueBuilder = ClientMessagePool.getValueBuilder();
+            for (Map.Entry<String, Object> entry : userDefinedAttributes.entrySet()) {
+                builder.putUserDefinedAttributes(entry.getKey(),
+                        value2proto(valueBuilder, entry.getValue()));
+                valueBuilder.clear();
+            }
         }
         return builder;
     }
@@ -395,6 +445,7 @@ public final class ProtoModelConvertor {
         Date lastUpdatedDate = group.getLastUpdatedDate();
         Date muteEndDate = group.getMuteEndDate();
         Boolean active = group.getIsActive();
+        Map<String, Object> userDefinedAttributes = group.getUserDefinedAttributes();
         if (groupId != null) {
             builder.setId(groupId);
         }
@@ -427,6 +478,14 @@ public final class ProtoModelConvertor {
         }
         if (active != null) {
             builder.setActive(active);
+        }
+        if (userDefinedAttributes != null && !userDefinedAttributes.isEmpty()) {
+            Value.Builder valueBuilder = ClientMessagePool.getValueBuilder();
+            for (Map.Entry<String, Object> entry : userDefinedAttributes.entrySet()) {
+                builder.putUserDefinedAttributes(entry.getKey(),
+                        value2proto(valueBuilder, entry.getValue()));
+                valueBuilder.clear();
+            }
         }
         return builder;
     }
@@ -721,24 +780,6 @@ public final class ProtoModelConvertor {
                 .setCreationDate(info.creationDate()
                         .getTime())
                 .build();
-    }
-
-    public static Value value2proto(Value.Builder builder, Object value) {
-        switch (value) {
-            case Integer val -> builder.setInt32Value(val);
-            case Long val -> builder.setInt64Value(val);
-            case Float val -> builder.setFloatValue(val);
-            case Double val -> builder.setDoubleValue(val);
-            case Boolean val -> builder.setBoolValue(val);
-            case byte[] val -> builder.setBytesValue(ByteStringUtil.wrap(val));
-            case String val -> builder.setStringValue(val);
-            case null -> {
-            }
-            default -> throw new IllegalArgumentException(
-                    "Unsupported type: "
-                            + value.getClass());
-        }
-        return builder.build();
     }
 
 }

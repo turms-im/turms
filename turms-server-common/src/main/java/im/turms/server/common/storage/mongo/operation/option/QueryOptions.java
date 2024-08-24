@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo.operation.option;
 
+import java.util.Collection;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.internal.client.model.FindOptions;
@@ -138,6 +139,18 @@ public final class QueryOptions extends BaseBson {
      */
     public QueryOptions include(String field) {
         BsonDocument projection = new BsonDocument(field, BsonPool.BSON_INT32_1);
+        document.put("projection", projection);
+        return this;
+    }
+
+    /**
+     * @implNote filter count: 1
+     */
+    public QueryOptions include(Collection<String> fields) {
+        BsonDocument projection = new BsonDocument();
+        for (String field : fields) {
+            projection.append(field, BsonPool.BSON_INT32_1);
+        }
         document.put("projection", projection);
         return this;
     }

@@ -18,6 +18,7 @@
 package im.turms.service.domain.group.po;
 
 import java.util.Date;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -102,6 +103,8 @@ public final class Group extends BaseEntity {
 
     @Field(Fields.IS_ACTIVE)
     private final Boolean isActive;
+
+    private final Map<String, Object> userDefinedAttributes;
 
     public static final class Fields {
         public static final String TYPE_ID = "tid";

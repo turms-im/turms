@@ -20,6 +20,7 @@ package im.turms.server.common.storage.mongo.operation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -58,6 +59,7 @@ import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
 import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonArray;
+import org.bson.BsonArrayUtil;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
@@ -137,6 +139,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             new BsonDocument().append("$getField",
                     new BsonDocument().append("field", new BsonString("k"))
                             .append("input", new BsonString("$$field")));
+    private static final BsonDocument FIND_FIELDS_FILTER_INPUT = new BsonDocument(
+            "$map",
+            new BsonDocument()
+                    .append("input", new BsonDocument("$objectToArray", new BsonString("$$ROOT")))
+                    .append("as", new BsonString("a"))
+                    .append("in", new BsonString("$$a.k")));
 
     private final MongoContext context;
     private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap =
@@ -208,6 +216,36 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 QueryOptions.newBuilder(1)
                         .projection(ID_ONLY));
         return Flux.from(publisher);
+    }
+
+    @Override
+    public <T> Mono<List<String>> findFields(Class<T> clazz, Collection<String> includedFields) {
+        MongoCollection<T> collection = context.getCollection(clazz);
+        List<Bson> pipeline = List.of(Aggregates.limit(1),
+                Aggregates.project(new BsonDocument()
+                        .append(DomainFieldName.ID, BsonPool.BSON_INT32_0)
+                        .append("n",
+                                new BsonDocument(
+                                        "$filter",
+                                        new BsonDocument().append("input", FIND_FIELDS_FILTER_INPUT)
+                                                .append("as", new BsonString("n"))
+                                                .append("cond",
+                                                        new BsonDocument(
+                                                                "$in",
+                                                                new BsonArray(
+                                                                        List.of(new BsonString(
+                                                                                "$$n"),
+                                                                                BsonArrayUtil
+                                                                                        .newArray(
+                                                                                                includedFields)))))))));
+        return Mono.from(collection.aggregate(pipeline, Document.class))
+                .map(document -> {
+                    List<String> names = (List<String>) document.get("n");
+                    return names == null
+                            ? Collections.<String>emptyList()
+                            : names;
+                })
+                .defaultIfEmpty(Collections.emptyList());
     }
 
     @Override

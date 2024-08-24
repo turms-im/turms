@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import im.turms.server.common.infra.lang.StringPattern;
+import im.turms.server.common.infra.property.env.service.business.common.customvalue.CustomValueOneOfProperties;
 import im.turms.server.common.infra.property.metadata.Description;
 import im.turms.server.common.infra.property.metadata.GlobalProperty;
 import im.turms.server.common.infra.property.metadata.MutableProperty;
@@ -47,7 +48,7 @@ public class CustomSettingProperties {
     @MatchesStringPattern(StringPattern.ALPHANUMERIC)
     private String sourceName = "";
 
-    @Description("The stored name of the setting. If empty, the source name will be used")
+    @Description("The stored name of the setting. If empty, the source name will be used as both the source name and the stored name")
     @GlobalProperty
     @MutableProperty
     @MatchesStringPattern(StringPattern.ALPHANUMERIC)
@@ -64,6 +65,6 @@ public class CustomSettingProperties {
     private boolean deletable = true;
 
     @NestedConfigurationProperty
-    private CustomSettingValueOneOfProperties value = new CustomSettingValueOneOfProperties();
+    private CustomValueOneOfProperties value = new CustomValueOneOfProperties();
 
 }

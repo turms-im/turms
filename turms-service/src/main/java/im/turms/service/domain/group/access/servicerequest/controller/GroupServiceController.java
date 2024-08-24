@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.access.client.dto.ClientMessagePool;
 import im.turms.server.common.access.client.dto.constant.GroupMemberRole;
+import im.turms.server.common.access.client.dto.model.common.Value;
 import im.turms.server.common.access.client.dto.model.group.GroupJoinQuestion;
 import im.turms.server.common.access.client.dto.notification.TurmsNotification;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
@@ -511,6 +513,10 @@ public class GroupServiceController extends BaseServiceController {
                 Date muteEndDate = request.hasMuteEndDate()
                         ? new Date(request.getMuteEndDate())
                         : null;
+                Map<String, Value> userDefinedAttributes =
+                        request.getUserDefinedAttributesCount() > 0
+                                ? request.getUserDefinedAttributesMap()
+                                : null;
                 updateMono = groupService.authAndUpdateGroupInformation(clientRequest.userId(),
                         request.getGroupId(),
                         typeId,
@@ -524,6 +530,7 @@ public class GroupServiceController extends BaseServiceController {
                         null,
                         null,
                         muteEndDate,
+                        userDefinedAttributes,
                         null);
             } else {
                 boolean quitAfterTransfer =
