@@ -36,8 +36,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class NetworkProperties {
 
     @NestedConfigurationProperty
-    private ProxyProperties proxy = new ProxyProperties();
+    protected ProxyProperties proxy = new ProxyProperties();
 
-    private List<NetworkPluginProperties> plugins = Collections.emptyList();
+    protected List<NetworkPluginProperties> plugins = Collections.emptyList();
 
 }

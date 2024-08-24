@@ -35,12 +35,12 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class HealthCheckProperties {
 
     @Min(1)
-    private int checkIntervalSeconds = 3;
+    protected int checkIntervalSeconds = 3;
 
     @NestedConfigurationProperty
-    private CpuHealthCheckProperties cpu = new CpuHealthCheckProperties();
+    protected CpuHealthCheckProperties cpu = new CpuHealthCheckProperties();
 
     @NestedConfigurationProperty
-    private MemoryHealthCheckProperties memory = new MemoryHealthCheckProperties();
+    protected MemoryHealthCheckProperties memory = new MemoryHealthCheckProperties();
 
 }

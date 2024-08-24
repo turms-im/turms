@@ -34,21 +34,10 @@ import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyPr
 @NoArgsConstructor
 public class WebSocketRemoteAddressSourceProperties {
 
-    private RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
+    protected RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
             RemoteAddressSourceProxyProtocolMode.OPTIONAL;
 
-    private RemoteAddressSourceHttpHeaderMode httpHeaderMode =
+    protected RemoteAddressSourceHttpHeaderMode httpHeaderMode =
             RemoteAddressSourceHttpHeaderMode.OPTIONAL;
 
-//    private List<String> httpHeaderSources = List.of(
-//            // RFC 7239
-//            "Forwarded",
-//            "X-Forwarded-For",
-//            "X-Real-IP",
-//            // Cloudflare CDN
-//            "CF-Connecting-IP",
-//            // Fastly CDN
-//            "Fastly-Client-IP",
-//            // Oracle WebLogic Server
-//            "WL-Proxy-Client-IP");
 }

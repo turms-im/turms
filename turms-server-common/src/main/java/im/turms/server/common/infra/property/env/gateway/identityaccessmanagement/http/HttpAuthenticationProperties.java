@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class HttpAuthenticationProperties {
 
     @NestedConfigurationProperty
-    private HttpAuthenticationResponseExpectationProperties responseExpectation =
+    protected HttpAuthenticationResponseExpectationProperties responseExpectation =
             new HttpAuthenticationResponseExpectationProperties();
 
 }

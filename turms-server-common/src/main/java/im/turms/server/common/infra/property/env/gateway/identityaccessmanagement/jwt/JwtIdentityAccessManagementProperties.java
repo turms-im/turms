@@ -33,13 +33,13 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class JwtIdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
-    private JwtAlgorithmProperties algorithm = new JwtAlgorithmProperties();
+    protected JwtAlgorithmProperties algorithm = new JwtAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtAuthenticationProperties authentication = new JwtAuthenticationProperties();
+    protected JwtAuthenticationProperties authentication = new JwtAuthenticationProperties();
 
     @NestedConfigurationProperty
-    private JwtIdentityAccessManagementVerificationProperties verification =
+    protected JwtIdentityAccessManagementVerificationProperties verification =
             new JwtIdentityAccessManagementVerificationProperties();
 
 }

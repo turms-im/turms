@@ -39,24 +39,24 @@ public class DiscoveryProperties {
     @Description("The identity of the local node will be sent to clients as a notification if identity is not blank"
             + " and \"turms.gateway.session.notifyClientsOfSessionInfoAfterConnected\" is true"
             + " (e.g. \"turms-east-0001\")")
-    private String identity = "";
+    protected String identity = "";
 
     @MutableProperty
     @Description("The advertise strategy is used to help clients or load balancing servers to access the local node. "
             + "Note: For security, do NOT use \"PUBLIC_ADDRESS\" in production "
             + "to prevent from exposing the origin IP address for DDoS attack.")
-    private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.PRIVATE_ADDRESS;
+    protected AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.PRIVATE_ADDRESS;
 
     @MutableProperty
     @Description("The advertise address of the local node exposed to the public. "
             + "The property can be used to advertise the DDoS Protected IP address to hide the origin IP address "
             + "(e.g. 100.131.251.96)")
-    private String advertiseHost = "";
+    protected String advertiseHost = "";
 
     @MutableProperty
     @Description("Whether to attach the local port to the host. "
             + "For example, if the local host is 100.131.251.96, and the port is 10510, "
             + "so the service address will be 100.131.251.96:10510")
-    private boolean attachPortToHost = true;
+    protected boolean attachPortToHost = true;
 
 }

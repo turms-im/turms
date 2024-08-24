@@ -29,7 +29,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class MongoProperties {
 
-    private transient String uri = "mongodb://localhost:27017/turms";
+    protected transient String uri = "mongodb://localhost:27017/turms";
 
     public MongoProperties(String uri) {
         if (uri != null) {

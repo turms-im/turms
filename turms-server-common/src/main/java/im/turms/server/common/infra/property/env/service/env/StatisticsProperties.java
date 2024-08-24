@@ -39,12 +39,12 @@ public class StatisticsProperties {
 
     @Description("The cron expression to specify the time to log online users' number")
     @ValidCron
-    private String onlineUsersNumberLoggingCron =
+    protected String onlineUsersNumberLoggingCron =
             CronConst.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
 
     @Description("Whether to log online users number")
     @GlobalProperty
     @MutableProperty
-    private boolean logOnlineUsersNumber = true;
+    protected boolean logOnlineUsersNumber = true;
 
 }

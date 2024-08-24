@@ -34,10 +34,10 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class BlocklistProperties {
 
     @NestedConfigurationProperty
-    private IpBlocklistTypeProperties ip = new IpBlocklistTypeProperties();
+    protected IpBlocklistTypeProperties ip = new IpBlocklistTypeProperties();
 
     @NestedConfigurationProperty
-    private UserIdBlocklistTypeProperties userId = new UserIdBlocklistTypeProperties();
+    protected UserIdBlocklistTypeProperties userId = new UserIdBlocklistTypeProperties();
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
@@ -46,13 +46,13 @@ public class BlocklistProperties {
     public static class IpAutoBlockProperties {
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
 
     }
 
@@ -63,13 +63,13 @@ public class BlocklistProperties {
     public static class UserIdAutoBlockProperties {
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties corruptedFrame = new AutoBlockItemProperties();
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties corruptedRequest = new AutoBlockItemProperties();
 
         @NestedConfigurationProperty
-        private AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
+        protected AutoBlockItemProperties frequentRequest = new AutoBlockItemProperties();
 
     }
 
@@ -79,9 +79,9 @@ public class BlocklistProperties {
     @SuperBuilder(toBuilder = true)
     public abstract static class BaseBlocklistTypeProperties {
 
-        private boolean enabled = true;
+        protected boolean enabled = true;
 
-        private int syncBlocklistIntervalMillis = 10 * 1000;
+        protected int syncBlocklistIntervalMillis = 10 * 1000;
 
     }
 
@@ -92,7 +92,7 @@ public class BlocklistProperties {
     public static class IpBlocklistTypeProperties extends BaseBlocklistTypeProperties {
 
         @NestedConfigurationProperty
-        private IpAutoBlockProperties autoBlock = new IpAutoBlockProperties();
+        protected IpAutoBlockProperties autoBlock = new IpAutoBlockProperties();
 
     }
 
@@ -103,7 +103,7 @@ public class BlocklistProperties {
     public static class UserIdBlocklistTypeProperties extends BaseBlocklistTypeProperties {
 
         @NestedConfigurationProperty
-        private UserIdAutoBlockProperties autoBlock = new UserIdAutoBlockProperties();
+        protected UserIdAutoBlockProperties autoBlock = new UserIdAutoBlockProperties();
 
     }
 

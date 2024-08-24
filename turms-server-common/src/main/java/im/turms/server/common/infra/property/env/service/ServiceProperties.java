@@ -51,50 +51,50 @@ public class ServiceProperties {
     // Env
 
     @NestedConfigurationProperty
-    private AdminApiProperties adminApi = new AdminApiProperties();
+    protected AdminApiProperties adminApi = new AdminApiProperties();
 
     @NestedConfigurationProperty
-    private ClientApiProperties clientApi = new ClientApiProperties();
+    protected ClientApiProperties clientApi = new ClientApiProperties();
 
     @NestedConfigurationProperty
-    private TurmsElasticsearchProperties elasticsearch = new TurmsElasticsearchProperties();
+    protected TurmsElasticsearchProperties elasticsearch = new TurmsElasticsearchProperties();
 
     @NestedConfigurationProperty
-    private FakeProperties fake = new FakeProperties();
+    protected FakeProperties fake = new FakeProperties();
 
     @NestedConfigurationProperty
-    private MongoGroupProperties mongo = new MongoGroupProperties();
+    protected MongoGroupProperties mongo = new MongoGroupProperties();
 
     @NestedConfigurationProperty
-    private PushNotificationProperties pushNotification = new PushNotificationProperties();
+    protected PushNotificationProperties pushNotification = new PushNotificationProperties();
 
     @NestedConfigurationProperty
-    private TurmsRedisProperties redis = new TurmsRedisProperties();
+    protected TurmsRedisProperties redis = new TurmsRedisProperties();
 
     @NestedConfigurationProperty
-    private StatisticsProperties statistics = new StatisticsProperties();
+    protected StatisticsProperties statistics = new StatisticsProperties();
 
     // Business
 
     @NestedConfigurationProperty
-    private ConferenceProperties conference = new ConferenceProperties();
+    protected ConferenceProperties conference = new ConferenceProperties();
 
     @NestedConfigurationProperty
-    private ConversationProperties conversation = new ConversationProperties();
+    protected ConversationProperties conversation = new ConversationProperties();
 
     @NestedConfigurationProperty
-    private MessageProperties message = new MessageProperties();
+    protected MessageProperties message = new MessageProperties();
 
     @NestedConfigurationProperty
-    private GroupProperties group = new GroupProperties();
+    protected GroupProperties group = new GroupProperties();
 
     @NestedConfigurationProperty
-    private UserProperties user = new UserProperties();
+    protected UserProperties user = new UserProperties();
 
     @NestedConfigurationProperty
-    private StorageProperties storage = new StorageProperties();
+    protected StorageProperties storage = new StorageProperties();
 
     @NestedConfigurationProperty
-    private NotificationProperties notification = new NotificationProperties();
+    protected NotificationProperties notification = new NotificationProperties();
 
 }

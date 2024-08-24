@@ -35,9 +35,9 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class TurmsElasticsearchProperties {
 
     @Description("Whether to enable Elasticsearch")
-    private boolean enabled;
+    protected boolean enabled;
 
     @NestedConfigurationProperty
-    private ElasticsearchUseCasesProperties useCase = new ElasticsearchUseCasesProperties();
+    protected ElasticsearchUseCasesProperties useCase = new ElasticsearchUseCasesProperties();
 
 }

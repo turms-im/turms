@@ -38,21 +38,21 @@ public class NotificationGroupInvitationRecalledProperties {
     @Description("Whether to notify the requester's other online sessions when they have recalled a group invitation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the invitee when a group member has recalled their received group invitation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyInvitee = true;
+    protected boolean notifyInvitee = true;
 
     @Description("Whether to notify the group owner and managers when an invitation has been recalled")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupOwnerAndManagers = true;
+    protected boolean notifyGroupOwnerAndManagers = true;
 
     @Description("Whether to notify group members when an invitation has been recalled")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

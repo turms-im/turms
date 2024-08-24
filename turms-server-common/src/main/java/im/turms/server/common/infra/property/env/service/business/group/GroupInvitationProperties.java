@@ -43,39 +43,39 @@ public class GroupInvitationProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxContentLength = 200;
+    protected int maxContentLength = 200;
 
     @Description("A group invitation will become expired after the specified time has passed")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int expireAfterSeconds = 30 * 24 * 3600;
+    protected int expireAfterSeconds = 30 * 24 * 3600;
 
     @Description("Whether to allow the owner and managers of a group to recall pending group invitations")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallPendingInvitationByOwnerAndManager;
+    protected boolean allowRecallPendingInvitationByOwnerAndManager;
 
     @Description("Whether to allow the sender to recall the pending group invitation sent by themselves")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallPendingInvitationBySender;
+    protected boolean allowRecallPendingInvitationBySender;
 
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
     @GlobalProperty
     @MutableProperty
-    private boolean deleteExpiredInvitationsWhenCronTriggered;
+    protected boolean deleteExpiredInvitationsWhenCronTriggered;
 
     @Description("Clean the expired group invitations when the cron expression is triggered"
             + " if \"deleteExpiredInvitationsWhenCronTriggered\" is true")
     @ValidCron
-    private String expiredInvitationsCleanupCron =
+    protected String expiredInvitationsCleanupCron =
             CronConst.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
 
     @Description("The maximum allowed length for the response reason of a group invitation")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxResponseReasonLength = 200;
+    protected int maxResponseReasonLength = 200;
 
 }

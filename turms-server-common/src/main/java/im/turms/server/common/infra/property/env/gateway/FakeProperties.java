@@ -36,24 +36,24 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class FakeProperties {
 
     @Description("Whether to fake clients. Note that faking only works in non-production environments")
-    private boolean enabled;
+    protected boolean enabled;
 
     @Min(0)
-    private long firstUserId = 100;
+    protected long firstUserId = 100;
 
     @Description("Run the number of real clients as faked users with an ID from [firstUserId, firstUserId + userCount) "
             + "to connect to turms-gateway. "
             + "So please ensure you have set \"turms.service.fake.userCount\" to a number larger than or equal to (firstUserId + userCount)")
     @Min(0)
-    private int userCount = 10;
+    protected int userCount = 10;
 
     @Description("The number of requests to send per interval. "
             + "If requestIntervalMillis is 1000, requestCountPerInterval is TPS in fact")
     @Min(1)
-    private int requestCountPerInterval = 10;
+    protected int requestCountPerInterval = 10;
 
     @Description("The interval to send request")
     @Min(1)
-    private int requestIntervalMillis = 1000;
+    protected int requestIntervalMillis = 1000;
 
 }

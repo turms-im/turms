@@ -34,10 +34,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JwtIdentityAccessManagementVerificationProperties {
 
-    private String issuer = "";
+    protected String issuer = "";
 
-    private String audience = "";
+    protected String audience = "";
 
-    private Map<String, String> customPayloadClaims = Collections.emptyMap();
+    protected Map<String, String> customPayloadClaims = Collections.emptyMap();
 
 }

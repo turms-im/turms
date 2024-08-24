@@ -33,9 +33,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class PushNotificationProperties {
 
     @NestedConfigurationProperty
-    private ApnsProperties apns = new ApnsProperties();
+    protected ApnsProperties apns = new ApnsProperties();
 
     @NestedConfigurationProperty
-    private FcmProperties fcm = new FcmProperties();
+    protected FcmProperties fcm = new FcmProperties();
 
 }

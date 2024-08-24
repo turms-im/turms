@@ -38,79 +38,79 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class GroupMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+    protected OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private GroupOptionalIndexProperties group = new GroupOptionalIndexProperties();
+        protected GroupOptionalIndexProperties group = new GroupOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupBlockedUserOptionalIndexProperties groupBlockedUser =
+        protected GroupBlockedUserOptionalIndexProperties groupBlockedUser =
                 new GroupBlockedUserOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupInvitationOptionalIndexProperties groupInvitation =
+        protected GroupInvitationOptionalIndexProperties groupInvitation =
                 new GroupInvitationOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupJoinRequestOptionalIndexProperties groupJoinRequest =
+        protected GroupJoinRequestOptionalIndexProperties groupJoinRequest =
                 new GroupJoinRequestOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private GroupMemberOptionalIndexProperties groupMember =
+        protected GroupMemberOptionalIndexProperties groupMember =
                 new GroupMemberOptionalIndexProperties();
     }
 
     @Data
     public static class GroupOptionalIndexProperties {
-        private boolean typeId;
-        private boolean creatorId;
-        private boolean ownerId = true;
-        private boolean creationDate;
-        private boolean deletionDate = true;
-        private boolean muteEndDate;
+        protected boolean typeId;
+        protected boolean creatorId;
+        protected boolean ownerId = true;
+        protected boolean creationDate;
+        protected boolean deletionDate = true;
+        protected boolean muteEndDate;
     }
 
     @Data
     public static class GroupBlockedUserOptionalIndexProperties {
-        private boolean blockDate;
-        private boolean requesterId;
+        protected boolean blockDate;
+        protected boolean requesterId;
     }
 
     @Data
     public static class GroupInvitationOptionalIndexProperties {
-        private boolean groupId = true;
-        private boolean inviterId;
-        private boolean responseDate;
+        protected boolean groupId = true;
+        protected boolean inviterId;
+        protected boolean responseDate;
     }
 
     @Data
     public static class GroupJoinRequestOptionalIndexProperties {
-        private boolean creationDate;
-        private boolean responseDate;
-        private boolean groupId = true;
-        private boolean responderId;
+        protected boolean creationDate;
+        protected boolean responseDate;
+        protected boolean groupId = true;
+        protected boolean responderId;
     }
 
     @Data
     public static class GroupMemberOptionalIndexProperties {
-        private boolean joinDate;
-        private boolean muteEndDate;
+        protected boolean joinDate;
+        protected boolean muteEndDate;
     }
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern group = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupBlockedUser = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupInvitation = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupJoinQuestion = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupJoinRequest = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupMember = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern groupType = WriteConcern.MAJORITY;
-        private WriteConcern groupVersion = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern group = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupBlockedUser = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupInvitation = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupJoinQuestion = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupJoinRequest = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupMember = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern groupType = WriteConcern.MAJORITY;
+        protected WriteConcern groupVersion = WriteConcern.ACKNOWLEDGED;
     }
 }

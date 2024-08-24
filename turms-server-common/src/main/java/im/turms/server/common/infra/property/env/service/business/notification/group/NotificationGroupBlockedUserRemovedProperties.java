@@ -38,16 +38,16 @@ public class NotificationGroupBlockedUserRemovedProperties {
     @Description("Whether to notify the requester's other online sessions when they have removed a blocked user from a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the user when they are unblocked by a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyUnblockedUser;
+    protected boolean notifyUnblockedUser;
 
     @Description("Whether to notify group members when a user is unblocked by a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

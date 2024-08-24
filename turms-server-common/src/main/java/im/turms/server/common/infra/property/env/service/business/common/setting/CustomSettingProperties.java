@@ -46,25 +46,25 @@ public class CustomSettingProperties {
     @MutableProperty
     @Size(min = 1)
     @MatchesStringPattern(StringPattern.ALPHANUMERIC)
-    private String sourceName = "";
+    protected String sourceName = "";
 
     @Description("The stored name of the setting. If empty, the source name will be used as both the source name and the stored name")
     @GlobalProperty
     @MutableProperty
     @MatchesStringPattern(StringPattern.ALPHANUMERIC)
-    private String storedName = "";
+    protected String storedName = "";
 
     @Description("Whether the setting is immutable")
     @GlobalProperty
     @MutableProperty
-    private boolean immutable;
+    protected boolean immutable;
 
     @Description("Whether the setting is deletable")
     @GlobalProperty
     @MutableProperty
-    private boolean deletable = true;
+    protected boolean deletable = true;
 
     @NestedConfigurationProperty
-    private CustomValueOneOfProperties value = new CustomValueOneOfProperties();
+    protected CustomValueOneOfProperties value = new CustomValueOneOfProperties();
 
 }

@@ -37,16 +37,16 @@ import im.turms.server.common.access.admin.web.MediaTypeConst;
 public class StorageProperties {
 
     @NestedConfigurationProperty
-    private StorageItemProperties userProfilePicture = new StorageItemProperties().toBuilder()
+    protected StorageItemProperties userProfilePicture = new StorageItemProperties().toBuilder()
             .allowedContentType(MediaTypeConst.IMAGE)
             .build();
 
     @NestedConfigurationProperty
-    private StorageItemProperties groupProfilePicture = new StorageItemProperties().toBuilder()
+    protected StorageItemProperties groupProfilePicture = new StorageItemProperties().toBuilder()
             .allowedContentType(MediaTypeConst.IMAGE)
             .build();
 
     @NestedConfigurationProperty
-    private StorageItemProperties messageAttachment = new StorageItemProperties();
+    protected StorageItemProperties messageAttachment = new StorageItemProperties();
 
 }

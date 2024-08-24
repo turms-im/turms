@@ -38,11 +38,11 @@ public class NotificationGroupUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify group members when the group owner or managers have updated their group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers = true;
+    protected boolean notifyGroupMembers = true;
 
 }

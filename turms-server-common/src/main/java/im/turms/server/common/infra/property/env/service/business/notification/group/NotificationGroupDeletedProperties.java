@@ -38,11 +38,11 @@ public class NotificationGroupDeletedProperties {
     @Description("Whether to notify the requester's other online sessions when they have deleted a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify group members when a group owner has updated their group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers = true;
+    protected boolean notifyGroupMembers = true;
 
 }

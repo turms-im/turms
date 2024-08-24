@@ -33,21 +33,21 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class MongoGroupProperties {
 
     @NestedConfigurationProperty
-    private AdminMongoProperties admin = new AdminMongoProperties();
+    protected AdminMongoProperties admin = new AdminMongoProperties();
 
     @NestedConfigurationProperty
-    private UserMongoProperties user = new UserMongoProperties();
+    protected UserMongoProperties user = new UserMongoProperties();
 
     @NestedConfigurationProperty
-    private GroupMongoProperties group = new GroupMongoProperties();
+    protected GroupMongoProperties group = new GroupMongoProperties();
 
     @NestedConfigurationProperty
-    private ConversationMongoProperties conversation = new ConversationMongoProperties();
+    protected ConversationMongoProperties conversation = new ConversationMongoProperties();
 
     @NestedConfigurationProperty
-    private MessageMongoProperties message = new MessageMongoProperties();
+    protected MessageMongoProperties message = new MessageMongoProperties();
 
     @NestedConfigurationProperty
-    private ConferenceMongoProperties conference = new ConferenceMongoProperties();
+    protected ConferenceMongoProperties conference = new ConferenceMongoProperties();
 
 }

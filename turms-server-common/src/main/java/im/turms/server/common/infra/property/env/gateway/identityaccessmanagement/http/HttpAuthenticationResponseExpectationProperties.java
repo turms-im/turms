@@ -37,10 +37,10 @@ import lombok.NoArgsConstructor;
 public class HttpAuthenticationResponseExpectationProperties {
 
     @Size(min = 1)
-    private Set<String> statusCodes = Set.of("2??");
+    protected Set<String> statusCodes = Set.of("2??");
 
-    private Map<String, String> headers = Collections.emptyMap();
+    protected Map<String, String> headers = Collections.emptyMap();
 
-    private Map<String, Object> bodyFields = Map.of("authenticated", true);
+    protected Map<String, Object> bodyFields = Map.of("authenticated", true);
 
 }

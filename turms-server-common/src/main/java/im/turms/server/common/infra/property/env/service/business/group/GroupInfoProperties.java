@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class GroupInfoProperties {
 
     @NestedConfigurationProperty
-    private GroupInfoUserDefinedAttributesProperties userDefinedAttributes =
+    protected GroupInfoUserDefinedAttributesProperties userDefinedAttributes =
             new GroupInfoUserDefinedAttributesProperties();
 
 }

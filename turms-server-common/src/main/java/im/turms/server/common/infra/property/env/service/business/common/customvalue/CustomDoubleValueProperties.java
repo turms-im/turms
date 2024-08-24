@@ -40,11 +40,11 @@ public class CustomDoubleValueProperties extends CustomEnumValueProperties<Doubl
     @Description("The minimum allowed value")
     @GlobalProperty
     @MutableProperty
-    private double min = Double.MIN_VALUE;
+    protected double min = Double.MIN_VALUE;
 
     @Description("The maximum allowed value")
     @GlobalProperty
     @MutableProperty
-    private double max = Double.MAX_VALUE;
+    protected double max = Double.MAX_VALUE;
 
 }

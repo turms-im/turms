@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class JwtAuthenticationProperties {
 
     @NestedConfigurationProperty
-    private JwtAuthenticationExpectationProperties expectation =
+    protected JwtAuthenticationExpectationProperties expectation =
             new JwtAuthenticationExpectationProperties();
 
 }

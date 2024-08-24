@@ -39,16 +39,16 @@ public class NotificationOneSidedRelationshipGroupMemberAddedProperties {
             + "a new member to their one-sided relationship group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the new member when a user has added them to their one-sided relationship group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyNewRelationshipGroupMember;
+    protected boolean notifyNewRelationshipGroupMember;
 
 //    @Description("Whether to notify the other members when a user has added them to their one-sided relationship group")
 //    @GlobalProperty
 //    @MutableProperty
-//    private boolean notifyOtherRelationshipGroupMembers;
+//    protected boolean notifyOtherRelationshipGroupMembers;
 
 }

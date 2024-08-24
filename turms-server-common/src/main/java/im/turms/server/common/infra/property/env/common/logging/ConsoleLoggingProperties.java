@@ -36,8 +36,8 @@ public class ConsoleLoggingProperties {
     public static final boolean DEFAULT_VALUE_ENABLED = false;
     public static final LogLevel DEFAULT_VALUE_LEVEL = LogLevel.INFO;
 
-    private boolean enabled = DEFAULT_VALUE_ENABLED;
+    protected boolean enabled = DEFAULT_VALUE_ENABLED;
 
-    private LogLevel level = DEFAULT_VALUE_LEVEL;
+    protected LogLevel level = DEFAULT_VALUE_LEVEL;
 
 }

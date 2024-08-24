@@ -37,14 +37,14 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class JsPluginDebugProperties {
 
     @Description("Whether to enable debugging")
-    private boolean enabled;
+    protected boolean enabled;
 
     @Description("The inspect host")
-    private String inspectHost = "localhost";
+    protected String inspectHost = "localhost";
 
     @Description("The inspect port")
     @Max(65535)
     @Min(1)
-    private int inspectPort = 24242;
+    protected int inspectPort = 24242;
 
 }

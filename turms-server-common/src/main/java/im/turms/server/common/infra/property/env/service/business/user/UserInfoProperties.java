@@ -46,34 +46,34 @@ public class UserInfoProperties {
     @MutableProperty
     @Min(-1)
     @LessThanOrEqualTo("maxPasswordLength")
-    private int minPasswordLength = -1;
+    protected int minPasswordLength = -1;
 
     @Description("The maximum allowed length for a user's password")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxPasswordLength = 16;
+    protected int maxPasswordLength = 16;
 
     @Description("The maximum allowed length for a user's name")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxNameLength = 20;
+    protected int maxNameLength = 20;
 
     @Description("The maximum allowed length for a user's intro")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxIntroLength = 100;
+    protected int maxIntroLength = 100;
 
     @Description("The maximum allowed length for a user's profile picture")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxProfilePictureLength = 100;
+    protected int maxProfilePictureLength = 100;
 
     @NestedConfigurationProperty
-    private UserInfoUserDefinedAttributesProperties userDefinedAttributes =
+    protected UserInfoUserDefinedAttributesProperties userDefinedAttributes =
             new UserInfoUserDefinedAttributesProperties();
 
 }

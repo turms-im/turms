@@ -38,54 +38,54 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class UserMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+    protected OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern user = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userFriendRequest = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userMaxDailyOnlineUser = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userPermissionGroup = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userRelationship = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userRelationshipGroup = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userRelationshipGroupMember = WriteConcern.ACKNOWLEDGED;
-        private WriteConcern userVersion = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern user = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userFriendRequest = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userMaxDailyOnlineUser = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userPermissionGroup = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userRelationship = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userRelationshipGroup = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userRelationshipGroupMember = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userVersion = WriteConcern.ACKNOWLEDGED;
     }
 
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private UserFriendRequestOptionalIndexProperties userFriendRequest =
+        protected UserFriendRequestOptionalIndexProperties userFriendRequest =
                 new UserFriendRequestOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private UserRelationshipOptionalIndexProperties userRelationship =
+        protected UserRelationshipOptionalIndexProperties userRelationship =
                 new UserRelationshipOptionalIndexProperties();
 
         @NestedConfigurationProperty
-        private UserRelationshipGroupMemberOptionalIndexProperties userRelationshipGroupMember =
+        protected UserRelationshipGroupMemberOptionalIndexProperties userRelationshipGroupMember =
                 new UserRelationshipGroupMemberOptionalIndexProperties();
     }
 
     @Data
     public static class UserFriendRequestOptionalIndexProperties {
-        private boolean responseDate;
-        private boolean requesterId;
-        private boolean recipientId;
+        protected boolean responseDate;
+        protected boolean requesterId;
+        protected boolean recipientId;
     }
 
     @Data
     public static class UserRelationshipOptionalIndexProperties {
-        private boolean establishmentDate;
+        protected boolean establishmentDate;
     }
 
     @Data
     public static class UserRelationshipGroupMemberOptionalIndexProperties {
-        private boolean joinDate;
-        private boolean groupIndex;
-        private boolean relatedUserId;
+        protected boolean joinDate;
+        protected boolean groupIndex;
+        protected boolean relatedUserId;
     }
 }

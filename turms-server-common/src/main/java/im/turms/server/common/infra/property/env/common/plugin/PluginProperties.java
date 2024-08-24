@@ -35,21 +35,21 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class PluginProperties {
 
     @Description("Whether to enable plugins")
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("The relative path of plugins")
-    private String dir = "plugins";
+    protected String dir = "plugins";
 
     @Description("Whether to watch the plugin directory. If enabled, the server will load and unload plugins automatically when a plugin is added or removed from the directory")
-    private boolean watchDir;
+    protected boolean watchDir;
 
     @NestedConfigurationProperty
-    private JavaPluginProperties java = new JavaPluginProperties();
+    protected JavaPluginProperties java = new JavaPluginProperties();
 
     @NestedConfigurationProperty
-    private JsPluginProperties js = new JsPluginProperties();
+    protected JsPluginProperties js = new JsPluginProperties();
 
     @NestedConfigurationProperty
-    private NetworkProperties network = new NetworkProperties();
+    protected NetworkProperties network = new NetworkProperties();
 
 }

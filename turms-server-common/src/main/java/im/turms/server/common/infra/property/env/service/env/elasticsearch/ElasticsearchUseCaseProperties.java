@@ -35,21 +35,21 @@ import im.turms.server.common.infra.property.metadata.Description;
 public abstract class ElasticsearchUseCaseProperties {
 
     @Description("Whether to enable this use case")
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     // Hide the feature currently because the performance on short texts
     // of most language detection models is too terrible to use.
 //    @NestedConfigurationProperty
-//    private ElasticsearchLanguageDetectProperties languageDetect =
+//    protected ElasticsearchLanguageDetectProperties languageDetect =
 //            new ElasticsearchLanguageDetectProperties();
 
     @NestedConfigurationProperty
-    private ElasticsearchClientProperties client = new ElasticsearchClientProperties();
+    protected ElasticsearchClientProperties client = new ElasticsearchClientProperties();
 
     @NestedConfigurationProperty
-    private ElasticsearchSyncProperties sync = new ElasticsearchSyncProperties();
+    protected ElasticsearchSyncProperties sync = new ElasticsearchSyncProperties();
 
     @NestedConfigurationProperty
-    private ElasticsearchMongoProperties mongo = new ElasticsearchMongoProperties();
+    protected ElasticsearchMongoProperties mongo = new ElasticsearchMongoProperties();
 
 }

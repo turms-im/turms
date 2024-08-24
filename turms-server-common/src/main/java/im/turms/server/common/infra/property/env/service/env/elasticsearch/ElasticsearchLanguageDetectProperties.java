@@ -40,16 +40,16 @@ public class ElasticsearchLanguageDetectProperties {
     @Description("Whether to enable language detection. "
             + "If true, a pipeline for language detection will be created on startup, "
             + "and will be used as the default pipeline of new indexes")
-    private boolean enabled;
+    protected boolean enabled;
 
     @Description("The confidence score threshold. "
             + "Only languages with a confidence score higher than this threshold will be used")
     @DecimalMin("0")
     @DecimalMax("1")
-    private float confidenceScoreThreshold = 0.5F;
+    protected float confidenceScoreThreshold = 0.5F;
 
     @Description("The maximum number of detected languages to use when detecting languages")
     @Min(1)
-    private int maxDetectedLanguages = 3;
+    protected int maxDetectedLanguages = 3;
 
 }

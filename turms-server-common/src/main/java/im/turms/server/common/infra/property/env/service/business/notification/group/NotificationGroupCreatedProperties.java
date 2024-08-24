@@ -38,6 +38,6 @@ public class NotificationGroupCreatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have created a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
 }

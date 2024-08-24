@@ -42,11 +42,11 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 public class ConversationProperties {
 
     @NestedConfigurationProperty
-    private ReadReceiptProperties readReceipt = new ReadReceiptProperties();
+    protected ReadReceiptProperties readReceipt = new ReadReceiptProperties();
 
     @NestedConfigurationProperty
-    private TypingStatusProperties typingStatus = new TypingStatusProperties();
+    protected TypingStatusProperties typingStatus = new TypingStatusProperties();
 
     @NestedConfigurationProperty
-    private ConversationSettingsProperties settings = new ConversationSettingsProperties();
+    protected ConversationSettingsProperties settings = new ConversationSettingsProperties();
 }

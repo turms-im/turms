@@ -40,11 +40,11 @@ public class CustomLongValueProperties extends CustomEnumValueProperties<Long> {
     @Description("The minimum allowed value")
     @GlobalProperty
     @MutableProperty
-    private long min = Long.MIN_VALUE;
+    protected long min = Long.MIN_VALUE;
 
     @Description("The maximum allowed value")
     @GlobalProperty
     @MutableProperty
-    private long max = Long.MAX_VALUE;
+    protected long max = Long.MAX_VALUE;
 
 }

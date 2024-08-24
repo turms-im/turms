@@ -32,22 +32,22 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class SslProperties {
 
-    private boolean enabled;
-    private ClientAuth clientAuth;
-    private String[] ciphers;
-    private String[] enabledProtocols;
+    protected boolean enabled;
+    protected ClientAuth clientAuth;
+    protected String[] ciphers;
+    protected String[] enabledProtocols;
 
-    private String keyAlias;
-    private String keyPassword;
-    private String keyStore;
-    private String keyStorePassword;
-    private String keyStoreType;
-    private String keyStoreProvider;
+    protected String keyAlias;
+    protected String keyPassword;
+    protected String keyStore;
+    protected String keyStorePassword;
+    protected String keyStoreType;
+    protected String keyStoreProvider;
 
-    private String trustStore;
-    private String trustStorePassword;
-    private String trustStoreType;
-    private String trustStoreProvider;
-    private String protocol = "TLS";
+    protected String trustStore;
+    protected String trustStorePassword;
+    protected String trustStoreType;
+    protected String trustStoreProvider;
+    protected String protocol = "TLS";
 
 }

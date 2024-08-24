@@ -35,7 +35,7 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class SharedConfigProperties {
 
     @NestedConfigurationProperty
-    private transient MongoProperties mongo =
+    protected transient MongoProperties mongo =
             new MongoProperties("mongodb://localhost:27017/turms-config");
 
 }

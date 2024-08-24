@@ -38,20 +38,20 @@ public class LdapIdentityAccessManagementUserProperties {
     public static final String SEARCH_FILTER_PLACEHOLDER_USER_ID = "${userId}";
 
     @Description("The host of LDAP server for user")
-    private String host = "localhost";
+    protected String host = "localhost";
 
     @Description("The port of LDAP server for user")
-    private int port = 389;
+    protected int port = 389;
 
     @Description("The search filter to find the user entry. "
             + "\""
             + SEARCH_FILTER_PLACEHOLDER_USER_ID
             + "\" is a placeholder and will be replaced with "
             + "the user ID passed in the login request")
-    private String searchFilter = "uid="
+    protected String searchFilter = "uid="
             + SEARCH_FILTER_PLACEHOLDER_USER_ID;
 
     @NestedConfigurationProperty
-    private transient SslProperties ssl = new SslProperties();
+    protected transient SslProperties ssl = new SslProperties();
 
 }

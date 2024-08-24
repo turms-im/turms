@@ -30,26 +30,26 @@ import im.turms.server.common.infra.property.metadata.Description;
 public abstract class BaseAdminApiProperties {
 
     @Description("Whether to enable the APIs for administrators")
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("Whether to use authentication. If false, "
             + "all HTTP requesters will personate the root user and all HTTP requests will be passed. "
             + "You may set it to false when you want to manage authentication via security groups, NACL, etc")
-    private boolean useAuthentication = true;
+    protected boolean useAuthentication = true;
 
     @NestedConfigurationProperty
     protected AdminHttpProperties http = new AdminHttpProperties();
 
     @NestedConfigurationProperty
-    private AddressProperties address = new AddressProperties();
+    protected AddressProperties address = new AddressProperties();
 
     @NestedConfigurationProperty
-    private DebugProperties debug = new DebugProperties();
+    protected DebugProperties debug = new DebugProperties();
 
     @NestedConfigurationProperty
-    private AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
+    protected AdminApiRateLimitingProperties rateLimiting = new AdminApiRateLimitingProperties();
 
     @NestedConfigurationProperty
-    private LogProperties log = new LogProperties();
+    protected LogProperties log = new LogProperties();
 
 }

@@ -42,10 +42,10 @@ public class DeviceDetailsProperties {
     @Description("Device details information will expire after the specified time has elapsed. 0 means never expire")
     // TODO: Support @GlobalProperty
     @Min(0)
-    private int expireAfterSeconds = 30 * 24 * 3600;
+    protected int expireAfterSeconds = 30 * 24 * 3600;
 
     @GlobalProperty
     @MutableProperty
-    private List<DeviceDetailsItemProperties> items = Collections.emptyList();
+    protected List<DeviceDetailsItemProperties> items = Collections.emptyList();
 
 }

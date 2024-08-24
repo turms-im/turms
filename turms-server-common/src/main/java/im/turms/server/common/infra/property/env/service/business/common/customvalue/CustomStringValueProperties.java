@@ -47,20 +47,20 @@ public class CustomStringValueProperties extends CustomEnumValueProperties<Strin
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int minLength = 0;
+    protected int minLength = 0;
 
     @Description("The maximum allowed length")
     @GlobalProperty
     @MutableProperty
-    private int maxLength = 100;
+    protected int maxLength = 100;
 
     @Description("The regular expressions that the value must match")
     @GlobalProperty
     @MutableProperty
     @ValidRegex
-    private List<String> regexes = Collections.emptyList();
+    protected List<String> regexes = Collections.emptyList();
 
-    private transient List<Pattern> parsedRegexes;
+    protected transient List<Pattern> parsedRegexes;
 
     @JsonIgnore
     public List<Pattern> getParsedRegexes() {

@@ -38,10 +38,10 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class ConversationMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern conversation = WriteConcern.MAJORITY;
+        protected WriteConcern conversation = WriteConcern.MAJORITY;
     }
 }

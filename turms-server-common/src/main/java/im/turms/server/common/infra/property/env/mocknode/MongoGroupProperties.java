@@ -35,6 +35,6 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class MongoGroupProperties {
 
     @NestedConfigurationProperty
-    private MongoProperties admin = new MongoProperties();
+    protected MongoProperties admin = new MongoProperties();
 
 }

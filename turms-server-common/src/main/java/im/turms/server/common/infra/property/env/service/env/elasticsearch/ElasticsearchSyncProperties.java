@@ -35,6 +35,6 @@ public class ElasticsearchSyncProperties {
 
     @Description("Whether to sync existing data from MongoDB to Elasticsearch. "
             + "If true and the current node is the leader, turms will run a full sync on startup if the data has not been synced yet")
-    private boolean performFullSyncAtStartup = true;
+    protected boolean performFullSyncAtStartup = true;
 
 }

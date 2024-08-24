@@ -34,15 +34,15 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 @NoArgsConstructor
 public class ConnectionServerProperties {
 
-    private String host = "0.0.0.0";
+    protected String host = "0.0.0.0";
 
-    private int port = 7510;
+    protected int port = 7510;
 
-    private boolean portAutoIncrement;
+    protected boolean portAutoIncrement;
 
-    private int portCount = 100;
+    protected int portCount = 100;
 
     @NestedConfigurationProperty
-    private transient SslProperties ssl = new SslProperties();
+    protected transient SslProperties ssl = new SslProperties();
 
 }

@@ -36,8 +36,8 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 public class LoggingRequestProperties {
 
     @EqualsAndHashCode.Include
-    private TurmsRequest.KindCase type;
+    protected TurmsRequest.KindCase type;
 
-    private float sampleRate = 1.0f;
+    protected float sampleRate = 1.0f;
 
 }

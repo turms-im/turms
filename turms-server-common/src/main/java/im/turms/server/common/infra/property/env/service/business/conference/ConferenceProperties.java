@@ -35,6 +35,6 @@ import im.turms.server.common.infra.property.env.service.business.conference.mee
 public class ConferenceProperties {
 
     @NestedConfigurationProperty
-    private MeetingProperties meeting = new MeetingProperties();
+    protected MeetingProperties meeting = new MeetingProperties();
 
 }

@@ -68,30 +68,30 @@ public abstract class BaseClientApiLoggingProperties {
      *           requests.
      */
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private LinkedHashSet<LoggingCategoryProperties> includedRequestCategories = CATEGORY_ALL;
+    protected LinkedHashSet<LoggingCategoryProperties> includedRequestCategories = CATEGORY_ALL;
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private LinkedHashSet<LoggingRequestProperties> includedRequests = new LinkedHashSet<>();
+    protected LinkedHashSet<LoggingRequestProperties> includedRequests = new LinkedHashSet<>();
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private Set<LoggingRequestCategory> excludedRequestCategories = Collections.emptySet();
+    protected Set<LoggingRequestCategory> excludedRequestCategories = Collections.emptySet();
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private Set<TurmsRequest.KindCase> excludedRequestTypes = Collections.emptySet();
+    protected Set<TurmsRequest.KindCase> excludedRequestTypes = Collections.emptySet();
 
     // Notification
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
-    private LinkedHashSet<LoggingCategoryProperties> includedNotificationCategories =
+    protected LinkedHashSet<LoggingCategoryProperties> includedNotificationCategories =
             new LinkedHashSet<>();
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
-    private LinkedHashSet<LoggingRequestProperties> includedNotifications = new LinkedHashSet<>();
+    protected LinkedHashSet<LoggingRequestProperties> includedNotifications = new LinkedHashSet<>();
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
-    private Set<LoggingRequestCategory> excludedNotificationCategories = Collections.emptySet();
+    protected Set<LoggingRequestCategory> excludedNotificationCategories = Collections.emptySet();
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
-    private Set<TurmsRequest.KindCase> excludedNotificationTypes = Collections.emptySet();
+    protected Set<TurmsRequest.KindCase> excludedNotificationTypes = Collections.emptySet();
 
 }

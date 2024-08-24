@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class ElasticsearchIndexPropertiesProperties {
 
     @NestedConfigurationProperty
-    private ElasticsearchIndexPropertiesFieldProperties name =
+    protected ElasticsearchIndexPropertiesFieldProperties name =
             new ElasticsearchIndexPropertiesFieldProperties();
 
 }

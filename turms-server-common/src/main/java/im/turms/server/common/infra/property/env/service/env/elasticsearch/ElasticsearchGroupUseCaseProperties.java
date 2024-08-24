@@ -33,7 +33,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ElasticsearchGroupUseCaseProperties extends ElasticsearchUseCaseProperties {
 
-    private List<ElasticsearchIndexProperties> indexes =
+    protected List<ElasticsearchIndexProperties> indexes =
             List.of(new ElasticsearchIndexProperties());
 
 }

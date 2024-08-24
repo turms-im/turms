@@ -38,25 +38,25 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class ConferenceMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+    protected OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private MeetingOptionalIndexProperties meeting = new MeetingOptionalIndexProperties();
+        protected MeetingOptionalIndexProperties meeting = new MeetingOptionalIndexProperties();
     }
 
     @Data
     public static class MeetingOptionalIndexProperties {
-        private boolean userId = true;
-        private boolean groupId = true;
+        protected boolean userId = true;
+        protected boolean groupId = true;
     }
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern meeting = WriteConcern.MAJORITY;
+        protected WriteConcern meeting = WriteConcern.MAJORITY;
     }
 }

@@ -34,11 +34,11 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 @NoArgsConstructor
 public abstract class BaseServerProperties {
 
-    private boolean enabled = true;
-    private String host = "0.0.0.0";
-    private int port = -1;
+    protected boolean enabled = true;
+    protected String host = "0.0.0.0";
+    protected int port = -1;
 
     @NestedConfigurationProperty
-    private transient SslProperties ssl = new SslProperties();
+    protected transient SslProperties ssl = new SslProperties();
 
 }

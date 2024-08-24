@@ -37,15 +37,15 @@ import im.turms.server.common.infra.property.env.common.SslProperties;
 public class ConnectionClientProperties {
 
     @Min(0)
-    private int keepaliveTimeoutSeconds = 15;
+    protected int keepaliveTimeoutSeconds = 15;
 
     @Min(0)
-    private int keepaliveIntervalSeconds = 5;
+    protected int keepaliveIntervalSeconds = 5;
 
     @Min(0)
-    private int reconnectIntervalSeconds = 15;
+    protected int reconnectIntervalSeconds = 15;
 
     @NestedConfigurationProperty
-    private transient SslProperties ssl = new SslProperties();
+    protected transient SslProperties ssl = new SslProperties();
 
 }

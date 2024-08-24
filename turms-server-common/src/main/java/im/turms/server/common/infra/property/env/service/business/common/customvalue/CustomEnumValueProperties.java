@@ -41,6 +41,6 @@ public abstract class CustomEnumValueProperties<T> {
     @Description("Allowed values")
     @GlobalProperty
     @MutableProperty
-    private Set<T> allowedValues = Collections.emptySet();
+    protected Set<T> allowedValues = Collections.emptySet();
 
 }

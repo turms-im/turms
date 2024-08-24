@@ -46,34 +46,34 @@ public class StorageItemProperties {
     @Description("Delete the resource the specific days after creation. "
             + "0 means no expiration")
     @Min(0)
-    private int expireAfterDays;
+    protected int expireAfterDays;
 
     @Description("Restrict access to the resource to only allow the specific referrers (e.g. \"https://github.com/turms-im/turms/*\")")
-    private List<String> allowedReferrers = Collections.emptyList();
+    protected List<String> allowedReferrers = Collections.emptyList();
 
     @Description("The allowed \"Content-Type\" of the resource that the client can upload")
-    private String allowedContentType = MediaTypeConst.ALL_VALUE;
+    protected String allowedContentType = MediaTypeConst.ALL_VALUE;
 
     @Description("The minimum size of the resource that the client can upload. "
             + "0 means no limit")
     @Min(0)
-    private int minSizeBytes;
+    protected int minSizeBytes;
 
     @Description("The maximum size of the resource that the client can upload. "
             + "0 means no limit")
     @Min(0)
-    private int maxSizeBytes = MB;
+    protected int maxSizeBytes = MB;
 
     @Description("The presigned URLs are valid only for the specified duration. "
             + "0 means no expiration")
     @Max(7 * 24 * 60 * 60)
     @Min(0)
-    private int downloadUrlExpireAfterSeconds = 5 * 60;
+    protected int downloadUrlExpireAfterSeconds = 5 * 60;
 
     @Description("The presigned URLs are valid only for the specified duration. "
             + "0 means no expiration")
     @Max(7 * 24 * 60 * 60)
     @Min(0)
-    private int uploadUrlExpireAfterSeconds = 5 * 60;
+    protected int uploadUrlExpireAfterSeconds = 5 * 60;
 
 }

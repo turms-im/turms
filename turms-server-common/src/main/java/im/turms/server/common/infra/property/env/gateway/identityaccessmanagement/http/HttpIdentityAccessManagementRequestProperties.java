@@ -37,13 +37,13 @@ import im.turms.server.common.infra.property.constant.HttpAuthenticationHttpMeth
 @NoArgsConstructor
 public class HttpIdentityAccessManagementRequestProperties {
 
-    private String url = "";
+    protected String url = "";
 
-    private Map<String, String> headers = Collections.emptyMap();
+    protected Map<String, String> headers = Collections.emptyMap();
 
-    private HttpAuthenticationHttpMethod httpMethod = HttpAuthenticationHttpMethod.GET;
+    protected HttpAuthenticationHttpMethod httpMethod = HttpAuthenticationHttpMethod.GET;
 
     @Min(1)
-    private int timeoutMillis = 30 * 1000;
+    protected int timeoutMillis = 30 * 1000;
 
 }

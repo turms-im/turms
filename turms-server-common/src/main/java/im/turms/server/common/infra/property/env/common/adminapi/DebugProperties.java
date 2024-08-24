@@ -38,6 +38,6 @@ public class DebugProperties {
     @Description("Whether to enable debug APIs")
     @GlobalProperty
     @MutableProperty
-    private boolean enabled;
+    protected boolean enabled;
 
 }

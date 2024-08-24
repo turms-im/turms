@@ -38,16 +38,16 @@ public class NotificationGroupJoinRequestRecalledProperties {
     @Description("Whether to notify the requester's other online sessions when they have recalled a group join request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the group owner and managers when a user has recalled a group join request for their group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupOwnerAndManagers = true;
+    protected boolean notifyGroupOwnerAndManagers = true;
 
     @Description("Whether to notify group members when a user has recalled a group join request for their group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

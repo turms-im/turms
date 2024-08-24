@@ -38,6 +38,6 @@ public class QuotaProperties {
     @Description("The maximum number of active meetings per user")
     @GlobalProperty
     @MutableProperty
-    private int maxActiveMeetingCountPerUser = 1;
+    protected int maxActiveMeetingCountPerUser = 1;
 
 }

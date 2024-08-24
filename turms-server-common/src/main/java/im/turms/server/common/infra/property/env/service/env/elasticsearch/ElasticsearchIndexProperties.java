@@ -38,18 +38,18 @@ public class ElasticsearchIndexProperties {
 
     @Description("The index will be created for the specified language. "
             + "If the language is NONE, this index will be used as the default index for all languages that don't have a specified index for them")
-    private LanguageCode code = LanguageCode.NONE;
+    protected LanguageCode code = LanguageCode.NONE;
 
     @Description("The number of shards. -1 means use the default value")
     @Min(-1)
-    private int numberOfShards = -1;
+    protected int numberOfShards = -1;
 
     @Description("The number of replicas. -1 means use the default value")
     @Min(-1)
-    private int numberOfReplicas = -1;
+    protected int numberOfReplicas = -1;
 
     @NestedConfigurationProperty
-    private ElasticsearchIndexPropertiesProperties properties =
+    protected ElasticsearchIndexPropertiesProperties properties =
             new ElasticsearchIndexPropertiesProperties();
 
 }

@@ -40,21 +40,21 @@ public class CustomValueOneOfProperties {
     @Description("The value type")
     @GlobalProperty
     @MutableProperty
-    private CustomValueType type = CustomValueType.STRING;
+    protected CustomValueType type = CustomValueType.STRING;
 
     @NestedConfigurationProperty
-    private CustomIntValueProperties intValue = new CustomIntValueProperties();
+    protected CustomIntValueProperties intValue = new CustomIntValueProperties();
 
     @NestedConfigurationProperty
-    private CustomLongValueProperties longValue = new CustomLongValueProperties();
+    protected CustomLongValueProperties longValue = new CustomLongValueProperties();
 
     @NestedConfigurationProperty
-    private CustomDoubleValueProperties doubleValue = new CustomDoubleValueProperties();
+    protected CustomDoubleValueProperties doubleValue = new CustomDoubleValueProperties();
 
     @NestedConfigurationProperty
-    private CustomStringValueProperties stringValue = new CustomStringValueProperties();
+    protected CustomStringValueProperties stringValue = new CustomStringValueProperties();
 
     @NestedConfigurationProperty
-    private CustomArrayValueProperties arrayValue = new CustomArrayValueProperties();
+    protected CustomArrayValueProperties arrayValue = new CustomArrayValueProperties();
 
 }

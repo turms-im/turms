@@ -40,24 +40,24 @@ public class SimultaneousLoginProperties {
     @Description("The simultaneous login strategy is used to control which devices can be online at the same time")
     @GlobalProperty
     @MutableProperty
-    private SimultaneousLoginStrategy strategy =
+    protected SimultaneousLoginStrategy strategy =
             SimultaneousLoginStrategy.ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE;
 
     @Description("The login conflict strategy is used for servers to know how to behave "
             + "if a device is logging in when there are conflicted and logged-in devices")
     @GlobalProperty
     @MutableProperty
-    private LoginConflictStrategy loginConflictStrategy =
+    protected LoginConflictStrategy loginConflictStrategy =
             LoginConflictStrategy.DISCONNECT_LOGGED_IN_DEVICES;
 
     @Description("Whether to allow the devices of DeviceType.UNKNOWN to login")
     @GlobalProperty
     @MutableProperty
-    private boolean allowDeviceTypeUnknownLogin = true;
+    protected boolean allowDeviceTypeUnknownLogin = true;
 
     @Description("Whether to allow the devices of DeviceType.OTHERS to login")
     @GlobalProperty
     @MutableProperty
-    private boolean allowDeviceTypeOthersLogin = true;
+    protected boolean allowDeviceTypeOthersLogin = true;
 
 }

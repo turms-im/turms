@@ -38,16 +38,16 @@ public class NotificationGroupBlockedUserAddedProperties {
     @Description("Whether to notify the requester's other online sessions when they have added a blocked user to a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the user when they have been blocked by a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyBlockedUser;
+    protected boolean notifyBlockedUser;
 
     @Description("Whether to notify group members when a user has been blocked by a group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

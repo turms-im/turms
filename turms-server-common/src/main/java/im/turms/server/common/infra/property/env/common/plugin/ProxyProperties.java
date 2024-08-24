@@ -38,25 +38,25 @@ import im.turms.server.common.infra.security.SensitiveProperty;
 public class ProxyProperties {
 
     @Description("Whether to enable HTTP proxy")
-    private boolean enabled;
+    protected boolean enabled;
 
     @Description("The HTTP proxy username")
-    private String username = "";
+    protected String username = "";
 
     @Description("The HTTP proxy password")
     @SensitiveProperty
-    private String password = "";
+    protected String password = "";
 
     @Description("The HTTP proxy host")
-    private String host = "";
+    protected String host = "";
 
     @Description("The HTTP proxy port")
     @Max(65535)
     @Min(1)
-    private int port = 8080;
+    protected int port = 8080;
 
     @Description("The HTTP proxy connect timeout in millis")
     @Min(1)
-    private int connectTimeoutMillis = 60_000;
+    protected int connectTimeoutMillis = 60_000;
 
 }

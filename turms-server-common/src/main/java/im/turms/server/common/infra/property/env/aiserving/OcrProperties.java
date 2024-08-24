@@ -33,9 +33,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OcrProperties {
 
-    private float orientationPossibilityThreshold = 0.8F;
+    protected float orientationPossibilityThreshold = 0.8F;
 
-    private List<FontProperties> preferredFonts =
+    protected List<FontProperties> preferredFonts =
             List.of(new FontProperties("Noto Sans CJK SC", FontStyle.BOLD),
                     new FontProperties("Noto Sans", FontStyle.BOLD));
 

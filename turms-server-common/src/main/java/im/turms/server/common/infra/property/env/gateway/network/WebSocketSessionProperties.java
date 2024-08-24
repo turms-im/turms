@@ -38,7 +38,7 @@ public class WebSocketSessionProperties {
     @Description("turms-gateway will close the WebSocket connection if the client has not established a user session within the specified time. "
             + "0 means no timeout")
     @Min(0)
-    private int establishTimeoutMillis = 60 * 5 * 1000;
+    protected int establishTimeoutMillis = 60 * 5 * 1000;
 
     @Description("turms-gateway will send and flush a WebSocket close frame, and then send a TCP RST packet to the connection if the client has not closed "
             + "the WebSocket connection within the specified time after turms-gateway has sent and flushed the session close notification. "
@@ -48,6 +48,6 @@ public class WebSocketSessionProperties {
             + "Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data "
             + "and only close the connection when it exceeds the timeout")
     @Min(-1)
-    private int closeTimeoutMillis = 120 * 1000;
+    protected int closeTimeoutMillis = 120 * 1000;
 
 }

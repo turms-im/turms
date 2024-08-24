@@ -38,32 +38,32 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class MessageMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+    protected OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private TieredStorageProperties tieredStorage = new TieredStorageProperties();
+    protected TieredStorageProperties tieredStorage = new TieredStorageProperties();
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern message = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern message = WriteConcern.ACKNOWLEDGED;
     }
 
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private MessageOptionalIndexProperties message = new MessageOptionalIndexProperties();
+        protected MessageOptionalIndexProperties message = new MessageOptionalIndexProperties();
     }
 
     @Data
     public static class MessageOptionalIndexProperties {
-        private boolean deletionDate = true;
-        private boolean senderId;
-        private boolean senderIp = true;
-        private boolean senderIpV6 = true;
-        private boolean referenceId;
+        protected boolean deletionDate = true;
+        protected boolean senderId;
+        protected boolean senderIp = true;
+        protected boolean senderIpV6 = true;
+        protected boolean referenceId;
     }
 
 }

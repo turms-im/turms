@@ -38,6 +38,6 @@ public class NotificationGroupConversationSettingUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated their group conversation settings")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
 }

@@ -31,10 +31,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JwtP12KeyStoreProperties {
 
-    private String filePath = "";
+    protected String filePath = "";
 
-    private String password = "";
+    protected String password = "";
 
-    private String keyAlias = "";
+    protected String keyAlias = "";
 
 }

@@ -55,5 +55,5 @@ public abstract class UserDefinedAttributesProperties {
 //            + "and continue to process the request")
 //    @GlobalProperty
 //    @MutableProperty
-//    private boolean ignoreUnknownAttributesOnDelete;
+//    protected boolean ignoreUnknownAttributesOnDelete;
 }

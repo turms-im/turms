@@ -42,19 +42,19 @@ public class CustomSettingsProperties {
     @Description("The list of allowed settings")
     @GlobalProperty
     @MutableProperty
-    private List<CustomSettingProperties> allowedSettings = Collections.emptyList();
+    protected List<CustomSettingProperties> allowedSettings = Collections.emptyList();
 
     @Description("Whether to ignore unknown settings on upsert. If false, the server will throw if the request "
             + "specifies an unknown setting. If true, the server will ignore the unknown settings, "
             + "and continue to process the request")
     @GlobalProperty
     @MutableProperty
-    private boolean ignoreUnknownSettingsOnUpsert;
+    protected boolean ignoreUnknownSettingsOnUpsert;
 
     @Description("Whether to ignore unknown settings on delete. If false, the server will throw if the request "
             + "specifies an unknown setting. If true, the server will ignore the unknown settings, "
             + "and continue to process the request")
     @GlobalProperty
     @MutableProperty
-    private boolean ignoreUnknownSettingsOnDelete;
+    protected boolean ignoreUnknownSettingsOnDelete;
 }

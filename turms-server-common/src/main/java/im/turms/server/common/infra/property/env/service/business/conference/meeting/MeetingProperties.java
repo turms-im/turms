@@ -33,21 +33,21 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class MeetingProperties {
 
     @NestedConfigurationProperty
-    private IdProperties id = new IdProperties();
+    protected IdProperties id = new IdProperties();
 
     @NestedConfigurationProperty
-    private NameProperties name = new NameProperties();
+    protected NameProperties name = new NameProperties();
 
     @NestedConfigurationProperty
-    private IntroProperties intro = new IntroProperties();
+    protected IntroProperties intro = new IntroProperties();
 
     @NestedConfigurationProperty
-    private PasswordProperties password = new PasswordProperties();
+    protected PasswordProperties password = new PasswordProperties();
 
     @NestedConfigurationProperty
-    private QuotaProperties quota = new QuotaProperties();
+    protected QuotaProperties quota = new QuotaProperties();
 
     @NestedConfigurationProperty
-    private SchedulingProperties scheduling = new SchedulingProperties();
+    protected SchedulingProperties scheduling = new SchedulingProperties();
 
 }

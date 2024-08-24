@@ -35,13 +35,13 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class LocationProperties {
 
     @Description("Whether to handle users' locations")
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("Whether to treat the pair of user ID and device type as a unique user when querying users nearby. "
             + "If false, only the user ID is used to identify a unique user")
-    private boolean treatUserIdAndDeviceTypeAsUniqueUser;
+    protected boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
     @NestedConfigurationProperty
-    private NearbyUserRequestProperties nearbyUserRequest = new NearbyUserRequestProperties();
+    protected NearbyUserRequestProperties nearbyUserRequest = new NearbyUserRequestProperties();
 
 }

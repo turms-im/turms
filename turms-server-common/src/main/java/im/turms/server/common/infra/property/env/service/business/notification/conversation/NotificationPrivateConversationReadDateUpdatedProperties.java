@@ -38,11 +38,11 @@ public class NotificationPrivateConversationReadDateUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated the read date in a private conversation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify another contact when a contact has updated their read date in a private conversation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyContact;
+    protected boolean notifyContact;
 
 }

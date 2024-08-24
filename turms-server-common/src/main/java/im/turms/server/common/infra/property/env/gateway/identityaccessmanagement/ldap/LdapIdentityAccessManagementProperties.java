@@ -35,14 +35,14 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class LdapIdentityAccessManagementProperties {
 
     @Description("The base DN from which all operations originate")
-    private String baseDn = "";
+    protected String baseDn = "";
 
     @NestedConfigurationProperty
-    private LdapIdentityAccessManagementAdminProperties admin =
+    protected LdapIdentityAccessManagementAdminProperties admin =
             new LdapIdentityAccessManagementAdminProperties();
 
     @NestedConfigurationProperty
-    private LdapIdentityAccessManagementUserProperties user =
+    protected LdapIdentityAccessManagementUserProperties user =
             new LdapIdentityAccessManagementUserProperties();
 
 }

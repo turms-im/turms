@@ -41,24 +41,24 @@ public class NearbyUserRequestProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private short defaultMaxNearbyUserCount = 20;
+    protected short defaultMaxNearbyUserCount = 20;
 
     @Description("The maximum allowed number of nearby users")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private short maxNearbyUserCount = 100;
+    protected short maxNearbyUserCount = 100;
 
     @Description("The default maximum allowed distance in meters")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int defaultMaxDistanceMeters = 10_000;
+    protected int defaultMaxDistanceMeters = 10_000;
 
     @Description("The maximum allowed distance in meters")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxDistanceMeters = 10_000;
+    protected int maxDistanceMeters = 10_000;
 
 }

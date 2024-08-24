@@ -45,7 +45,7 @@ public class IpProperties {
             + "if needed (e.g. If the node discovery property \"advertiseStrategy\" is \"PUBLIC_ADDRESS\". "
             + "Note that the HTTP response body must be a string of IP instead of a JSON")
     @MutableProperty
-    private List<String> publicIpDetectorAddresses = List.of("https://checkip.amazonaws.com",
+    protected List<String> publicIpDetectorAddresses = List.of("https://checkip.amazonaws.com",
             "https://whatismyip.akamai.com",
             "https://ifconfig.me/ip",
             "https://myip.dnsomatic.com");
@@ -53,11 +53,11 @@ public class IpProperties {
     @Description("The cached private IP will expire after the specified time has elapsed. 0 means no cache")
     @MutableProperty
     @Min(0)
-    private int cachedPrivateIpExpireAfterMillis = 60 * 1000;
+    protected int cachedPrivateIpExpireAfterMillis = 60 * 1000;
 
     @Description("The cached public IP will expire after the specified time has elapsed. 0 means no cache")
     @MutableProperty
     @Min(0)
-    private int cachedPublicIpExpireAfterMillis = 60 * 1000;
+    protected int cachedPublicIpExpireAfterMillis = 60 * 1000;
 
 }

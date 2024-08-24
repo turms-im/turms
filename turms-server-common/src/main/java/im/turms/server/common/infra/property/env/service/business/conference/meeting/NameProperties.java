@@ -41,12 +41,12 @@ public class NameProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int minLength = 0;
+    protected int minLength = 0;
 
     @Description("The maximum length of the name. 0 means no maximum length")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxLength = 20;
+    protected int maxLength = 20;
 
 }

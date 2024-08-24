@@ -38,11 +38,11 @@ public class NotificationOneSidedRelationshipUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated a one-sided relationship")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the related user when a user has updated a one-sided relationship with them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRelatedUser;
+    protected boolean notifyRelatedUser;
 
 }

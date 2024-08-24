@@ -38,6 +38,6 @@ public class FlightRecorderProperties {
     @Description("A closed recording will be retained for the given period and will be removed from the file system after the retention period. "
             + "0 means no retention. -1 means unlimited retention.")
     @Min(-1)
-    private int closedRecordingRetentionPeriod = 0;
+    protected int closedRecordingRetentionPeriod = 0;
 
 }

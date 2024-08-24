@@ -39,9 +39,9 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class ClientApiProperties {
 
     @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them")
-    private Set<TurmsRequest.KindCase> disabledEndpoints = Collections.emptySet();
+    protected Set<TurmsRequest.KindCase> disabledEndpoints = Collections.emptySet();
 
     @NestedConfigurationProperty
-    private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
+    protected ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
 
 }

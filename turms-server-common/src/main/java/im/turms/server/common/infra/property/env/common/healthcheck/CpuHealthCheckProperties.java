@@ -36,9 +36,9 @@ public class CpuHealthCheckProperties {
 
     @Max(100)
     @Min(1)
-    private int unhealthyLoadThresholdPercentage = 95;
+    protected int unhealthyLoadThresholdPercentage = 95;
 
     @Min(0)
-    private int retries = 5;
+    protected int retries = 5;
 
 }

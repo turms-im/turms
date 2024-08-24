@@ -36,14 +36,14 @@ import im.turms.server.common.infra.validation.ValidCron;
 @Data
 public class TieredStorageProperties {
 
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("The storage properties for tiers from hot to cold. "
             + "Note that the order of the tiers is important")
-    private LinkedHashMap<String, StorageTierProperties> tiers = new LinkedHashMap<>();
+    protected LinkedHashMap<String, StorageTierProperties> tiers = new LinkedHashMap<>();
 
     @NestedConfigurationProperty
-    private AutoRangeUpdaterProperties autoRangeUpdater = new AutoRangeUpdaterProperties();
+    protected AutoRangeUpdaterProperties autoRangeUpdater = new AutoRangeUpdaterProperties();
 
     public TieredStorageProperties() {
         tiers.put("hot", new StorageTierProperties(30));
@@ -55,11 +55,11 @@ public class TieredStorageProperties {
     @Data
     @NoArgsConstructor
     public static class StorageTierProperties {
-        private boolean enabled = true;
+        protected boolean enabled = true;
 
-        private int days;
+        protected int days;
 
-        private List<String> shards = List.of("");
+        protected List<String> shards = List.of("");
 
         public StorageTierProperties(int days) {
             this.days = days;
@@ -70,10 +70,10 @@ public class TieredStorageProperties {
     public static class AutoRangeUpdaterProperties {
         @GlobalProperty
         @MutableProperty
-        private boolean enabled = true;
+        protected boolean enabled = true;
 
         @ValidCron
-        private String cron = CronConst.DEFAULT_TIERED_STORAGE_TIER_RANGE_UPDATING_CRON;
+        protected String cron = CronConst.DEFAULT_TIERED_STORAGE_TIER_RANGE_UPDATING_CRON;
     }
 
 }

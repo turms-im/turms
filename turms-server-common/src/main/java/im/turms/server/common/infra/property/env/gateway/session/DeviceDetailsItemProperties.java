@@ -31,8 +31,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DeviceDetailsItemProperties {
 
-    private String fieldName = "";
+    protected String fieldName = "";
 
-    private String redisFieldName = "";
+    protected String redisFieldName = "";
 
 }

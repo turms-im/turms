@@ -38,11 +38,11 @@ public class NotificationGroupConversationReadDateUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated the read date in a group conversation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify other group members when a group member has updated their read date in a group conversation")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyOtherGroupMembers;
+    protected boolean notifyOtherGroupMembers;
 
 }

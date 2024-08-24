@@ -40,11 +40,11 @@ public class CustomIntValueProperties extends CustomEnumValueProperties<Integer>
     @Description("The minimum allowed value")
     @GlobalProperty
     @MutableProperty
-    private int min = Integer.MIN_VALUE;
+    protected int min = Integer.MIN_VALUE;
 
     @Description("The maximum allowed value")
     @GlobalProperty
     @MutableProperty
-    private int max = Integer.MAX_VALUE;
+    protected int max = Integer.MAX_VALUE;
 
 }

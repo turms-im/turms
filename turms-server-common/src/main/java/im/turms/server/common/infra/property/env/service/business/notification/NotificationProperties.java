@@ -74,114 +74,114 @@ public class NotificationProperties {
     // region User
 
     @NestedConfigurationProperty
-    private NotificationUserInfoUpdatedProperties userInfoUpdated =
+    protected NotificationUserInfoUpdatedProperties userInfoUpdated =
             new NotificationUserInfoUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationUserOnlineStatusUpdatedProperties userOnlineStatusUpdated =
+    protected NotificationUserOnlineStatusUpdatedProperties userOnlineStatusUpdated =
             new NotificationUserOnlineStatusUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationUserSettingDeletedProperties userSettingDeleted =
+    protected NotificationUserSettingDeletedProperties userSettingDeleted =
             new NotificationUserSettingDeletedProperties();
 
     @NestedConfigurationProperty
-    private NotificationUserSettingUpdatedProperties userSettingUpdated =
+    protected NotificationUserSettingUpdatedProperties userSettingUpdated =
             new NotificationUserSettingUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationFriendRequestCreatedProperties friendRequestCreated =
+    protected NotificationFriendRequestCreatedProperties friendRequestCreated =
             new NotificationFriendRequestCreatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationFriendRequestRecalledProperties friendRequestRecalled =
+    protected NotificationFriendRequestRecalledProperties friendRequestRecalled =
             new NotificationFriendRequestRecalledProperties();
 
     @NestedConfigurationProperty
-    private NotificationFriendRequestRepliedProperties friendRequestReplied =
+    protected NotificationFriendRequestRepliedProperties friendRequestReplied =
             new NotificationFriendRequestRepliedProperties();
 
     @NestedConfigurationProperty
-    private NotificationOneSidedRelationshipUpdatedProperties oneSidedRelationshipUpdated =
+    protected NotificationOneSidedRelationshipUpdatedProperties oneSidedRelationshipUpdated =
             new NotificationOneSidedRelationshipUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationOneSidedRelationshipGroupDeletedProperties oneSidedRelationshipGroupDeleted =
+    protected NotificationOneSidedRelationshipGroupDeletedProperties oneSidedRelationshipGroupDeleted =
             new NotificationOneSidedRelationshipGroupDeletedProperties();
 
     @NestedConfigurationProperty
-    private NotificationOneSidedRelationshipGroupUpdatedProperties oneSidedRelationshipGroupUpdated =
+    protected NotificationOneSidedRelationshipGroupUpdatedProperties oneSidedRelationshipGroupUpdated =
             new NotificationOneSidedRelationshipGroupUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationOneSidedRelationshipGroupMemberAddedProperties oneSidedRelationshipGroupMemberAdded =
+    protected NotificationOneSidedRelationshipGroupMemberAddedProperties oneSidedRelationshipGroupMemberAdded =
             new NotificationOneSidedRelationshipGroupMemberAddedProperties();
 
     @NestedConfigurationProperty
-    private NotificationOneSidedRelationshipGroupMemberRemovedProperties oneSidedRelationshipGroupMemberRemoved =
+    protected NotificationOneSidedRelationshipGroupMemberRemovedProperties oneSidedRelationshipGroupMemberRemoved =
             new NotificationOneSidedRelationshipGroupMemberRemovedProperties();
     // endregion
 
     // region Group
 
     @NestedConfigurationProperty
-    private NotificationGroupCreatedProperties groupCreated =
+    protected NotificationGroupCreatedProperties groupCreated =
             new NotificationGroupCreatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupDeletedProperties groupDeleted =
+    protected NotificationGroupDeletedProperties groupDeleted =
             new NotificationGroupDeletedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupUpdatedProperties groupUpdated =
+    protected NotificationGroupUpdatedProperties groupUpdated =
             new NotificationGroupUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupMemberAddedProperties groupMemberAdded =
+    protected NotificationGroupMemberAddedProperties groupMemberAdded =
             new NotificationGroupMemberAddedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupMemberRemovedProperties groupMemberRemoved =
+    protected NotificationGroupMemberRemovedProperties groupMemberRemoved =
             new NotificationGroupMemberRemovedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupMemberInfoUpdatedProperties groupMemberInfoUpdated =
+    protected NotificationGroupMemberInfoUpdatedProperties groupMemberInfoUpdated =
             new NotificationGroupMemberInfoUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupMemberOnlineStatusUpdatedProperties groupMemberOnlineStatusUpdated =
+    protected NotificationGroupMemberOnlineStatusUpdatedProperties groupMemberOnlineStatusUpdated =
             new NotificationGroupMemberOnlineStatusUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupBlockedUserAddedProperties groupBlockedUserAdded =
+    protected NotificationGroupBlockedUserAddedProperties groupBlockedUserAdded =
             new NotificationGroupBlockedUserAddedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupBlockedUserRemovedProperties groupBlockedUserRemoved =
+    protected NotificationGroupBlockedUserRemovedProperties groupBlockedUserRemoved =
             new NotificationGroupBlockedUserRemovedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupInvitationAddedProperties groupInvitationAdded =
+    protected NotificationGroupInvitationAddedProperties groupInvitationAdded =
             new NotificationGroupInvitationAddedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupInvitationRecalledProperties groupInvitationRecalled =
+    protected NotificationGroupInvitationRecalledProperties groupInvitationRecalled =
             new NotificationGroupInvitationRecalledProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupInvitationRepliedProperties groupInvitationReplied =
+    protected NotificationGroupInvitationRepliedProperties groupInvitationReplied =
             new NotificationGroupInvitationRepliedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupJoinRequestCreatedProperties groupJoinRequestCreated =
+    protected NotificationGroupJoinRequestCreatedProperties groupJoinRequestCreated =
             new NotificationGroupJoinRequestCreatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupJoinRequestRecalledProperties groupJoinRequestRecalled =
+    protected NotificationGroupJoinRequestRecalledProperties groupJoinRequestRecalled =
             new NotificationGroupJoinRequestRecalledProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupJoinRequestRepliedProperties groupJoinRequestReplied =
+    protected NotificationGroupJoinRequestRepliedProperties groupJoinRequestReplied =
             new NotificationGroupJoinRequestRepliedProperties();
 
     // endregion
@@ -189,27 +189,27 @@ public class NotificationProperties {
     // region Conversation
 
     @NestedConfigurationProperty
-    private NotificationPrivateConversationReadDateUpdatedProperties privateConversationReadDateUpdated =
+    protected NotificationPrivateConversationReadDateUpdatedProperties privateConversationReadDateUpdated =
             new NotificationPrivateConversationReadDateUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationPrivateConversationSettingDeletedProperties privateConversationSettingDeleted =
+    protected NotificationPrivateConversationSettingDeletedProperties privateConversationSettingDeleted =
             new NotificationPrivateConversationSettingDeletedProperties();
 
     @NestedConfigurationProperty
-    private NotificationPrivateConversationSettingUpdatedProperties privateConversationSettingUpdated =
+    protected NotificationPrivateConversationSettingUpdatedProperties privateConversationSettingUpdated =
             new NotificationPrivateConversationSettingUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupConversationReadDateUpdatedProperties groupConversationReadDateUpdated =
+    protected NotificationGroupConversationReadDateUpdatedProperties groupConversationReadDateUpdated =
             new NotificationGroupConversationReadDateUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupConversationSettingDeletedProperties groupConversationSettingDeleted =
+    protected NotificationGroupConversationSettingDeletedProperties groupConversationSettingDeleted =
             new NotificationGroupConversationSettingDeletedProperties();
 
     @NestedConfigurationProperty
-    private NotificationGroupConversationSettingUpdatedProperties groupConversationSettingUpdated =
+    protected NotificationGroupConversationSettingUpdatedProperties groupConversationSettingUpdated =
             new NotificationGroupConversationSettingUpdatedProperties();
 
     // endregion
@@ -217,11 +217,11 @@ public class NotificationProperties {
     // region Message
 
     @NestedConfigurationProperty
-    private NotificationMessageCreatedProperties messageCreated =
+    protected NotificationMessageCreatedProperties messageCreated =
             new NotificationMessageCreatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationMessageUpdatedProperties messageUpdated =
+    protected NotificationMessageUpdatedProperties messageUpdated =
             new NotificationMessageUpdatedProperties();
 
     // endregion
@@ -229,15 +229,15 @@ public class NotificationProperties {
     // region Meeting
 
     @NestedConfigurationProperty
-    private NotificationMeetingCanceledProperties meetingCanceled =
+    protected NotificationMeetingCanceledProperties meetingCanceled =
             new NotificationMeetingCanceledProperties();
 
     @NestedConfigurationProperty
-    private NotificationMeetingUpdatedProperties meetingUpdated =
+    protected NotificationMeetingUpdatedProperties meetingUpdated =
             new NotificationMeetingUpdatedProperties();
 
     @NestedConfigurationProperty
-    private NotificationMeetingInvitationUpdatedProperties meetingInvitationUpdated =
+    protected NotificationMeetingInvitationUpdatedProperties meetingInvitationUpdated =
             new NotificationMeetingInvitationUpdatedProperties();
 
     // endregion

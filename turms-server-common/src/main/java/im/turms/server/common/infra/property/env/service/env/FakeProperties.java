@@ -36,16 +36,16 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class FakeProperties {
 
     @Description("Whether to fake data. Note that faking only works in non-production environments")
-    private boolean enabled;
+    protected boolean enabled;
 
     @Description("the total number of users to fake")
     @Min(0)
-    private int userCount = 1000;
+    protected int userCount = 1000;
 
     @Description("Whether to clear all collections before faking on startup")
-    private boolean clearAllCollectionsBeforeFaking;
+    protected boolean clearAllCollectionsBeforeFaking;
 
     @Description("Whether to fake data even if the collection has already existed")
-    private boolean fakeIfCollectionExists;
+    protected boolean fakeIfCollectionExists;
 
 }

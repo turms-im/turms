@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ElasticsearchIndexPropertiesFieldProperties {
 
-    private List<ElasticsearchIndexTextFieldProperties> textFields =
+    protected List<ElasticsearchIndexTextFieldProperties> textFields =
             List.of(new ElasticsearchIndexTextFieldProperties());
 
 }

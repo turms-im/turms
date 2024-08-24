@@ -37,19 +37,19 @@ import im.turms.server.common.infra.security.SensitiveProperty;
 public class LdapIdentityAccessManagementAdminProperties {
 
     @Description("The host of LDAP server for admin")
-    private String host = "localhost";
+    protected String host = "localhost";
 
     @Description("The port of LDAP server for admin")
-    private int port = 389;
+    protected int port = 389;
 
     @Description("The administrator's username for binding")
-    private String username = "";
+    protected String username = "";
 
     @Description("The administrator's password for binding")
     @SensitiveProperty
-    private String password = "";
+    protected String password = "";
 
     @NestedConfigurationProperty
-    private transient SslProperties ssl = new SslProperties();
+    protected transient SslProperties ssl = new SslProperties();
 
 }

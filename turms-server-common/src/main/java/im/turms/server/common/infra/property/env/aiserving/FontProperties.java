@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FontProperties {
 
-    private String familyName;
+    protected String familyName;
 
-    private FontStyle style = FontStyle.PLAIN;
+    protected FontStyle style = FontStyle.PLAIN;
 }

@@ -33,39 +33,39 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class JwtAlgorithmProperties {
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties rsa256 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties rsa256 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties rsa384 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties rsa384 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties rsa512 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties rsa512 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ps256 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ps256 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ps384 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ps384 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ps512 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ps512 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa256 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ecdsa256 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa384 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ecdsa384 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtKeyAlgorithmProperties ecdsa512 = new JwtKeyAlgorithmProperties();
+    protected JwtKeyAlgorithmProperties ecdsa512 = new JwtKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtSecretKeyAlgorithmProperties hmac256 = new JwtSecretKeyAlgorithmProperties();
+    protected JwtSecretKeyAlgorithmProperties hmac256 = new JwtSecretKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtSecretKeyAlgorithmProperties hmac384 = new JwtSecretKeyAlgorithmProperties();
+    protected JwtSecretKeyAlgorithmProperties hmac384 = new JwtSecretKeyAlgorithmProperties();
 
     @NestedConfigurationProperty
-    private JwtSecretKeyAlgorithmProperties hmac512 = new JwtSecretKeyAlgorithmProperties();
+    protected JwtSecretKeyAlgorithmProperties hmac512 = new JwtSecretKeyAlgorithmProperties();
 
 }

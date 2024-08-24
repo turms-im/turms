@@ -39,24 +39,24 @@ public abstract class BaseRateLimitingProperties {
     @GlobalProperty
     @MutableProperty
     @Min(1)
-    private int capacity = 50;
+    protected int capacity = 50;
 
     @Description("The initial number of tokens for new session")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int initialTokens = 50;
+    protected int initialTokens = 50;
 
     @Description("Refills the bucket with the specified number of tokens per period if the bucket is not full")
     @GlobalProperty
     @MutableProperty
     @Min(1)
-    private int tokensPerPeriod = 1;
+    protected int tokensPerPeriod = 1;
 
     @Description("The time interval to refill. 0 means never refill")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int refillIntervalMillis = 1000;
+    protected int refillIntervalMillis = 1000;
 
 }

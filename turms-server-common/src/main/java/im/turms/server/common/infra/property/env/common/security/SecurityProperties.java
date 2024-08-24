@@ -33,9 +33,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class SecurityProperties {
 
     @NestedConfigurationProperty
-    private PasswordProperties password = new PasswordProperties();
+    protected PasswordProperties password = new PasswordProperties();
 
     @NestedConfigurationProperty
-    private BlocklistProperties blocklist = new BlocklistProperties();
+    protected BlocklistProperties blocklist = new BlocklistProperties();
 
 }

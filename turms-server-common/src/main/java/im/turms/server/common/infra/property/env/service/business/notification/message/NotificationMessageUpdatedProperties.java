@@ -38,11 +38,11 @@ public class NotificationMessageUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated a message")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the message recipients when a sender has updated a message sent to them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyMessageRecipients = true;
+    protected boolean notifyMessageRecipients = true;
 
 }

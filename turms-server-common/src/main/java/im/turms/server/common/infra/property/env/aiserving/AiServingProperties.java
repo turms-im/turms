@@ -35,16 +35,16 @@ public class AiServingProperties {
     // API
 
     @NestedConfigurationProperty
-    private AdminApiProperties adminApi = new AdminApiProperties();
+    protected AdminApiProperties adminApi = new AdminApiProperties();
 
     // Data Store
 
     @NestedConfigurationProperty
-    private MongoGroupProperties mongo = new MongoGroupProperties();
+    protected MongoGroupProperties mongo = new MongoGroupProperties();
 
     // OCR
 
     @NestedConfigurationProperty
-    private OcrProperties ocr = new OcrProperties();
+    protected OcrProperties ocr = new OcrProperties();
 
 }

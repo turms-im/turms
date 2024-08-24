@@ -38,7 +38,7 @@ public class TcpSessionProperties {
     @Description("turms-gateway will close the TCP connection if the client has not established a user session within the specified time. "
             + "0 means no timeout")
     @Min(0)
-    private int establishTimeoutMillis = 60 * 5 * 1000;
+    protected int establishTimeoutMillis = 60 * 5 * 1000;
 
     @Description("turms-gateway will send a TCP RST packet to the connection if the client has not closed "
             + "the TCP connection within the specified time after turms-gateway has sent and flushed the session close notification. "
@@ -48,6 +48,6 @@ public class TcpSessionProperties {
             + "Positive value should be used when you prefer that turms-gateway waits for the client to receive within the specified time data "
             + "and only close the connection when it exceeds the timeout")
     @Min(-1)
-    private int closeTimeoutMillis = 120 * 1000;
+    protected int closeTimeoutMillis = 120 * 1000;
 
 }

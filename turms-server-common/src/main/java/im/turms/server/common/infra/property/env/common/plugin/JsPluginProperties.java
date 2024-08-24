@@ -36,12 +36,12 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class JsPluginProperties {
 
     @NestedConfigurationProperty
-    private JsPluginDebugProperties debug = new JsPluginDebugProperties();
+    protected JsPluginDebugProperties debug = new JsPluginDebugProperties();
 
     @Description("Whether to allow saving plugins using HTTP API")
-    private boolean allowSave;
+    protected boolean allowSave;
 
     @Description("The sandbox policy to use when running plugins")
-    private PluginSandboxPolicy sandboxPolicy = PluginSandboxPolicy.TRUSTED;
+    protected PluginSandboxPolicy sandboxPolicy = PluginSandboxPolicy.TRUSTED;
 
 }

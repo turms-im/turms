@@ -40,15 +40,15 @@ public class FileLoggingProperties {
     public static final int DEFAULT_VALUE_MAX_FILES = 320;
     public static final int DEFAULT_VALUE_FILE_SIZE_MB = 32;
 
-    private boolean enabled = DEFAULT_VALUE_ENABLED;
+    protected boolean enabled = DEFAULT_VALUE_ENABLED;
 
-    private LogLevel level = DEFAULT_VALUE_LEVEL;
+    protected LogLevel level = DEFAULT_VALUE_LEVEL;
 
-    private String filePath = DEFAULT_VALUE_FILE_PATH;
-    private int maxFiles = DEFAULT_VALUE_MAX_FILES;
-    private int maxFileSizeMb = DEFAULT_VALUE_FILE_SIZE_MB;
+    protected String filePath = DEFAULT_VALUE_FILE_PATH;
+    protected int maxFiles = DEFAULT_VALUE_MAX_FILES;
+    protected int maxFileSizeMb = DEFAULT_VALUE_FILE_SIZE_MB;
 
     @NestedConfigurationProperty
-    private FileLoggingCompressionProperties compression = new FileLoggingCompressionProperties();
+    protected FileLoggingCompressionProperties compression = new FileLoggingCompressionProperties();
 
 }

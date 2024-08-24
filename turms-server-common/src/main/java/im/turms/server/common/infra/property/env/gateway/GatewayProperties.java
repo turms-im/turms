@@ -42,49 +42,50 @@ public class GatewayProperties {
     // API
 
     @NestedConfigurationProperty
-    private AdminApiProperties adminApi = new AdminApiProperties();
+    protected AdminApiProperties adminApi = new AdminApiProperties();
 
     @NestedConfigurationProperty
-    private ClientApiProperties clientApi = new ClientApiProperties();
+    protected ClientApiProperties clientApi = new ClientApiProperties();
 
     @NestedConfigurationProperty
-    private NotificationLoggingProperties notificationLogging = new NotificationLoggingProperties();
+    protected NotificationLoggingProperties notificationLogging =
+            new NotificationLoggingProperties();
 
     // Business Behavior
 
     @NestedConfigurationProperty
-    private SessionProperties session = new SessionProperties();
+    protected SessionProperties session = new SessionProperties();
 
     @NestedConfigurationProperty
-    private SimultaneousLoginProperties simultaneousLogin = new SimultaneousLoginProperties();
+    protected SimultaneousLoginProperties simultaneousLogin = new SimultaneousLoginProperties();
 
     // Cluster
 
     @NestedConfigurationProperty
-    private DiscoveryProperties serviceDiscovery = new DiscoveryProperties();
+    protected DiscoveryProperties serviceDiscovery = new DiscoveryProperties();
 
     // Data Store
 
     @NestedConfigurationProperty
-    private MongoGroupProperties mongo = new MongoGroupProperties();
+    protected MongoGroupProperties mongo = new MongoGroupProperties();
 
     @NestedConfigurationProperty
-    private TurmsRedisProperties redis = new TurmsRedisProperties();
+    protected TurmsRedisProperties redis = new TurmsRedisProperties();
 
     // Faking
 
     @NestedConfigurationProperty
-    private FakeProperties fake = new FakeProperties();
+    protected FakeProperties fake = new FakeProperties();
 
     // Network Access Layer
 
     @NestedConfigurationProperty
-    private UdpProperties udp = new UdpProperties();
+    protected UdpProperties udp = new UdpProperties();
 
     @NestedConfigurationProperty
-    private TcpProperties tcp = new TcpProperties();
+    protected TcpProperties tcp = new TcpProperties();
 
     @NestedConfigurationProperty
-    private WebSocketProperties websocket = new WebSocketProperties();
+    protected WebSocketProperties websocket = new WebSocketProperties();
 
 }

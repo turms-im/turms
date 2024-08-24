@@ -41,16 +41,16 @@ public class DiscoveryProperties {
 
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int heartbeatTimeoutSeconds = 30;
+    protected int heartbeatTimeoutSeconds = 30;
 
     @Min(0)
-    private int heartbeatIntervalSeconds = 10;
+    protected int heartbeatIntervalSeconds = 10;
 
     @Description("Delay notifying listeners on members change. Waits for seconds to avoid thundering herd")
     @Min(0)
-    private int delayToNotifyMembersChangeSeconds = 3;
+    protected int delayToNotifyMembersChangeSeconds = 3;
 
     @NestedConfigurationProperty
-    private AddressProperties address = new AddressProperties();
+    protected AddressProperties address = new AddressProperties();
 
 }

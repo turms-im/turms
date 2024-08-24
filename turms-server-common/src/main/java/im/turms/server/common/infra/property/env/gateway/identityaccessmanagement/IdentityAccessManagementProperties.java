@@ -45,21 +45,22 @@ public class IdentityAccessManagementProperties {
             + "If false at startup, turms-gateway will not connect to the MongoDB server for user records")
     @GlobalProperty
     @MutableProperty
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("Note that if the type is not PASSWORD, "
             + "turms-gateway will not connect to the MongoDB server for user records")
-    private IdentityAccessManagementType type = IdentityAccessManagementType.PASSWORD;
+    protected IdentityAccessManagementType type = IdentityAccessManagementType.PASSWORD;
 
     @NestedConfigurationProperty
-    private JwtIdentityAccessManagementProperties jwt = new JwtIdentityAccessManagementProperties();
+    protected JwtIdentityAccessManagementProperties jwt =
+            new JwtIdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
-    private LdapIdentityAccessManagementProperties ldap =
+    protected LdapIdentityAccessManagementProperties ldap =
             new LdapIdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
-    private HttpIdentityAccessManagementProperties http =
+    protected HttpIdentityAccessManagementProperties http =
             new HttpIdentityAccessManagementProperties();
 
 }

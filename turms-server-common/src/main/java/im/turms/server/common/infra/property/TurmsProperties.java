@@ -61,47 +61,47 @@ public class TurmsProperties {
     // Common
 
     @NestedConfigurationProperty
-    private ClusterProperties cluster = new ClusterProperties();
+    protected ClusterProperties cluster = new ClusterProperties();
 
     @NestedConfigurationProperty
-    private FlightRecorderProperties flightRecorder = new FlightRecorderProperties();
+    protected FlightRecorderProperties flightRecorder = new FlightRecorderProperties();
 
     @NestedConfigurationProperty
-    private HealthCheckProperties healthCheck = new HealthCheckProperties();
+    protected HealthCheckProperties healthCheck = new HealthCheckProperties();
 
     @NestedConfigurationProperty
-    private IpProperties ip = new IpProperties();
+    protected IpProperties ip = new IpProperties();
 
     @NestedConfigurationProperty
-    private LocationProperties location = new LocationProperties();
+    protected LocationProperties location = new LocationProperties();
 
     @NestedConfigurationProperty
-    private LoggingProperties logging = new LoggingProperties();
+    protected LoggingProperties logging = new LoggingProperties();
 
     @NestedConfigurationProperty
-    private PluginProperties plugin = new PluginProperties();
+    protected PluginProperties plugin = new PluginProperties();
 
     @NestedConfigurationProperty
-    private SecurityProperties security = new SecurityProperties();
+    protected SecurityProperties security = new SecurityProperties();
 
     @NestedConfigurationProperty
-    private ShutdownProperties shutdown = new ShutdownProperties();
+    protected ShutdownProperties shutdown = new ShutdownProperties();
 
     @NestedConfigurationProperty
-    private UserStatusProperties userStatus = new UserStatusProperties();
+    protected UserStatusProperties userStatus = new UserStatusProperties();
 
     // AI Serving, Gateway and Service
 
     @NestedConfigurationProperty
-    private AiServingProperties aiServing = new AiServingProperties();
+    protected AiServingProperties aiServing = new AiServingProperties();
 
     @NestedConfigurationProperty
-    private GatewayProperties gateway = new GatewayProperties();
+    protected GatewayProperties gateway = new GatewayProperties();
 
     @NestedConfigurationProperty
-    private ServiceProperties service = new ServiceProperties();
+    protected ServiceProperties service = new ServiceProperties();
 
     @NestedConfigurationProperty
-    private MockNodeProperties mockNode = new MockNodeProperties();
+    protected MockNodeProperties mockNode = new MockNodeProperties();
 
 }

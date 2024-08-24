@@ -33,10 +33,10 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class HttpIdentityAccessManagementProperties {
 
     @NestedConfigurationProperty
-    private HttpIdentityAccessManagementRequestProperties request =
+    protected HttpIdentityAccessManagementRequestProperties request =
             new HttpIdentityAccessManagementRequestProperties();
 
     @NestedConfigurationProperty
-    private HttpAuthenticationProperties authentication = new HttpAuthenticationProperties();
+    protected HttpAuthenticationProperties authentication = new HttpAuthenticationProperties();
 
 }

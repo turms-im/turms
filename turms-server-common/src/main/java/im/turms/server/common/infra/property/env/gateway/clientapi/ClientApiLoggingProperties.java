@@ -35,6 +35,6 @@ import im.turms.server.common.infra.property.env.common.clientapi.BaseClientApiL
 @NoArgsConstructor
 public class ClientApiLoggingProperties extends BaseClientApiLoggingProperties {
 
-    private float heartbeatSampleRate;
+    protected float heartbeatSampleRate;
 
 }

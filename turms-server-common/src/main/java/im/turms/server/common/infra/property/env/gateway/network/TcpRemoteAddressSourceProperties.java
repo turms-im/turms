@@ -33,7 +33,7 @@ import im.turms.server.common.infra.property.constant.RemoteAddressSourceProxyPr
 @NoArgsConstructor
 public class TcpRemoteAddressSourceProperties {
 
-    private RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
+    protected RemoteAddressSourceProxyProtocolMode proxyProtocolMode =
             RemoteAddressSourceProxyProtocolMode.OPTIONAL;
 
 }

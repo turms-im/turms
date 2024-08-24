@@ -33,9 +33,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class ElasticsearchUseCasesProperties {
 
     @NestedConfigurationProperty
-    private ElasticsearchUserUseCaseProperties user = new ElasticsearchUserUseCaseProperties();
+    protected ElasticsearchUserUseCaseProperties user = new ElasticsearchUserUseCaseProperties();
 
     @NestedConfigurationProperty
-    private ElasticsearchGroupUseCaseProperties group = new ElasticsearchGroupUseCaseProperties();
+    protected ElasticsearchGroupUseCaseProperties group = new ElasticsearchGroupUseCaseProperties();
 
 }

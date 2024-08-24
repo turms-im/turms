@@ -39,16 +39,16 @@ public class PasswordProperties {
 
     @Description("The initial password of the root user")
     @SensitiveProperty
-    private String initialRootPassword = "turms";
+    protected String initialRootPassword = "turms";
 
     @ImmutableOnceApplied
     @Description("The password encoding algorithm for users")
-    private PasswordEncodingAlgorithm userPasswordEncodingAlgorithm =
+    protected PasswordEncodingAlgorithm userPasswordEncodingAlgorithm =
             PasswordEncodingAlgorithm.SALTED_SHA256;
 
     @ImmutableOnceApplied
     @Description("The password encoding algorithm for admins")
-    private PasswordEncodingAlgorithm adminPasswordEncodingAlgorithm =
+    protected PasswordEncodingAlgorithm adminPasswordEncodingAlgorithm =
             PasswordEncodingAlgorithm.BCRYPT;
 
     @Override

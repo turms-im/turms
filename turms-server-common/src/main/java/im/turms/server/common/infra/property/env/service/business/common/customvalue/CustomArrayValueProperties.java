@@ -42,25 +42,25 @@ public class CustomArrayValueProperties extends CustomEnumValueProperties<String
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int minElementCount = 0;
+    protected int minElementCount = 0;
 
     @Description("The maximum allowed number of elements")
     @GlobalProperty
     @MutableProperty
-    private int maxElementCount = 10;
+    protected int maxElementCount = 10;
 
     @Description("Whether the elements are unique. If true, the Turms server will deduplicate the elements")
     @GlobalProperty
     @MutableProperty
-    private boolean unique;
+    protected boolean unique;
 
     @Description("Whether the array element can be null")
     @GlobalProperty
     @MutableProperty
-    private boolean allowNullElement;
+    protected boolean allowNullElement;
 
     @NestedConfigurationProperty
-    private CustomValueOneOfProperties element;
+    protected CustomValueOneOfProperties element;
 
     public CustomValueOneOfProperties getElement() {
         // Lazy initialization to avoid recursion.

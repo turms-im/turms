@@ -37,15 +37,15 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class ElasticsearchClientProperties {
 
     @Description("Elasticsearch URI")
-    private String uri = "http://localhost:9200";
+    protected String uri = "http://localhost:9200";
 
     @Description("Elasticsearch HTTP request headers")
-    private List<HttpHeaderProperties> requestHeaders = Collections.emptyList();
+    protected List<HttpHeaderProperties> requestHeaders = Collections.emptyList();
 
     @Description("Elasticsearch username")
-    private String username = "elastic";
+    protected String username = "elastic";
 
     @Description("Elasticsearch password")
-    private String password = "";
+    protected String password = "";
 
 }

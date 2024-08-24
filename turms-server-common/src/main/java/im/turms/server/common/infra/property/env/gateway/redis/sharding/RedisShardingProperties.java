@@ -34,11 +34,11 @@ import im.turms.server.common.storage.redis.sharding.ShardingAlgorithm;
 @NoArgsConstructor
 public class RedisShardingProperties {
 
-    private static final ShardingAlgorithm DEFAULT_SHARDING_ALGORITHM =
+    protected static final ShardingAlgorithm DEFAULT_SHARDING_ALGORITHM =
             new ConsistentHashingShardingAlgorithm();
 
-    private ShardingAlgorithm algorithmForSession = DEFAULT_SHARDING_ALGORITHM;
+    protected ShardingAlgorithm algorithmForSession = DEFAULT_SHARDING_ALGORITHM;
 
-    private ShardingAlgorithm algorithmForLocation = DEFAULT_SHARDING_ALGORITHM;
+    protected ShardingAlgorithm algorithmForLocation = DEFAULT_SHARDING_ALGORITHM;
 
 }

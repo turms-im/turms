@@ -50,30 +50,30 @@ public class MemoryHealthCheckProperties {
             + "the available memory for JVM")
     @Max(100)
     @Min(1)
-    private int maxAvailableMemoryPercentage = 95;
+    protected int maxAvailableMemoryPercentage = 95;
 
     @Description("The server will refuse to serve when the used direct memory exceeds the max direct memory of the percentage "
             + "to try to avoid OutOfMemoryError")
     @Max(100)
     @Min(1)
-    private int maxAvailableDirectMemoryPercentage = 95;
+    protected int maxAvailableDirectMemoryPercentage = 95;
 
     @Description("The server will refuse to serve when the free system memory is less than minFreeSystemMemoryBytes")
-    private int minFreeSystemMemoryBytes = 128 * MB;
+    protected int minFreeSystemMemoryBytes = 128 * MB;
 
     // Memory Usage Warning
 
     @Description("Log warning messages if the used direct memory exceeds the max direct memory of the percentage")
     @Max(100)
     @Min(0)
-    private int directMemoryWarningThresholdPercentage = 50;
+    protected int directMemoryWarningThresholdPercentage = 50;
 
     @Description("Log warning messages if the used heap memory exceeds the max heap memory of the percentage")
     @Max(100)
     @Min(0)
-    private int heapMemoryWarningThresholdPercentage = 95;
+    protected int heapMemoryWarningThresholdPercentage = 95;
 
-    private int minMemoryWarningIntervalSeconds = 10;
+    protected int minMemoryWarningIntervalSeconds = 10;
 
     // GC
 
@@ -81,8 +81,8 @@ public class MemoryHealthCheckProperties {
             + "try to start GC when the used heap memory exceeds the max heap memory of the percentage")
     @Max(100)
     @Min(0)
-    private int heapMemoryGcThresholdPercentage = 60;
+    protected int heapMemoryGcThresholdPercentage = 60;
 
-    private int minHeapMemoryGcIntervalSeconds = 10;
+    protected int minHeapMemoryGcIntervalSeconds = 10;
 
 }

@@ -38,6 +38,6 @@ public class NotificationGroupMemberOnlineStatusUpdatedProperties {
     @Description("Whether to notify other group members when a member's online status has been updated")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

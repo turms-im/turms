@@ -46,7 +46,7 @@ public class SessionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int closeIdleSessionAfterSeconds = 180;
+    protected int closeIdleSessionAfterSeconds = 180;
 
     @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, "
             + "the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client "
@@ -55,7 +55,7 @@ public class SessionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int switchProtocolAfterSeconds =
+    protected int switchProtocolAfterSeconds =
             MathUtil.multiply(closeIdleSessionAfterSeconds, 3, Integer.MAX_VALUE);
 
     @Description("The minimum interval to refresh the heartbeat status by client requests "
@@ -63,7 +63,7 @@ public class SessionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
+    protected int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
     @Description("The client heartbeat interval. "
             + "Note that the value will NOT change the actual heartbeat behavior of clients, "
@@ -71,18 +71,18 @@ public class SessionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int clientHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 3;
+    protected int clientHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 3;
 
     @Description("Whether to notify clients of the session information after connected with the server")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyClientsOfSessionInfoAfterConnected = true;
+    protected boolean notifyClientsOfSessionInfoAfterConnected = true;
 
     @NestedConfigurationProperty
-    private IdentityAccessManagementProperties identityAccessManagement =
+    protected IdentityAccessManagementProperties identityAccessManagement =
             new IdentityAccessManagementProperties();
 
     @NestedConfigurationProperty
-    private DeviceDetailsProperties deviceDetails = new DeviceDetailsProperties();
+    protected DeviceDetailsProperties deviceDetails = new DeviceDetailsProperties();
 
 }

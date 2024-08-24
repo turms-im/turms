@@ -37,6 +37,6 @@ public class RpcProperties {
 
     @Description("The timeout for RPC requests in milliseconds")
     @Min(1)
-    private int requestTimeoutMillis = 30 * 1000;
+    protected int requestTimeoutMillis = 30 * 1000;
 
 }

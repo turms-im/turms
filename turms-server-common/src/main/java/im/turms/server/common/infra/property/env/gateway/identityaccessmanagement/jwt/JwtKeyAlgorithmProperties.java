@@ -32,9 +32,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class JwtKeyAlgorithmProperties {
 
-    private String pemFilePath = "";
+    protected String pemFilePath = "";
 
     @NestedConfigurationProperty
-    private JwtP12KeyStoreProperties p12 = new JwtP12KeyStoreProperties();
+    protected JwtP12KeyStoreProperties p12 = new JwtP12KeyStoreProperties();
 
 }

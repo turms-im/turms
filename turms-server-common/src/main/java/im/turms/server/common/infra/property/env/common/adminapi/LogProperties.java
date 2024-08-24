@@ -38,11 +38,11 @@ public class LogProperties {
     @Description("Whether to log API calls")
     @GlobalProperty
     @MutableProperty
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("Whether to log the parameters of requests")
     @GlobalProperty
     @MutableProperty
-    private boolean logRequestParams = true;
+    protected boolean logRequestParams = true;
 
 }

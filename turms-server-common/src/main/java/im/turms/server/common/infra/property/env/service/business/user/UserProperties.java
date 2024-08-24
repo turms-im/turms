@@ -37,32 +37,32 @@ import im.turms.server.common.infra.property.metadata.MutableProperty;
 public class UserProperties {
 
     @NestedConfigurationProperty
-    private FriendRequestProperties friendRequest = new FriendRequestProperties();
+    protected FriendRequestProperties friendRequest = new FriendRequestProperties();
 
     @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
     @GlobalProperty
     @MutableProperty
-    private boolean respondOfflineIfInvisible;
+    protected boolean respondOfflineIfInvisible;
 
     @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
     @GlobalProperty
     @MutableProperty
-    private boolean deleteTwoSidedRelationships;
+    protected boolean deleteTwoSidedRelationships;
 
     @Description("Whether to delete a user logically")
     @GlobalProperty
     @MutableProperty
-    private boolean deleteUserLogically = true;
+    protected boolean deleteUserLogically = true;
 
     @Description("Whether to activate a user when added by default")
     @GlobalProperty
     @MutableProperty
-    private boolean activateUserWhenAdded = true;
+    protected boolean activateUserWhenAdded = true;
 
     @NestedConfigurationProperty
-    private UserInfoProperties info = new UserInfoProperties();
+    protected UserInfoProperties info = new UserInfoProperties();
 
     @NestedConfigurationProperty
-    private UserSettingsProperties settings = new UserSettingsProperties();
+    protected UserSettingsProperties settings = new UserSettingsProperties();
 
 }

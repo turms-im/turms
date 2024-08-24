@@ -46,134 +46,134 @@ public class MessageProperties {
     @Description("Whether to use conversation ID so that "
             + "a user can query the messages sent by themselves in a conversation quickly")
     @GlobalProperty
-    private boolean useConversationId;
+    protected boolean useConversationId;
 
     @NestedConfigurationProperty
-    private SequenceIdProperties sequenceId = new SequenceIdProperties();
+    protected SequenceIdProperties sequenceId = new SequenceIdProperties();
 
     @Description("The time type for the delivery time of message")
     @GlobalProperty
     @MutableProperty
-    private TimeType timeType = TimeType.LOCAL_SERVER_TIME;
+    protected TimeType timeType = TimeType.LOCAL_SERVER_TIME;
 
     @Description("Whether to check if the target (recipient or group) of a message is active and not deleted")
     @GlobalProperty
     @MutableProperty
-    private boolean checkIfTargetActiveAndNotDeleted = true;
+    protected boolean checkIfTargetActiveAndNotDeleted = true;
 
     @Description("The maximum allowed length for the text of a message")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxTextLimit = 500;
+    protected int maxTextLimit = 500;
 
     @Description("The maximum allowed size for the records of a message")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxRecordsSizeBytes = 15 * MB;
+    protected int maxRecordsSizeBytes = 15 * MB;
 
     @Description("Whether to persist messages in databases.\n"
             + "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")
     @GlobalProperty
     @MutableProperty
-    private boolean persistMessage = true;
+    protected boolean persistMessage = true;
 
     @Description("Whether to persist the records of messages in databases")
     @GlobalProperty
     @MutableProperty
-    private boolean persistRecord;
+    protected boolean persistRecord;
 
     @Description("Whether to persist the previous message ID of messages in databases")
     @GlobalProperty
     @MutableProperty
-    private boolean persistPreMessageId;
+    protected boolean persistPreMessageId;
 
     @Description("Whether to persist the sender IP of messages in databases")
     @GlobalProperty
     @MutableProperty
-    private boolean persistSenderIp;
+    protected boolean persistSenderIp;
 
     @Description("A message will be retained for the given period and will be removed from the database after the retention period")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int messageRetentionPeriodHours;
+    protected int messageRetentionPeriodHours;
 
     @Description("Clean the expired messages when the cron expression is triggered")
     @ValidCron
-    private String expiredMessagesCleanupCron = CronConst.DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON;
+    protected String expiredMessagesCleanupCron = CronConst.DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON;
 
     @Description("Whether to delete messages logically by default")
     @GlobalProperty
     @MutableProperty
-    private boolean deleteMessageLogicallyByDefault = true;
+    protected boolean deleteMessageLogicallyByDefault = true;
 
     @Description("Whether to respond with recalled messages to clients' message query requests")
     @GlobalProperty
     @MutableProperty
-    private boolean isRecalledMessageVisible;
+    protected boolean isRecalledMessageVisible;
 
     // TODO
 //    @Description("Whether to hide the content (text and records) of recalled messages, " +
 //            "but still return when responding to clients' message query requests")
 //    @GlobalProperty
 //    @MutableProperty
-//    private boolean hideRecalledMessageContent = true;
+//    protected boolean hideRecalledMessageContent = true;
 
     @Description("Whether to allow users to send messages to a stranger")
     @GlobalProperty
     @MutableProperty
-    private boolean allowSendMessagesToStranger = true;
+    protected boolean allowSendMessagesToStranger = true;
 
     @Description("Whether to allow users to send messages to themselves")
     @GlobalProperty
     @MutableProperty
-    private boolean allowSendMessagesToOneself;
+    protected boolean allowSendMessagesToOneself;
 
     @Description("Whether to allow users to recall messages.\n"
             + "Note: To recall messages, more system resources are needed")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallMessage = true;
+    protected boolean allowRecallMessage = true;
 
     @Description("Whether to allow the sender of a message to edit the message")
     @GlobalProperty
     @MutableProperty
-    private boolean allowEditMessageBySender = true;
+    protected boolean allowEditMessageBySender = true;
 
     @Description("The available recall duration for the sender of a message")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int availableRecallDurationSeconds = 60 * 5;
+    protected int availableRecallDurationSeconds = 60 * 5;
 
     @Description("The default available messages number without the \"total\" field for a message query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int defaultAvailableMessagesNumberWithoutTotal = 1000;
+    protected int defaultAvailableMessagesNumberWithoutTotal = 1000;
 
     @Description("The max available messages number without the \"total\" field that a message query request can request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAvailableMessagesNumberWithoutTotal = 1000;
+    protected int maxAvailableMessagesNumberWithoutTotal = 1000;
 
     @Description("The default available messages number with the \"total\" field for a message query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int defaultAvailableMessagesNumberWithTotal = 1;
+    protected int defaultAvailableMessagesNumberWithTotal = 1;
 
     @Description("The max available messages number with the \"total\" field that a message query request can request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAvailableMessagesNumberWithTotal = 1000;
+    protected int maxAvailableMessagesNumberWithTotal = 1000;
 
     @NestedConfigurationProperty
-    private CacheProperties cache = new CacheProperties();
+    protected CacheProperties cache = new CacheProperties();
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
@@ -183,12 +183,12 @@ public class MessageProperties {
 
         @Description("The maximum size of the cache of sent messages.")
         @Min(0)
-        private int sentMessageCacheMaxSize = 10240;
+        protected int sentMessageCacheMaxSize = 10240;
 
         @Description("The retention period of sent messages in the cache. "
                 + "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
         @Min(1)
-        private int sentMessageExpireAfter = 30;
+        protected int sentMessageExpireAfter = 30;
 
     }
 }

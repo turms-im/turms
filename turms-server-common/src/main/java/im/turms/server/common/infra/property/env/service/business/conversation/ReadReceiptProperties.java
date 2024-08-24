@@ -38,26 +38,26 @@ public class ReadReceiptProperties {
     @Description("Whether to allow updating the last read date")
     @GlobalProperty
     @MutableProperty
-    private boolean enabled = true;
+    protected boolean enabled = true;
 
     @Description("Whether to allow moving the last read date forward")
     @GlobalProperty
     @MutableProperty
-    private boolean allowMoveReadDateForward;
+    protected boolean allowMoveReadDateForward;
 
     @Description("Whether to use the server time to set the last read date when updating")
     @GlobalProperty
     @MutableProperty
-    private boolean useServerTime = true;
+    protected boolean useServerTime = true;
 
     @Description("Whether to update the read date when a user queries messages")
     @GlobalProperty
     @MutableProperty
-    private boolean updateReadDateWhenUserQueryingMessage;
+    protected boolean updateReadDateWhenUserQueryingMessage;
 
     @Description("Whether to update the read date after a user sent a message")
     @GlobalProperty
     @MutableProperty
-    private boolean updateReadDateAfterMessageSent = true;
+    protected boolean updateReadDateAfterMessageSent = true;
 
 }

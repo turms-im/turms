@@ -43,25 +43,25 @@ public class NodeProperties {
             + "e.g. \"turms001\", \"turms_002\". "
             + "A node must have a unique ID. "
             + "If not specified, Turms server will generate a random unique ID")
-    private String id = "";
+    protected String id = "";
 
     @Description("The node name must start with a letter or underscore, "
             + "and matches zero or more of characters [a-zA-Z0-9_] after the beginning. "
             + "e.g. \"turms001\", \"turms_002\". "
             + "The node name can be duplicate in the cluster. "
             + "If not specified, Turms server will use the node ID as the node name")
-    private String name = "";
+    protected String name = "";
 
     @Description("e.g. \"us-east-1\" and \"ap-east-1\"")
-    private String zone = "";
+    protected String zone = "";
 
-    private boolean activeByDefault = true;
+    protected boolean activeByDefault = true;
 
     @Description("Only works when it is a turms-service node")
-    private boolean leaderEligible = true;
+    protected boolean leaderEligible = true;
 
     @Description("The priority to be a leader")
     @Min(0)
-    private int priority;
+    protected int priority;
 
 }

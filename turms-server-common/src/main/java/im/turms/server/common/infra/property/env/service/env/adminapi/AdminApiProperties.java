@@ -40,51 +40,51 @@ public class AdminApiProperties extends BaseAdminApiProperties {
             + "Better false to prevent administrators from deleting all data by accident")
     @GlobalProperty
     @MutableProperty
-    private boolean allowDeleteWithoutFilter;
+    protected boolean allowDeleteWithoutFilter;
 
     // FIXME: The property is unused
     @Description("The maximum day difference per query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxDayDifferencePerRequest = 3 * 30;
+    protected int maxDayDifferencePerRequest = 3 * 30;
 
     @Description("The maximum hour difference per count request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxHourDifferencePerCountRequest = 24;
+    protected int maxHourDifferencePerCountRequest = 24;
 
     @Description("The maximum day difference per count request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxDayDifferencePerCountRequest = 31;
+    protected int maxDayDifferencePerCountRequest = 31;
 
     @Description("The maximum month difference per count request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxMonthDifferencePerCountRequest = 12;
+    protected int maxMonthDifferencePerCountRequest = 12;
 
     @Description("The maximum available records per query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAvailableRecordsPerRequest = 1000;
+    protected int maxAvailableRecordsPerRequest = 1000;
 
     // FIXME: The property is unused
     @Description("The maximum available online users' status per query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAvailableOnlineUsersStatusPerRequest = 20;
+    protected int maxAvailableOnlineUsersStatusPerRequest = 20;
 
     @Description("The default available records per query request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int defaultAvailableRecordsPerRequest = 10;
+    protected int defaultAvailableRecordsPerRequest = 10;
 
     public AdminApiProperties() {
         http.setPort(8510);

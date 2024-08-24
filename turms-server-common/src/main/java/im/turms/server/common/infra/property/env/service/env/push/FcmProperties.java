@@ -31,8 +31,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FcmProperties {
 
-    private boolean enabled;
+    protected boolean enabled;
 
-    private String credentials = "";
+    protected String credentials = "";
 
 }

@@ -41,18 +41,18 @@ public class GroupQuestionProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int questionContentLimit = 200;
+    protected int questionContentLimit = 200;
 
     @Description("The maximum allowed length for the text of a group question's answer")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int answerContentLimit = 50;
+    protected int answerContentLimit = 50;
 
     @Description("The maximum number of answers for a group question")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAnswerCount = 10;
+    protected int maxAnswerCount = 10;
 
 }

@@ -35,6 +35,6 @@ import lombok.NoArgsConstructor;
 public class JwtAuthenticationExpectationProperties {
 
     @Size(min = 1)
-    private Map<String, Object> customPayloadClaims = Map.of("authenticated", true);
+    protected Map<String, Object> customPayloadClaims = Map.of("authenticated", true);
 
 }

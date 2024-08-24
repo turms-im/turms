@@ -42,11 +42,11 @@ public class SchedulingProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxAllowedStartDateOffsetSeconds;
+    protected int maxAllowedStartDateOffsetSeconds;
 
     @Description("Whether to allow users to cancel the meeting")
     @GlobalProperty
     @MutableProperty
-    private boolean allowCancel = true;
+    protected boolean allowCancel = true;
 
 }

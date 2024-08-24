@@ -38,11 +38,11 @@ public class NotificationFriendRequestRepliedProperties {
     @Description("Whether to notify the requester's other online sessions when they have replied to a friend request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the sender of the friend request when the recipient has replied to the friend request sent by them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyFriendRequestSender = true;
+    protected boolean notifyFriendRequestSender = true;
 
 }

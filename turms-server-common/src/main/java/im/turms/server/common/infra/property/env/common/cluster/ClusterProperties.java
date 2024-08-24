@@ -34,21 +34,21 @@ import im.turms.server.common.infra.property.env.common.cluster.connection.Conne
 @NoArgsConstructor
 public class ClusterProperties {
 
-    private String id = "turms";
+    protected String id = "turms";
 
     @NestedConfigurationProperty
-    private NodeProperties node = new NodeProperties();
+    protected NodeProperties node = new NodeProperties();
 
     @NestedConfigurationProperty
-    private ConnectionProperties connection = new ConnectionProperties();
+    protected ConnectionProperties connection = new ConnectionProperties();
 
     @NestedConfigurationProperty
-    private DiscoveryProperties discovery = new DiscoveryProperties();
+    protected DiscoveryProperties discovery = new DiscoveryProperties();
 
     @NestedConfigurationProperty
-    private SharedConfigProperties sharedConfig = new SharedConfigProperties();
+    protected SharedConfigProperties sharedConfig = new SharedConfigProperties();
 
     @NestedConfigurationProperty
-    private RpcProperties rpc = new RpcProperties();
+    protected RpcProperties rpc = new RpcProperties();
 
 }

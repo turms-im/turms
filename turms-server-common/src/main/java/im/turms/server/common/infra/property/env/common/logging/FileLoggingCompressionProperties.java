@@ -33,6 +33,6 @@ public class FileLoggingCompressionProperties {
 
     public static final boolean DEFAULT_VALUE_ENABLED = true;
 
-    private boolean enabled = DEFAULT_VALUE_ENABLED;
+    protected boolean enabled = DEFAULT_VALUE_ENABLED;
 
 }

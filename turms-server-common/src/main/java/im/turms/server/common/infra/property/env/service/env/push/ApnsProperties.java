@@ -31,16 +31,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApnsProperties {
 
-    private boolean enabled;
+    protected boolean enabled;
 
-    private String bundleId = "";
+    protected String bundleId = "";
 
-    private String signingKey = "";
+    protected String signingKey = "";
 
-    private String teamId = "";
+    protected String teamId = "";
 
-    private String keyId = "";
+    protected String keyId = "";
 
-    private boolean sandboxEnabled;
+    protected boolean sandboxEnabled;
 
 }

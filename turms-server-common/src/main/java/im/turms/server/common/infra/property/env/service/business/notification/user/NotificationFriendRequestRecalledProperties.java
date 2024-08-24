@@ -38,11 +38,11 @@ public class NotificationFriendRequestRecalledProperties {
     @Description("Whether to notify the requester's other online sessions when they have recalled a friend request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the recipient when the requester has recalled a friend request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyFriendRequestRecipient = true;
+    protected boolean notifyFriendRequestRecipient = true;
 
 }

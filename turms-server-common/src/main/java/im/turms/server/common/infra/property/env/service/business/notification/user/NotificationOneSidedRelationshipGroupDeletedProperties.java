@@ -38,11 +38,11 @@ public class NotificationOneSidedRelationshipGroupDeletedProperties {
     @Description("Whether to notify the requester's other online sessions when they have deleted a relationship group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify members when a one-side relationship group owner has deleted the group")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRelationshipGroupMembers;
+    protected boolean notifyRelationshipGroupMembers;
 
 }

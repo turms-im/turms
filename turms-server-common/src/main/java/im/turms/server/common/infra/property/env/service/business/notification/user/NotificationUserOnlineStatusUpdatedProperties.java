@@ -38,11 +38,11 @@ public class NotificationUserOnlineStatusUpdatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have updated their online status")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify non-blocked related users when a user has updated their online status")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyNonBlockedRelatedUsers;
+    protected boolean notifyNonBlockedRelatedUsers;
 
 }

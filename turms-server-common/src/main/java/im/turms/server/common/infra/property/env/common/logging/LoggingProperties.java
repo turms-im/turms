@@ -33,9 +33,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class LoggingProperties {
 
     @NestedConfigurationProperty
-    private ConsoleLoggingProperties console = new ConsoleLoggingProperties();
+    protected ConsoleLoggingProperties console = new ConsoleLoggingProperties();
 
     @NestedConfigurationProperty
-    private FileLoggingProperties file = new FileLoggingProperties();
+    protected FileLoggingProperties file = new FileLoggingProperties();
 
 }

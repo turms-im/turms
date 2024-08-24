@@ -38,27 +38,27 @@ import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 public class AdminMongoProperties extends MongoProperties {
 
     @NestedConfigurationProperty
-    private OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
+    protected OptionalIndexProperties optionalIndex = new OptionalIndexProperties();
 
     @NestedConfigurationProperty
-    private transient WriteConcernProperties writeConcern = new WriteConcernProperties();
+    protected transient WriteConcernProperties writeConcern = new WriteConcernProperties();
 
     @Data
     public static class OptionalIndexProperties {
         @NestedConfigurationProperty
-        private AdminOptionalIndexProperties admin = new AdminOptionalIndexProperties();
+        protected AdminOptionalIndexProperties admin = new AdminOptionalIndexProperties();
     }
 
     @Data
     public static class AdminOptionalIndexProperties {
-        private boolean roleIds;
-        private boolean registrationDate;
+        protected boolean roleIds;
+        protected boolean registrationDate;
     }
 
     @Data
     public static class WriteConcernProperties {
-        private WriteConcern admin = WriteConcern.MAJORITY;
-        private WriteConcern adminRole = WriteConcern.MAJORITY;
+        protected WriteConcern admin = WriteConcern.MAJORITY;
+        protected WriteConcern adminRole = WriteConcern.MAJORITY;
     }
 
 }

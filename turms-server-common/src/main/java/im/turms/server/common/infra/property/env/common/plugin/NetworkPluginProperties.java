@@ -39,33 +39,33 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class NetworkPluginProperties {
 
     @Description("The plugin download URL")
-    private String url = "";
+    protected String url = "";
 
     @Description("The plugin type. If \"AUTO\", "
             + "the URL must end with \".jar\" for Java plugins, "
             + "or \".js\" for JavaScript plugins")
-    private PluginType type = PluginType.AUTO;
+    protected PluginType type = PluginType.AUTO;
 
     @Description("Whether to use the local cache. If false, turms will download the plugin every time on startup "
             + "even if the plugin has been downloaded on the local machine")
-    private boolean useLocalCache;
+    protected boolean useLocalCache;
 
     @NestedConfigurationProperty
-    private DownloadProperties download = new DownloadProperties();
+    protected DownloadProperties download = new DownloadProperties();
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
     @Data
     @NoArgsConstructor
     public static class DownloadProperties {
-        private HttpMethod httpMethod = HttpMethod.GET;
+        protected HttpMethod httpMethod = HttpMethod.GET;
 
         @Min(1)
-        private int timeoutMillis = 60_000;
+        protected int timeoutMillis = 60_000;
     }
 
     // TODO
-//    private String version = "";
-//    private ProxyProperties proxy = new ProxyProperties();
+//    protected String version = "";
+//    protected ProxyProperties proxy = new ProxyProperties();
 
 }

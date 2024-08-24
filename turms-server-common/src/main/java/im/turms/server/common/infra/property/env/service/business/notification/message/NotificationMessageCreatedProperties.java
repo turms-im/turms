@@ -38,11 +38,11 @@ public class NotificationMessageCreatedProperties {
     @Description("Whether to notify the requester's other online sessions when they have created a message")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the message recipients when a sender has created a message to them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyMessageRecipients = true;
+    protected boolean notifyMessageRecipients = true;
 
 }

@@ -43,33 +43,33 @@ public class GroupJoinRequestProperties {
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxContentLength = 200;
+    protected int maxContentLength = 200;
 
     @Description("A group join request will become expired after the specified time has elapsed")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int expireAfterSeconds = 30 * 24 * 3600;
+    protected int expireAfterSeconds = 30 * 24 * 3600;
 
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
     @MutableProperty
-    private boolean allowRecallPendingJoinRequestBySender;
+    protected boolean allowRecallPendingJoinRequestBySender;
 
     @Description("Whether to delete expired group join requests when the cron expression is triggered")
     @GlobalProperty
     @MutableProperty
-    private boolean deleteExpiredJoinRequestsWhenCronTriggered;
+    protected boolean deleteExpiredJoinRequestsWhenCronTriggered;
 
     @Description("Clean the expired group join requests when the cron expression is triggered"
             + " if \"deleteExpiredJoinRequestsWhenCronTriggered\" is true")
     @ValidCron
-    private String expiredJoinRequestsCleanupCron =
+    protected String expiredJoinRequestsCleanupCron =
             CronConst.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON;
 
     @Description("The maximum allowed length for the response reason of a group join request")
     @GlobalProperty
     @MutableProperty
     @Min(0)
-    private int maxResponseReasonLength = 200;
+    protected int maxResponseReasonLength = 200;
 }

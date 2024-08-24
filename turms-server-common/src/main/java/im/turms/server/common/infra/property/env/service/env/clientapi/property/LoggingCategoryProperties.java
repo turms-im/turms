@@ -36,8 +36,8 @@ import im.turms.server.common.infra.property.constant.LoggingRequestCategory;
 public class LoggingCategoryProperties {
 
     @EqualsAndHashCode.Include
-    private LoggingRequestCategory category;
+    protected LoggingRequestCategory category;
 
-    private float sampleRate = 1.0f;
+    protected float sampleRate = 1.0f;
 
 }

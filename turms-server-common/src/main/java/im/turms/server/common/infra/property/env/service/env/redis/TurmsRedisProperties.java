@@ -36,6 +36,6 @@ import im.turms.server.common.storage.redis.RedisProperties;
 public class TurmsRedisProperties extends BaseRedisProperties {
 
     @NestedConfigurationProperty
-    private RedisProperties sequenceId = new RedisProperties();
+    protected RedisProperties sequenceId = new RedisProperties();
 
 }

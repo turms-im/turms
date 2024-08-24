@@ -34,9 +34,9 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class HttpHeaderProperties {
 
     @Description("The name of the header")
-    private String name;
+    protected String name;
 
     @Description("The value of the header")
-    private String value;
+    protected String value;
 
 }

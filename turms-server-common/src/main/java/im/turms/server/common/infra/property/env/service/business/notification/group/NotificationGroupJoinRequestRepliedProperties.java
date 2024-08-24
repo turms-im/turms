@@ -38,21 +38,21 @@ public class NotificationGroupJoinRequestRepliedProperties {
     @Description("Whether to notify the requester's other online sessions when they have replied to a group join request")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyRequesterOtherOnlineSessions = true;
+    protected boolean notifyRequesterOtherOnlineSessions = true;
 
     @Description("Whether to notify the sender of the group join request when the group owner or manager has replied to the friend request sent by them")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupJoinRequestSender = true;
+    protected boolean notifyGroupJoinRequestSender = true;
 
     @Description("Whether to notify the group owner and managers when a group join request has been replied")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupOwnerAndManagers = true;
+    protected boolean notifyGroupOwnerAndManagers = true;
 
     @Description("Whether to notify group members when a group join request has been replied")
     @GlobalProperty
     @MutableProperty
-    private boolean notifyGroupMembers;
+    protected boolean notifyGroupMembers;
 
 }

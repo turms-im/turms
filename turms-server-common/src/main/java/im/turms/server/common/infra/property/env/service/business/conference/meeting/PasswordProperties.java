@@ -40,12 +40,12 @@ public class PasswordProperties {
     @Description("The password policy")
     @GlobalProperty
     @MutableProperty
-    private PasswordPolicy policy = PasswordPolicy.PROHIBITED;
+    protected PasswordPolicy policy = PasswordPolicy.PROHIBITED;
 
     @Description("The password type")
     @GlobalProperty
     @MutableProperty
-    private StringPattern type = StringPattern.NUMERIC;
+    protected StringPattern type = StringPattern.NUMERIC;
 
     /**
      * @implNote Use 6 by default because it is easy for mobile users to input.
@@ -53,11 +53,11 @@ public class PasswordProperties {
     @Description("The minimum length of the password")
     @GlobalProperty
     @MutableProperty
-    private int minLength = 6;
+    protected int minLength = 6;
 
     @Description("The maximum length of the password")
     @GlobalProperty
     @MutableProperty
-    private int maxLength = 6;
+    protected int maxLength = 6;
 
 }

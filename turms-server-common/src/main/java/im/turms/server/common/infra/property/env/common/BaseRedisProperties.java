@@ -36,15 +36,15 @@ import im.turms.server.common.storage.redis.SimpleRedisProperties;
 public abstract class BaseRedisProperties {
 
     @NestedConfigurationProperty
-    private transient RedisProperties session = new RedisProperties();
+    protected transient RedisProperties session = new RedisProperties();
 
     @NestedConfigurationProperty
-    private transient RedisProperties location = new RedisProperties();
+    protected transient RedisProperties location = new RedisProperties();
 
     @NestedConfigurationProperty
-    private transient SimpleRedisProperties ipBlocklist = new SimpleRedisProperties();
+    protected transient SimpleRedisProperties ipBlocklist = new SimpleRedisProperties();
 
     @NestedConfigurationProperty
-    private transient SimpleRedisProperties userIdBlocklist = new SimpleRedisProperties();
+    protected transient SimpleRedisProperties userIdBlocklist = new SimpleRedisProperties();
 
 }

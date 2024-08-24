@@ -33,9 +33,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 public class ConnectionProperties {
 
     @NestedConfigurationProperty
-    private ConnectionClientProperties client = new ConnectionClientProperties();
+    protected ConnectionClientProperties client = new ConnectionClientProperties();
 
     @NestedConfigurationProperty
-    private ConnectionServerProperties server = new ConnectionServerProperties();
+    protected ConnectionServerProperties server = new ConnectionServerProperties();
 
 }

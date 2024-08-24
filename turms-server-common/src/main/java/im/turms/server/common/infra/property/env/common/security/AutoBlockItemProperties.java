@@ -41,13 +41,13 @@ public class AutoBlockItemProperties {
                     new BlockLevel(30 * 60, 60 * 1000, 1),
                     new BlockLevel(60 * 60, 60 * 1000, 0));
 
-    private boolean enabled;
+    protected boolean enabled;
 
     @Description("Block the client when the block condition is triggered the times")
     @Min(0)
-    private int blockTriggerTimes = 5;
+    protected int blockTriggerTimes = 5;
 
-    private List<BlockLevel> blockLevels = DEFAULT_BLOCK_LEVELS;
+    protected List<BlockLevel> blockLevels = DEFAULT_BLOCK_LEVELS;
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
@@ -57,17 +57,17 @@ public class AutoBlockItemProperties {
 
         @Description("Block the client for the specified duration in seconds")
         @Min(1)
-        private long blockDurationSeconds = 10L * 60;
+        protected long blockDurationSeconds = 10L * 60;
 
         @Description("Reduce the trigger time by 1 when the time passes. "
                 + "If 0, never reduce the trigger times and "
                 + "the block status will remain in the memory until the server is closed")
         @Min(0)
-        private int reduceOneTriggerTimeIntervalMillis = 60 * 1000;
+        protected int reduceOneTriggerTimeIntervalMillis = 60 * 1000;
 
         @Description("Go to the next block level when the block condition is triggered the times")
         @Min(0)
-        private int goNextLevelTriggerTimes = 1;
+        protected int goNextLevelTriggerTimes = 1;
 
     }
 

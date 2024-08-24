@@ -34,13 +34,13 @@ import im.turms.server.common.infra.property.metadata.Description;
 public class ElasticsearchIndexTextFieldProperties {
 
     @Description("The name of the field. A property can have multiple fields in Elasticsearch")
-    private String fieldName = "";
+    protected String fieldName = "";
 
     @Description("The name of the analyzer to use for the text field. "
             + "If not specified, the default analyzer for the language will be used")
-    private String analyzer = "";
+    protected String analyzer = "";
 
     @Description("The name of the search analyzer to use for the text field")
-    private String searchAnalyzer = "";
+    protected String searchAnalyzer = "";
 
 }

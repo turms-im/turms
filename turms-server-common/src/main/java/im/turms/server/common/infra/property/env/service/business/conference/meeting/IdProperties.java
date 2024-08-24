@@ -39,6 +39,6 @@ public class IdProperties {
     @Description("The ID type")
     @GlobalProperty
     @MutableProperty
-    private MeetingIdType type = MeetingIdType.DIGIT_9;
+    protected MeetingIdType type = MeetingIdType.DIGIT_9;
 
 }
