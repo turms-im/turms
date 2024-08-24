@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileSystemUtils;
@@ -173,6 +174,7 @@ public class TestEnvironmentContainer extends ComposeContainer implements Closea
                             + DOCKER_COMPOSE_TEST_FILE);
         }
         YAMLMapper yamlMapper = YAMLMapper.builder()
+                .enable(YAMLGenerator.Feature.LITERAL_BLOCK_STYLE)
                 .build();
         Map<String, Object> config;
         try {
