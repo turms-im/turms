@@ -74,9 +74,9 @@ services:
       - |
         PLUGINS=$(bin/elasticsearch-plugin list)
         echo "Installed plugins: ${PLUGINS}"
-        echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0"
-        echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install analysis-icu
-        echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install analysis-kuromoji
+        echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch --verbose "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
+        echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install --batch --verbose analysis-icu || (echo "failed to the plugin: analysis-icu" && exit 1)
+        echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install --batch --verbose analysis-kuromoji || (echo "failed to the plugin: analysis-kuromoji" && exit 1)
         /usr/local/bin/docker-entrypoint.sh
     healthcheck:
       test: [

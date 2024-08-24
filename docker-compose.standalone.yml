@@ -191,11 +191,11 @@ services:
     # to install optional analysis plugins.
 
     # Plugins for Chinese analysis
-    # echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0"
+    # echo "${PLUGINS}" | grep -q analysis-ik || bin/elasticsearch-plugin install --batch "https://get.infini.cloud/elasticsearch/analysis-ik/8.13.0" || (echo "failed to the plugin: analysis-ik" && exit 1)
 
     # Plugins for Japanese analysis
-    # echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install analysis-icu
-    # echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install analysis-kuromoji
+    # echo "${PLUGINS}" | grep -q analysis-icu || bin/elasticsearch-plugin install --batch analysis-icu || (echo "failed to the plugin: analysis-icu" && exit 1)
+    # echo "${PLUGINS}" | grep -q analysis-kuromoji || bin/elasticsearch-plugin install --batch analysis-kuromoji || (echo "failed to the plugin: analysis-kuromoji" && exit 1)
     command:
       - /bin/bash
       - -c
