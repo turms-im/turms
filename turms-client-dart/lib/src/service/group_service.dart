@@ -2,8 +2,6 @@ import 'package:fixnum/fixnum.dart' show Int64;
 
 import '../../turms_client.dart';
 import '../extension/notification_extensions.dart';
-import '../model/proto/request/group/enrollment/update_group_invitation_request.pb.dart';
-import '../model/proto/request/group/enrollment/update_group_join_request_request.pb.dart';
 
 class GroupService {
   final TurmsClient _turmsClient;
@@ -38,6 +36,13 @@ class GroupService {
   ///   throws [ResponseException] with the code [ResponseStatusCode.createGroupWithNonexistentGroupType].
   /// * If the logged-in user does not have the permission to create the group with [typeId],
   ///   throws [ResponseException] with the code [ResponseStatusCode.noPermissionToCreateGroupWithGroupType].
+  /// * `userDefinedAttributes`: The user-defined attributes for upsert.
+  /// 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+  /// Otherwise, the method will throw with [ResponseStatusCode.illegalArgument]
+  /// if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+  /// or silently ignored if it is true.
+  /// 2. Only public attributes are supported currently, which means other users can find out these attributes
+  /// via [queryGroups].
   ///
   /// **Returns**: The group ID.
   ///
@@ -47,14 +52,16 @@ class GroupService {
       String? announcement,
       int? minScore,
       DateTime? muteEndDate,
-      Int64? typeId}) async {
+      Int64? typeId,
+      Map<String, Value>? userDefinedAttributes}) async {
     final n = await _turmsClient.driver.send(CreateGroupRequest(
         name: name,
         intro: intro,
         announcement: announcement,
         minScore: minScore,
         muteEndDate: muteEndDate?.toInt64(),
-        typeId: typeId));
+        typeId: typeId,
+        userDefinedAttributes: userDefinedAttributes));
     return n.toResponse((data) => data.getLongOrThrow());
   }
 
@@ -161,6 +168,21 @@ class GroupService {
   /// Authorization:
   /// * If the logged-in user is not the owner of the group,
   ///   throws [ResponseException] with the code [ResponseStatusCode.notGroupOwnerToTransferGroup].
+  /// * `userDefinedAttributes`: The user-defined attributes for upsert.
+  /// 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+  /// Otherwise, the method will throw with [ResponseStatusCode.illegalArgument]
+  /// if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+  /// or silently ignored if it is true.
+  /// 2. If trying to update existing immutable attribute, throws with [ResponseStatusCode.illegalArgument].
+  /// 3. Only public attributes are supported currently, which means other users can find out these attributes
+  /// via [queryGroups].
+  ///
+  /// Authorization:
+  /// * Whether the logged-in user can change the user-defined attributes depends on the group type.
+  ///   If not null and the logged-in user does NOT have the permission to change the group name,
+  ///   throws [ResponseException] with the code [ResponseStatusCode.notGroupMemberToUpdateGroupInfo]
+  ///   or [ResponseStatusCode.notGroupOwnerOrManagerToUpdateGroupInfo]
+  ///   or [ResponseStatusCode.notGroupOwnerToUpdateGroupInfo].
   ///
   /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateGroup(Int64 groupId,
@@ -171,9 +193,18 @@ class GroupService {
       Int64? typeId,
       DateTime? muteEndDate,
       Int64? successorId,
-      bool? quitAfterTransfer}) async {
-    if ([name, intro, announcement, minScore, typeId, muteEndDate, successorId]
-        .areAllNull) {
+      bool? quitAfterTransfer,
+      Map<String, Value>? userDefinedAttributes}) async {
+    if ([
+      name,
+      intro,
+      announcement,
+      minScore,
+      typeId,
+      muteEndDate,
+      successorId,
+      userDefinedAttributes
+    ].areAllNullOrEmpty) {
       return Response.nullValue();
     }
     final n = await _turmsClient.driver.send(UpdateGroupRequest(
@@ -185,7 +216,8 @@ class GroupService {
         minScore: minScore,
         typeId: typeId,
         successorId: successorId,
-        quitAfterTransfer: quitAfterTransfer));
+        quitAfterTransfer: quitAfterTransfer,
+        userDefinedAttributes: userDefinedAttributes));
     return n.toNullResponse();
   }
 

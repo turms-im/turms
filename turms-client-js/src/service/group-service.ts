@@ -11,6 +11,7 @@ import Validator from '../util/validator';
 import CollectionUtil from '../util/collection-util';
 import NewGroupJoinQuestion from '../model/new-group-join-question';
 import { ResponseAction } from '../model/proto/constant/response_action';
+import { Value } from '../model/proto/model/common/value';
 
 export default class GroupService {
     private _turmsClient: TurmsClient;
@@ -48,6 +49,13 @@ export default class GroupService {
      *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#CREATE_GROUP_WITH_NONEXISTENT_GROUP_TYPE}.
      * * If the logged-in user does not have the permission to create the group with {@link typeId},
      *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE}.
+     * @param userDefinedAttributes - the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with {@link ResponseStatusCode#ILLEGAL_ARGUMENT}
+     * if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. Only public attributes are supported currently, which means other users can find out these attributes
+     * via {@link queryGroups}.
      * @returns the group ID.
      * @throws {@link ResponseError} if an error occurs.
      */
@@ -57,14 +65,16 @@ export default class GroupService {
         announcement,
         minScore,
         muteEndDate,
-        typeId
+        typeId,
+        userDefinedAttributes
     }: {
         name: string,
         intro?: string,
         announcement?: string,
         minScore?: number,
         muteEndDate?: Date,
-        typeId?: string
+        typeId?: string,
+        userDefinedAttributes?: Record<string, Value>
     }): Promise<Response<string>> {
         if (null == name) {
             return ResponseError.notNullPromise('name');
@@ -77,7 +87,7 @@ export default class GroupService {
                 minScore,
                 muteEndDate: DataParser.getDateTimeStr(muteEndDate),
                 typeId,
-                userDefinedAttributes: {},
+                userDefinedAttributes,
                 customAttributes: []
             },
             customAttributes: []
@@ -201,6 +211,21 @@ export default class GroupService {
      * Authorization:
      * * If the logged-in user is not the owner of the group,
      *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_GROUP_OWNER_TO_TRANSFER_GROUP}.
+     * @param userDefinedAttributes - the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with {@link ResponseStatusCode#ILLEGAL_ARGUMENT}
+     * if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. If trying to update existing immutable attribute, throws with {@link ResponseStatusCode#ILLEGAL_ARGUMENT}.
+     * 3. Only public attributes are supported currently, which means other users can find out these attributes
+     * via {@link queryGroups}.
+     *
+     * Authorization:
+     * * Whether the logged-in user can change the user-defined attributes depends on the group type.
+     *   If not null and the logged-in user does NOT have the permission to change the group name,
+     *   throws {@link {@link ResponseError}} with the code {@link ResponseStatusCode#NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO}
+     *   or {@link ResponseStatusCode#NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO}
+     *   or {@link ResponseStatusCode#NOT_GROUP_OWNER_TO_UPDATE_GROUP_INFO}.
      * @throws {@link ResponseError} if an error occurs.
      */
     updateGroup({
@@ -212,7 +237,8 @@ export default class GroupService {
         typeId,
         muteEndDate,
         successorId,
-        quitAfterTransfer
+        quitAfterTransfer,
+        userDefinedAttributes
     }: {
         groupId: string,
         name?: string,
@@ -222,13 +248,14 @@ export default class GroupService {
         typeId?: string,
         muteEndDate?: Date,
         successorId?: string,
-        quitAfterTransfer?: boolean
+        quitAfterTransfer?: boolean,
+        userDefinedAttributes?: Record<string, Value>
     }): Promise<Response<void>> {
         if (null == groupId) {
             return ResponseError.notNullPromise('groupId');
         }
-        if (Validator.areAllNull(name, intro, announcement, minScore, typeId,
-            muteEndDate, successorId)) {
+        if (Validator.areAllNullOrEmpty(name, intro, announcement, minScore, typeId,
+            muteEndDate, successorId, userDefinedAttributes)) {
             return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
@@ -242,7 +269,7 @@ export default class GroupService {
                 typeId,
                 successorId,
                 quitAfterTransfer,
-                userDefinedAttributes: {},
+                userDefinedAttributes,
                 customAttributes: []
             },
             customAttributes: []

@@ -17,6 +17,7 @@ import UserLocation from '../model/user-location';
 import { UserStatus } from '../model/proto/constant/user_status';
 import Validator from '../util/validator';
 import CollectionUtil from '../util/collection-util';
+import { Value } from '../model/proto/model/common/value';
 
 const INVALID_ONLINE_STATUSES = [UserStatus.OFFLINE];
 
@@ -459,20 +460,30 @@ export default class UserService {
      * to upload the profile picture and use the returned URL as {@link profilePicture}.
      * @param profileAccessStrategy - the new profile access strategy.
      * If null, the profile access strategy will not be updated.
+     * @param userDefinedAttributes - the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.user.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with {@link ResponseStatusCode#ILLEGAL_ARGUMENT}
+     * if `turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. If trying to update existing immutable attribute, throws with {@link ResponseStatusCode#ILLEGAL_ARGUMENT}.
+     * 3. Only public attributes are supported currently, which means other users can find out these attributes
+     * via {@link queryUserProfiles}.
      * @throws {@link ResponseError} if an error occurs.
      */
     updateProfile({
         name,
         intro,
         profilePicture,
-        profileAccessStrategy
+        profileAccessStrategy,
+        userDefinedAttributes
     }: {
         name?: string,
         intro?: string,
         profilePicture?: string,
-        profileAccessStrategy?: string | ProfileAccessStrategy
+        profileAccessStrategy?: string | ProfileAccessStrategy,
+        userDefinedAttributes?: Record<string, Value>
     }): Promise<Response<void>> {
-        if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
+        if (Validator.areAllNullOrEmpty(name, intro, profilePicture, profileAccessStrategy, userDefinedAttributes)) {
             return Promise.resolve(Response.nullValue());
         }
         if (null != profileAccessStrategy) {
@@ -487,7 +498,7 @@ export default class UserService {
                 intro,
                 profilePicture,
                 profileAccessStrategy: profileAccessStrategy as ProfileAccessStrategy | undefined,
-                userDefinedAttributes: {},
+                userDefinedAttributes,
                 customAttributes: []
             },
             customAttributes: []

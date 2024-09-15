@@ -49,6 +49,8 @@ class GroupService : private boost::noncopyable {
     using UserInfo = model::proto::UserInfo;
     using UserInfosWithVersion = model::proto::UserInfosWithVersion;
 
+    using Value = model::proto::Value;
+
    public:
     explicit GroupService(TurmsClient& turmsClient);
 
@@ -84,6 +86,14 @@ class GroupService : private boost::noncopyable {
      * * If the logged-in user does not have the permission to create the group with typeId,
      *   throws ResponseException with the code
      * ResponseStatusCode::kNoPermissionToCreateGroupWithGroupType.
+     * @param userDefinedAttributes the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via
+     * `turms.service.group.info.user-defined-attributes.allowed-attributes`. Otherwise, the method
+     * will throw with ResponseStatusCode::kIllegalArgument if
+     * `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is
+     * false (false by default), or silently ignored if it is true.
+     * 2. Only public attributes are supported currently, which means other users can find out these
+     * attributes via queryGroups().
      * @return the group ID.
      * @throws ResponseException if an error occurs.
      */
@@ -92,7 +102,8 @@ class GroupService : private boost::noncopyable {
                      const boost::optional<absl::string_view>& announcement = boost::none,
                      const boost::optional<int>& minScore = boost::none,
                      const boost::optional<time_point>& muteEndDate = boost::none,
-                     const boost::optional<int64_t>& typeId = boost::none)
+                     const boost::optional<int64_t>& typeId = boost::none,
+                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {})
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -206,6 +217,24 @@ class GroupService : private boost::noncopyable {
      * Authorization:
      * * If the logged-in user is not the owner of the group,
      *   throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerToTransferGroup.
+     * @param userDefinedAttributes the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via
+     * `turms.service.group.info.user-defined-attributes.allowed-attributes`. Otherwise, the method
+     * will throw with ResponseStatusCode::kIllegalArgument if
+     * `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is
+     * false (false by default), or silently ignored if it is true.
+     * 2. If trying to update existing immutable attribute, throws with
+     * ResponseStatusCode::kIllegalArgument.
+     * 3. Only public attributes are supported currently, which means other users can find out these
+     * attributes via queryGroups().
+     *
+     * Authorization:
+     * * Whether the logged-in user can change the user-defined attributes depends on the group
+     * type. If not null and the logged-in user does NOT have the permission to change the group
+     * name, throws ResponseException with the code
+     * ResponseStatusCode::kNotGroupMemberToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerOrManagerToUpdateGroupInfo or
+     * ResponseStatusCode::kNotGroupOwnerToUpdateGroupInfo.
      * @throws ResponseException if an error occurs.
      */
     auto updateGroup(int64_t groupId,
@@ -216,7 +245,8 @@ class GroupService : private boost::noncopyable {
                      const boost::optional<int64_t>& typeId = boost::none,
                      const boost::optional<time_point>& muteEndDate = boost::none,
                      const boost::optional<int64_t>& successorId = boost::none,
-                     const boost::optional<bool>& quitAfterTransfer = boost::none)
+                     const boost::optional<bool>& quitAfterTransfer = boost::none,
+                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {})
         -> boost::future<Response<void>>;
 
     /**

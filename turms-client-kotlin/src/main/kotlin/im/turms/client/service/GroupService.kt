@@ -27,6 +27,7 @@ import im.turms.client.model.ResponseStatusCode
 import im.turms.client.model.proto.constant.GroupMemberRole
 import im.turms.client.model.proto.constant.ResponseAction
 import im.turms.client.model.proto.model.common.LongsWithVersion
+import im.turms.client.model.proto.model.common.Value
 import im.turms.client.model.proto.model.group.Group
 import im.turms.client.model.proto.model.group.GroupInvitationsWithVersion
 import im.turms.client.model.proto.model.group.GroupJoinQuestion
@@ -98,6 +99,13 @@ class GroupService(private val turmsClient: TurmsClient) {
      *   throws [ResponseException] with the code [ResponseStatusCode.CREATE_GROUP_WITH_NONEXISTENT_GROUP_TYPE].
      * * If the logged-in user does not have the permission to create the group with [typeId],
      *   throws [ResponseException] with the code [ResponseStatusCode.NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE].
+     * @param userDefinedAttributes the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with [ResponseStatusCode.ILLEGAL_ARGUMENT]
+     * if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. Only public attributes are supported currently, which means other users can find out these attributes
+     * via [queryGroups].
      * @return the group ID.
      * @throws ResponseException if an error occurs.
      */
@@ -108,6 +116,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         minScore: Int? = null,
         muteEndDate: Date? = null,
         typeId: Long? = null,
+        userDefinedAttributes: Map<String, Value>? = null,
     ): Response<Long> =
         turmsClient.driver
             .send(
@@ -118,6 +127,9 @@ class GroupService(private val turmsClient: TurmsClient) {
                     minScore?.let { this.minScore = it }
                     muteEndDate?.let { this.muteEndDate = it.time }
                     typeId?.let { this.typeId = it }
+                    userDefinedAttributes?.takeIf { it.isNotEmpty() }?.let {
+                        putAllUserDefinedAttributes(it)
+                    }
                 },
             ).toResponse {
                 it.getLongOrThrow()
@@ -231,6 +243,21 @@ class GroupService(private val turmsClient: TurmsClient) {
      * Authorization:
      * * If the logged-in user is not the owner of the group,
      *   throws [ResponseException] with the code [ResponseStatusCode.NOT_GROUP_OWNER_TO_TRANSFER_GROUP].
+     * @param userDefinedAttributes the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with [ResponseStatusCode.ILLEGAL_ARGUMENT]
+     * if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. If trying to update existing immutable attribute, throws with [ResponseStatusCode.ILLEGAL_ARGUMENT].
+     * 3. Only public attributes are supported currently, which means other users can find out these attributes
+     * via [queryGroups].
+     *
+     * Authorization:
+     * * Whether the logged-in user can change the user-defined attributes depends on the group type.
+     *   If not null and the logged-in user does NOT have the permission to change the group name,
+     *   throws [ResponseException] with the code [ResponseStatusCode.NOT_GROUP_MEMBER_TO_UPDATE_GROUP_INFO]
+     *   or [ResponseStatusCode.NOT_GROUP_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO]
+     *   or [ResponseStatusCode.NOT_GROUP_OWNER_TO_UPDATE_GROUP_INFO].
      * @throws ResponseException if an error occurs.
      */
     suspend fun updateGroup(
@@ -243,8 +270,9 @@ class GroupService(private val turmsClient: TurmsClient) {
         muteEndDate: Date? = null,
         successorId: Long? = null,
         quitAfterTransfer: Boolean? = null,
+        userDefinedAttributes: Map<String, Value>? = null,
     ): Response<Unit> =
-        if (Validator.areAllNull(
+        if (Validator.areAllNullOrEmpty(
                 name,
                 intro,
                 announcement,
@@ -252,6 +280,7 @@ class GroupService(private val turmsClient: TurmsClient) {
                 typeId,
                 muteEndDate,
                 successorId,
+                userDefinedAttributes,
             )
         ) {
             Response.unitValue()
@@ -268,6 +297,9 @@ class GroupService(private val turmsClient: TurmsClient) {
                         typeId?.let { this.typeId = it }
                         successorId?.let { this.successorId = it }
                         quitAfterTransfer?.let { this.quitAfterTransfer = it }
+                        userDefinedAttributes?.takeIf { it.isNotEmpty() }?.let {
+                            putAllUserDefinedAttributes(it)
+                        }
                     },
                 )
                 .toResponse()

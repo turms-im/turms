@@ -323,6 +323,14 @@ class UserService(private val turmsClient: TurmsClient) {
      * to upload the profile picture and use the returned URL as [profilePicture].
      * @param profileAccessStrategy the new profile access strategy.
      * If null, the profile access strategy will not be updated.
+     * @param userDefinedAttributes the user-defined attributes for upsert.
+     * 1. The attributes must have been defined on the server side via `turms.service.user.info.user-defined-attributes.allowed-attributes`.
+     * Otherwise, the method will throw with [ResponseStatusCode.ILLEGAL_ARGUMENT]
+     * if `turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+     * or silently ignored if it is true.
+     * 2. If trying to update existing immutable attribute, throws with [ResponseStatusCode.ILLEGAL_ARGUMENT].
+     * 3. Only public attributes are supported currently, which means other users can find out these attributes
+     * via [queryUserProfiles].
      * @throws ResponseException if an error occurs.
      */
     suspend fun updateProfile(
@@ -330,8 +338,9 @@ class UserService(private val turmsClient: TurmsClient) {
         intro: String? = null,
         profilePicture: String? = null,
         profileAccessStrategy: ProfileAccessStrategy? = null,
+        userDefinedAttributes: Map<String, Value>? = null,
     ): Response<Unit> =
-        if (Validator.areAllNull(name, intro, profileAccessStrategy)) {
+        if (Validator.areAllNullOrEmpty(name, intro, profilePicture, profileAccessStrategy, userDefinedAttributes)) {
             Response.unitValue()
         } else {
             turmsClient.driver
@@ -341,6 +350,9 @@ class UserService(private val turmsClient: TurmsClient) {
                         intro?.let { this.intro = it }
                         profilePicture?.let { this.profilePicture = it }
                         profileAccessStrategy?.let { this.profileAccessStrategy = it }
+                        userDefinedAttributes?.takeIf { it.isNotEmpty() }?.let {
+                            this.putAllUserDefinedAttributes(it)
+                        }
                     },
                 )
                 .toResponse()

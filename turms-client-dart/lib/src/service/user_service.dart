@@ -2,12 +2,6 @@ import 'package:fixnum/fixnum.dart';
 
 import '../../turms_client.dart';
 import '../extension/notification_extensions.dart';
-import '../model/proto/model/common/value.pb.dart';
-import '../model/proto/model/user/user_settings.pb.dart';
-import '../model/proto/request/user/delete_user_settings_request.pb.dart';
-import '../model/proto/request/user/query_user_settings_request.pb.dart';
-import '../model/proto/request/user/relationship/delete_friend_request_request.pb.dart';
-import '../model/proto/request/user/update_user_settings_request.pb.dart';
 import '../util/system.dart';
 
 class Location {
@@ -237,21 +231,38 @@ class UserService {
   /// to upload the profile picture and use the returned URL as [profilePicture].
   /// * `profileAccessStrategy`: The new profile access strategy.
   /// If null, the profile access strategy will not be updated.
+  /// * `userDefinedAttributes`: The user-defined attributes for upsert.
+  /// 1. The attributes must have been defined on the server side via `turms.service.user.info.user-defined-attributes.allowed-attributes`.
+  /// Otherwise, the method will throw with [ResponseStatusCode.illegalArgument]
+  /// if `turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+  /// or silently ignored if it is true.
+  /// 2. If trying to update existing immutable attribute, throws with [ResponseStatusCode.illegalArgument].
+  /// 3. Only public attributes are supported currently, which means other users can find out these attributes
+  /// via [queryUserProfiles].
   ///
   /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateProfile(
       {String? name,
       String? intro,
       String? profilePicture,
-      ProfileAccessStrategy? profileAccessStrategy}) async {
-    if ([name, intro, profilePicture, profileAccessStrategy].areAllNull) {
+      ProfileAccessStrategy? profileAccessStrategy,
+      Map<String, Value>? userDefinedAttributes}) async {
+    if ([
+      name,
+      intro,
+      profilePicture,
+      profileAccessStrategy,
+      userDefinedAttributes
+    ].areAllNullOrEmpty) {
       return Response.nullValue();
     }
     final n = await _turmsClient.driver.send(UpdateUserRequest(
-        name: name,
-        intro: intro,
-        profilePicture: profilePicture,
-        profileAccessStrategy: profileAccessStrategy));
+      name: name,
+      intro: intro,
+      profilePicture: profilePicture,
+      profileAccessStrategy: profileAccessStrategy,
+      userDefinedAttributes: userDefinedAttributes,
+    ));
     return n.toNullResponse();
   }
 

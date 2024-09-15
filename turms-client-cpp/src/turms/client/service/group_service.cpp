@@ -14,7 +14,8 @@ auto GroupService::createGroup(const absl::string_view& name,
                                const boost::optional<absl::string_view>& announcement,
                                const boost::optional<int>& minScore,
                                const boost::optional<time_point>& muteEndDate,
-                               const boost::optional<int64_t>& typeId)
+                               const boost::optional<int64_t>& typeId,
+                               const std::unordered_map<std::string, Value>& userDefinedAttributes)
     -> boost::future<Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_group_request();
@@ -33,6 +34,10 @@ auto GroupService::createGroup(const absl::string_view& name,
     }
     if (typeId) {
         request->set_type_id(*typeId);
+    }
+    if (!userDefinedAttributes.empty()) {
+        request->mutable_user_defined_attributes()()->insert(userDefinedAttributes.cbegin(),
+                                                             userDefinedAttributes.cend());
     }
     return turmsClient_.driver()
         .send(turmsRequest)
@@ -62,10 +67,11 @@ auto GroupService::updateGroup(int64_t groupId,
                                const boost::optional<int64_t>& typeId,
                                const boost::optional<time_point>& muteEndDate,
                                const boost::optional<int64_t>& successorId,
-                               const boost::optional<bool>& quitAfterTransfer)
+                               const boost::optional<bool>& quitAfterTransfer,
+                               const std::unordered_map<std::string, Value>& userDefinedAttributes)
     -> boost::future<Response<void>> {
     if (!name && !intro && !announcement && !minScore && !typeId && !muteEndDate && !successorId &&
-        !quitAfterTransfer) {
+        userDefinedAttributes.empty()) {
         return boost::make_ready_future<>(Response<void>{});
     }
     TurmsRequest turmsRequest;
@@ -94,6 +100,10 @@ auto GroupService::updateGroup(int64_t groupId,
     }
     if (quitAfterTransfer) {
         request->set_quit_after_transfer(*quitAfterTransfer);
+    }
+    if (!userDefinedAttributes.empty()) {
+        request->mutable_user_defined_attributes()()->insert(userDefinedAttributes.cbegin(),
+                                                             userDefinedAttributes.cend());
     }
     return turmsClient_.driver()
         .send(turmsRequest)

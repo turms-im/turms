@@ -211,9 +211,11 @@ auto UserService::updatePassword(const std::string& password) -> boost::future<R
 auto UserService::updateProfile(const boost::optional<absl::string_view>& name,
                                 const boost::optional<absl::string_view>& intro,
                                 const boost::optional<absl::string_view>& profilePicture,
-                                const boost::optional<ProfileAccessStrategy>& profileAccessStrategy)
+                                const boost::optional<ProfileAccessStrategy>& profileAccessStrategy,
+                                const std::unordered_map<std::string, Value>& userDefinedAttributes)
     -> boost::future<Response<void>> {
-    if (!name && !intro && !profileAccessStrategy) {
+    if (!name && !intro && !profilePicture && !profileAccessStrategy &&
+        userDefinedAttributes.empty()) {
         return boost::make_ready_future<>(Response<void>{});
     }
     TurmsRequest turmsRequest;
@@ -229,6 +231,10 @@ auto UserService::updateProfile(const boost::optional<absl::string_view>& name,
     }
     if (profileAccessStrategy) {
         request->set_profile_access_strategy(*profileAccessStrategy);
+    }
+    if (!userDefinedAttributes.empty()) {
+        request->mutable_user_defined_attributes()->insert(userDefinedAttributes.cbegin(),
+                                                           userDefinedAttributes.cend());
     }
     return turmsClient_.driver()
         .send(turmsRequest)

@@ -35,6 +35,13 @@ public class GroupService {
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/createGroupWithNonexistentGroupType``.
     ///     * If the logged-in user does not have the permission to create the group with `typeId`,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/noPermissionToCreateGroupWithGroupType``.
+    ///   - userDefinedAttributes: The user-defined attributes for upsert.
+    ///     1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+    ///     Otherwise, the method will throw with ``ResponseStatusCode/illegalArgument``
+    ///     if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+    ///     or silently ignored if it is true.
+    ///     2. Only public attributes are supported currently, which means other users can find out these attributes
+    ///     via ``queryGroups``.
     ///
     /// - Returns: The group ID.
     ///
@@ -45,7 +52,8 @@ public class GroupService {
         announcement: String? = nil,
         minScore: Int32? = nil,
         muteEndDate: Date? = nil,
-        typeId: Int64? = nil
+        typeId: Int64? = nil,
+        userDefinedAttributes: [String: Value]? = nil
     ) async throws -> Response<Int64> {
         return try (await turmsClient.driver
             .send {
@@ -65,6 +73,9 @@ public class GroupService {
                     }
                     if let typeId {
                         $0.typeID = typeId
+                    }
+                    if let userDefinedAttributes {
+                        $0.userDefinedAttributes = userDefinedAttributes
                     }
                 }
             }).toResponse {
@@ -178,6 +189,21 @@ public class GroupService {
     ///     Authorization:
     ///     * If the logged-in user is not the owner of the group,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupOwnerToTransferGroup``.
+    ///   - userDefinedAttributes: The user-defined attributes for upsert.
+    ///     1. The attributes must have been defined on the server side via `turms.service.group.info.user-defined-attributes.allowed-attributes`.
+    ///     Otherwise, the method will throw with ``ResponseStatusCode/illegalArgument``
+    ///     if `turms.service.group.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+    ///     or silently ignored if it is true.
+    ///     2. If trying to update existing immutable attribute, throws with ``ResponseStatusCode/illegalArgument``.
+    ///     3. Only public attributes are supported currently, which means other users can find out these attributes
+    ///     via ``queryGroups``.
+    ///
+    ///     Authorization:
+    ///     * Whether the logged-in user can change the user-defined attributes depends on the group type.
+    ///       If not nil and the logged-in user does NOT have the permission to change the group name,
+    ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToUpdateGroupInfo``
+    ///       or ``ResponseStatusCode/notGroupOwnerOrManagerToUpdateGroupInfo``
+    ///       or ``ResponseStatusCode/notGroupOwnerToUpdateGroupInfo``.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateGroup(
@@ -189,16 +215,18 @@ public class GroupService {
         typeId: Int64? = nil,
         muteEndDate: Date? = nil,
         successorId: Int64? = nil,
-        quitAfterTransfer: Bool? = nil
+        quitAfterTransfer: Bool? = nil,
+        userDefinedAttributes: [String: Value]? = nil
     ) async throws -> Response<Void> {
-        if Validator.areAllNil(
+        if Validator.areAllNilOrEmpty(
             name,
             intro,
             announcement,
             minScore,
             typeId,
             muteEndDate,
-            successorId
+            successorId,
+            userDefinedAttributes
         ) {
             return Response.empty()
         }
@@ -229,6 +257,9 @@ public class GroupService {
                     }
                     if let quitAfterTransfer {
                         $0.quitAfterTransfer = quitAfterTransfer
+                    }
+                    if let userDefinedAttributes {
+                        $0.userDefinedAttributes = userDefinedAttributes
                     }
                 }
             }).toResponse()

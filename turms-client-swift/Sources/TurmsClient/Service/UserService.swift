@@ -232,14 +232,24 @@ public class UserService {
     ///     to upload the profile picture and use the returned URL as `profilePicture`.
     ///   - profileAccessStrategy: The new profile access strategy.
     ///     If nil, the profile access strategy will not be updated.
+    ///   - userDefinedAttributes: The user-defined attributes for upsert.
+    ///     1. The attributes must have been defined on the server side via `turms.service.user.info.user-defined-attributes.allowed-attributes`.
+    ///     Otherwise, the method will throw with ``ResponseStatusCode/illegalArgument``
+    ///     if `turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert` is false (false by default),
+    ///     or silently ignored if it is true.
+    ///     2. If trying to update existing immutable attribute, throws with ``ResponseStatusCode/illegalArgument``.
+    ///     3. Only public attributes are supported currently, which means other users can find out these attributes
+    ///     via ``queryUserProfiles``.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateProfile(
         name: String? = nil,
         intro: String? = nil,
-        profileAccessStrategy: ProfileAccessStrategy? = nil
+        profilePicture: String? = nil,
+        profileAccessStrategy: ProfileAccessStrategy? = nil,
+        userDefinedAttributes: [String: Value]? = nil
     ) async throws -> Response<Void> {
-        if Validator.areAllNil(name, intro, profileAccessStrategy) {
+        if Validator.areAllNilOrEmpty(name, intro, profilePicture, profileAccessStrategy, userDefinedAttributes) {
             return Response.empty()
         }
         return try (await turmsClient.driver
@@ -251,8 +261,14 @@ public class UserService {
                     if let intro {
                         $0.intro = intro
                     }
+                    if let profilePicture {
+                        $0.profilePicture = profilePicture
+                    }
                     if let profileAccessStrategy {
                         $0.profileAccessStrategy = profileAccessStrategy
+                    }
+                    if let userDefinedAttributes {
+                        $0.userDefinedAttributes = userDefinedAttributes
                     }
                 }
             }
