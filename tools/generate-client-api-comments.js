@@ -278,6 +278,7 @@ function writeSwiftLines(lines, method, brief, description, params, returns, thr
     const formatLines = (lines, indent = 1) => lines
         .map(line => {
             line = line
+                .replaceAll(' null', ' nil')
                 .replaceAll('[ResponseException]', '``ResponseError``')
                 .replaceAll('ResponseException', '``ResponseError``');
             return line.replaceAll(symbolRegex, (substring) => {
@@ -357,6 +358,19 @@ function writeTypeScriptLines(lines, method, brief, description, params, returns
     lines.push('\n\n//============ end ============//\n\n');
 }
 
+function writeToFile(fileAndFunctionsEntries, dir, fileSuffix, writeMethod) {
+    fs.mkdirSync(dir, {recursive: true});
+    for (const entry of fileAndFunctionsEntries) {
+        const lines = [];
+        const functions = entry[1];
+        for (const func of functions) {
+            const {method, brief, description, params = {}, return: returns, throws} = func;
+            writeMethod(lines, method, brief, description, params, returns, throws);
+        }
+        fs.writeFileSync(path.join(dir, `${entry[0]}.${fileSuffix}`), lines.join('\n'));
+    }
+}
+
 // endregion
 
 // region main
@@ -381,27 +395,10 @@ const outputDir = path.join(root, 'generated-docs');
 if (fs.existsSync(outputDir)) {
     fs.rmSync(outputDir, {recursive: true});
 }
-fs.mkdirSync(outputDir, {recursive: true});
-for (const entry of fileAndFunctionsEntries) {
-    const cppLines = [];
-    const dartLines = [];
-    const swiftLines = [];
-    const typescriptLines = [];
-
-    const functions = entry[1];
-    for (const func of functions) {
-        const {method, brief, description, params = {}, return: returns, throws} = func;
-
-        writeCppLines(cppLines, method, brief, description, params, returns, throws);
-        writeDartLines(dartLines, method, brief, description, params, returns, throws);
-        writeSwiftLines(swiftLines, method, brief, description, params, returns, throws);
-        writeTypeScriptLines(typescriptLines, method, brief, description, params, returns, throws);
-    }
-    fs.writeFileSync(path.join(outputDir, `${entry[0]}.h`), cppLines.join('\n'));
-    fs.writeFileSync(path.join(outputDir, `${entry[0]}.dart`), dartLines.join('\n'));
-    fs.writeFileSync(path.join(outputDir, `${entry[0]}.swift`), swiftLines.join('\n'));
-    fs.writeFileSync(path.join(outputDir, `${entry[0]}.ts`), typescriptLines.join('\n'));
-}
+writeToFile(fileAndFunctionsEntries, path.join(outputDir, 'turms-client-cpp'), 'h', writeCppLines);
+writeToFile(fileAndFunctionsEntries, path.join(outputDir, 'turms-client-dart'), 'dart', writeDartLines);
+writeToFile(fileAndFunctionsEntries, path.join(outputDir, 'turms-client-swift'), 'swift', writeSwiftLines);
+writeToFile(fileAndFunctionsEntries, path.join(outputDir, 'turms-client-typescript'), 'ts', writeTypeScriptLines);
 
 console.info(`All files generated in the directory: ${outputDir}`);
 

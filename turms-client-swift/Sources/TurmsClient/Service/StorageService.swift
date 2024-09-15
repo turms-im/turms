@@ -152,7 +152,7 @@ public class StorageService {
             if groupId != nil {
                 throw ResponseError(
                     code: .illegalArgument,
-                    reason: "The user ID and the group ID must not both be non-null"
+                    reason: "The user ID and the group ID must not both be non-nil"
                 )
             } else {
                 try await queryMessageAttachmentUploadInfoInPrivateConversation(
@@ -184,7 +184,7 @@ public class StorageService {
     }
 
     public func deleteMessageAttachment(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, customAttributes: [Value]? = nil) async throws -> Response<Void> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
@@ -194,7 +194,7 @@ public class StorageService {
     }
 
     public func shareMessageAttachmentWithUser(userId: Int64, attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil) async throws -> Response<Void> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
@@ -216,7 +216,7 @@ public class StorageService {
     }
 
     public func shareMessageAttachmentWithGroup(groupId: Int64, attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil) async throws -> Response<Void> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
@@ -237,7 +237,7 @@ public class StorageService {
     }
 
     public func unshareMessageAttachmentWithUser(userId: Int64, attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil) async throws -> Response<Void> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
@@ -258,7 +258,7 @@ public class StorageService {
     }
 
     public func unshareMessageAttachmentWithGroup(groupId: Int64, attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil) async throws -> Response<Void> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"
@@ -302,7 +302,7 @@ public class StorageService {
     }
 
     public func queryMessageAttachmentDownloadInfo(attachmentIdNum: Int64? = nil, attachmentIdStr: String? = nil, fetch: Bool = false, urlKeyName: String? = nil, customAttributes: [Value]? = nil) async throws -> Response<[String: String]> {
-        if Validator.areAllNullOrNonNull(attachmentIdNum, attachmentIdStr) {
+        if Validator.areAllNilOrNotNil(attachmentIdNum, attachmentIdStr) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
                 reason: "One and only one attachment ID must be specified"

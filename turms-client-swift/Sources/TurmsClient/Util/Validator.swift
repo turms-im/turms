@@ -10,10 +10,10 @@ public class Validator {
         return true
     }
 
-    static func areAllNullOrNonNull(_ values: Any?...) -> Bool {
-        let isFirstValueNull = values.first == nil
+    static func areAllNilOrNotNil(_ values: Any?...) -> Bool {
+        let isFirstValueNil = values.first == nil
         for value in values {
-            if (value == nil) != isFirstValueNull {
+            if (value == nil) != isFirstValueNil {
                 return false
             }
         }

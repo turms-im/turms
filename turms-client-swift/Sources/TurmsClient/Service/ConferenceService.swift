@@ -41,14 +41,14 @@ public class ConferenceService {
     ///   throws ``ResponseError`` with the code ``ResponseStatusCode/sendMessageToMutedGroup``.
     ///
     /// - Parameters:
-    ///   - userId: The target user ID. If not null, the meeting will be a private meeting.
-    ///     If both `userId` and `groupId` are null, the meeting will be a public meeting.
-    ///   - groupId: The target group ID. If not null, the meeting will be a group meeting.
-    ///     If both `userId` and `groupId` are null, the meeting will be a public meeting.
+    ///   - userId: The target user ID. If not nil, the meeting will be a private meeting.
+    ///     If both `userId` and `groupId` are nil, the meeting will be a public meeting.
+    ///   - groupId: The target group ID. If not nil, the meeting will be a group meeting.
+    ///     If both `userId` and `groupId` are nil, the meeting will be a public meeting.
     ///   - name: The name of the meeting.
     ///   - intro: The intro of the meeting.
     ///   - password: The password of the meeting.
-    ///   - startDate: The start date of the meeting. If not null, the meeting will be a scheduled meeting.
+    ///   - startDate: The start date of the meeting. If not nil, the meeting will be a scheduled meeting.
     ///
     /// - Returns: The meeting ID.
     ///
@@ -120,7 +120,7 @@ public class ConferenceService {
     /// but only the meeting creator can update the password of the meeting.
     /// * If the meeting does not exist, or the logged-in user is not the meeting participant,
     /// throws ``ResponseError`` with the code ``ResponseStatusCode/updateInfoOfNonexistentMeeting``.
-    /// * If `password` is not null, and the logged-in user is not the creator of the meeting,
+    /// * If `password` is not nil, and the logged-in user is not the creator of the meeting,
     /// throws ``ResponseError`` with the code ``ResponseStatusCode/notCreatorToUpdateMeetingPassword``.
     ///
     /// Notifications:
@@ -132,11 +132,11 @@ public class ConferenceService {
     /// - Parameters:
     ///   - meetingId: The target meeting ID.
     ///   - name: A new name of the meeting.
-    ///     If null, the meeting name will not be updated.
+    ///     If nil, the meeting name will not be updated.
     ///   - intro: A new intro of the meeting.
-    ///     If null, the meeting intro will not be updated.
+    ///     If nil, the meeting intro will not be updated.
     ///   - password: A new password of the meeting.
-    ///     If null, the meeting password will not be updated.
+    ///     If nil, the meeting password will not be updated.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateMeeting(_ meetingId: Int64,

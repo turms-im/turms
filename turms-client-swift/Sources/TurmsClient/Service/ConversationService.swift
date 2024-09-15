@@ -100,7 +100,7 @@ public class ConversationService {
     /// - Parameters:
     ///   - userId: The target user ID.
     ///   - readDate: The read date.
-    ///     If null, the current time is used.
+    ///     If nil, the current time is used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updatePrivateConversationReadDate(_ userId: Int64, readDate: Date = Date()) async throws -> Response<Void> {
@@ -137,7 +137,7 @@ public class ConversationService {
     /// - Parameters:
     ///   - groupId: The target group ID.
     ///   - readDate: The read date.
-    ///     If null, the current time is used.
+    ///     If nil, the current time is used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) async throws -> Response<Void> {
@@ -215,9 +215,9 @@ public class ConversationService {
     ///   and a group conversation setting is deleted, the server will send a group settings deleted notification to all other online sessions of the logged-in user actively.
     ///
     /// - Parameters:
-    ///   - userIds: The target user IDs. If both `userIds` and `groupIds` are null, all deletable conversation settings will be deleted.
-    ///   - groupIds: The target group IDs. If both `userIds` and `groupIds` are null, all deletable conversation settings will be deleted.
-    ///   - names: The names of the conversation settings to delete. If null, all deletable conversation settings will be deleted.
+    ///   - userIds: The target user IDs. If both `userIds` and `groupIds` are nil, all deletable conversation settings will be deleted.
+    ///   - groupIds: The target group IDs. If both `userIds` and `groupIds` are nil, all deletable conversation settings will be deleted.
+    ///   - names: The names of the conversation settings to delete. If nil, all deletable conversation settings will be deleted.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If trying to delete any non-deletable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
@@ -241,8 +241,8 @@ public class ConversationService {
     /// Find conversation settings.
     ///
     /// - Parameters:
-    ///   - userIds: The target user IDs. If both `userIds` and `groupIds` are null, the settings of all private and group conversations will be returned.
-    ///   - groupIds: The target group IDs. If both `userIds` and `groupIds` are null, the settings of all private and group conversations will be returned.
+    ///   - userIds: The target user IDs. If both `userIds` and `groupIds` are nil, the settings of all private and group conversations will be returned.
+    ///   - groupIds: The target group IDs. If both `userIds` and `groupIds` are nil, the settings of all private and group conversations will be returned.
     ///   - names: The target setting names.
     ///   - lastUpdatedDate: The last updated date of conversation settings stored locally.
     ///     The server will only return conversation settings if a setting has been updated after `lastUpdatedDate`.

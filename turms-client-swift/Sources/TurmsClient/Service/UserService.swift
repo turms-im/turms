@@ -56,7 +56,7 @@ public class UserService {
     ///   - userId: The user ID
     ///   - password: The user password.
     ///   - deviceType: The device type.
-    ///     If null, the detected device type will be used.
+    ///     If nil, the detected device type will be used.
     ///     Note: The device types of online session that conflicts with `deviceType`
     ///     will be closed by the server if logged in successfully.
     ///   - deviceDetails: The device details.
@@ -221,17 +221,17 @@ public class UserService {
     ///
     /// - Parameters:
     ///   - name: The new name.
-    ///     If null, the name will not be updated.
+    ///     If nil, the name will not be updated.
     ///   - intro: The new intro.
-    ///     If null, the intro will not be updated.
+    ///     If nil, the intro will not be updated.
     ///   - profilePicture: The new profile picture.
-    ///     If null, the profile picture will not be updated.
+    ///     If nil, the profile picture will not be updated.
     ///     The profile picture can be anything you want.
     ///     e.g. an image URL or a base64 encoded string.
     ///     Note: You can use ``StorageService/uploadUserProfilePicture``
     ///     to upload the profile picture and use the returned URL as `profilePicture`.
     ///   - profileAccessStrategy: The new profile access strategy.
-    ///     If null, the profile access strategy will not be updated.
+    ///     If nil, the profile access strategy will not be updated.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateProfile(
@@ -265,7 +265,7 @@ public class UserService {
     ///   - userIds: The target user IDs.
     ///   - lastUpdatedDate: The last updated date of user profiles stored locally.
     ///     The server will only return user profiles that are updated after `lastUpdatedDate`.
-    ///     If null, all user profiles will be returned.
+    ///     If nil, all user profiles will be returned.
     ///
     /// - Returns: A list of user profiles.
     ///
@@ -360,7 +360,7 @@ public class UserService {
     ///   the server will send a user settings deleted notification to all other online sessions of the logged-in user actively.
     ///
     /// - Parameters:
-    ///   - names: The names of the user settings to delete. If null, all deletable user settings will be deleted.
+    ///   - names: The names of the user settings to delete. If nil, all deletable user settings will be deleted.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     /// * If trying to delete any non-deletable setting, throws ``ResponseError`` with the code ``ResponseStatusCode/illegalArgument``.
@@ -379,7 +379,7 @@ public class UserService {
     /// Find user settings.
     ///
     /// - Parameters:
-    ///   - names: The names of the user settings to query. If null, all user settings will be returned.
+    ///   - names: The names of the user settings to query. If nil, all user settings will be returned.
     ///   - lastUpdatedDate: The last updated date of user settings stored locally.
     ///     The server will only return user settings if a setting has been updated after `lastUpdatedDate`.
     ///
@@ -467,13 +467,13 @@ public class UserService {
     /// - Parameters:
     ///   - relatedUserIds: The target related user IDs.
     ///   - isBlocked: Whether to query blocked relationships.
-    ///     If null, all relationships will be returned.
+    ///     If nil, all relationships will be returned.
     ///     If true, only blocked relationships will be returned.
     ///     If false, only non-blocked relationships will be returned.
     ///   - groupIndexes: The target group indexes for querying.
     ///   - lastUpdatedDate: The last updated date of user relationships stored locally.
     ///     The server will only return relationships that are created after `lastUpdatedDate`.
-    ///     If null, all relationships will be returned.
+    ///     If nil, all relationships will be returned.
     ///
     /// - Returns: Relationships and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -510,13 +510,13 @@ public class UserService {
     ///
     /// - Parameters:
     ///   - isBlocked: Whether to query blocked relationships.
-    ///     If null, all relationships will be returned.
+    ///     If nil, all relationships will be returned.
     ///     If true, only blocked relationships will be returned.
     ///     If false, only non-blocked relationships will be returned.
     ///   - groupIndexes: The target group indexes for querying.
     ///   - lastUpdatedDate: The last updated date of related user IDs stored locally.
     ///     The server will only return related user IDs that are created after `lastUpdatedDate`.
-    ///     If null, all related user IDs will be returned.
+    ///     If nil, all related user IDs will be returned.
     ///
     /// - Returns: Related user IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -547,7 +547,7 @@ public class UserService {
     ///   - groupIndexes: The target group indexes for finding.
     ///   - lastUpdatedDate: The last updated date of friends stored locally.
     ///     The server will only return friends that are created after `lastUpdatedDate`.
-    ///     If null, all friends will be returned.
+    ///     If nil, all friends will be returned.
     ///
     /// - Returns: Friends and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -567,7 +567,7 @@ public class UserService {
     ///   - groupIndexes: The target group indexes for finding.
     ///   - lastUpdatedDate: The last updated date of blocked users stored locally.
     ///     The server will only return friends that are created after `lastUpdatedDate`.
-    ///     If null, all blocked users will be returned.
+    ///     If nil, all blocked users will be returned.
     ///
     /// - Returns: Blocked users and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -595,7 +595,7 @@ public class UserService {
     ///     If true, a blocked relationship will be created,
     ///     and the target user will not be able to send messages to the logged-in user.
     ///   - groupIndex: The target group index in which create the relationship.
-    ///     If null, the relationship will be created in the default group.
+    ///     If nil, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) async throws -> Response<Void> {
@@ -623,7 +623,7 @@ public class UserService {
     /// - Parameters:
     ///   - userId: The target user ID.
     ///   - groupIndex: The target group index in which create the relationship.
-    ///     If null, the relationship will be created in the default group.
+    ///     If nil, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func createFriendRelationship(userId: Int64, groupIndex: Int32? = nil) async throws -> Response<Void> {
@@ -645,7 +645,7 @@ public class UserService {
     /// - Parameters:
     ///   - userId: The target user ID.
     ///   - groupIndex: The target group index in which create the relationship.
-    ///     If null, the relationship will be created in the default group.
+    ///     If nil, the relationship will be created in the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func createBlockedUserRelationship(userId: Int64, groupIndex: Int32? = nil) async throws -> Response<Void> {
@@ -667,7 +667,7 @@ public class UserService {
     /// - Parameters:
     ///   - relatedUserId: The target user ID.
     ///   - deleteGroupIndex: The target group index in which delete the relationship.
-    ///     If null, the relationship will be deleted in all groups.
+    ///     If nil, the relationship will be deleted in all groups.
     ///   - targetGroupIndex: TODO: not implemented yet.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
@@ -698,7 +698,7 @@ public class UserService {
     /// - Parameters:
     ///   - relatedUserId: The target user ID.
     ///   - isBlocked: Whether to update a blocked relationship.
-    ///     If null, the relationship will not be updated.
+    ///     If nil, the relationship will not be updated.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateRelationship(relatedUserId: Int64, isBlocked: Bool? = nil, groupIndex: Int32? = nil) async throws -> Response<Void> {
@@ -820,7 +820,7 @@ public class UserService {
     ///     If false, find the friend requests not sent to the logged-in user.
     ///   - lastUpdatedDate: The last updated date of friend requests stored locally.
     ///     The server will only return friend requests that are updated after `lastUpdatedDate`.
-    ///     If null, all friend requests will be returned.
+    ///     If nil, all friend requests will be returned.
     ///
     /// - Returns: Friend requests and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -871,7 +871,7 @@ public class UserService {
     ///   - groupIndex: The target group index to delete.
     ///   - targetGroupIndex: Move the group members of `groupIndex` to `targetGroupIndex`
     ///     when the group is deleted.
-    ///     If null, the group members of `groupIndex` will be moved to the default group.
+    ///     If nil, the group members of `groupIndex` will be moved to the default group.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) async throws -> Response<Void> {
@@ -916,7 +916,7 @@ public class UserService {
     /// - Parameters:
     ///   - lastUpdatedDate: The last updated date of relationship groups stored locally.
     ///     The server will only return relationship groups that are updated after `lastUpdatedDate`.
-    ///     If null, all relationship groups will be returned.
+    ///     If nil, all relationship groups will be returned.
     ///
     /// - Returns: Relationship groups and the version.
     /// Note: The version can be used to update the last updated date stored locally.

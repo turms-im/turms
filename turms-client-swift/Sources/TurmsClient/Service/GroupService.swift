@@ -28,7 +28,7 @@ public class GroupService {
     ///   - minScore: The group minimum score that a non-member user needs to acquire
     ///     to join the group when answering group questions.
     ///   - typeId: The group type ID.
-    ///     If null, the default group type configured in turms-service will be used.
+    ///     If nil, the default group type configured in turms-service will be used.
     ///
     ///     Authorization:
     ///     * If the group type ID does not exist,
@@ -108,44 +108,44 @@ public class GroupService {
     /// - Parameters:
     ///   - groupId: The target group ID to find the group for updating.
     ///   - name: The new group name.
-    ///     If null, the group name will not be changed.
+    ///     If nil, the group name will not be changed.
     ///
     ///     Authorization:
     ///     * Whether the logged-in user can change the group name depends on the group type.
-    ///       If not null and the logged-in user does NOT have the permission to change the group name,
+    ///       If not nil and the logged-in user does NOT have the permission to change the group name,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerOrManagerToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerToUpdateGroupInfo``.
     ///   - intro: The new group introduction.
-    ///     If null, the group introduction will not be changed.
+    ///     If nil, the group introduction will not be changed.
     ///
     ///     Authorization:
     ///     * Whether the logged-in user can change the group introduction depends on the group type.
-    ///       If not null and the logged-in user does NOT have the permission to change the group introduction,
+    ///       If not nil and the logged-in user does NOT have the permission to change the group introduction,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerOrManagerToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerToUpdateGroupInfo``.
     ///   - announcement: The new group announcement.
-    ///     If null, the group announcement will not be changed.
+    ///     If nil, the group announcement will not be changed.
     ///
     ///     Authorization:
     ///     * Whether the logged-in user can change the group announcement depends on the group type.
-    ///       If not null and the logged-in user does NOT have the permission to change the group announcement,
+    ///       If not nil and the logged-in user does NOT have the permission to change the group announcement,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerOrManagerToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerToUpdateGroupInfo``.
     ///   - minScore: The new group minimum score that a non-member user needs to acquire
     ///     to join the group when answering group questions.
-    ///     If null, the group minimum score will not be changed.
+    ///     If nil, the group minimum score will not be changed.
     ///
     ///     Authorization:
     ///     * Whether the logged-in user can change the group minimum score depends on the group type.
-    ///       If not null and the logged-in user does NOT have the permission to change the group minimum score,
+    ///       If not nil and the logged-in user does NOT have the permission to change the group minimum score,
     ///       throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupMemberToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerOrManagerToUpdateGroupInfo``
     ///       or ``ResponseStatusCode/notGroupOwnerToUpdateGroupInfo``.
     ///   - typeId: The new group type ID.
-    ///     If null, the group type ID will not be changed.
+    ///     If nil, the group type ID will not be changed.
     ///
     ///     Authorization:
     ///     * If the server property `turms.service.group.allow-group-owner-change-group-type`
@@ -173,7 +173,7 @@ public class GroupService {
     ///     ``ResponseStatusCode/groupSuccessorNotGroupMember`` otherwise.
     ///   - quitAfterTransfer: Whether to quit the group after transfer the group ownership.
     ///     If false, the logged-in user will become a normal group member (not the group admin).
-    ///     If null, the value will not be changed.
+    ///     If nil, the value will not be changed.
     ///
     ///     Authorization:
     ///     * If the logged-in user is not the owner of the group,
@@ -253,7 +253,7 @@ public class GroupService {
     ///     ``ResponseStatusCode/groupSuccessorNotGroupMember`` otherwise.
     ///   - quitAfterTransfer: Whether to quit the group after transfer the group ownership.
     ///     If false, the logged-in user will become a normal group member (not the group admin).
-    ///     If null, the value will not be changed.
+    ///     If nil, the value will not be changed.
     ///     Authorization: If the logged-in user is not the owner of the group,
     ///     throws ``ResponseError`` with the code ``ResponseStatusCode/notGroupOwnerToTransferGroup``.
     ///
@@ -328,7 +328,7 @@ public class GroupService {
     ///   - groupIds: The target group IDs for finding groups.
     ///   - lastUpdatedDate: The last updated date of groups on local.
     ///     The server will only return groups that are updated after `lastUpdatedDate`.
-    ///     If null, all groups will be returned.
+    ///     If nil, all groups will be returned.
     ///
     /// - Returns: A list of groups.
     ///
@@ -394,7 +394,7 @@ public class GroupService {
     /// - Parameters:
     ///   - lastUpdatedDate: The last updated date of group IDs that the logged-in user has joined stored locally.
     ///     The server will only return group IDs that are updated after `lastUpdatedDate`.
-    ///     If null, all group IDs will be returned.
+    ///     If nil, all group IDs will be returned.
     ///
     /// - Returns: A list of group IDs and the version.
     /// Note: The version can be used to update the last updated date on local.
@@ -418,7 +418,7 @@ public class GroupService {
     /// - Parameters:
     ///   - lastUpdatedDate: The last updated date of groups that the logged-in user has joined stored locally.
     ///     The server will only return groups that are updated after `lastUpdatedDate`.
-    ///     If null, all groups will be returned.
+    ///     If nil, all groups will be returned.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func queryJoinedGroupInfos(_ lastUpdatedDate: Date? = nil) async throws -> Response<GroupsWithVersion?> {
@@ -520,15 +520,15 @@ public class GroupService {
     /// - Parameters:
     ///   - questionId: The target question ID.
     ///   - question: The question.
-    ///     If null, the question will not be updated.
+    ///     If nil, the question will not be updated.
     ///   - answers: The answers.
-    ///     If null, the answers will not be updated.
+    ///     If nil or empty, the answers will not be updated.
     ///   - score: The score.
-    ///     If null, the score will not be updated.
+    ///     If nil, the score will not be updated.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateGroupJoinQuestion(questionId: Int64, question: String? = nil, answers: [String]? = nil, score: Int32? = nil) async throws -> Response<Void> {
-        if Validator.areAllNil(question, answers, score) {
+        if Validator.areAllNilOrEmpty(question, answers, score) {
             return Response.empty()
         }
         return try (await turmsClient.driver
@@ -617,7 +617,7 @@ public class GroupService {
     ///   - groupId: The target group ID.
     ///   - lastUpdatedDate: The last updated date of blocked user IDs stored locally.
     ///     The server will only return blocked user IDs that are updated after `lastUpdatedDate`.
-    ///     If null, all blocked user IDs will be returned.
+    ///     If nil, all blocked user IDs will be returned.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func queryBlockedUserIds(
@@ -643,7 +643,7 @@ public class GroupService {
     ///   - groupId: The target group ID.
     ///   - lastUpdatedDate: The last updated date of blocked user infos stored locally.
     ///     The server will only return blocked user infos that are updated after `lastUpdatedDate`.
-    ///     If null, all blocked user infos will be returned.
+    ///     If nil, all blocked user infos will be returned.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func queryBlockedUserInfos(
@@ -793,7 +793,7 @@ public class GroupService {
     ///   - groupId: The target group ID.
     ///   - lastUpdatedDate: The last updated date of invitations stored locally.
     ///     The server will only return groups that are updated after `lastUpdatedDate`.
-    ///     If null, all group IDs will be returned.
+    ///     If nil, all group IDs will be returned.
     ///
     /// - Returns: A list of invitation IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -819,7 +819,7 @@ public class GroupService {
     ///   - areSentByMe: Whether the invitations are sent by me.
     ///   - lastUpdatedDate: The last updated date of invitations stored locally.
     ///     The server will only return invitations that are updated after `lastUpdatedDate`.
-    ///     If null, all invitations will be returned.
+    ///     If nil, all invitations will be returned.
     ///
     /// - Returns: A list of invitation IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -955,7 +955,7 @@ public class GroupService {
     ///   - groupId: The target group ID.
     ///   - lastUpdatedDate: The last updated date of requests stored locally.
     ///     The server will only return requests that are updated after `lastUpdatedDate`.
-    ///     If null, all requests will be returned.
+    ///     If nil, all requests will be returned.
     ///
     /// - Returns: A list of request IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -980,7 +980,7 @@ public class GroupService {
     /// - Parameters:
     ///   - lastUpdatedDate: The last updated date of requests stored locally.
     ///     The server will only return requests that are updated after `lastUpdatedDate`.
-    ///     If null, all requests will be returned.
+    ///     If nil, all requests will be returned.
     ///
     /// - Returns: A list of request IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -1009,7 +1009,7 @@ public class GroupService {
     ///   - withAnswers: Whether to return the answers.
     ///   - lastUpdatedDate: The last updated date of questions stored locally.
     ///     The server will only return questions that are updated after `lastUpdatedDate`.
-    ///     If null, all questions will be returned.
+    ///     If nil, all questions will be returned.
     ///
     /// - Returns: A list of question IDs and the version.
     /// Note: The version can be used to update the last updated date stored locally.
@@ -1181,7 +1181,7 @@ public class GroupService {
     ///     ``ResponseStatusCode/groupSuccessorNotGroupMember`` otherwise.
     ///   - quitAfterTransfer: Whether to quit the group after transfer the group ownership.
     ///     If false, the logged-in user will become a normal group member (not the group admin).
-    ///     If null, the value will not be changed.
+    ///     If nil, the value will not be changed.
     ///
     ///     Authorization:
     ///     * If the logged-in user is not the owner of the group,
@@ -1277,11 +1277,11 @@ public class GroupService {
     ///   - groupId: The target group ID.
     ///   - memberId: The target member ID.
     ///   - name: The new name of the group member.
-    ///     If null, the name will not be updated.
+    ///     If nil, the name will not be updated.
     ///   - role: The new role of the group member.
-    ///     If null, the role will not be updated.
+    ///     If nil, the role will not be updated.
     ///   - muteEndDate: The new mute end date of the group member.
-    ///     If null, the mute end date will not be updated.
+    ///     If nil, the mute end date will not be updated.
     ///
     ///     Authorization:
     ///     * If the logged-in user is not the group owner or manager of the group,
@@ -1384,7 +1384,7 @@ public class GroupService {
     ///   - withStatus: Whether to return the session status of the group members.
     ///   - lastUpdatedDate: The last updated date of the group members stored locally.
     ///     The server will only return group members that are updated after `lastUpdatedDate`.
-    ///     If null, all group members will be returned.
+    ///     If nil, all group members will be returned.
     ///
     /// - Returns: Group members and the version.
     /// Note: The version can be used to update the last updated date stored locally.

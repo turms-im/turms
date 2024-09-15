@@ -90,10 +90,10 @@ public class MessageService {
     ///     `turms.service.message.time-type` is `client_time` (`local_server_time` by default).
     ///   - text: The message text.
     ///     `text` can be anything you want. e.g. Markdown, base64 encoded bytes.
-    ///     Note that if `text` is null, `records` must not be null.
+    ///     Note that if `text` is nil, `records` must not be nil.
     ///   - records: The message records.
     ///     `records` can be anything you want. e.g. base64 encoded images (it is highly not recommended).
-    ///     Note that if `records` is null, `text` must not be null.
+    ///     Note that if `records` is nil, `text` must not be nil.
     ///   - burnAfter: The burn after the specified time.
     ///     Note that Turms server and client do NOT implement the `burn after` feature,
     ///     and they just store and pass `burnAfter` between server and clients.
@@ -118,7 +118,7 @@ public class MessageService {
         if Validator.areAllNil(text, records) {
             throw ResponseError(
                 code: ResponseStatusCode.illegalArgument,
-                reason: "text and records must not all be null"
+                reason: "text and records must not all be nil"
             )
         }
         return try (await turmsClient.driver
@@ -217,9 +217,9 @@ public class MessageService {
     /// - Parameters:
     ///   - messageId: The sent message ID.
     ///   - text: The new message text.
-    ///     If null, the message text will not be changed.
+    ///     If nil, the message text will not be changed.
     ///   - records: The new message records.
-    ///     If null, the message records will not be changed.
+    ///     If nil, the message records will not be changed.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func updateSentMessage(
@@ -397,7 +397,7 @@ public class MessageService {
     /// - Parameters:
     ///   - messageId: The message ID.
     ///   - recallDate: The recall date.
-    ///     If null, the current date will be used.
+    ///     If nil, the current date will be used.
     ///
     /// - Throws: ``ResponseError`` if an error occurs.
     public func recallMessage(messageId: Int64, recallDate: Date = Date()) async throws -> Response<Void> {
