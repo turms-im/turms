@@ -12,6 +12,26 @@ extension IterableExtensions<T> on Iterable<T> {
     return true;
   }
 
+  bool get areAllNullOrEmpty {
+    for (final value in this) {
+      if (value == null) {
+        continue;
+      }
+      if (value is Iterable) {
+        if (value.isNotEmpty) {
+          return false;
+        }
+      } else if (value is Map) {
+        if (value.isNotEmpty) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
   bool get areAllNullOrNonNull {
     final isFirstValueNull = first == null;
     for (final value in this) {

@@ -416,14 +416,14 @@ class GroupService {
   /// * `question`: The question.
   /// If null, the question will not be updated.
   /// * `answers`: The answers.
-  /// If null, the answers will not be updated.
+  /// If null or empty, the answers will not be updated.
   /// * `score`: The score.
   /// If null, the score will not be updated.
   ///
   /// **Throws**: [ResponseException] if an error occurs.
   Future<Response<void>> updateGroupJoinQuestion(Int64 questionId,
       {String? question, Set<String>? answers, int? score}) async {
-    if ([question, answers, score].areAllNull) {
+    if ([question, answers, score].areAllNullOrEmpty) {
       return Response.nullValue();
     }
     final n = await _turmsClient.driver.send(UpdateGroupJoinQuestionRequest(

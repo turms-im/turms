@@ -29,7 +29,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * @author James Chen
  */
-class TurmsClient constructor(
+class TurmsClient(
     host: String? = null,
     port: Int? = null,
     connectTimeoutMillis: Int? = null,

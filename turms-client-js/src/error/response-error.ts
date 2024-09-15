@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import DataParser from '../util/data-parser';
 import ResponseStatusCode from '../model/response-status-code';
 import { TurmsNotification } from '../model/proto/notification/turms_notification';
 
@@ -75,29 +76,45 @@ export default class ResponseError extends Error {
         });
     }
 
-    static illegalParam(reason: string): never {
-        throw new ResponseError({
+    static illegalParam(reason: string): ResponseError {
+        return new ResponseError({
             code: ResponseStatusCode.ILLEGAL_ARGUMENT,
             reason
         });
     }
 
-    static notFalsy(name: string, notEmpty = false): never {
-        const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        ResponseError.illegalParam(`"${name}" must not be null${emptyPlaceholder} or an invalid param`);
+    static notNull(name: string): ResponseError {
+        return ResponseError.illegalParam(`"${name}" must not be null`);
     }
 
-    static illegalParamPromise<T = never>(reason: string): Promise<T> {
-        const exception = new ResponseError({
-            code: ResponseStatusCode.ILLEGAL_ARGUMENT,
-            reason: reason
-        });
-        return Promise.reject(exception);
+    static notNullOrEmpty(name: string): ResponseError {
+        return ResponseError.illegalParam(`"${name}" must not be null or empty`);
     }
 
-    static notFalsyPromise<T = never>(name: string, notEmpty = false): Promise<T> {
-        const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        return ResponseError.illegalParamPromise(`"${name}" must not be null${emptyPlaceholder} or an invalid param`);
+    static invalidEnumValue(name: string, enumType: Record<string, string | number>, excludedValues?: number[]): ResponseError {
+        if (excludedValues?.length) {
+            const enumInfo = DataParser.getEnumInfo(enumType);
+            const names = new Set(enumInfo.allNames);
+            excludedValues.forEach(v => names.delete(v));
+            return ResponseError.illegalParam(`"${name}" must be a value of [${Array.from(names).map(v => typeof v === 'string' ? `"${v}"` : v)}]`);
+        }
+        return ResponseError.illegalParam(`"${name}" must be a value of [${Object.keys(enumType).map(v => typeof v === 'string' ? `"${v}"` : v)}]`);
+    }
+
+    static illegalParamPromise<T>(reason: string): Promise<T> {
+        return Promise.reject(ResponseError.illegalParam(reason));
+    }
+
+    static notNullPromise<T>(name: string): Promise<T> {
+        return Promise.reject(ResponseError.notNull(name));
+    }
+
+    static notNullOrEmptyPromise<T>(name: string): Promise<T> {
+        return Promise.reject(ResponseError.notNullOrEmpty(name));
+    }
+
+    static invalidEnumValuePromise<T>(name: string, enumType: Record<string, string | number>, excludedValues?: number[]): Promise<T> {
+        return Promise.reject(ResponseError.invalidEnumValue(name, enumType, excludedValues));
     }
 
 }

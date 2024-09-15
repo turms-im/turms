@@ -3,7 +3,6 @@ import { ParsedModel } from '../model/parsed-model';
 import Response from '../model/response';
 import ResponseError from '../error/response-error';
 import TurmsClient from '../turms-client';
-import Validator from '../util/validator';
 import DataParser from '../util/data-parser';
 import { ResponseAction } from '../model/proto/constant/response_action';
 
@@ -113,12 +112,11 @@ export default class ConferenceService {
      */
     cancelMeeting({
         meetingId
-                  }: {
+    }: {
         meetingId: string
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(meetingId)
-        ) {
-            return ResponseError.notFalsyPromise('meetingId');
+        if (null == meetingId) {
+            return ResponseError.notNullPromise('meetingId');
         }
         return this._turmsClient.driver.send({
             deleteMeetingRequest: {
@@ -167,9 +165,8 @@ export default class ConferenceService {
         intro?: string,
         password?: string
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(meetingId)
-        ) {
-            return ResponseError.notFalsyPromise('meetingId');
+        if (null == meetingId) {
+            return ResponseError.notNullPromise('meetingId');
         }
         return this._turmsClient.driver.send({
             updateMeetingRequest: {
@@ -196,27 +193,25 @@ export default class ConferenceService {
      * @param limit - the maximum number of meetings to be returned.
      * @throws {@link ResponseError} if an error occurs.
      */
-    queryMeetings(
-        {
-            meetingIds,
-            creatorIds,
-            userIds,
-            groupIds,
-            creationDateStart,
-            creationDateEnd,
-            skip,
-            limit
-        }: {
-            meetingIds?: string[],
-            creatorIds?: string[],
-            userIds?: string[],
-            groupIds?: string[],
-            creationDateStart?: Date,
-            creationDateEnd?: Date,
-            skip?: number,
-            limit?: number
-        }
-    ): Promise<Response<ParsedModel.Meeting[]>> {
+    queryMeetings({
+        meetingIds,
+        creatorIds,
+        userIds,
+        groupIds,
+        creationDateStart,
+        creationDateEnd,
+        skip,
+        limit
+    }: {
+        meetingIds?: string[],
+        creatorIds?: string[],
+        userIds?: string[],
+        groupIds?: string[],
+        creationDateStart?: Date,
+        creationDateEnd?: Date,
+        skip?: number,
+        limit?: number
+    }): Promise<Response<ParsedModel.Meeting[]>> {
         return this._turmsClient.driver.send({
             queryMeetingsRequest: {
                 ids: meetingIds,
@@ -258,13 +253,12 @@ export default class ConferenceService {
     acceptMeetingInvitation({
         meetingId,
         password
-                                 }: {
+    }: {
         meetingId: string,
         password?: string
     }): Promise<Response<string>> {
-        if (Validator.isFalsy(meetingId)
-        ) {
-            return ResponseError.notFalsyPromise('meetingId');
+        if (null == meetingId) {
+            return ResponseError.notNullPromise('meetingId');
         }
         return this._turmsClient.driver.send({
             updateMeetingInvitationRequest: {

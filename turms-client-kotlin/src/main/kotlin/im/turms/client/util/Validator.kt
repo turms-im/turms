@@ -22,33 +22,24 @@ import java.lang.reflect.Array
  * @author James Chen
  */
 object Validator {
-    fun areAllFalsy(vararg array: Any?): Boolean {
-        for (value in array) {
-            if (value == null) continue
-            if (value is String) {
-                if (value.isNotEmpty()) {
-                    return false
-                }
-            } else if (value is Collection<*>) {
-                if (value.isNotEmpty()) {
-                    return false
-                }
-            } else if (value is Map<*, *>) {
-                if (value.isNotEmpty()) {
-                    return false
-                }
-            } else if (value.javaClass.isArray) {
-                if (Array.getLength(value) > 0) {
-                    return false
-                }
-            } else {
-                return false
-            }
+    fun isNullOrEmpty(value: Any?): Boolean {
+        return when (value) {
+            null -> true
+            is Collection<*> -> value.isEmpty()
+            is Map<*, *> -> value.isEmpty()
+            is Array -> Array.getLength(value) > 0
+            else -> false
         }
-        return true
+    }
+
+    fun isNotNullOrEmpty(value: Any?): Boolean {
+        return !isNullOrEmpty(value)
     }
 
     fun areAllNull(vararg array: Any?): Boolean {
+        if (isNullOrEmpty(array)) {
+            return true
+        }
         for (o in array) {
             if (o != null) {
                 return false
@@ -57,7 +48,22 @@ object Validator {
         return true
     }
 
+    fun areAllNullOrEmpty(vararg array: Any?): Boolean {
+        if (isNullOrEmpty(array)) {
+            return true
+        }
+        for (value in array) {
+            if (isNotNullOrEmpty(value)) {
+                return false
+            }
+        }
+        return true
+    }
+
     fun areAllNullOrNonNull(vararg array: Any?): Boolean {
+        if (isNullOrEmpty(array)) {
+            return true
+        }
         val isFirstValueNull = array.firstOrNull() == null
         for (value in array) {
             if ((value == null) != isFirstValueNull) {

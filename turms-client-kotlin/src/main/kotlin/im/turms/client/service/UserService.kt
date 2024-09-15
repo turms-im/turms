@@ -762,7 +762,7 @@ class UserService(private val turmsClient: TurmsClient) {
         isBlocked: Boolean? = null,
         groupIndex: Int? = null,
     ): Response<Unit> =
-        if (Validator.areAllFalsy(isBlocked, groupIndex)) {
+        if (Validator.areAllNull(isBlocked, groupIndex)) {
             Response.unitValue()
         } else {
             turmsClient.driver

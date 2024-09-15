@@ -227,7 +227,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         text: String? = null,
         records: List<ByteBuffer>? = null,
     ): Response<Unit> =
-        if (Validator.areAllFalsy(text, records)) {
+        if (Validator.areAllNull(text, records)) {
             Response.unitValue()
         } else {
             turmsClient.driver

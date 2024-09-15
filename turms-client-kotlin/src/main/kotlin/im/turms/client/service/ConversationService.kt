@@ -60,7 +60,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
      * @throws ResponseException if an error occurs.
      */
     suspend fun queryPrivateConversations(userIds: Set<Long>?): Response<List<PrivateConversation>> =
-        if (Validator.areAllFalsy(userIds)) {
+        if (Validator.isNullOrEmpty(userIds)) {
             Response.emptyList()
         } else {
             turmsClient.driver
@@ -95,7 +95,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
      * @throws ResponseException if an error occurs.
      */
     suspend fun queryGroupConversations(groupIds: Set<Long>?): Response<List<GroupConversation>> =
-        if (Validator.areAllFalsy(groupIds)) {
+        if (Validator.isNullOrEmpty(groupIds)) {
             Response.emptyList()
         } else {
             turmsClient.driver

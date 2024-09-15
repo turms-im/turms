@@ -43,7 +43,7 @@ export default class ConversationService {
     }: {
         userIds: string[]
     }): Promise<Response<ParsedModel.PrivateConversation[]>> {
-        if (Validator.isFalsy(userIds)) {
+        if (Validator.isNullOrEmpty(userIds)) {
             return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
@@ -83,7 +83,7 @@ export default class ConversationService {
     }: {
         groupIds: string[]
     }): Promise<Response<ParsedModel.GroupConversation[]>> {
-        if (Validator.isFalsy(groupIds)) {
+        if (Validator.isNullOrEmpty(groupIds)) {
             return Promise.resolve(Response.emptyList());
         }
         return this._turmsClient.driver.send({
@@ -131,8 +131,8 @@ export default class ConversationService {
         userId: string,
         readDate?: Date
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(userId)) {
-            return ResponseError.notFalsyPromise('userId');
+        if (null == userId) {
+            return ResponseError.notNullPromise('userId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -180,8 +180,8 @@ export default class ConversationService {
         groupId: string,
         readDate?: Date
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(groupId)) {
-            return ResponseError.notFalsyPromise('groupId');
+        if (null == groupId) {
+            return ResponseError.notNullPromise('groupId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -217,8 +217,8 @@ export default class ConversationService {
         userId: string,
         settings: Record<string, Value>
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(userId)) {
-            return ResponseError.notFalsyPromise('userId');
+        if (null == userId) {
+            return ResponseError.notNullPromise('userId');
         }
         return this._turmsClient.driver.send({
             updateConversationSettingsRequest: {
@@ -253,8 +253,8 @@ export default class ConversationService {
         groupId: string,
         settings: Record<string, Value>
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(groupId)) {
-            return ResponseError.notFalsyPromise('groupId');
+        if (null == groupId) {
+            return ResponseError.notNullPromise('groupId');
         }
         return this._turmsClient.driver.send({
             updateConversationSettingsRequest: {
@@ -324,8 +324,8 @@ export default class ConversationService {
     }: {
         userId: string
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(userId)) {
-            return ResponseError.notFalsyPromise('userId');
+        if (null == userId) {
+            return ResponseError.notNullPromise('userId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {
@@ -392,8 +392,8 @@ export default class ConversationService {
     }: {
         groupId: string
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(groupId)) {
-            return ResponseError.notFalsyPromise('groupId');
+        if (null == groupId) {
+            return ResponseError.notNullPromise('groupId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {

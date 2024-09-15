@@ -150,10 +150,10 @@ export default class MessageService {
         burnAfter?: number,
         preMessageId?: string
     }): Promise<Response<string>> {
-        if (Validator.isFalsy(targetId)) {
-            return ResponseError.notFalsyPromise('targetId');
+        if (null == targetId) {
+            return ResponseError.notNullPromise('targetId');
         }
-        if (Validator.isFalsy(text) && Validator.isFalsy(records)) {
+        if (null == text && null == records) {
             return ResponseError.illegalParamPromise('text and records must not all be null');
         }
         return this._turmsClient.driver.send({
@@ -204,11 +204,11 @@ export default class MessageService {
         isGroupMessage: boolean,
         targetId: string
     }): Promise<Response<string>> {
-        if (Validator.isFalsy(messageId)) {
-            return ResponseError.notFalsyPromise('messageId');
+        if (null == messageId) {
+            return ResponseError.notNullPromise('messageId');
         }
-        if (Validator.isFalsy(targetId)) {
-            return ResponseError.notFalsyPromise('targetId');
+        if (null == targetId) {
+            return ResponseError.notNullPromise('targetId');
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
@@ -260,10 +260,10 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[]
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(messageId)) {
-            return ResponseError.notFalsyPromise('messageId');
+        if (null == messageId) {
+            return ResponseError.notNullPromise('messageId');
         }
-        if (Validator.areAllFalsy(text, records)) {
+        if (Validator.areAllNull(text, records)) {
             return Promise.resolve(Response.nullValue());
         }
         return this._turmsClient.driver.send({
@@ -426,8 +426,8 @@ export default class MessageService {
         messageId: string,
         recallDate?: Date
     }): Promise<Response<void>> {
-        if (Validator.isFalsy(messageId)) {
-            return ResponseError.notFalsyPromise('messageId');
+        if (null == messageId) {
+            return ResponseError.notNullPromise('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -461,7 +461,7 @@ export default class MessageService {
         longitude: number,
         details?: { [_: string]: string }
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(latitude, longitude);
+        Validator.throwIfAnyNull(latitude, longitude);
         return UserLocation.encode({
             latitude,
             longitude,
@@ -481,7 +481,7 @@ export default class MessageService {
         format?: string,
         size?: number
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(url);
+        Validator.throwIfAnyNull(url);
         return AudioFile.encode({
             description: {
                 url,
@@ -498,7 +498,7 @@ export default class MessageService {
     }: {
         data: ArrayBuffer
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(data);
+        Validator.throwIfAnyNull(data);
         return AudioFile.encode({
             data: new Uint8Array(data),
             customAttributes: []
@@ -516,7 +516,7 @@ export default class MessageService {
         format?: string,
         size?: number
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(url);
+        Validator.throwIfAnyNull(url);
         return VideoFile.encode({
             description: {
                 url,
@@ -533,7 +533,7 @@ export default class MessageService {
     }: {
         data: ArrayBuffer
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(data);
+        Validator.throwIfAnyNull(data);
         return VideoFile.encode({
             data: new Uint8Array(data),
             customAttributes: []
@@ -545,7 +545,7 @@ export default class MessageService {
     }: {
         data: ArrayBuffer
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(data);
+        Validator.throwIfAnyNull(data);
         return ImageFile.encode({
             data: new Uint8Array(data),
             customAttributes: []
@@ -563,7 +563,7 @@ export default class MessageService {
         imageSize?: number,
         original?: boolean
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(url);
+        Validator.throwIfAnyNull(url);
         return ImageFile.encode({
             description: {
                 url,
@@ -580,7 +580,7 @@ export default class MessageService {
     }: {
         data: ArrayBuffer
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(data);
+        Validator.throwIfAnyNull(data);
         return File.encode({
             data: new Uint8Array(data),
             customAttributes: []
@@ -596,7 +596,7 @@ export default class MessageService {
         format?: string,
         size?: number
     }): Uint8Array {
-        Validator.throwIfAnyFalsy(url);
+        Validator.throwIfAnyNull(url);
         return File.encode({
             description: {
                 url,

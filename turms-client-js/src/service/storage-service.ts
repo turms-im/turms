@@ -443,7 +443,7 @@ export default class StorageService {
         attachmentIdStr?: string,
         customAttributes?: Value[]
     }): Promise<Response<void>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -466,7 +466,7 @@ export default class StorageService {
         attachmentIdNum?: string,
         attachmentIdStr?: string
     }): Promise<Response<void>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -492,7 +492,7 @@ export default class StorageService {
         attachmentIdNum?: string,
         attachmentIdStr?: string
     }): Promise<Response<void>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -518,7 +518,7 @@ export default class StorageService {
         attachmentIdNum?: string,
         attachmentIdStr?: string
     }): Promise<Response<void>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -544,7 +544,7 @@ export default class StorageService {
         attachmentIdNum?: string,
         attachmentIdStr?: string
     }): Promise<Response<void>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -656,7 +656,7 @@ export default class StorageService {
         urlKeyName?: string
         customAttributes?: Value[],
     }): Promise<Response<Record<string, string>>> {
-        if (Validator.areAllNullOrNonNull([attachmentIdNum, attachmentIdStr])) {
+        if (Validator.areAllNullOrNotNull(attachmentIdNum, attachmentIdStr)) {
             return Promise.reject(ResponseError.from({
                 code: ResponseStatusCode.ILLEGAL_ARGUMENT,
                 reason: 'One and only one attachment ID must be specified'
@@ -733,7 +733,7 @@ export default class StorageService {
         return this._turmsClient.driver.send({
             queryMessageAttachmentInfosRequest: {
                 groupIds: CollectionUtil.uniqueArray(groupIds),
-                userIds: userIds == null ? undefined:CollectionUtil.uniqueArray(userIds),
+                userIds: userIds == null ? undefined : CollectionUtil.uniqueArray(userIds),
                 creationDateStart: DataParser.getDateTimeStr(creationDateStart),
                 creationDateEnd: DataParser.getDateTimeStr(creationDateEnd),
                 customAttributes: []

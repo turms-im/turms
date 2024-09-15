@@ -244,7 +244,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         successorId: Long? = null,
         quitAfterTransfer: Boolean? = null,
     ): Response<Unit> =
-        if (Validator.areAllFalsy(
+        if (Validator.areAllNull(
                 name,
                 intro,
                 announcement,
@@ -544,7 +544,7 @@ class GroupService(private val turmsClient: TurmsClient) {
      * @param question the question.
      * If null, the question will not be updated.
      * @param answers the answers.
-     * If null, the answers will not be updated.
+     * If null or empty, the answers will not be updated.
      * @param score the score.
      * If null, the score will not be updated.
      * @throws ResponseException if an error occurs.
@@ -555,7 +555,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         answers: List<String>? = null,
         score: Int? = null,
     ): Response<Unit> =
-        if (Validator.areAllNull(question, answers, score)) {
+        if (Validator.areAllNullOrEmpty(question, answers, score)) {
             Response.unitValue()
         } else {
             turmsClient.driver.send(
