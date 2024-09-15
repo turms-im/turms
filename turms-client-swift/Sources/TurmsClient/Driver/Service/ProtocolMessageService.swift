@@ -10,7 +10,7 @@ private class RequestContext {
     }
 }
 
-class DriverMessageService: BaseService {
+class ProtocolMessageService: BaseService {
     private let requestTimeout: TimeInterval
     private let minRequestInterval: TimeInterval
     private var notificationListeners: [(TurmsNotification) -> Void] = []

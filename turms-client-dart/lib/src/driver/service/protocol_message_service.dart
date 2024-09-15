@@ -17,7 +17,7 @@ class TurmsRequestContext {
   TurmsRequestContext(this.completer, this.timeoutTimer);
 }
 
-class DriverMessageService extends BaseService {
+class ProtocolMessageService extends BaseService {
   static const int randomMax = 1 << 32;
 
   final Random _random = Random();
@@ -27,7 +27,7 @@ class DriverMessageService extends BaseService {
   final List<NotificationListener> _notificationListeners = [];
   final Map<int, TurmsRequestContext> _idToRequest = {};
 
-  DriverMessageService(super.stateStore, int? requestTimeoutMillis,
+  ProtocolMessageService(super.stateStore, int? requestTimeoutMillis,
       int? minRequestIntervalMillis) {
     _requestTimeoutMillis =
         requestTimeoutMillis == null || requestTimeoutMillis <= 0

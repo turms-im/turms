@@ -1,5 +1,5 @@
-#ifndef TURMS_CLIENT_DRIVER_SERVICE_MESSAGE_SERVICE_H
-#define TURMS_CLIENT_DRIVER_SERVICE_MESSAGE_SERVICE_H
+#ifndef TURMS_CLIENT_DRIVER_SERVICE_PROTOCOL_MESSAGE_SERVICE_H
+#define TURMS_CLIENT_DRIVER_SERVICE_PROTOCOL_MESSAGE_SERVICE_H
 
 #include <boost/thread/future.hpp>
 #include <random>
@@ -17,7 +17,8 @@ namespace client {
 namespace driver {
 namespace service {
 
-class MessageService : public BaseService, private std::enable_shared_from_this<MessageService> {
+class ProtocolMessageService : public BaseService,
+                               private std::enable_shared_from_this<ProtocolMessageService> {
    private:
     using ResponseException = exception::ResponseException;
     using TurmsNotification = model::proto::TurmsNotification;
@@ -26,10 +27,10 @@ class MessageService : public BaseService, private std::enable_shared_from_this<
    public:
     using NotificationHandler = std::function<void(const TurmsNotification&)>;
 
-    MessageService(boost::asio::io_context& ioContext,
-                   StateStore& stateStore,
-                   const boost::optional<int>& requestTimeout,
-                   const boost::optional<int>& minRequestInterval);
+    ProtocolMessageService(boost::asio::io_context& ioContext,
+                           StateStore& stateStore,
+                           const boost::optional<int>& requestTimeout,
+                           const boost::optional<int>& minRequestInterval);
 
     // Listeners
 
@@ -74,4 +75,4 @@ class MessageService : public BaseService, private std::enable_shared_from_this<
 }  // namespace client
 }  // namespace turms
 
-#endif  // TURMS_CLIENT_DRIVER_SERVICE_MESSAGE_SERVICE_H
+#endif  // TURMS_CLIENT_DRIVER_SERVICE_PROTOCOL_MESSAGE_SERVICE_H

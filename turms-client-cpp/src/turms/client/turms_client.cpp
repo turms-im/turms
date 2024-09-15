@@ -32,27 +32,27 @@ auto TurmsClient::close() -> boost::future<void> {
     return driver_.close();
 }
 
-auto TurmsClient::driver() noexcept -> TurmsClient::TurmsDriver& {
+auto TurmsClient::driver() noexcept -> TurmsDriver& {
     return driver_;
 }
 
-auto TurmsClient::userService() noexcept -> TurmsClient::UserService& {
+auto TurmsClient::userService() noexcept -> UserService& {
     return userService_;
 }
 
-auto TurmsClient::groupService() noexcept -> TurmsClient::GroupService& {
+auto TurmsClient::groupService() noexcept -> GroupService& {
     return groupService_;
 }
 
-auto TurmsClient::conversationService() noexcept -> TurmsClient::ConversationService& {
+auto TurmsClient::conversationService() noexcept -> ConversationService& {
     return conversationService_;
 }
 
-auto TurmsClient::messageService() noexcept -> TurmsClient::MessageService& {
+auto TurmsClient::messageService() noexcept -> MessageService& {
     return messageService_;
 }
 
-auto TurmsClient::notificationService() noexcept -> TurmsClient::NotificationService& {
+auto TurmsClient::notificationService() noexcept -> NotificationService& {
     return notificationService_;
 }
 }  // namespace client

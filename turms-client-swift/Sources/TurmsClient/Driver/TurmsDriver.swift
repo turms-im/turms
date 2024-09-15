@@ -5,14 +5,14 @@ public class TurmsDriver {
 
     private let connectionService: ConnectionService
     private let heartbeatService: HeartbeatService
-    private let messageService: DriverMessageService
+    private let protocolMessageService: ProtocolMessageService
 
     public init(host: String? = nil, port: UInt16? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
         stateStore = StateStore()
 
         connectionService = ConnectionService(stateStore: stateStore, host: host, port: port, connectTimeout: connectTimeout)
         heartbeatService = HeartbeatService(stateStore: stateStore, heartbeatInterval: heartbeatInterval)
-        messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
+        protocolMessageService = ProtocolMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
 
         initConnectionService()
     }
@@ -29,7 +29,7 @@ public class TurmsDriver {
     }
 
     public func close() async {
-        _ = await [connectionService.close(), heartbeatService.close(), messageService.close()]
+        _ = await [connectionService.close(), heartbeatService.close(), protocolMessageService.close()]
     }
 
     // Heartbeat Service
@@ -79,7 +79,7 @@ public class TurmsDriver {
     public func send(_ populator: (inout TurmsRequest) throws -> Void) async throws -> TurmsNotification {
         var request = TurmsRequest()
         try populator(&request)
-        let notification = try await messageService.sendRequest(&request)
+        let notification = try await protocolMessageService.sendRequest(&request)
         if case .createSessionRequest = request.kind {
             heartbeatService.start()
         }
@@ -87,7 +87,7 @@ public class TurmsDriver {
     }
 
     public func addNotificationListener(_ listener: @escaping (TurmsNotification) -> Void) {
-        messageService.addNotificationListener(listener)
+        protocolMessageService.addNotificationListener(listener)
     }
 
     // Intermediary functions as a mediator between services
@@ -95,7 +95,7 @@ public class TurmsDriver {
     private func onConnectionDisconnected(_ error: Error?) {
         stateStore.reset()
         heartbeatService.onDisconnected(error)
-        messageService.onDisconnected(error)
+        protocolMessageService.onDisconnected(error)
     }
 
     private func onMessage(_ message: Data) {
@@ -114,7 +114,7 @@ public class TurmsDriver {
             }
             if notification.hasCloseStatus {
                 stateStore.isSessionOpen = false
-                messageService.didReceiveNotification(notification)
+                protocolMessageService.didReceiveNotification(notification)
                 Task {
                     // We must close the connection after finishing handling the notification
                     // to ensure notification handlers will always be triggered before connection close handlers.
@@ -126,7 +126,7 @@ public class TurmsDriver {
                 stateStore.sessionId = notification.data.userSession.sessionID
                 stateStore.serverId = notification.data.userSession.serverID
             }
-            messageService.didReceiveNotification(notification)
+            protocolMessageService.didReceiveNotification(notification)
         }
     }
 }

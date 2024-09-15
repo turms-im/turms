@@ -3,7 +3,8 @@ library turms_client_dart;
 export 'src/driver/service/base_service.dart' show BaseService;
 export 'src/driver/service/connection_service.dart' show ConnectionService;
 export 'src/driver/service/heartbeat_service.dart' show HeartbeatService;
-export 'src/driver/service/message_service.dart' show DriverMessageService;
+export 'src/driver/service/protocol_message_service.dart'
+    show ProtocolMessageService;
 export 'src/driver/state_store.dart' show StateStore;
 export 'src/driver/turms_driver.dart' show TurmsDriver;
 export 'src/exception/response_exception.dart' show ResponseException;

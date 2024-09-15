@@ -13,7 +13,7 @@ TurmsDriver::TurmsDriver(const std::shared_ptr<boost::asio::io_context>& ioConte
     : ioContext_(ioContext),
       connectionService_(*ioContext, stateStore_, host, port, connectTimeoutMillis),
       heartbeatService_(*ioContext, stateStore_, heartbeatIntervalMillis),
-      messageService_(*ioContext, stateStore_, requestTimeoutMillis, minRequestIntervalMillis) {
+      protocolMessageService_(*ioContext, stateStore_, requestTimeoutMillis, minRequestIntervalMillis) {
     connectionService_.addOnDisconnectedListener([this](const boost::optional<std::exception>& e) {
         onConnectionDisconnected(e);
     });
@@ -36,7 +36,7 @@ auto TurmsDriver::close() -> boost::future<void> {
                 promise->set_value();
             }
         });
-        messageService_.close().then([count, promise](const boost::future<void>&) mutable {
+        protocolMessageService_.close().then([count, promise](const boost::future<void>&) mutable {
             if (--(*count) == 0) {
                 promise->set_value();
             }
@@ -82,7 +82,7 @@ auto TurmsDriver::connectionMetrics() const -> boost::optional<TcpMetrics> {
 
 auto TurmsDriver::send(TurmsRequest& request) -> boost::future<TurmsNotification> {
     const bool isCreateSessionRequest = request.has_create_session_request();
-    return messageService_.sendRequest(request).then(
+    return protocolMessageService_.sendRequest(request).then(
         [weakThis = std::weak_ptr<TurmsDriver>(shared_from_this()),
          isCreateSessionRequest](boost::future<TurmsNotification> response) {
             if (auto sharedThis = weakThis.lock()) {
@@ -101,7 +101,7 @@ auto TurmsDriver::stateStore() -> StateStore& {
 auto TurmsDriver::onConnectionDisconnected(const boost::optional<std::exception>& e) -> void {
     stateStore_.reset();
     heartbeatService_.onDisconnected(e);
-    messageService_.onDisconnected(e);
+    protocolMessageService_.onDisconnected(e);
 }
 
 auto TurmsDriver::onMessage(const std::vector<uint8_t>& message) -> void {
@@ -120,7 +120,7 @@ auto TurmsDriver::onMessage(const std::vector<uint8_t>& message) -> void {
         }
         if (notification.has_close_status()) {
             stateStore_.isSessionOpen = false;
-            messageService_.didReceiveNotification(notification);
+            protocolMessageService_.didReceiveNotification(notification);
             // We must close the connection after finishing handling the notification
             // to ensure notification handlers will always be triggered before connection close
             // handlers.
@@ -132,7 +132,7 @@ auto TurmsDriver::onMessage(const std::vector<uint8_t>& message) -> void {
             stateStore_.sessionId = session.session_id();
             stateStore_.serverId = session.server_id();
         }
-        messageService_.didReceiveNotification(notification);
+        protocolMessageService_.didReceiveNotification(notification);
     }
 }
 }  // namespace driver

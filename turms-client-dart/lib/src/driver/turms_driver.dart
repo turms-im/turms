@@ -7,7 +7,7 @@ import '../model/proto/request/turms_request.pb.dart';
 import '../transport/tcp_metrics.dart';
 import 'service/connection_service.dart';
 import 'service/heartbeat_service.dart';
-import 'service/message_service.dart';
+import 'service/protocol_message_service.dart';
 import 'state_store.dart';
 
 final _requestMessageNameToTagNumber = <String, int>{};
@@ -17,7 +17,7 @@ class TurmsDriver {
 
   late final ConnectionService _connectionService;
   late final HeartbeatService _heartbeatService;
-  late final DriverMessageService _messageService;
+  late final ProtocolMessageService _protocolMessageService;
 
   TurmsDriver(
       String? host,
@@ -31,7 +31,7 @@ class TurmsDriver {
           ..addOnDisconnectedListener(_onConnectionDisconnected)
           ..addMessageListener(_onMessage);
     _heartbeatService = HeartbeatService(_stateStore, heartbeatIntervalMillis);
-    _messageService = DriverMessageService(
+    _protocolMessageService = ProtocolMessageService(
         _stateStore, requestTimeoutMillis, minRequestIntervalMillis);
   }
 
@@ -44,7 +44,7 @@ class TurmsDriver {
   Future<void> close() => Future.wait([
         _connectionService.close(),
         _heartbeatService.close(),
-        _messageService.close()
+        _protocolMessageService.close()
       ]);
 
   // Heartbeat Service
@@ -110,7 +110,7 @@ class TurmsDriver {
       _requestMessageNameToTagNumber[name] = tagNumber;
     }
     final request = TurmsRequest.create()..setField(tagNumber, message);
-    final notification = await _messageService.sendRequest(request);
+    final notification = await _protocolMessageService.sendRequest(request);
     if (request.hasCreateSessionRequest()) {
       _heartbeatService.start();
     }
@@ -118,17 +118,18 @@ class TurmsDriver {
   }
 
   void addNotificationListener(NotificationListener listener) =>
-      _messageService.addNotificationListener(listener);
+      _protocolMessageService.addNotificationListener(listener);
 
   void removeNotificationListener(NotificationListener listener) =>
-      _messageService.removeNotificationListener(listener);
+      _protocolMessageService.removeNotificationListener(listener);
 
   // Intermediary functions as a mediator between services
 
   void _onConnectionDisconnected({Object? error, StackTrace? stackTrace}) {
     _stateStore.reset();
     _heartbeatService.onDisconnected(error: error, stackTrace: stackTrace);
-    _messageService.onDisconnected(error: error, stackTrace: stackTrace);
+    _protocolMessageService.onDisconnected(
+        error: error, stackTrace: stackTrace);
   }
 
   void _onMessage(List<int> message) {
@@ -145,7 +146,7 @@ class TurmsDriver {
       }
       if (notification.hasCloseStatus()) {
         _stateStore.isSessionOpen = false;
-        _messageService.didReceiveNotification(notification);
+        _protocolMessageService.didReceiveNotification(notification);
         // We must close the connection after finishing handling the notification
         // to ensure notification handlers will always be triggered before connection close handlers.
         _connectionService.disconnect();
@@ -157,7 +158,7 @@ class TurmsDriver {
           ..sessionId = session.sessionId
           ..serverId = session.serverId;
       }
-      _messageService.didReceiveNotification(notification);
+      _protocolMessageService.didReceiveNotification(notification);
     } else {
       _heartbeatService.resolveHeartbeatCompleters();
     }

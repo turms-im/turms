@@ -21,7 +21,7 @@ import { TurmsNotification } from '../model/proto/notification/turms_notificatio
 import { TurmsRequest } from '../model/proto/request/turms_request';
 import WebSocketMetrics from '../transport/websocket-metrics';
 import StateStore from './state-store';
-import MessageService from './service/message-service';
+import ProtocolMessageService from './service/protocol-message-service';
 import HeartbeatService from './service/heartbeat-service';
 import SharedContextService, { Notification, NotificationType, Request } from './service/shared-context-service';
 import ConnectionService, { ConnectOptions, ConnectionDisconnectInfo } from './service/connection-service';
@@ -32,7 +32,7 @@ export default class TurmsDriver {
 
     private readonly _connectionService: ConnectionService;
     private readonly _heartbeatService: HeartbeatService;
-    private readonly _messageService: MessageService;
+    private readonly _protoMessageService: ProtocolMessageService;
     private readonly _sharedContextService?: SharedContextService;
 
     constructor(wsUrl?: string,
@@ -47,7 +47,7 @@ export default class TurmsDriver {
         this._stateStore = new StateStore(this._sharedContextService);
         this._connectionService = this.initConnectionService(wsUrl, connectTimeout);
         this._heartbeatService = new HeartbeatService(this._stateStore, heartbeatInterval);
-        this._messageService = new MessageService(this._stateStore, requestTimeout, minRequestInterval);
+        this._protoMessageService = new ProtocolMessageService(this._stateStore, requestTimeout, minRequestInterval);
         if (SystemUtil.isBrowser()) {
             window.addEventListener('beforeunload', () => this.close());
         }
@@ -72,7 +72,7 @@ export default class TurmsDriver {
         return Promise.allSettled([
             this._connectionService.close(),
             this._heartbeatService.close(),
-            this._messageService.close()]
+            this._protoMessageService.close()]
         ).then(() => null);
     }
 
@@ -146,7 +146,7 @@ export default class TurmsDriver {
     // Message Service
 
     send(message: TurmsRequest): Promise<TurmsNotification> {
-        const notification = this._messageService.sendRequest(message);
+        const notification = this._protoMessageService.sendRequest(message);
         if (message.createSessionRequest) {
             notification.then(() => {
                 this._heartbeatService.start();
@@ -156,11 +156,11 @@ export default class TurmsDriver {
     }
 
     addNotificationListener(listener: ((notification: ParsedNotification) => void)): void {
-        this._messageService.addNotificationListener(listener);
+        this._protoMessageService.addNotificationListener(listener);
     }
 
     removeNotificationListener(listener: ((notification: ParsedNotification) => void)): void {
-        this._messageService.removeNotificationListener(listener);
+        this._protoMessageService.removeNotificationListener(listener);
     }
 
     // Intermediary functions as a mediator between services
@@ -168,7 +168,7 @@ export default class TurmsDriver {
     private _onConnectionDisconnected(): void {
         this._stateStore.reset();
         this._heartbeatService.onDisconnected();
-        this._messageService.onDisconnected();
+        this._protoMessageService.onDisconnected();
     }
 
     private _onMessage(message: ArrayBuffer): void {
@@ -185,7 +185,7 @@ export default class TurmsDriver {
             }
             if (notification.closeStatus) {
                 this._stateStore.isSessionOpen = false;
-                this._messageService.didReceiveNotification(notification);
+                this._protoMessageService.didReceiveNotification(notification);
                 // We must close the connection after finishing handling the notification
                 // to ensure notification handlers will always be triggered before connection close handlers.
                 this._connectionService.disconnect();
@@ -196,7 +196,7 @@ export default class TurmsDriver {
                 this._stateStore.sessionId = session.sessionId;
                 this._stateStore.serverId = session.serverId;
             }
-            this._messageService.didReceiveNotification(notification);
+            this._protoMessageService.didReceiveNotification(notification);
         } else {
             this._heartbeatService.resolveHeartbeatPromises();
         }

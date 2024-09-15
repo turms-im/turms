@@ -8,7 +8,7 @@
 
 #include "turms/client/driver/service/connection_service.h"
 #include "turms/client/driver/service/heartbeat_service.h"
-#include "turms/client/driver/service/message_service.h"
+#include "turms/client/driver/service/protocol_message_service.h"
 #include "turms/client/driver/state_store.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/transport/tcp_metrics.h"
@@ -21,10 +21,9 @@ class TurmsDriver : private boost::noncopyable, private std::enable_shared_from_
    private:
     using TurmsNotification = model::proto::TurmsNotification;
     using TurmsRequest = model::proto::TurmsRequest;
-    using StateStore = driver::StateStore;
     using ConnectionService = service::ConnectionService;
     using HeartbeatService = service::HeartbeatService;
-    using MessageService = service::MessageService;
+    using ProtocolMessageService = service::ProtocolMessageService;
     using TcpMetrics = transport::TcpMetrics;
 
    public:
@@ -80,7 +79,7 @@ class TurmsDriver : private boost::noncopyable, private std::enable_shared_from_
 
     template <typename T>
     auto addNotificationListener(T&& listener) -> void {
-        messageService_.addNotificationListener(std::forward<T>(listener));
+        protocolMessageService_.addNotificationListener(std::forward<T>(listener));
     }
 
     // State
@@ -91,7 +90,7 @@ class TurmsDriver : private boost::noncopyable, private std::enable_shared_from_
     std::shared_ptr<boost::asio::io_context> ioContext_;
     ConnectionService connectionService_;
     HeartbeatService heartbeatService_;
-    MessageService messageService_;
+    ProtocolMessageService protocolMessageService_;
 
     // Intermediary functions as a mediator between services
     auto onConnectionDisconnected(const boost::optional<std::exception>& e = boost::none) -> void;

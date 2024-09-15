@@ -1,20 +1,20 @@
-#include "turms/client/driver/service/message_service.h"
+#include "turms/client/driver/service/protocol_message_service.h"
 
 namespace turms {
 namespace client {
 namespace driver {
 namespace service {
-MessageService::MessageService(boost::asio::io_context& ioContext,
-                               StateStore& stateStore,
-                               const boost::optional<int>& requestTimeout,
-                               const boost::optional<int>& minRequestInterval)
+ProtocolMessageService::ProtocolMessageService(boost::asio::io_context& ioContext,
+                                               StateStore& stateStore,
+                                               const boost::optional<int>& requestTimeout,
+                                               const boost::optional<int>& minRequestInterval)
     : BaseService(ioContext, stateStore),
       requestTimeout_(std::chrono::milliseconds{requestTimeout.get_value_or(60 * 1000)}),
       enableRequestTimeout_(requestTimeout_.count() > 0),
       minRequestInterval_(minRequestInterval.get_value_or(0)) {
 }
 
-auto MessageService::sendRequest(model::proto::TurmsRequest& request)
+auto ProtocolMessageService::sendRequest(model::proto::TurmsRequest& request)
     -> boost::future<TurmsNotification> {
     if (request.has_create_session_request()) {
         if (stateStore_.isSessionOpen) {
@@ -58,7 +58,7 @@ auto MessageService::sendRequest(model::proto::TurmsRequest& request)
 
         if (enableRequestTimeout_) {
             boost::asio::steady_timer timer{ioContext_, requestTimeout_};
-            timer.async_wait([weakThis = std::weak_ptr<MessageService>(shared_from_this()),
+            timer.async_wait([weakThis = std::weak_ptr<ProtocolMessageService>(shared_from_this()),
                               requestId](const boost::system::error_code& e) {
                 if (e == boost::asio::error::operation_aborted) {
                     return;
@@ -82,7 +82,7 @@ auto MessageService::sendRequest(model::proto::TurmsRequest& request)
     }
 }
 
-auto MessageService::didReceiveNotification(const MessageService::TurmsNotification& notification)
+auto ProtocolMessageService::didReceiveNotification(const ProtocolMessageService::TurmsNotification& notification)
     -> void {
     const bool isResponse = !notification.has_relayed_request() && notification.has_request_id();
     if (isResponse) {
@@ -110,17 +110,17 @@ auto MessageService::didReceiveNotification(const MessageService::TurmsNotificat
     notifyNotificationListeners(notification);
 }
 
-auto MessageService::close() -> boost::future<void> {
+auto ProtocolMessageService::close() -> boost::future<void> {
     onDisconnected(boost::none);
     return boost::make_ready_future();
 }
 
-auto MessageService::onDisconnected(const boost::optional<std::exception>& exception) -> void {
+auto ProtocolMessageService::onDisconnected(const boost::optional<std::exception>& exception) -> void {
     rejectRequestPromises(exception::ResponseException{
         model::ResponseStatusCode::kClientSessionHasBeenClosed, "", exception});
 }
 
-auto MessageService::generateRandomId() const -> int64_t {
+auto ProtocolMessageService::generateRandomId() const -> int64_t {
     int64_t id;
     do {
         id = random::nextPositiveInt64();
@@ -128,14 +128,14 @@ auto MessageService::generateRandomId() const -> int64_t {
     return id;
 }
 
-auto MessageService::notifyNotificationListeners(
-    const MessageService::TurmsNotification& notification) const -> void {
+auto ProtocolMessageService::notifyNotificationListeners(
+    const TurmsNotification& notification) const -> void {
     for (const auto& listener : notificationListeners_) {
         listener(notification);
     }
 }
 
-auto MessageService::rejectRequestPromises(const std::exception& exception) -> void {
+auto ProtocolMessageService::rejectRequestPromises(const std::exception& exception) -> void {
     for (auto it = idToRequest_.begin(); it != idToRequest_.end();) {
         it = idToRequest_.erase(it);
         TurmsRequestContext& context = it->second;

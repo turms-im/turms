@@ -20,7 +20,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import com.google.protobuf.MessageLite
 import im.turms.client.driver.service.ConnectionService
 import im.turms.client.driver.service.HeartbeatService
-import im.turms.client.driver.service.MessageService
+import im.turms.client.driver.service.ProtocolMessageService
 import im.turms.client.model.proto.notification.TurmsNotification
 import im.turms.client.model.proto.request.TurmsRequest
 import im.turms.client.transport.Pin
@@ -62,8 +62,8 @@ class TurmsDriver(
         }
     private val heartbeatService: HeartbeatService =
         HeartbeatService(coroutineContext, stateStore, heartbeatIntervalMillis)
-    private val messageService: MessageService =
-        MessageService(coroutineContext, stateStore, requestTimeoutMillis, minRequestIntervalMillis)
+    private val protocolMessageService: ProtocolMessageService =
+        ProtocolMessageService(coroutineContext, stateStore, requestTimeoutMillis, minRequestIntervalMillis)
 
     // Close
 
@@ -71,10 +71,10 @@ class TurmsDriver(
         coroutineScope {
             val closeConnectionService = async { connectionService.close() }
             val closeHeartbeatService = async { heartbeatService.close() }
-            val closeMessageService = async { messageService.close() }
+            val closeProtocolMessageService = async { protocolMessageService.close() }
             closeConnectionService.await()
             closeHeartbeatService.await()
-            closeMessageService.await()
+            closeProtocolMessageService.await()
         }
 
     // Heartbeat Service
@@ -121,7 +121,7 @@ class TurmsDriver(
     // Message Service
 
     suspend fun send(requestBuilder: TurmsRequest.Builder): TurmsNotification {
-        val notification = messageService.sendRequest(requestBuilder)
+        val notification = protocolMessageService.sendRequest(requestBuilder)
         if (requestBuilder.hasCreateSessionRequest()) {
             heartbeatService.start()
         }
@@ -144,16 +144,16 @@ class TurmsDriver(
         return send(requestBuilder)
     }
 
-    fun addNotificationListener(listener: (TurmsNotification) -> Unit) = messageService.addNotificationListener(listener)
+    fun addNotificationListener(listener: (TurmsNotification) -> Unit) = protocolMessageService.addNotificationListener(listener)
 
-    fun removeNotificationListener(listener: (TurmsNotification) -> Unit) = messageService.removeNotificationListener(listener)
+    fun removeNotificationListener(listener: (TurmsNotification) -> Unit) = protocolMessageService.removeNotificationListener(listener)
 
     // Intermediary functions as a mediator between services
 
     private fun onConnectionDisconnected(throwable: Throwable?) {
         stateStore.reset()
         heartbeatService.onDisconnected(throwable)
-        messageService.onDisconnected(throwable)
+        protocolMessageService.onDisconnected(throwable)
     }
 
     private fun onMessage(byteBuffer: ByteBuffer) {
@@ -170,7 +170,7 @@ class TurmsDriver(
             }
             if (notification.hasCloseStatus()) {
                 stateStore.isSessionOpen = false
-                messageService.didReceiveNotification(notification)
+                protocolMessageService.didReceiveNotification(notification)
                 // We must close the connection after finishing handling the notification
                 // to ensure notification handlers will always be triggered before connection close handlers.
                 runBlocking {
@@ -183,7 +183,7 @@ class TurmsDriver(
                 stateStore.sessionId = notification.data.userSession.sessionId
                 stateStore.serverId = notification.data.userSession.serverId
             }
-            messageService.didReceiveNotification(notification)
+            protocolMessageService.didReceiveNotification(notification)
         } else {
             heartbeatService.completeHeartbeatFutures()
         }

@@ -41,7 +41,7 @@ import kotlin.coroutines.suspendCoroutine
  * @author James Chen
  */
 
-class MessageService(
+class ProtocolMessageService(
     coroutineContext: CoroutineContext,
     stateStore: StateStore,
     requestTimeout: Int?,
