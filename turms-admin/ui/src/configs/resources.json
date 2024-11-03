@@ -73,7 +73,7 @@
             ]
         },
         "GROUP": {
-            "GROUP_INFO": [
+            "GROUP": [
                 "GROUP_CREATE",
                 "GROUP_DELETE",
                 "GROUP_UPDATE",
@@ -142,12 +142,18 @@
                 "ADMIN_ROLE_DELETE",
                 "ADMIN_ROLE_UPDATE",
                 "ADMIN_ROLE_QUERY"
+            ],
+            "ADMIN_PERMISSION": [
+                "ADMIN_PERMISSION_QUERY"
             ]
         },
         "CLIENT_BLOCKLIST": [
             "CLIENT_BLOCKLIST_CREATE",
             "CLIENT_BLOCKLIST_DELETE",
             "CLIENT_BLOCKLIST_QUERY"
+        ],
+        "CLIENT_REQUEST": [
+            "CLIENT_REQUEST_CREATE"
         ],
         "CLUSTER_MEMBER": [
             "CLUSTER_MEMBER_CREATE",
@@ -159,7 +165,7 @@
             "CLUSTER_LEADER_UPDATE",
             "CLUSTER_LEADER_QUERY"
         ],
-        "CLUSTER_CONFIG": [
+        "CLUSTER_SETTING": [
             "CLUSTER_SETTING_UPDATE",
             "CLUSTER_SETTING_QUERY"
         ],
