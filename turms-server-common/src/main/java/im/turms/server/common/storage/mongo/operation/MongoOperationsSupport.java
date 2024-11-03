@@ -160,10 +160,16 @@ public interface MongoOperationsSupport {
             Document minimum,
             Document maximum);
 
+    Flux<String> listCollectionNames();
+
     /**
      * @return whether the collection has already existed
      */
     Mono<Boolean> createCollectionIfNotExists(Class<?> clazz);
+
+    Mono<Boolean> createCollectionIfNotExists(
+            Class<?> clazz,
+            Collection<String> existingCollectionNames);
 
     Mono<Boolean> collectionExists(Class<?> clazz);
 

@@ -35,8 +35,6 @@ import reactor.core.publisher.Sinks;
 
 import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
-import im.turms.server.common.infra.logging.core.logger.Logger;
-import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.property.env.common.mongo.MongoProperties;
 import im.turms.server.common.storage.mongo.entity.MongoEntity;
 import im.turms.server.common.storage.mongo.exception.IncompatibleMongoException;
@@ -48,8 +46,6 @@ import im.turms.server.common.storage.mongo.operation.TurmsMongoOperations;
  * @author James Chen
  */
 public final class TurmsMongoClient implements MongoOperationsSupport {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TurmsMongoClient.class);
 
     private final Set<String> names = UnifiedSet.newSet(8);
     private List<ServerDescription> descriptions;

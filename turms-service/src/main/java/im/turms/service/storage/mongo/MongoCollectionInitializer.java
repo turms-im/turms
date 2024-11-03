@@ -47,6 +47,7 @@ import im.turms.server.common.domain.user.po.User;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.collection.CollectionUtil;
+import im.turms.server.common.infra.collection.CollectorUtil;
 import im.turms.server.common.infra.lang.Pair;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
@@ -228,38 +229,67 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
      * @return True if all collections have existed
      */
     private Mono<Boolean> createCollectionsIfNotExist() {
-        return PublisherUtil.areAllTrue(adminMongoClient.createCollectionIfNotExists(Admin.class),
-                adminMongoClient.createCollectionIfNotExists(AdminRole.class),
+        return adminMongoClient.listCollectionNames()
+                .collect(CollectorUtil.toSet(32))
+                .flatMap(existingCollectionNames -> PublisherUtil.areAllTrue(
+                        adminMongoClient.createCollectionIfNotExists(Admin.class,
+                                existingCollectionNames),
+                        adminMongoClient.createCollectionIfNotExists(AdminRole.class,
+                                existingCollectionNames),
 
-                groupMongoClient.createCollectionIfNotExists(Group.class),
-                groupMongoClient.createCollectionIfNotExists(GroupBlockedUser.class),
-                groupMongoClient.createCollectionIfNotExists(GroupInvitation.class),
-                groupMongoClient.createCollectionIfNotExists(GroupJoinQuestion.class),
-                groupMongoClient.createCollectionIfNotExists(GroupJoinRequest.class),
-                groupMongoClient.createCollectionIfNotExists(GroupMember.class),
-                groupMongoClient.createCollectionIfNotExists(GroupType.class),
-                groupMongoClient.createCollectionIfNotExists(GroupVersion.class),
+                        groupMongoClient.createCollectionIfNotExists(Group.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupBlockedUser.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupInvitation.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupJoinQuestion.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupJoinRequest.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupMember.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupType.class,
+                                existingCollectionNames),
+                        groupMongoClient.createCollectionIfNotExists(GroupVersion.class,
+                                existingCollectionNames),
 
-                conferenceMongoClient.createCollectionIfNotExists(Meeting.class),
+                        conferenceMongoClient.createCollectionIfNotExists(Meeting.class,
+                                existingCollectionNames),
 
-                messageMongoClient.createCollectionIfNotExists(Message.class),
+                        messageMongoClient.createCollectionIfNotExists(Message.class,
+                                existingCollectionNames),
 
-                conversationMongoClient.createCollectionIfNotExists(ConversationSettings.class),
-                conversationMongoClient.createCollectionIfNotExists(GroupConversation.class),
-                conversationMongoClient.createCollectionIfNotExists(PrivateConversation.class),
+                        conversationMongoClient.createCollectionIfNotExists(
+                                ConversationSettings.class,
+                                existingCollectionNames),
+                        conversationMongoClient.createCollectionIfNotExists(GroupConversation.class,
+                                existingCollectionNames),
+                        conversationMongoClient.createCollectionIfNotExists(
+                                PrivateConversation.class,
+                                existingCollectionNames),
 
-                // ElasticsearchManager has its own logic to create collections dynamically,
-                // so we don't need to create collections for it.
-//                mongoClient.createCollectionIfNotExists(SyncLog.class),
+                        // ElasticsearchManager has its own logic to create collections dynamically,
+                        // so we don't need to create collections for it.
+//                      mongoClient.createCollectionIfNotExists(SyncLog.class),
 
-                userMongoClient.createCollectionIfNotExists(User.class),
-                userMongoClient.createCollectionIfNotExists(UserFriendRequest.class),
-                userMongoClient.createCollectionIfNotExists(UserPermissionGroup.class),
-                userMongoClient.createCollectionIfNotExists(UserRelationship.class),
-                userMongoClient.createCollectionIfNotExists(UserRelationshipGroup.class),
-                userMongoClient.createCollectionIfNotExists(UserRelationshipGroupMember.class),
-                userMongoClient.createCollectionIfNotExists(UserSettings.class),
-                userMongoClient.createCollectionIfNotExists(UserVersion.class));
+                        userMongoClient.createCollectionIfNotExists(User.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserFriendRequest.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserPermissionGroup.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserRelationship.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserRelationshipGroup.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(
+                                UserRelationshipGroupMember.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserSettings.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserVersion.class,
+                                existingCollectionNames)));
     }
 
     private Mono<Void> dropAllDatabases() {

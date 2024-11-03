@@ -790,6 +790,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     // Collection
 
     @Override
+    public Flux<String> listCollectionNames() {
+        return Flux.from(context.getDatabase()
+                .listCollectionNames());
+    }
+
+    @Override
     public Mono<Boolean> createCollectionIfNotExists(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
         BsonDocument jsonSchema = entity.jsonSchema();
@@ -799,28 +805,51 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                             + entity.collectionName()
                             + "\" because no JSON schema is specified"));
         }
-        return collectionExists(clazz).flatMap(exists -> {
-            if (exists) {
-                // Always update the JSON schema to ensure the schema is up to date.
-                return updateJsonSchema(clazz,
-                        jsonSchema,
-                        ValidationAction.ERROR,
-                        ValidationLevel.STRICT).then(PublisherPool.TRUE);
-            }
-            CreateCollectionOptions options = new CreateCollectionOptions()
-                    .validationOptions(new ValidationOptions().validator(jsonSchema)
-                            .validationAction(ValidationAction.ERROR)
-                            .validationLevel(ValidationLevel.STRICT));
-            Publisher<Void> source = context.getDatabase()
-                    .createCollection(entity.collectionName(), options);
-            return Mono.from(source)
-                    .thenReturn(false)
-                    // https://github.com/turms-im/turms/issues/1010
-                    .onErrorResume(throwable -> MongoExceptionUtil.isErrorOf(throwable,
-                            MongoErrorCodes.NAMESPACE_EXISTS)
-                                    ? PublisherPool.TRUE
-                                    : Mono.error(throwable));
-        });
+        return collectionExists(clazz)
+                .flatMap(exists -> createCollectionIfNotExists0(exists, clazz, jsonSchema, entity));
+    }
+
+    @Override
+    public Mono<Boolean> createCollectionIfNotExists(
+            Class<?> clazz,
+            Collection<String> existingCollectionNames) {
+        MongoEntity<?> entity = context.getEntity(clazz);
+        BsonDocument jsonSchema = entity.jsonSchema();
+        if (jsonSchema == null) {
+            return Mono.error(new RuntimeException(
+                    "Failed to create the collection \""
+                            + entity.collectionName()
+                            + "\" because no JSON schema is specified"));
+        }
+        return createCollectionIfNotExists0(existingCollectionNames
+                .contains(entity.collectionName()), clazz, jsonSchema, entity);
+    }
+
+    private Mono<Boolean> createCollectionIfNotExists0(
+            boolean exists,
+            Class<?> clazz,
+            BsonDocument jsonSchema,
+            MongoEntity<?> entity) {
+        if (exists) {
+            // Always update the JSON schema to ensure the schema is up to date.
+            return updateJsonSchema(clazz,
+                    jsonSchema,
+                    ValidationAction.ERROR,
+                    ValidationLevel.STRICT).then(PublisherPool.TRUE);
+        }
+        CreateCollectionOptions options = new CreateCollectionOptions()
+                .validationOptions(new ValidationOptions().validator(jsonSchema)
+                        .validationAction(ValidationAction.ERROR)
+                        .validationLevel(ValidationLevel.STRICT));
+        Publisher<Void> source = context.getDatabase()
+                .createCollection(entity.collectionName(), options);
+        return Mono.from(source)
+                .thenReturn(false)
+                // https://github.com/turms-im/turms/issues/1010
+                .onErrorResume(throwable -> MongoExceptionUtil.isErrorOf(throwable,
+                        MongoErrorCodes.NAMESPACE_EXISTS)
+                                ? PublisherPool.TRUE
+                                : Mono.error(throwable));
     }
 
     @Override
