@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import jakarta.annotation.Nullable;
 
 import com.mongodb.ClientSessionOptions;
+import com.mongodb.MongoNamespace;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
@@ -186,6 +187,21 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 : options.limit(1);
         FindPublisher<T> source = find(collection, filter, options);
         return Mono.from(source);
+    }
+
+    @Override
+    public Flux<BsonDocument> findMany(String collectionName, Filter filter) {
+        return findMany(collectionName, filter, null);
+    }
+
+    @Override
+    public Flux<BsonDocument> findMany(
+            String collectionName,
+            Filter filter,
+            @Nullable QueryOptions options) {
+        MongoCollection<BsonDocument> collection = context.getCollection(collectionName);
+        FindPublisher<BsonDocument> source = find(collection, filter, options);
+        return Flux.from(source);
     }
 
     @Override
@@ -793,6 +809,17 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public Flux<String> listCollectionNames() {
         return Flux.from(context.getDatabase()
                 .listCollectionNames());
+    }
+
+    @Override
+    public Mono<Void> renameCollection(String oldCollectionName, String newCollectionName) {
+        MongoCollection<Document> collection = context.getDatabase()
+                .getCollection(oldCollectionName);
+        MongoNamespace newNamespace = new MongoNamespace(
+                collection.getNamespace()
+                        .getDatabaseName(),
+                newCollectionName);
+        return Mono.from(collection.renameCollection(newNamespace));
     }
 
     @Override

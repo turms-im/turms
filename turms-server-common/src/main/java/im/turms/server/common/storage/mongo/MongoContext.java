@@ -40,6 +40,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.Future;
 import lombok.Getter;
+import org.bson.BsonDocument;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jctools.maps.NonBlockingIdentityHashMap;
@@ -137,6 +138,10 @@ public class MongoContext {
                     .second();
         }
         return collection;
+    }
+
+    public MongoCollection<BsonDocument> getCollection(String collectionName) {
+        return database.getCollection(collectionName, BsonDocument.class);
     }
 
     public List<MongoEntity<?>> getEntities() {

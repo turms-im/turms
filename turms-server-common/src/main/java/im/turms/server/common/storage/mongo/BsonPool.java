@@ -17,6 +17,7 @@
 
 package im.turms.server.common.storage.mongo;
 
+import org.bson.BsonArray;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
 import org.bson.types.MaxKey;
@@ -38,5 +39,6 @@ public final class BsonPool {
     public static final BsonString BSON_STRING_EMPTY = new BsonString("");
     public static final MaxKey MAX_KEY = new MaxKey();
     public static final MinKey MIN_KEY = new MinKey();
+    public static final BsonArray BSON_ARRAY_EMPTY = new BsonArray();
 
 }
