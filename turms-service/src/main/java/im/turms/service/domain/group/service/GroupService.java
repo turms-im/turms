@@ -81,8 +81,8 @@ import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.repository.GroupRepository;
 import im.turms.service.domain.message.service.MessageService;
 import im.turms.service.domain.observation.service.MetricsService;
-import im.turms.service.domain.user.po.UserPermissionGroup;
-import im.turms.service.domain.user.service.UserPermissionGroupService;
+import im.turms.service.domain.user.po.UserRole;
+import im.turms.service.domain.user.service.UserRoleService;
 import im.turms.service.domain.user.service.UserVersionService;
 import im.turms.service.infra.proto.ProtoModelConvertor;
 import im.turms.service.storage.elasticsearch.ElasticsearchManager;
@@ -113,7 +113,7 @@ public class GroupService extends BaseService {
     private final GroupMemberService groupMemberService;
     private final GroupVersionService groupVersionService;
     private final UserVersionService userVersionService;
-    private final UserPermissionGroupService userPermissionGroupService;
+    private final UserRoleService userRoleService;
     private final ConversationService conversationService;
     private final MessageService messageService;
 
@@ -139,7 +139,7 @@ public class GroupService extends BaseService {
             GroupMemberService groupMemberService,
             GroupVersionService groupVersionService,
             UserVersionService userVersionService,
-            UserPermissionGroupService userPermissionGroupService,
+            UserRoleService userRoleService,
             ConversationService conversationService,
             @Lazy MessageService messageService,
             MetricsService metricsService) {
@@ -151,7 +151,7 @@ public class GroupService extends BaseService {
         this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
         this.userVersionService = userVersionService;
-        this.userPermissionGroupService = userPermissionGroupService;
+        this.userRoleService = userRoleService;
         this.conversationService = conversationService;
         this.messageService = messageService;
 
@@ -998,15 +998,11 @@ public class GroupService extends BaseService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService
-                .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
-        return userPermissionGroupMono.flatMap(userPermissionGroup -> isAllowedToCreateGroup(
-                requesterId,
-                userPermissionGroup)
+        Mono<UserRole> userRoleMono =
+                userRoleService.queryStoredOrDefaultUserRoleByUserId(requesterId);
+        return userRoleMono.flatMap(userRole -> isAllowedToCreateGroup(requesterId, userRole)
                 .flatMap(permission -> permission.code() == ResponseStatusCode.OK
-                        ? isAllowedCreateGroupWithGroupType(requesterId,
-                                groupTypeId,
-                                userPermissionGroup)
+                        ? isAllowedCreateGroupWithGroupType(requesterId, groupTypeId, userRole)
                         : Mono.just(
                                 ServicePermission.get(permission.code(), permission.reason()))));
     }
@@ -1018,18 +1014,17 @@ public class GroupService extends BaseService {
      */
     public Mono<ServicePermission> isAllowedToCreateGroup(
             @NotNull Long requesterId,
-            @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
+            @Nullable UserRole auxiliaryUserRole) {
         try {
             Validator.notNull(requesterId, "requesterId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        Mono<UserPermissionGroup> userPermissionGroupMono = auxiliaryUserPermissionGroup == null
-                ? userPermissionGroupService
-                        .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId)
-                : Mono.just(auxiliaryUserPermissionGroup);
-        return userPermissionGroupMono.flatMap(userPermissionGroup -> {
-            Integer ownedGroupLimit = userPermissionGroup.getOwnedGroupLimit();
+        Mono<UserRole> userRoleMono = auxiliaryUserRole == null
+                ? userRoleService.queryStoredOrDefaultUserRoleByUserId(requesterId)
+                : Mono.just(auxiliaryUserRole);
+        return userRoleMono.flatMap(userRole -> {
+            Integer ownedGroupLimit = userRole.getOwnedGroupLimit();
             if (ownedGroupLimit == Integer.MAX_VALUE) {
                 return Mono.just(ServicePermission.get(ResponseStatusCode.OK));
             }
@@ -1058,7 +1053,7 @@ public class GroupService extends BaseService {
     public Mono<ServicePermission> isAllowedCreateGroupWithGroupType(
             @NotNull Long requesterId,
             @NotNull Long groupTypeId,
-            @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
+            @Nullable UserRole auxiliaryUserRole) {
         try {
             Validator.notNull(requesterId, "requesterId");
         } catch (ResponseException e) {
@@ -1070,13 +1065,11 @@ public class GroupService extends BaseService {
                         return Mono.just(ServicePermission
                                 .get(ResponseStatusCode.CREATE_GROUP_WITH_NONEXISTENT_GROUP_TYPE));
                     }
-                    Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
-                            ? Mono.just(auxiliaryUserPermissionGroup)
-                            : userPermissionGroupService
-                                    .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
-                    return groupMono.flatMap(userPermissionGroup -> {
-                        Set<Long> creatableGroupTypeIds =
-                                userPermissionGroup.getCreatableGroupTypeIds();
+                    Mono<UserRole> userRoleMono = auxiliaryUserRole != null
+                            ? Mono.just(auxiliaryUserRole)
+                            : userRoleService.queryStoredOrDefaultUserRoleByUserId(requesterId);
+                    return userRoleMono.flatMap(userRole -> {
+                        Set<Long> creatableGroupTypeIds = userRole.getCreatableGroupTypeIds();
                         if (!creatableGroupTypeIds.contains(groupTypeId)) {
                             List<Long> sortedIds = new ArrayList<>(creatableGroupTypeIds);
                             sortedIds.sort(null);
@@ -1088,9 +1081,9 @@ public class GroupService extends BaseService {
                                     ResponseStatusCode.NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE,
                                     reason));
                         }
-                        Integer ownedGroupLimit = userPermissionGroup.getGroupTypeIdToLimit()
+                        Integer ownedGroupLimit = userRole.getGroupTypeIdToLimit()
                                 .getOrDefault(groupTypeId,
-                                        userPermissionGroup.getOwnedGroupLimitForEachGroupType());
+                                        userRole.getOwnedGroupLimitForEachGroupType());
                         if (ownedGroupLimit == Integer.MAX_VALUE) {
                             return Mono.just(ServicePermission.OK);
                         }
@@ -1106,7 +1099,7 @@ public class GroupService extends BaseService {
     public Mono<ServicePermission> isAllowedUpdateGroupToGroupType(
             @NotNull Long requesterId,
             @NotNull Long groupTypeId,
-            @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
+            @Nullable UserRole auxiliaryUserRole) {
         try {
             Validator.notNull(requesterId, "requesterId");
         } catch (ResponseException e) {
@@ -1118,13 +1111,11 @@ public class GroupService extends BaseService {
                         return Mono.just(ServicePermission
                                 .get(ResponseStatusCode.UPDATE_GROUP_TO_NONEXISTENT_GROUP_TYPE));
                     }
-                    Mono<UserPermissionGroup> groupMono = auxiliaryUserPermissionGroup != null
-                            ? Mono.just(auxiliaryUserPermissionGroup)
-                            : userPermissionGroupService
-                                    .queryStoredOrDefaultUserPermissionGroupByUserId(requesterId);
-                    return groupMono.flatMap(userPermissionGroup -> {
-                        Set<Long> creatableGroupTypeIds =
-                                userPermissionGroup.getCreatableGroupTypeIds();
+                    Mono<UserRole> userRoleMono = auxiliaryUserRole != null
+                            ? Mono.just(auxiliaryUserRole)
+                            : userRoleService.queryStoredOrDefaultUserRoleByUserId(requesterId);
+                    return userRoleMono.flatMap(userRole -> {
+                        Set<Long> creatableGroupTypeIds = userRole.getCreatableGroupTypeIds();
                         if (!creatableGroupTypeIds.contains(groupTypeId)) {
                             List<Long> sortedIds = new ArrayList<>(creatableGroupTypeIds);
                             sortedIds.sort(null);
@@ -1136,9 +1127,9 @@ public class GroupService extends BaseService {
                                     ResponseStatusCode.NO_PERMISSION_TO_UPDATE_GROUP_TO_GROUP_TYPE,
                                     reason));
                         }
-                        Integer ownedGroupLimit = userPermissionGroup.getGroupTypeIdToLimit()
+                        Integer ownedGroupLimit = userRole.getGroupTypeIdToLimit()
                                 .getOrDefault(groupTypeId,
-                                        userPermissionGroup.getOwnedGroupLimitForEachGroupType());
+                                        userRole.getOwnedGroupLimitForEachGroupType());
                         if (ownedGroupLimit == Integer.MAX_VALUE) {
                             return Mono.just(ServicePermission.OK);
                         }

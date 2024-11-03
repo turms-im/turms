@@ -11,25 +11,29 @@
 import ContentTemplate from '../template/content-template.vue';
 
 export default {
-    name: 'content-user-permission-group-pane',
+    name: 'content-user-role-pane',
     components: {
         ContentTemplate
     },
     data() {
         return {
-            name: 'user-permission-group',
-            url: this.$rs.apis.userPermissionGroup,
+            name: 'user-role',
+            url: this.$rs.apis.userRole,
             actions: [
                 {
-                    title: 'addPermissionGroup',
+                    title: 'addUserRole',
                     type: 'CREATE',
                     size: 'XL',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: 'permissionGroupId',
+                            label: 'userRoleId',
                             rules: this.$validator.create({onlyNumber: true})
+                        },
+                        {
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
                             id: 'creatableGroupTypeIds',
@@ -56,10 +60,14 @@ export default {
                     ]
                 },
                 {
-                    title: 'updateSelectedPermissionGroups',
+                    title: 'updateSelectedUserRoles',
                     type: 'UPDATE',
                     size: 'XL',
                     fields: [
+                        {
+                            id: 'name',
+                            type: 'INPUT'
+                        },
                         {
                             id: 'creatableGroupTypeIds',
                             type: 'INPUT',
@@ -86,9 +94,13 @@ export default {
             table: {
                 columns: [
                     {
-                        title: 'permissionGroupId',
+                        title: 'userRoleId',
                         key: 'id',
-                        width: '20%'
+                        width: '15%'
+                    },
+                    {
+                        key: 'name',
+                        width: '15%'
                     },
                     {
                         title: 'creatableGroupTypeId',
@@ -97,11 +109,11 @@ export default {
                     },
                     {
                         key: 'ownedGroupLimit',
-                        width: '15%'
+                        width: '10%'
                     },
                     {
                         key: 'ownedGroupLimitForEachGroupType',
-                        width: '15%'
+                        width: '10%'
                     },
                     {
                         title: 'groupTypeIdToLimit',

@@ -61,14 +61,14 @@ import im.turms.service.domain.group.po.GroupVersion;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.message.repository.MessageRepository;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
+import im.turms.service.domain.user.po.UserRole;
 import im.turms.service.domain.user.po.UserVersion;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
-import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
+import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_ROLE_ID;
 
 /**
  * @author James Chen
@@ -455,7 +455,7 @@ public final class MongoFakeDataGenerator {
                     "my-intro",
                     "my-avatar-id",
                     ProfileAccessStrategy.ALL,
-                    DEFAULT_USER_PERMISSION_GROUP_ID,
+                    DEFAULT_USER_ROLE_ID,
                     userDate,
                     null,
                     userDate,
@@ -494,7 +494,7 @@ public final class MongoFakeDataGenerator {
         }
 
         userRelatedRecords
-                .add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
+                .add(new UserRole(1L, "my-role", Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
 
         for (int i =
                 targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {

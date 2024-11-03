@@ -25,7 +25,8 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 /**
  * @author James Chen
  */
-public record UpdateUserPermissionGroupDTO(
+public record UpdateUserRoleDTO(
+        String name,
         Set<Long> creatableGroupTypeIds,
         Integer ownedGroupLimit,
         Integer ownedGroupLimitForEachGroupType,

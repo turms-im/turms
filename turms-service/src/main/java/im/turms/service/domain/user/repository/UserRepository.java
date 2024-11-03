@@ -55,7 +55,7 @@ public class UserRepository extends BaseRepository<User, Long> {
             User.Fields.PROFILE_PICTURE,
             User.Fields.REGISTRATION_DATE,
             User.Fields.PROFILE_ACCESS_STRATEGY,
-            User.Fields.PERMISSION_GROUP_ID,
+            User.Fields.ROLE_ID,
             User.Fields.IS_ACTIVE};
 
     public UserRepository(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
@@ -69,7 +69,7 @@ public class UserRepository extends BaseRepository<User, Long> {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable Date registrationDate,
             @Nullable Boolean isActive,
             @Nullable Map<String, Object> userDefinedAttributes,
@@ -82,7 +82,7 @@ public class UserRepository extends BaseRepository<User, Long> {
                 .setIfNotNull(User.Fields.INTRO, intro)
                 .setIfNotNull(User.Fields.PROFILE_PICTURE, profilePicture)
                 .setIfNotNull(User.Fields.PROFILE_ACCESS_STRATEGY, profileAccessStrategy)
-                .setIfNotNull(User.Fields.PERMISSION_GROUP_ID, permissionGroupId)
+                .setIfNotNull(User.Fields.ROLE_ID, roleId)
                 .setIfNotNull(User.Fields.REGISTRATION_DATE, registrationDate)
                 .setIfNotNull(User.Fields.IS_ACTIVE, isActive)
                 .setUserDefinedAttributesIfNotEmpty(userDefinedAttributes)
@@ -230,13 +230,13 @@ public class UserRepository extends BaseRepository<User, Long> {
         return mongoClient.findMany(entityClass, filter, options);
     }
 
-    public Mono<Long> findUserPermissionGroupId(Long userId) {
+    public Mono<Long> findUserRoleId(Long userId) {
         Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, userId);
         QueryOptions options = QueryOptions.newBuilder(1)
-                .include(User.Fields.PERMISSION_GROUP_ID);
+                .include(User.Fields.ROLE_ID);
         return mongoClient.findOne(entityClass, filter, options)
-                .map(User::getPermissionGroupId);
+                .map(User::getRoleId);
     }
 
     public Mono<Boolean> isActiveAndNotDeleted(Long userId) {

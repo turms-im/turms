@@ -81,10 +81,10 @@ import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.po.GroupVersion;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
+import im.turms.service.domain.user.po.UserRole;
 import im.turms.service.domain.user.po.UserSettings;
 import im.turms.service.domain.user.po.UserVersion;
 
@@ -277,14 +277,14 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                 existingCollectionNames),
                         userMongoClient.createCollectionIfNotExists(UserFriendRequest.class,
                                 existingCollectionNames),
-                        userMongoClient.createCollectionIfNotExists(UserPermissionGroup.class,
-                                existingCollectionNames),
                         userMongoClient.createCollectionIfNotExists(UserRelationship.class,
                                 existingCollectionNames),
                         userMongoClient.createCollectionIfNotExists(UserRelationshipGroup.class,
                                 existingCollectionNames),
                         userMongoClient.createCollectionIfNotExists(
                                 UserRelationshipGroupMember.class,
+                                existingCollectionNames),
+                        userMongoClient.createCollectionIfNotExists(UserRole.class,
                                 existingCollectionNames),
                         userMongoClient.createCollectionIfNotExists(UserSettings.class,
                                 existingCollectionNames),

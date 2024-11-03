@@ -51,10 +51,10 @@ import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.po.GroupVersion;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
+import im.turms.service.domain.user.po.UserRole;
 import im.turms.service.domain.user.po.UserVersion;
 
 /**
@@ -96,14 +96,13 @@ public class MongoConfig extends BaseMongoConfig {
                 MongoCollectionOptions.of(User.class, writeConcern.getUser()),
                 MongoCollectionOptions.of(UserFriendRequest.class,
                         writeConcern.getUserFriendRequest()),
-                MongoCollectionOptions.of(UserPermissionGroup.class,
-                        writeConcern.getUserPermissionGroup()),
                 MongoCollectionOptions.of(UserRelationship.class,
                         writeConcern.getUserRelationship()),
                 MongoCollectionOptions.of(UserRelationshipGroup.class,
                         writeConcern.getUserRelationshipGroup()),
                 MongoCollectionOptions.of(UserRelationshipGroupMember.class,
                         writeConcern.getUserRelationshipGroupMember()),
+                MongoCollectionOptions.of(UserRole.class, writeConcern.getUserRole()),
                 MongoCollectionOptions.of(UserVersion.class, writeConcern.getUserVersion()));
         return mongoClient;
     }

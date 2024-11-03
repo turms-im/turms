@@ -36,7 +36,7 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
     private static final int TAG_INTRO = 3;
     private static final int TAG_PROFILE_PICTURE = 4;
     private static final int TAG_PROFILE_ACCESS_STRATEGY = 5;
-    private static final int TAG_PERMISSION_GROUP_ID = 6;
+    private static final int TAG_ROLE_ID = 6;
     private static final int TAG_REGISTRATION_DATE = 7;
     private static final int TAG_IS_ACTIVE = 8;
 
@@ -58,7 +58,7 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
         String intro = data.getIntro();
         String profilePicture = data.getProfilePicture();
         ProfileAccessStrategy profileAccessStrategy = data.getProfileAccessStrategy();
-        Long permissionGroupId = data.getPermissionGroupId();
+        Long roleId = data.getRoleId();
         Date registrationDate = data.getRegistrationDate();
         Boolean isActive = data.getIsActive();
         if (id != null) {
@@ -85,9 +85,9 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
             output.writeByte(TAG_PROFILE_ACCESS_STRATEGY)
                     .writeByte(profileAccessStrategy.getNumber());
         }
-        if (permissionGroupId != null) {
-            output.writeByte(TAG_PERMISSION_GROUP_ID)
-                    .writeLong(permissionGroupId);
+        if (roleId != null) {
+            output.writeByte(TAG_ROLE_ID)
+                    .writeLong(roleId);
         }
         if (registrationDate != null) {
             output.writeByte(TAG_REGISTRATION_DATE)
@@ -107,7 +107,7 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
         String intro = null;
         String profilePicture = null;
         ProfileAccessStrategy profileAccessStrategy = null;
-        Long permissionGroupId = null;
+        Long roleId = null;
         Date registrationDate = null;
         Boolean isActive = null;
         byte tag;
@@ -121,7 +121,7 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
                 case TAG_PROFILE_PICTURE -> profilePicture = input.readString();
                 case TAG_PROFILE_ACCESS_STRATEGY ->
                     profileAccessStrategy = ProfileAccessStrategy.forNumber(input.readByte());
-                case TAG_PERMISSION_GROUP_ID -> permissionGroupId = input.readLong();
+                case TAG_ROLE_ID -> roleId = input.readLong();
                 case TAG_REGISTRATION_DATE -> registrationDate = new Date(input.readLong());
                 case TAG_IS_ACTIVE -> isActive = input.readBoolean();
                 default -> throw new IllegalArgumentException(
@@ -136,7 +136,7 @@ public class CreateUserRequestCodec extends RpcRequestCodec<CreateUserRequest> {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 registrationDate,
                 isActive);
     }

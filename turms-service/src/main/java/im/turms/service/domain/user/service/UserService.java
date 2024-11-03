@@ -83,7 +83,7 @@ import im.turms.service.storage.elasticsearch.model.Hit;
 import im.turms.service.storage.elasticsearch.model.doc.UserDoc;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
-import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
+import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_ROLE_ID;
 import static im.turms.service.storage.mongo.MongoOperationConst.TRANSACTION_RETRY;
 
 /**
@@ -284,7 +284,7 @@ public class UserService implements RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         return addUser(id,
@@ -293,7 +293,7 @@ public class UserService implements RpcUserService {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 registrationDate,
                 isActive).map(User::getId);
     }
@@ -305,7 +305,7 @@ public class UserService implements RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
         try {
@@ -337,9 +337,9 @@ public class UserService implements RpcUserService {
         profileAccessStrategy = profileAccessStrategy == null
                 ? ProfileAccessStrategy.ALL
                 : profileAccessStrategy;
-        permissionGroupId = permissionGroupId == null
-                ? DEFAULT_USER_PERMISSION_GROUP_ID
-                : permissionGroupId;
+        roleId = roleId == null
+                ? DEFAULT_USER_ROLE_ID
+                : roleId;
         isActive = isActive == null
                 ? activateUserWhenAdded
                 : isActive;
@@ -353,7 +353,7 @@ public class UserService implements RpcUserService {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 date,
                 null,
                 now,
@@ -493,13 +493,13 @@ public class UserService implements RpcUserService {
                 queryDeletedRecords);
     }
 
-    public Mono<Long> queryUserPermissionGroupId(@NotNull Long userId) {
+    public Mono<Long> queryUserRoleIdByUserId(@NotNull Long userId) {
         try {
             Validator.notNull(userId, "userId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return userRepository.findUserPermissionGroupId(userId);
+        return userRepository.findUserRoleId(userId);
     }
 
     public Mono<DeleteResult> deleteUsers(
@@ -600,7 +600,7 @@ public class UserService implements RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable Boolean isActive,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Map<String, Value> userDefinedAttributes) {
@@ -616,7 +616,7 @@ public class UserService implements RpcUserService {
                     intro,
                     profilePicture,
                     profileAccessStrategy,
-                    permissionGroupId,
+                    roleId,
                     registrationDate,
                     isActive,
                     null).map(result -> result.getModifiedCount() > 0);
@@ -628,7 +628,7 @@ public class UserService implements RpcUserService {
                         intro,
                         profilePicture,
                         profileAccessStrategy,
-                        permissionGroupId,
+                        roleId,
                         registrationDate,
                         isActive,
                         attributes).map(result -> result.getModifiedCount() > 0));
@@ -681,7 +681,7 @@ public class UserService implements RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive,
             @Nullable Map<String, Object> userDefinedAttributes) {
@@ -704,7 +704,7 @@ public class UserService implements RpcUserService {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 registrationDate,
                 isActive,
                 userDefinedAttributes)) {
@@ -721,7 +721,7 @@ public class UserService implements RpcUserService {
                     intro,
                     profilePicture,
                     profileAccessStrategy,
-                    permissionGroupId,
+                    roleId,
                     registrationDate,
                     isActive,
                     password,
@@ -734,7 +734,7 @@ public class UserService implements RpcUserService {
                     intro,
                     profilePicture,
                     profileAccessStrategy,
-                    permissionGroupId,
+                    roleId,
                     registrationDate,
                     isActive,
                     password,
@@ -754,7 +754,7 @@ public class UserService implements RpcUserService {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 registrationDate,
                 isActive,
                 password,
@@ -784,7 +784,7 @@ public class UserService implements RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable Date registrationDate,
             @Nullable Boolean isActive,
             @Nullable byte[] password,
@@ -797,7 +797,7 @@ public class UserService implements RpcUserService {
                         intro,
                         profilePicture,
                         profileAccessStrategy,
-                        permissionGroupId,
+                        roleId,
                         registrationDate,
                         isActive,
                         userDefinedAttributes,

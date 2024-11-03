@@ -38,7 +38,7 @@ public interface RpcUserService {
             @Nullable String intro,
             @Nullable String profilePicture,
             @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
-            @Nullable Long permissionGroupId,
+            @Nullable Long roleId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive);
 

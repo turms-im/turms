@@ -47,10 +47,10 @@ import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.po.GroupVersion;
 import im.turms.service.domain.message.po.Message;
 import im.turms.service.domain.user.po.UserFriendRequest;
-import im.turms.service.domain.user.po.UserPermissionGroup;
 import im.turms.service.domain.user.po.UserRelationship;
 import im.turms.service.domain.user.po.UserRelationshipGroup;
 import im.turms.service.domain.user.po.UserRelationshipGroupMember;
+import im.turms.service.domain.user.po.UserRole;
 import im.turms.service.domain.user.po.UserVersion;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,7 +81,7 @@ class MongoCollectionInitializerIT extends SpringAwareIntegrationTest {
             // User
             User.class,
             UserFriendRequest.class,
-            UserPermissionGroup.class,
+            UserRole.class,
             UserRelationship.class,
             UserRelationshipGroup.class,
             UserRelationshipGroupMember.class,

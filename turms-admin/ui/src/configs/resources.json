@@ -61,6 +61,12 @@
                 "USER_FRIEND_REQUEST_UPDATE",
                 "USER_FRIEND_REQUEST_QUERY"
             ],
+            "USER_ROLE": [
+                "USER_ROLE_CREATE",
+                "USER_ROLE_DELETE",
+                "USER_ROLE_UPDATE",
+                "USER_ROLE_QUERY"
+            ],
             "USER_ONLINE_INFO": [
                 "USER_ONLINE_INFO_UPDATE",
                 "USER_ONLINE_INFO_QUERY"
@@ -190,9 +196,9 @@
 
         "user": "/users",
         "userOnline": "/users/online-infos/count",
-        "userPermissionGroup": "/users/permission-groups",
         "userRelationship": "/users/relationships",
         "userRelationshipGroup": "/users/relationships/groups",
+        "userRole": "/users/roles",
         "userSession": "/users/online-infos/sessions",
         "userStatus": "/users/online-infos/statuses",
         "friendRequest": "/users/relationships/friend-requests",

@@ -29,9 +29,9 @@
         </a-tab-pane>
         <a-tab-pane
             key="5"
-            :tab="$t('permissionGroup')"
+            :tab="$t('userRole')"
         >
-            <content-user-permission-group-pane />
+            <content-user-role-pane />
         </a-tab-pane>
     </a-tabs>
 </template>
@@ -41,7 +41,7 @@ import ContentUserInfoPane from './content-user-info-pane.vue';
 import ContentOnlineUserPane from './content-online-user-info-pane.vue';
 import ContentUserRelationshipPane from './relationship/index.vue';
 import ContentUserFriendRequestPane from './content-user-friend-request-pane.vue';
-import ContentUserPermissionGroupPane from './content-user-permission-group-pane.vue';
+import ContentUserRolePane from './content-user-role-pane.vue';
 
 export default {
     name: 'content-user-tabs',
@@ -50,7 +50,7 @@ export default {
         ContentOnlineUserPane,
         ContentUserRelationshipPane,
         ContentUserFriendRequestPane,
-        ContentUserPermissionGroupPane
+        ContentUserRolePane
     }
 };
 </script>

@@ -46,110 +46,104 @@ import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.exception.DuplicateKeyException;
-import im.turms.service.domain.user.po.UserPermissionGroup;
-import im.turms.service.domain.user.repository.UserPermissionGroupRepository;
+import im.turms.service.domain.user.po.UserRole;
+import im.turms.service.domain.user.repository.UserRoleRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.group.constant.GroupConst.DEFAULT_GROUP_TYPE_ID;
-import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_PERMISSION_GROUP_ID;
+import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER_ROLE_ID;
 
 /**
  * @author James Chen
  */
 @Service
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
-public class UserPermissionGroupService extends BaseService {
+public class UserRoleService extends BaseService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserPermissionGroupService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRoleService.class);
 
-    private final Map<Long, UserPermissionGroup> idToPermissionGroup = new ConcurrentHashMap<>(16);
+    private final Map<Long, UserRole> idToRole = new ConcurrentHashMap<>(16);
 
     private final Node node;
-    private final UserPermissionGroupRepository userPermissionGroupRepository;
+    private final UserRoleRepository userRoleRepository;
     private final UserService userService;
 
-    public UserPermissionGroupService(
+    public UserRoleService(
             Node node,
-            UserPermissionGroupRepository userPermissionGroupRepository,
+            UserRoleRepository userRoleRepository,
             UserService userService) {
         this.node = node;
-        this.userPermissionGroupRepository = userPermissionGroupRepository;
+        this.userRoleRepository = userRoleRepository;
         this.userService = userService;
 
-        LOGGER.info(
-                "Loading all user permission groups and adding the default user permission group");
-        userPermissionGroupRepository.findAll()
-                .doOnNext(userPermissionGroup -> idToPermissionGroup
-                        .put(userPermissionGroup.getId(), userPermissionGroup))
+        LOGGER.info("Loading all user roles and adding the default user role");
+        userRoleRepository.findAll()
+                .doOnNext(userRole -> idToRole.put(userRole.getId(), userRole))
                 .onErrorMap(t -> new RuntimeException(
-                        "Caught an error while loading all user permission groups",
+                        "Caught an error while loading all user roles",
                         t))
                 .then(Mono.defer(() -> {
-                    UserPermissionGroup userPermissionGroup =
-                            idToPermissionGroup.get(DEFAULT_USER_PERMISSION_GROUP_ID);
-                    if (userPermissionGroup != null) {
+                    UserRole userRole = idToRole.get(DEFAULT_USER_ROLE_ID);
+                    if (userRole != null) {
                         return Mono.empty();
                     }
-                    return addDefaultUserPermissionGroup().onErrorMap(t -> new RuntimeException(
-                            "Caught an error while adding the default user permission group",
+                    return addDefaultUserRole().onErrorMap(t -> new RuntimeException(
+                            "Caught an error while adding the default user role",
                             t));
                 }))
                 .block(DurationConst.ONE_MINUTE);
-        LOGGER.info(
-                "Loaded all user permission groups and added the default user permission group");
+        LOGGER.info("Loaded all user roles and added the default user role");
 
-        userPermissionGroupRepository.watch(FullDocument.UPDATE_LOOKUP)
+        userRoleRepository.watch(FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
-                    UserPermissionGroup userPermissionGroup = event.getFullDocument();
+                    UserRole userRole = event.getFullDocument();
                     switch (operationType) {
-                        case INSERT, UPDATE, REPLACE -> idToPermissionGroup
-                                .put(userPermissionGroup.getId(), userPermissionGroup);
+                        case INSERT, UPDATE, REPLACE -> idToRole.put(userRole.getId(), userRole);
                         case DELETE -> {
-                            long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
-                            idToPermissionGroup.remove(groupTypeId);
-                            if (groupTypeId == DEFAULT_USER_PERMISSION_GROUP_ID) {
+                            long userRoleId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
+                            idToRole.remove(userRoleId);
+                            if (userRoleId == DEFAULT_USER_ROLE_ID) {
                                 LOGGER.warn(
-                                        "Adding the default user permission group because it is deleted unexpectedly");
-                                addDefaultUserPermissionGroup().subscribe(null,
+                                        "Adding the default user role because it is deleted unexpectedly");
+                                addDefaultUserRole().subscribe(null,
                                         t -> LOGGER.error(
-                                                "Caught an error while adding the default user permission group",
+                                                "Caught an error while adding the default user role",
                                                 t),
-                                        () -> LOGGER
-                                                .warn("Added the default user permission group"));
+                                        () -> LOGGER.warn("Added the default user role"));
                             }
                         }
-                        case INVALIDATE -> idToPermissionGroup.clear();
+                        case INVALIDATE -> idToRole.clear();
                         default -> LOGGER.fatal("Detected an illegal operation on the collection \""
-                                + UserPermissionGroup.COLLECTION_NAME
+                                + UserRole.COLLECTION_NAME
                                 + "\" in the change stream event: {}", event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> LOGGER.error(
                         "Caught an error while processing the change stream event ({}) of the collection: \""
-                                + UserPermissionGroup.COLLECTION_NAME
+                                + UserRole.COLLECTION_NAME
                                 + "\"",
                         o,
                         throwable))
                 .subscribe();
     }
 
-    private Mono<UserPermissionGroup> addDefaultUserPermissionGroup() {
-        return addUserPermissionGroup(DEFAULT_USER_PERMISSION_GROUP_ID,
+    private Mono<UserRole> addDefaultUserRole() {
+        return addUserRole(DEFAULT_USER_ROLE_ID,
+                "default",
                 Set.of(DEFAULT_GROUP_TYPE_ID),
                 Integer.MAX_VALUE,
                 Integer.MAX_VALUE,
                 Collections.emptyMap()).onErrorComplete(DuplicateKeyException.class);
     }
 
-    public Flux<UserPermissionGroup> queryUserPermissionGroups(
-            @Nullable Integer page,
-            @Nullable Integer size) {
-        return userPermissionGroupRepository.findAll(page, size);
+    public Flux<UserRole> queryUserRoles(@Nullable Integer page, @Nullable Integer size) {
+        return userRoleRepository.findAll(page, size);
     }
 
-    public Mono<UserPermissionGroup> addUserPermissionGroup(
+    public Mono<UserRole> addUserRole(
             @Nullable Long groupId,
+            @Nullable String name,
             @NotNull Set<Long> creatableGroupTypeIds,
             @NotNull Integer ownedGroupLimit,
             @NotNull Integer ownedGroupLimitForEachGroupType,
@@ -163,21 +157,23 @@ public class UserPermissionGroupService extends BaseService {
             return Mono.error(e);
         }
         if (groupId == null) {
-            groupId = node.nextLargeGapId(ServiceType.USER_PERMISSION_GROUP);
+            groupId = node.nextLargeGapId(ServiceType.USER_ROLE);
         }
-        UserPermissionGroup userPermissionGroup = new UserPermissionGroup(
+        UserRole userRole = new UserRole(
                 groupId,
+                name,
                 creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
                 groupTypeIdToLimit);
-        idToPermissionGroup.put(groupId, userPermissionGroup);
-        return userPermissionGroupRepository.insert(userPermissionGroup)
-                .thenReturn(userPermissionGroup);
+        idToRole.put(groupId, userRole);
+        return userRoleRepository.insert(userRole)
+                .thenReturn(userRole);
     }
 
-    public Mono<UpdateResult> updateUserPermissionGroups(
+    public Mono<UpdateResult> updateUserRoles(
             @NotEmpty Set<Long> groupIds,
+            @Nullable String name,
             @Nullable Set<Long> creatableGroupTypeIds,
             @Nullable Integer ownedGroupLimit,
             @Nullable Integer ownedGroupLimitForEachGroupType,
@@ -187,14 +183,16 @@ public class UserPermissionGroupService extends BaseService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(creatableGroupTypeIds,
+        if (Validator.areAllNull(name,
+                creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
                 groupTypeIdToLimit)) {
             return OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT;
         }
-        return userPermissionGroupRepository
-                .updateUserPermissionGroups(groupIds,
+        return userRoleRepository
+                .updateUserRoles(groupIds,
+                        name,
                         creatableGroupTypeIds,
                         ownedGroupLimit,
                         ownedGroupLimitForEachGroupType,
@@ -204,65 +202,62 @@ public class UserPermissionGroupService extends BaseService {
                     // we still need to invalid dirty cache immediately, so the subsequent query
                     // won't get outdated records
                     for (Long groupId : groupIds) {
-                        idToPermissionGroup.remove(groupId);
+                        idToRole.remove(groupId);
                     }
                 });
     }
 
     /**
-     * @implNote Note that we don't need to remove corresponding groups in "idToPermissionGroup"
-     *           because their data will be synced in the watch callback.
+     * @implNote Note that we don't need to remove corresponding groups in {@link #idToRole} because
+     *           their data will be synced in the watch callback.
      */
-    public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
+    public Mono<DeleteResult> deleteUserRoles(@Nullable Set<Long> groupIds) {
         if (groupIds == null) {
-            return userPermissionGroupRepository
-                    .deleteByNotIds(Set.of(DEFAULT_USER_PERMISSION_GROUP_ID));
+            return userRoleRepository.deleteByNotIds(Set.of(DEFAULT_USER_ROLE_ID));
         }
-        if (groupIds.contains(DEFAULT_USER_PERMISSION_GROUP_ID)) {
+        if (groupIds.contains(DEFAULT_USER_ROLE_ID)) {
             return Mono.error(ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT,
-                    "The default user permission group cannot be deleted"));
+                    "The default user role cannot be deleted"));
         }
-        return userPermissionGroupRepository.deleteByIds(groupIds)
+        return userRoleRepository.deleteByIds(groupIds)
                 .doOnNext(deleteResult -> {
                     // Though the latest records will be synced in the watch callback,
                     // we still need to invalid dirty cache immediately, so the subsequent query
                     // won't get outdated records
                     for (Long groupId : groupIds) {
-                        idToPermissionGroup.remove(groupId);
+                        idToRole.remove(groupId);
                     }
                 });
     }
 
-    public Mono<UserPermissionGroup> queryUserPermissionGroup(@NotNull Long groupId) {
+    public Mono<UserRole> queryUserRoleById(@NotNull Long id) {
         try {
-            Validator.notNull(groupId, "groupId");
+            Validator.notNull(id, "id");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        UserPermissionGroup userPermissionGroup = idToPermissionGroup.get(groupId);
-        if (userPermissionGroup == null) {
-            return userPermissionGroupRepository.findById(groupId)
-                    .doOnNext(type -> idToPermissionGroup.put(groupId, type));
+        UserRole userRole = idToRole.get(id);
+        if (userRole == null) {
+            return userRoleRepository.findById(id)
+                    .doOnNext(type -> idToRole.put(id, type));
         }
-        return Mono.just(userPermissionGroup);
+        return Mono.just(userRole);
     }
 
-    public Mono<UserPermissionGroup> queryStoredOrDefaultUserPermissionGroupByUserId(
-            @NotNull Long userId) {
-        Mono<Long> queryUserPermissionGroupId = userService.queryUserPermissionGroupId(userId)
-                .defaultIfEmpty(DEFAULT_USER_PERMISSION_GROUP_ID);
-        return queryUserPermissionGroupId
-                .flatMap(groupId -> queryUserPermissionGroup(groupId).switchIfEmpty(
-                        Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
-                                "The user ("
-                                        + userId
-                                        + ") is in the nonexistent permission group ("
-                                        + groupId
-                                        + ")"))));
+    public Mono<UserRole> queryStoredOrDefaultUserRoleByUserId(@NotNull Long userId) {
+        Mono<Long> userRoleIdMono = userService.queryUserRoleIdByUserId(userId)
+                .defaultIfEmpty(DEFAULT_USER_ROLE_ID);
+        return userRoleIdMono.flatMap(userRoleId -> queryUserRoleById(userRoleId).switchIfEmpty(
+                Mono.error(ResponseException.get(ResponseStatusCode.SERVER_INTERNAL_ERROR,
+                        "The role ("
+                                + userRoleId
+                                + ") of the user ("
+                                + userId
+                                + ") was not found"))));
     }
 
-    public Mono<Long> countUserPermissionGroups() {
-        return userPermissionGroupRepository.countAll();
+    public Mono<Long> countUserRoles() {
+        return userRoleRepository.countAll();
     }
 
 }

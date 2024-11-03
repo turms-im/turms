@@ -25,8 +25,9 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
 /**
  * @author James Chen
  */
-public record AddUserPermissionGroupDTO(
+public record AddUserRoleDTO(
         Long id,
+        String name,
         Set<Long> creatableGroupTypeIds,
         Integer ownedGroupLimit,
         Integer ownedGroupLimitForEachGroupType,

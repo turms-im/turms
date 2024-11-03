@@ -28,18 +28,24 @@ import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
 
 /**
- * No need to shard because there should be only a few user permission groups.
+ * No need to shard because there should be only a few user roles.
  *
+ * @implNote We call it "UserRole" because most developers are familiar with RBAC, we pick the term
+ *           "role" from RBAC to represent a set of permissions.
  * @author James Chen
  */
 @Data
-@Document(UserPermissionGroup.COLLECTION_NAME)
-public final class UserPermissionGroup extends BaseEntity {
+@Document(UserRole.COLLECTION_NAME)
+public final class UserRole extends BaseEntity {
 
-    public static final String COLLECTION_NAME = "userPermissionGroup";
+    public static final String COLLECTION_NAME = "userRole";
+    public static final String LEGACY_COLLECTION_NAME = "userPermissionGroup";
 
     @Id
     private final Long id;
+
+    @Field(Fields.NAME)
+    private final String name;
 
     @Field(Fields.CREATABLE_GROUP_TYPE_IDS)
     private final Set<Long> creatableGroupTypeIds;
@@ -54,6 +60,7 @@ public final class UserPermissionGroup extends BaseEntity {
     private final Map<Long, Integer> groupTypeIdToLimit;
 
     public static final class Fields {
+        public static final String NAME = "n";
         public static final String CREATABLE_GROUP_TYPE_IDS = "cgtid";
         public static final String OWNED_GROUP_LIMIT = "ogl";
         public static final String OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE = "oglegt";
