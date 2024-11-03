@@ -435,7 +435,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         for (MultipartFile file : files) {
             String fileName = file.name();
-            ZipFile zipFile = null;
+            ZipFile zipFile;
             File jarFile;
             if (save) {
                 fileName = file.basename()

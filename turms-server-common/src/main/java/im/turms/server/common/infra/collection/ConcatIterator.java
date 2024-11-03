@@ -20,8 +20,6 @@ package im.turms.server.common.infra.collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.oracle.truffle.api.CompilerDirectives;
-
 /**
  * @author James Chen
  */
@@ -42,7 +40,6 @@ public class ConcatIterator<T> implements Iterator<T> {
         } else if (secondIterator.hasNext()) {
             return secondIterator.next();
         }
-        CompilerDirectives.transferToInterpreter();
         throw new NoSuchElementException();
     }
 

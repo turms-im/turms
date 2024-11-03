@@ -20,7 +20,7 @@ package im.turms.server.common.infra.metrics;
 /**
  * @author James Chen
  * @implNote 1. A metric name must start with "turms" if it belongs to a component specific to
- *           Turms. If a component is just used by Turms (e.g. Lettuce, LDAP client, JVM), their
+ *           Turms. If a component is just used by Turms (e.g., Lettuce, LDAP client, JVM), their
  *           metric names should not start with "turms".
  *           <p>
  *           2. Always use singular nouns.

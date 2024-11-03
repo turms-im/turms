@@ -63,7 +63,7 @@ public abstract class BaseClientApiLoggingProperties {
     // Request + Response
 
     /**
-     * @implNote Use LinkedHashSet so that the properties (e.g. sample rate) of the previous
+     * @implNote Use LinkedHashSet so that the properties (e.g., sample rate) of the previous
      *           categories can be replaced by the ones of the following categories for common
      *           requests.
      */

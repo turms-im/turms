@@ -24,5 +24,5 @@ public enum PluginSandboxPolicy {
     TRUSTED,
     CONSTRAINED,
     ISOLATED,
-    UNTRUSTED;
+    UNTRUSTED
 }

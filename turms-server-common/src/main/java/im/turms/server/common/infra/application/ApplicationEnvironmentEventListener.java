@@ -53,8 +53,8 @@ public class ApplicationEnvironmentEventListener
         implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
     /**
-     * @implNote We don't use {@link ApplicationContextInitializedEvent} because it's still too late
-     *           for logging.
+     * @implNote We don't use {@link ApplicationContextInitializedEvent} because it is still too
+     *           late for logging.
      */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {

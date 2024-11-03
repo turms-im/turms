@@ -28,7 +28,6 @@ import jakarta.annotation.Nullable;
 
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Message;
-import lombok.Getter;
 import reactor.core.publisher.Mono;
 
 import im.turms.plugin.antispam.controller.ContentModerationController;

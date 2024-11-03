@@ -57,25 +57,25 @@ import im.turms.server.common.storage.redis.script.RedisScript;
  *           nodes to sync.
  *           <p>
  *           If a push action fails, we will NOT retry to push it to keep logic simple currently, so
- *           it will only take effects on the local node. (To implement "retry", we need to
- *           implement "pendingActions" and add "log time" for each action to distinguish which
- *           actions come first, which makes thing complex, we will implement it in the future)
+ *           it will only take effect on the local node. (To implement "retry", we need to implement
+ *           "pendingActions" and add "log time" for each action to distinguish which actions come
+ *           first, which makes thing complex, we will implement it in the future)
  *           <p>
  *           By comparing the latest log ID, fetching and applying the delta logs, other nodes can
  *           get a weak consistent map of blocklist.
  *           <p>
- *           If a node just starts, or lags behind and cannot catch up, it will perform a full sync
- *           (We do NOT support sync by cursor currently).
+ *           If a node just starts, or lags and cannot catch up, it will perform a full sync (We do
+ *           NOT support sync by a cursor currently).
  *           <p>
  *           The implementation of blocklist is similar to the implementation of replicated map, and
- *           both of them use a full map and logs to perform full and delta sync.
+ *           both use a full map and logs to perform full and delta sync.
  *           <p>
  *           Data in Redis, taking IP blocklist as an example: 1. "blocklist:ip:target": Sorted Set,
  *           sorted by the block end time. Used to perform full sync 2. "blocklist:ip:timestamp":
  *           Integer. Used to detect whether the blocklist is cleared to ensure the blocklist in
- *           nodes is consistent even if the Redis server crashes or the blocklist is cleared 3.
+ *           nodes is consistent even if the Redis server crashes, or the blocklist is cleared 3.
  *           "blocklist:ip:log": List. Used to perform delta sync 4. "blocklist:ip:log_id": Counter.
- *           Used to perform delta sync
+ *           Used to perform delta sync.
  */
 public class BlocklistServiceManager<T extends Comparable<T>> {
 
@@ -424,7 +424,7 @@ public class BlocklistServiceManager<T extends Comparable<T>> {
                 encodeLocalTimestamp(),
                 encodeLocalLogId());
         return getBlocklistLogs.flatMap(elements -> {
-            long timestampSeconds = (long) elements.get(0);
+            long timestampSeconds = (long) elements.getFirst();
             if (timestampSeconds < 0) {
                 return Mono.empty();
             }

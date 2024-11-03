@@ -73,8 +73,8 @@ public abstract class BaseTurmsApplication {
             }
 
             // Make sure turms can exit if SpringApplication failed to bootstrap
-            // (e.g. PortInUseException) because there are may still some non-daemon
-            // threads preventing from exiting after the context has been closed
+            // (e.g., PortInUseException) because some non-daemon
+            // threads may prevent from exiting after the context has been closed
             System.exit(1);
         }
     }
@@ -94,7 +94,7 @@ public abstract class BaseTurmsApplication {
                     + bean.getVmVersion()
                     + ", vendor="
                     + bean.getVmVendor()
-                    + "} cannot work with turms server";
+                    + "} cannot work with the server";
             throw new IncompatibleJvmException(message, e);
         }
     }

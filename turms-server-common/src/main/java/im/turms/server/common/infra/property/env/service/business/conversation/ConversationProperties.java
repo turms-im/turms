@@ -17,20 +17,13 @@
 
 package im.turms.server.common.infra.property.env.service.business.conversation;
 
-import java.util.Collections;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import im.turms.server.common.infra.property.env.service.business.common.setting.CustomSettingProperties;
 import im.turms.server.common.infra.property.env.service.business.message.TypingStatusProperties;
-import im.turms.server.common.infra.property.metadata.Description;
-import im.turms.server.common.infra.property.metadata.GlobalProperty;
-import im.turms.server.common.infra.property.metadata.MutableProperty;
 
 /**
  * @author James Chen

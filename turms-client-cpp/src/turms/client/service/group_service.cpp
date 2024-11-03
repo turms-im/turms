@@ -36,8 +36,8 @@ auto GroupService::createGroup(const absl::string_view& name,
         request->set_type_id(*typeId);
     }
     if (!userDefinedAttributes.empty()) {
-        request->mutable_user_defined_attributes()()->insert(userDefinedAttributes.cbegin(),
-                                                             userDefinedAttributes.cend());
+        request->mutable_user_defined_attributes()->insert(userDefinedAttributes.cbegin(),
+                                                           userDefinedAttributes.cend());
     }
     return turmsClient_.driver()
         .send(turmsRequest)
@@ -102,8 +102,8 @@ auto GroupService::updateGroup(int64_t groupId,
         request->set_quit_after_transfer(*quitAfterTransfer);
     }
     if (!userDefinedAttributes.empty()) {
-        request->mutable_user_defined_attributes()()->insert(userDefinedAttributes.cbegin(),
-                                                             userDefinedAttributes.cend());
+        request->mutable_user_defined_attributes()->insert(userDefinedAttributes.cbegin(),
+                                                           userDefinedAttributes.cend());
     }
     return turmsClient_.driver()
         .send(turmsRequest)

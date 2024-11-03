@@ -241,7 +241,7 @@ public class TurmsApplicationContext {
 
     private String getActiveEnvProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {
         for (String profile : activeProfiles) {
-            if (profile.endsWith("-latest")) {
+            if (profile.endsWith(TurmsPropertiesManager.LATEST_PROFILE_SUFFIX)) {
                 continue;
             }
             for (List<String> envProfiles : knownEnvProfiles) {

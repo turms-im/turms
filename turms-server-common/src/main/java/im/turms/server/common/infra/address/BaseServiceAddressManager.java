@@ -226,7 +226,7 @@ public abstract class BaseServiceAddressManager {
         return switch (advertiseStrategy) {
             case ADVERTISE_ADDRESS -> StringUtil.isBlank(advertiseHost)
                     ? Mono.error(
-                            new IllegalArgumentException("The advertise host is not specified"))
+                            new IllegalArgumentException("The advertised host is not specified"))
                     : Mono.just(advertiseHost);
             case BIND_ADDRESS -> StringUtil.isBlank(bindHost)
                     ? Mono.error(new IllegalArgumentException("The bind host is not specified"))

@@ -53,7 +53,6 @@ import im.turms.server.common.infra.reflect.VarAccessor;
 import im.turms.server.common.infra.reflect.VarAccessorFactory;
 import im.turms.server.common.storage.mongo.BsonPool;
 import im.turms.server.common.storage.mongo.DomainFieldName;
-import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import im.turms.server.common.storage.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.EnumNumber;
