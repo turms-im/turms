@@ -107,7 +107,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final List<TurmsMongoClient> clients;
 
     private final TurmsApplicationContext context;
-    private final MongoFakingManager fakingManager;
+    private final MongoFakeDataGenerator fakeDataGenerator;
     private final TieredStorageProperties messageTieredStorageProperties;
     private final MongoGroupProperties mongoGroupProperties;
 
@@ -144,7 +144,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         this.propertiesManager = propertiesManager;
         ServiceProperties serviceProperties = propertiesManager.getLocalProperties()
                 .getService();
-        fakingManager = new MongoFakingManager(
+        fakeDataGenerator = new MongoFakeDataGenerator(
                 serviceProperties.getFake(),
                 passwordManager,
                 adminMongoClient,
@@ -188,7 +188,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     }
 
     private void initCollections() {
-        if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
+        if (!context.isProduction() && fakeDataGenerator.isClearAllCollectionsBeforeFaking()) {
             LOGGER.info("Start dropping databases");
             try {
                 dropAllDatabases().block(DurationConst.ONE_MINUTE);
@@ -205,7 +205,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                         t -> new MongoInitializationException("Failed to create collections", t))
                 .doOnSuccess(ignored -> LOGGER.info("All collections are created"))
                 .flatMap(exists -> {
-                    if (exists && !fakingManager.isFakeIfCollectionExists()) {
+                    if (exists && !fakeDataGenerator.isFakeIfCollectionExists()) {
                         return Mono.empty();
                     }
                     return Mono.defer(() -> ensureZones()
@@ -213,9 +213,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                                     .onErrorMap(t -> new MongoInitializationException(
                                             "Failed to ensure indexes and shards",
                                             t)))
-                            .then(Mono.defer(
-                                    () -> !context.isProduction() && fakingManager.isFakingEnabled()
-                                            ? fakingManager.fakeData()
+                            .then(Mono.defer(() -> !context.isProduction()
+                                    && fakeDataGenerator.isFakingEnabled()
+                                            ? fakeDataGenerator.populateCollectionsWithFakeData()
                                             : Mono.empty())));
                 });
         try {

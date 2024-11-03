@@ -73,9 +73,9 @@ import static im.turms.server.common.domain.user.constant.UserConst.DEFAULT_USER
 /**
  * @author James Chen
  */
-public final class MongoFakingManager {
+public final class MongoFakeDataGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MongoFakingManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoFakeDataGenerator.class);
 
     private final PasswordManager passwordManager;
 
@@ -110,7 +110,7 @@ public final class MongoFakingManager {
 
     private long currentId = 1L;
 
-    public MongoFakingManager(
+    public MongoFakeDataGenerator(
             FakeProperties properties,
             PasswordManager passwordManager,
             TurmsMongoClient adminMongoClient,
@@ -146,16 +146,64 @@ public final class MongoFakingManager {
         targetUserToRequestFriendRequestEnd = 1 + step * 2;
     }
 
-    public Mono<Void> fakeData() {
-        LOGGER.info("Start faking");
+    public Mono<Void> populateCollectionsWithFakeData() {
+        LOGGER.info("Start populating collections with fake data");
 
+        FakeData data = generateFakeData();
+
+        // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired
+        // behaviour
+        // that TurmsMongoClient#insertAll seems blocking when running in debug mode
+        // but it won't block when running in non-debug mode
+        // and there is no blocking method after reviewing the workflow of
+        // TurmsMongoClient#insertAll
+        Scheduler scheduler = Schedulers.boundedElastic();
+        Mono<Void> adminMono = adminMongoClient.insertAll(data.adminRelatedRecords())
+                .doOnSubscribe(s -> LOGGER.info("Start populating with admin-related data"))
+                .doOnError(
+                        error -> LOGGER.error("Failed to populate with admin-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Admin-related data has been populated"))
+                .subscribeOn(scheduler);
+        Mono<Void> userMono = userMongoClient.insertAll(data.userRelatedRecords())
+                .doOnSubscribe(s -> LOGGER.info("Start populating with user-related data"))
+                .doOnError(
+                        error -> LOGGER.error("Failed to populate with user-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("User-related data has been populated"))
+                .subscribeOn(scheduler);
+        Mono<Void> groupMono = groupMongoClient.insertAll(data.groupRelatedRecords())
+                .doOnSubscribe(s -> LOGGER.info("Start populating with group-related data"))
+                .doOnError(
+                        error -> LOGGER.error("Failed to populate with group-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Group-related data has been populated"))
+                .subscribeOn(scheduler);
+        Mono<Void> conversationMono = conversationMongoClient
+                .insertAll(data.conversationRelatedRecords())
+                .doOnSubscribe(s -> LOGGER.info("Start populating with conversation-related data"))
+                .doOnError(error -> LOGGER
+                        .error("Failed to populate with conversation-related data", error))
+                .doOnSuccess(unused -> LOGGER.info("Conversation-related data has been populated"))
+                .subscribeOn(scheduler);
+        Mono<Void> messageMono = messageMongoClient.insertAll(data.messageRelatedRecords())
+                .doOnSubscribe(s -> LOGGER.info("Start populating with message-related data"))
+                .doOnError(error -> LOGGER.error("Failed to populate with message-related data",
+                        error))
+                .doOnSuccess(unused -> LOGGER.info("Message-related data has been populated"))
+                .subscribeOn(scheduler);
+        return Mono.whenDelayError(adminMono, userMono, groupMono, conversationMono, messageMono)
+                .then()
+                .doOnSuccess(ignored -> LOGGER.info("Populated collections with fake data"))
+                .doOnError(t -> LOGGER
+                        .error("Caught an error while populating collections with fake data", t));
+    }
+
+    private FakeData generateFakeData() {
         final int adminCount = 10;
 
-        List<Object> adminRelatedObjs = new LinkedList<>();
-        List<Object> userRelatedObjs = new LinkedList<>();
-        List<Object> groupRelatedObjs = new LinkedList<>();
-        List<Object> conversationRelatedObjs = new LinkedList<>();
-        List<Object> messageRelatedObjs = new LinkedList<>();
+        List<Object> adminRelatedRecords = new LinkedList<>();
+        List<Object> userRelatedRecords = new LinkedList<>();
+        List<Object> groupRelatedRecords = new LinkedList<>();
+        List<Object> conversationRelatedRecords = new LinkedList<>();
+        List<Object> messageRelatedRecords = new LinkedList<>();
 
         // Admin
         // "2000-01-01:00:00:00Z"
@@ -168,7 +216,7 @@ public final class MongoFakingManager {
                 "guest",
                 Set.of(guestRoleId),
                 epoch);
-        adminRelatedObjs.add(guest);
+        adminRelatedRecords.add(guest);
         for (int i = 1; i <= adminCount; i++) {
             Admin admin = new Admin(
                     "account"
@@ -177,7 +225,7 @@ public final class MongoFakingManager {
                     "my-name",
                     Set.of(adminRoleId),
                     DateUtils.addDays(epoch, i));
-            adminRelatedObjs.add(admin);
+            adminRelatedRecords.add(admin);
         }
         AdminRole adminRole = new AdminRole(adminRoleId, "ADMIN", AdminPermission.ALL, 0, epoch);
         AdminRole guestRole = new AdminRole(
@@ -189,8 +237,8 @@ public final class MongoFakingManager {
                                 + AdminPermission.SUFFIX_CREATE)),
                 0,
                 epoch);
-        adminRelatedObjs.add(adminRole);
-        adminRelatedObjs.add(guestRole);
+        adminRelatedRecords.add(adminRole);
+        adminRelatedRecords.add(guestRole);
 
         // Group
         Map<String, Object> userDefinedAttributes = Map.of("k1",
@@ -218,12 +266,12 @@ public final class MongoFakingManager {
                 null,
                 true,
                 userDefinedAttributes);
-        groupRelatedObjs.add(group);
+        groupRelatedRecords.add(group);
         GroupVersion groupVersion = new GroupVersion(1L, epoch, epoch, epoch, epoch, epoch);
-        groupRelatedObjs.add(groupVersion);
+        groupRelatedRecords.add(groupVersion);
         for (int i = targetUserToBlockInGroupStart; i <= targetUserToBlockInGroupEnd; i++) {
             GroupBlockedUser groupBlockedUser = new GroupBlockedUser(1L, (long) i, epoch, 1L);
-            groupRelatedObjs.add(groupBlockedUser);
+            groupRelatedRecords.add(groupBlockedUser);
         }
         for (int i = targetUserForGroupInvitationStart; i <= targetUserForGroupInvitationEnd; i++) {
             GroupInvitation groupInvitation = new GroupInvitation(
@@ -236,7 +284,7 @@ public final class MongoFakingManager {
                     DateUtils.addDays(epoch, i),
                     null,
                     null);
-            groupRelatedObjs.add(groupInvitation);
+            groupRelatedRecords.add(groupInvitation);
         }
         GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
                 nextId(),
@@ -244,7 +292,7 @@ public final class MongoFakingManager {
                 "test-question",
                 new LinkedHashSet<>(List.of("a", "b", "c")),
                 20);
-        groupRelatedObjs.add(groupJoinQuestion);
+        groupRelatedRecords.add(groupJoinQuestion);
         for (int i =
                 targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
             GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
@@ -257,7 +305,7 @@ public final class MongoFakingManager {
                     1L,
                     (long) i,
                     null);
-            groupRelatedObjs.add(groupJoinRequest);
+            groupRelatedRecords.add(groupJoinRequest);
         }
         Set<Long> groupMemberIds = CollectionUtil.newSetWithExpectedSize(
                 targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart);
@@ -275,10 +323,10 @@ public final class MongoFakingManager {
                     i > userCount / 10 / 2
                             ? new Date(9999999999999L)
                             : null);
-            groupRelatedObjs.add(groupMember);
+            groupRelatedRecords.add(groupMember);
         }
 
-        groupRelatedObjs.add(new GroupType(
+        groupRelatedRecords.add(new GroupType(
                 1L,
                 "test",
                 1000,
@@ -382,20 +430,20 @@ public final class MongoFakingManager {
                     null,
                     null,
                     null);
-            messageRelatedObjs.add(privateMessage1);
-            messageRelatedObjs.add(privateMessage2);
-            messageRelatedObjs.add(groupMessage);
+            messageRelatedRecords.add(privateMessage1);
+            messageRelatedRecords.add(privateMessage2);
+            messageRelatedRecords.add(groupMessage);
         }
 
         // Conversation
         for (Long targetId : targetIds) {
             PrivateConversation privateConversation =
                     new PrivateConversation(new PrivateConversation.Key(senderId, targetId), epoch);
-            conversationRelatedObjs.add(privateConversation);
+            conversationRelatedRecords.add(privateConversation);
         }
         GroupConversation groupConversation =
                 new GroupConversation(1L, CollectionUtil.newMap(groupMemberIds, id -> epoch));
-        conversationRelatedObjs.add(groupConversation);
+        conversationRelatedRecords.add(groupConversation);
 
         // User
         for (int i = 1; i <= userCount; i++) {
@@ -426,9 +474,9 @@ public final class MongoFakingManager {
                     userDate);
             UserRelationshipGroup relationshipGroup =
                     new UserRelationshipGroup((long) i, 0, "", userDate);
-            userRelatedObjs.add(user);
-            userRelatedObjs.add(userVersion);
-            userRelatedObjs.add(relationshipGroup);
+            userRelatedRecords.add(user);
+            userRelatedRecords.add(userVersion);
+            userRelatedRecords.add(relationshipGroup);
         }
 
         for (int i =
@@ -442,10 +490,11 @@ public final class MongoFakingManager {
                     null,
                     1L,
                     (long) i);
-            userRelatedObjs.add(userFriendRequest);
+            userRelatedRecords.add(userFriendRequest);
         }
 
-        userRelatedObjs.add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
+        userRelatedRecords
+                .add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
 
         for (int i =
                 targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
@@ -457,48 +506,26 @@ public final class MongoFakingManager {
                     new UserRelationshipGroupMember(1L, 0, (long) i, epoch);
             UserRelationshipGroupMember relationshipGroupMember2 =
                     new UserRelationshipGroupMember((long) i, 0, 1L, epoch);
-            userRelatedObjs.add(userRelationship1);
-            userRelatedObjs.add(userRelationship2);
-            userRelatedObjs.add(relationshipGroupMember1);
-            userRelatedObjs.add(relationshipGroupMember2);
+            userRelatedRecords.add(userRelationship1);
+            userRelatedRecords.add(userRelationship2);
+            userRelatedRecords.add(relationshipGroupMember1);
+            userRelatedRecords.add(relationshipGroupMember2);
         }
+        return new FakeData(
+                adminRelatedRecords,
+                userRelatedRecords,
+                groupRelatedRecords,
+                conversationRelatedRecords,
+                messageRelatedRecords);
+    }
 
-        // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired
-        // behaviour
-        // that TurmsMongoClient#insertAll seems blocking when running in debug mode
-        // but it won't block when running in non-debug mode
-        // and there is no blocking method after reviewing the workflow of
-        // TurmsMongoClient#insertAll
-        Scheduler scheduler = Schedulers.boundedElastic();
-        Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
-                .doOnSubscribe(s -> LOGGER.info("Start faking admin-related data"))
-                .doOnError(error -> LOGGER.error("Failed to fake admin-related data", error))
-                .doOnSuccess(unused -> LOGGER.info("Admin-related data has been faked"))
-                .subscribeOn(scheduler);
-        Mono<Void> userMono = userMongoClient.insertAll(userRelatedObjs)
-                .doOnSubscribe(s -> LOGGER.info("Start faking user-related data"))
-                .doOnError(error -> LOGGER.error("Failed to fake user-related data", error))
-                .doOnSuccess(unused -> LOGGER.info("User-related data has been faked"))
-                .subscribeOn(scheduler);
-        Mono<Void> groupMono = groupMongoClient.insertAll(groupRelatedObjs)
-                .doOnSubscribe(s -> LOGGER.info("Start faking group-related data"))
-                .doOnError(error -> LOGGER.error("Failed to fake group-related data", error))
-                .doOnSuccess(unused -> LOGGER.info("Group-related data has been faked"))
-                .subscribeOn(scheduler);
-        Mono<Void> conversationMono = conversationMongoClient.insertAll(conversationRelatedObjs)
-                .doOnSubscribe(s -> LOGGER.info("Start faking conversation-related data"))
-                .doOnError(error -> LOGGER.error("Failed to fake conversation-related data", error))
-                .doOnSuccess(unused -> LOGGER.info("Conversation-related data has been faked"))
-                .subscribeOn(scheduler);
-        Mono<Void> messageMono = messageMongoClient.insertAll(messageRelatedObjs)
-                .doOnSubscribe(s -> LOGGER.info("Start faking message-related data"))
-                .doOnError(error -> LOGGER.error("Failed to fake message-related data", error))
-                .doOnSuccess(unused -> LOGGER.info("Message-related data has been faked"))
-                .subscribeOn(scheduler);
-        return Mono.whenDelayError(adminMono, userMono, groupMono, conversationMono, messageMono)
-                .then()
-                .doOnSuccess(ignored -> LOGGER.info("All data has been faked"))
-                .doOnError(t -> LOGGER.error("Failed to fake data", t));
+    private record FakeData(
+            List<Object> adminRelatedRecords,
+            List<Object> userRelatedRecords,
+            List<Object> groupRelatedRecords,
+            List<Object> conversationRelatedRecords,
+            List<Object> messageRelatedRecords
+    ) {
     }
 
     private long nextId() {
