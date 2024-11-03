@@ -34,6 +34,8 @@ public @interface Indexed {
 
     boolean optional() default false;
 
+    boolean unique() default false;
+
     long expireAfterSeconds() default 0;
 
     String partialFilter() default "";

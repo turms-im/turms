@@ -28,7 +28,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import im.turms.server.common.domain.admin.po.Admin;
-import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.domain.admin.repository.BaseAdminRepository;
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
@@ -39,41 +39,43 @@ import im.turms.server.common.storage.mongo.operation.option.Update;
  * @author James Chen
  */
 @Repository
-public class AdminRepository extends BaseRepository<Admin, String> {
+public class AdminRepository extends BaseAdminRepository {
 
     public AdminRepository(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient) {
-        super(mongoClient, Admin.class);
+        super(mongoClient);
         this.mongoClient = mongoClient;
     }
 
     public Mono<UpdateResult> updateAdmins(
-            Set<String> targetAccounts,
+            Set<Long> ids,
             @Nullable byte[] password,
-            @Nullable String name,
+            @Nullable String displayName,
             @Nullable Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(1)
-                .in(DomainFieldName.ID, targetAccounts);
+                .in(DomainFieldName.ID, ids);
         Update update = Update.newBuilder(3)
                 .setIfNotNull(Admin.Fields.PASSWORD, password)
-                .setIfNotNull(Admin.Fields.NAME, name)
+                .setIfNotNull(Admin.Fields.DISPLAY_NAME, displayName)
                 .setIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         return mongoClient.updateMany(entityClass, filter, update);
     }
 
-    public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {
+    public Mono<Long> countAdmins(@Nullable Set<Long> ids, @Nullable Set<Long> roleIds) {
         Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DomainFieldName.ID, accounts)
+                .inIfNotNull(DomainFieldName.ID, ids)
                 .inIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         return mongoClient.count(entityClass, filter);
     }
 
     public Flux<Admin> findAdmins(
-            @Nullable Collection<String> accounts,
+            @Nullable Collection<Long> ids,
+            @Nullable Collection<String> loginNames,
             @Nullable Collection<Long> roleIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(DomainFieldName.ID, accounts)
+        Filter filter = Filter.newBuilder(3)
+                .inIfNotNull(DomainFieldName.ID, ids)
+                .inIfNotNull(Admin.Fields.LOGIN_NAME, loginNames)
                 .inIfNotNull(Admin.Fields.ROLE_IDS, roleIds);
         QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);

@@ -30,13 +30,13 @@
                     </template>
                 </a-input>
             </a-form-item>
-            <a-form-item name="account">
+            <a-form-item name="loginName">
                 <a-input
-                    ref="accountInput"
-                    v-model:value="form.account"
+                    ref="loginNameInput"
+                    v-model:value="form.loginName"
                     autocomplete="username"
-                    class="login-modal__account"
-                    :placeholder="$t('adminAccount')"
+                    class="login-modal__login-name"
+                    :placeholder="$t('loginName')"
                 >
                     <template #prefix>
                         <span class="login-form__input-icon">
@@ -90,12 +90,12 @@ export default {
         return {
             form: {
                 url: localStorage.getItem(this.$rs.storage.url) || DEFAULT_URL,
-                account: '',
+                loginName: '',
                 password: ''
             },
             rules: {
                 url: this.$validator.create({required: true, noBlank: true}),
-                account: this.$validator.create({required: true, noBlank: true}),
+                loginName: this.$validator.create({required: true, noBlank: true}),
                 password: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
             },
             confirmLoading: false
@@ -110,22 +110,23 @@ export default {
         }
     },
     mounted() {
-        this.tryFocusAccountInput();
+        this.tryFocusLoginNameInput();
     },
     methods: {
-        tryFocusAccountInput() {
-            if (this.$refs.accountInput) {
-                this.$refs.accountInput.focus();
+        tryFocusLoginNameInput() {
+            const loginNameInput = this.$refs.loginNameInput;
+            if (loginNameInput) {
+                loginNameInput.focus();
             } else {
                 setTimeout(() => {
-                    this.tryFocusAccountInput();
+                    this.tryFocusLoginNameInput();
                 }, 100);
             }
         },
         async onValidationPass(values) {
             const url = this._getHttpUrl(values.url);
             if (url) {
-                return this.login(values.url, values.account, values.password);
+                return this.login(values.url, values.loginName, values.password);
             } else {
                 this.$error(this.$t('invalidUrl'));
             }
@@ -149,8 +150,8 @@ export default {
                 }
             }
         },
-        login(url, account, password) {
-            const token = btoa(`${account}:${password}`);
+        login(url, loginName, password) {
+            const token = btoa(`${loginName}:${password}`);
             this.confirmLoading = true;
             this.$http.defaults.baseURL = url;
             this.$http.defaults.headers.common.Authorization = `Basic ${token}`;
@@ -158,7 +159,7 @@ export default {
                 .then(() => {
                     return this.$http.get(this.$rs.apis.admin, {
                         params: {
-                            accounts: account
+                            loginNames: [loginName]
                         }
                     }).then((response => {
                         const admin = response.data?.data?.[0];

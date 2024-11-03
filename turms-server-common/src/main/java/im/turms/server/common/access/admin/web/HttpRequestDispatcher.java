@@ -52,6 +52,7 @@ import im.turms.server.common.access.admin.throttle.BaseAdminApiRateLimitingMana
 import im.turms.server.common.access.admin.web.annotation.DeleteMapping;
 import im.turms.server.common.access.common.ResponseStatusCode;
 import im.turms.server.common.domain.admin.bo.AdminAction;
+import im.turms.server.common.domain.admin.constant.AdminConst;
 import im.turms.server.common.domain.admin.service.BaseAdminService;
 import im.turms.server.common.infra.application.JobShutdownOrder;
 import im.turms.server.common.infra.application.TurmsApplicationContext;
@@ -99,7 +100,7 @@ public class HttpRequestDispatcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequestDispatcher.class);
 
     private static final String X_REQUEST_ID = "X-Request-ID";
-    private static final Mono<Credentials> CREDENTIALS_ROOT = Mono.just(Credentials.ROOT);
+    private static final Mono<Long> ROOT_ADMIN_ID = Mono.just(AdminConst.ROOT_ADMIN_ID);
 
     private static final Method HANDLE_ADMIN_ACTION_METHOD;
 
@@ -329,7 +330,7 @@ public class HttpRequestDispatcher {
             }
             tryLogAndInvokeHandlers(requestContext.getParams(),
                     tracingContext,
-                    requestContext.getAccount(),
+                    requestContext.getRequesterId(),
                     ip,
                     request.requestId(),
                     requestTime,
@@ -410,14 +411,18 @@ public class HttpRequestDispatcher {
                                                 ResponseStatusCode.NO_FILTER_FOR_DELETE_OPERATION))));
                     }
                     // 6. authenticate + authorize
-                    Mono<Credentials> authenticate = useAuthentication
-                            ? authenticator.authenticate(endpoint.parameters(),
-                                    params,
-                                    request.requestHeaders(),
-                                    endpoint.permission())
-                            : CREDENTIALS_ROOT;
-                    return authenticate.flatMap(credentials -> {
-                        requestContext.setAccount(credentials.account());
+                    Mono<Long> authenticate = useAuthentication
+                            ? authenticator
+                                    .authenticate(endpoint.parameters(),
+                                            params,
+                                            request.requestHeaders(),
+                                            endpoint.permission())
+                                    .defaultIfEmpty(Long.MIN_VALUE)
+                            : ROOT_ADMIN_ID;
+                    return authenticate.flatMap(adminId -> {
+                        if (adminId != Long.MIN_VALUE) {
+                            requestContext.setRequesterId(adminId);
+                        }
                         // 7. pass to handler
                         return invokeHandler(endpoint, params);
                     });
@@ -576,7 +581,7 @@ public class HttpRequestDispatcher {
     private void tryLogAndInvokeHandlers(
             @Nullable MethodParameterInfo[] parameters,
             TracingContext context,
-            @Nullable String account,
+            @Nullable Long adminId,
             String ip,
             String requestId,
             long requestTime,
@@ -600,7 +605,7 @@ public class HttpRequestDispatcher {
             }
         }
         AdminAction adminAction =
-                new AdminAction(account, ip, new Date(requestTime), action, params, processingTime);
+                new AdminAction(adminId, ip, new Date(requestTime), action, params, processingTime);
         pluginManager
                 .invokeExtensionPointsSimultaneously(AdminActionHandler.class,
                         HANDLE_ADMIN_ACTION_METHOD,
@@ -608,7 +613,7 @@ public class HttpRequestDispatcher {
                 .subscribe(null, LOGGER::error);
         if (isLogEnabled) {
             try (TracingCloseableContext ignored = context.asCloseable()) {
-                AdminApiLogging.log(account,
+                AdminApiLogging.log(adminId,
                         ip,
                         requestId,
                         requestTime,

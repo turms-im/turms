@@ -28,7 +28,7 @@ import im.turms.server.common.infra.security.SensitiveProperty;
  */
 public record UpdateAdminDTO(
         @SensitiveProperty(SensitiveProperty.Access.ALLOW_DESERIALIZATION) String password,
-        String name,
+        String displayName,
         Set<Long> roleIds
 ) implements ControllerDTO {
     @Override
@@ -36,8 +36,8 @@ public record UpdateAdminDTO(
         return "UpdateAdminDTO["
                 + "password="
                 + SecurityValueConst.SENSITIVE_VALUE
-                + ", name="
-                + name
+                + ", displayName="
+                + displayName
                 + ", roleIds="
                 + roleIds
                 + ']';

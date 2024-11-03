@@ -33,7 +33,7 @@ public class RequestContext {
     @Nullable
     private String action;
     @Nullable
-    private String account;
+    private Long requesterId;
     @Nullable
     private Object[] paramValues;
 

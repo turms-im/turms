@@ -211,6 +211,7 @@ public final class MongoFakeDataGenerator {
         final long adminRoleId = 1L;
         final long guestRoleId = 2L;
         Admin guest = new Admin(
+                nextId(),
                 "guest",
                 passwordManager.encodeAdminPassword("guest"),
                 "guest",
@@ -219,10 +220,11 @@ public final class MongoFakeDataGenerator {
         adminRelatedRecords.add(guest);
         for (int i = 1; i <= adminCount; i++) {
             Admin admin = new Admin(
-                    "account"
+                    nextId(),
+                    "my-login-name:"
                             + i,
                     passwordManager.encodeAdminPassword("123"),
-                    "my-name",
+                    "my-display-name",
                     Set.of(adminRoleId),
                     DateUtils.addDays(epoch, i));
             adminRelatedRecords.add(admin);

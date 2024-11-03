@@ -13,7 +13,7 @@ describe('Home page', () => {
 
         it('should focus account by default', () => {
             cy.focused()
-                .should('have.id', 'form_item_account');
+                .should('have.id', 'form_item_loginName');
         });
 
         it('should have default URL value', () => {
@@ -22,7 +22,7 @@ describe('Home page', () => {
         });
 
         it('account input should accept input', () => {
-            cy.get('#form_item_account')
+            cy.get('#form_item_loginName')
                 .should('be.empty')
                 .type(account)
                 .should('have.value', account);
@@ -37,7 +37,7 @@ describe('Home page', () => {
 
         context('Form submission', () => {
             beforeEach(() => {
-                cy.get('.login-modal__account').type(account);
+                cy.get('.login-modal__login-name').type(account);
                 cy.get('.login-modal__password').type(pwd);
             });
 

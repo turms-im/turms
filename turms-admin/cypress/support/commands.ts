@@ -14,7 +14,7 @@ Cypress.Commands.add('login', (url = '/') => {
     const account = 'turms';
     const pwd = 'turms';
     cy.visit(url);
-    cy.get('.login-modal__account').type(account);
+    cy.get('.login-modal__login-name').type(account);
     cy.get('.login-modal__password')
         .type(pwd)
         .type('{enter}');

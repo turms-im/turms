@@ -18,7 +18,6 @@
 package im.turms.server.common.domain.admin.service;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +30,7 @@ import im.turms.server.common.access.admin.permission.AdminPermission;
 import im.turms.server.common.access.admin.web.MethodParameterInfo;
 import im.turms.server.common.domain.admin.bo.AdminInfo;
 import im.turms.server.common.domain.admin.po.Admin;
-import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.domain.admin.repository.BaseAdminRepository;
 import im.turms.server.common.domain.common.service.BaseService;
 import im.turms.server.common.infra.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -54,14 +53,15 @@ public abstract class BaseAdminService extends BaseService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseAdminService.class);
 
     private final PasswordManager passwordManager;
-    private final BaseRepository<Admin, String> adminRepository;
+    private final BaseAdminRepository adminRepository;
     private final BaseAdminRoleService adminRoleService;
 
-    private final Map<String, AdminInfo> accountToAdmin = new ConcurrentHashMap<>(16);
+    private final Map<Long, AdminInfo> idToAdminInfo = new ConcurrentHashMap<>(16);
+    private final Map<String, AdminInfo> loginNameToAdminInfo = new ConcurrentHashMap<>(16);
 
     protected BaseAdminService(
             PasswordManager passwordManager,
-            BaseRepository<Admin, String> adminRepository,
+            BaseAdminRepository adminRepository,
             BaseAdminRoleService adminRoleService) {
         this.passwordManager = passwordManager;
         this.adminRepository = adminRepository;
@@ -77,7 +77,7 @@ public abstract class BaseAdminService extends BaseService {
                         t -> new RuntimeException("Caught an error while loading all admins", t))
                 .flatMap(admins -> {
                     for (Admin admin : admins) {
-                        accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
+                        upsertAdminIntoCache(admin);
                     }
                     for (Admin admin : admins) {
                         if (admin.getRoleIds()
@@ -97,13 +97,17 @@ public abstract class BaseAdminService extends BaseService {
                 .doOnNext(event -> {
                     Admin admin = event.getFullDocument();
                     switch (event.getOperationType()) {
-                        case INSERT, UPDATE, REPLACE ->
-                            accountToAdmin.put(admin.getAccount(), new AdminInfo(admin, null));
+                        case INSERT, UPDATE, REPLACE -> upsertAdminIntoCache(admin);
                         case DELETE -> {
-                            String account = ChangeStreamUtil.getIdAsString(event.getDocumentKey());
-                            accountToAdmin.remove(account);
+                            Long id = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
+                            removeAdminFromCache(id);
                         }
-                        case INVALIDATE -> accountToAdmin.clear();
+                        case INVALIDATE -> {
+                            synchronized (this) {
+                                idToAdminInfo.clear();
+                                loginNameToAdminInfo.clear();
+                            }
+                        }
                         default -> LOGGER.fatal("Detected an illegal operation on the collection \""
                                 + Admin.COLLECTION_NAME
                                 + "\" in the change stream event: {}", event);
@@ -118,24 +122,44 @@ public abstract class BaseAdminService extends BaseService {
                 .subscribe();
     }
 
+    private void upsertAdminIntoCache(Admin admin) {
+        Long id = admin.getId();
+        String loginName = admin.getLoginName();
+        if (id == null || loginName == null) {
+            LOGGER.error("Found an invalid admin record missing the ID or login name: {}", admin);
+        } else {
+            AdminInfo adminInfo = new AdminInfo(admin, null);
+            synchronized (this) {
+                idToAdminInfo.put(id, adminInfo);
+                loginNameToAdminInfo.put(loginName, adminInfo);
+            }
+        }
+    }
+
+    private synchronized void removeAdminFromCache(Long id) {
+        AdminInfo adminInfo = idToAdminInfo.remove(id);
+        if (adminInfo != null) {
+            loginNameToAdminInfo.remove(adminInfo.getAdmin()
+                    .getLoginName());
+        }
+    }
+
     protected Mono<Admin> addRootAdmin() {
         return Mono.empty();
     }
 
-    public Mono<Set<Long>> queryRoleIds(@NotNull String account) {
-        return queryAdmin(account).map(Admin::getRoleIds);
+    public Mono<Set<Long>> queryRoleIdsByAdminId(@NotNull Long id) {
+        return queryAdminById(id).map(Admin::getRoleIds);
     }
 
-    public Mono<Boolean> isAdminAuthorized(
-            @NotNull String account,
-            @NotNull AdminPermission permission) {
+    public Mono<Boolean> isAdminAuthorized(@NotNull Long id, @NotNull AdminPermission permission) {
         try {
-            Validator.notNull(account, "account");
+            Validator.notNull(id, "id");
             Validator.notNull(permission, "permission");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryRoleIds(account)
+        return queryRoleIdsByAdminId(id)
                 .flatMap(roleIds -> adminRoleService.hasPermission(roleIds, permission))
                 .switchIfEmpty(PublisherPool.FALSE);
     }
@@ -143,30 +167,30 @@ public abstract class BaseAdminService extends BaseService {
     public Mono<Boolean> isAdminAuthorized(
             @NotNull MethodParameterInfo[] params,
             @NotNull Object[] paramValues,
-            @NotNull String account,
+            @NotNull Long id,
             @NotNull AdminPermission permission) {
         try {
             Validator.notNull(params, "params");
             Validator.notNull(paramValues, "paramValues");
-            Validator.notNull(account, "account");
+            Validator.notNull(id, "id");
             Validator.notNull(permission, "permission");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
         boolean isQueryingSelfInfo = false;
-        // Even if the account doesn't have the permission ADMIN_QUERY,
-        // it can still query its own information
+        // Even if the admin doesn't have the permission ADMIN_QUERY,
+        // it can still query their own information.
         if (permission == AdminPermission.ADMIN_QUERY) {
             for (int i = 0, length = params.length; i < length; i++) {
                 MethodParameterInfo param = params[i];
                 if (param.name()
-                        .equals("accounts")) {
+                        .equals("ids")) {
                     Object value = paramValues[i];
                     if (value instanceof Collection<?> collection
                             && collection.size() == 1
                             && collection.iterator()
                                     .next()
-                                    .equals(account)) {
+                                    .equals(id)) {
                         isQueryingSelfInfo = true;
                     }
                     break;
@@ -175,49 +199,71 @@ public abstract class BaseAdminService extends BaseService {
         }
         return isQueryingSelfInfo
                 ? PublisherPool.TRUE
-                : isAdminAuthorized(account, permission);
+                : isAdminAuthorized(id, permission);
     }
 
-    public Mono<Boolean> authenticate(
-            @NotNull @NoWhitespace String account,
+    /**
+     * @return admin ID if authenticated.
+     */
+    public Mono<Long> authenticate(
+            @NotNull @NoWhitespace String loginName,
             @NotNull @NoWhitespace String rawPassword) {
         try {
-            Validator.notNull(account, "account");
-            Validator.noWhitespace(account, "account");
+            Validator.notNull(loginName, "loginName");
+            Validator.noWhitespace(loginName, "loginName");
             Validator.notNull(rawPassword, "rawPassword");
             Validator.noWhitespace(rawPassword, "rawPassword");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminInfo adminInfo = accountToAdmin.get(account);
-        if (adminInfo != null && adminInfo.getRawPassword() != null) {
-            return Mono.just(adminInfo.getRawPassword()
-                    .equals(rawPassword));
+        AdminInfo adminInfo = loginNameToAdminInfo.get(loginName);
+        if (adminInfo != null) {
+            String correctRawPassword = adminInfo.getRawPassword();
+            // If the password doesn't match, it may happen due to the outdated cache,
+            // so compare the input password with the one stored in MongoDB.
+            if (correctRawPassword != null && correctRawPassword.equals(rawPassword)) {
+                return Mono.just(adminInfo.getAdmin()
+                        .getId());
+            }
         }
-        return queryAdmin(account).map(admin -> {
+        return queryAdminByLoginName(loginName).flatMap(admin -> {
             boolean isValidPassword =
                     passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
-            if (isValidPassword) {
-                AdminInfo info = accountToAdmin.get(admin.getAccount());
-                if (info != null) {
-                    info.setRawPassword(rawPassword);
-                }
+            if (!isValidPassword) {
+                return Mono.empty();
             }
-            return isValidPassword;
-        })
-                .switchIfEmpty(PublisherPool.FALSE);
+            AdminInfo info = idToAdminInfo.get(admin.getId());
+            if (info != null) {
+                info.setRawPassword(rawPassword);
+            }
+            return Mono.just(admin.getId());
+        });
     }
 
-    public Mono<Admin> queryAdmin(@NotNull String account) {
+    public Mono<Admin> queryAdminById(@NotNull Long id) {
         try {
-            Validator.notNull(account, "account");
+            Validator.notNull(id, "id");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        AdminInfo adminInfo = accountToAdmin.get(account);
+        AdminInfo adminInfo = idToAdminInfo.get(id);
         if (adminInfo == null) {
-            return adminRepository.findById(account)
-                    .doOnNext(admin -> accountToAdmin.put(account, new AdminInfo(admin, null)));
+            return adminRepository.findById(id)
+                    .doOnNext(this::upsertAdminIntoCache);
+        }
+        return Mono.just(adminInfo.getAdmin());
+    }
+
+    public Mono<Admin> queryAdminByLoginName(@NotNull String loginName) {
+        try {
+            Validator.notNull(loginName, "loginName");
+        } catch (ResponseException e) {
+            return Mono.error(e);
+        }
+        AdminInfo adminInfo = loginNameToAdminInfo.get(loginName);
+        if (adminInfo == null) {
+            return adminRepository.findByLoginName(loginName)
+                    .doOnNext(this::upsertAdminIntoCache);
         }
         return Mono.just(adminInfo.getAdmin());
     }

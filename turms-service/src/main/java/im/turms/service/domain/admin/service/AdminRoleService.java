@@ -82,7 +82,7 @@ public class AdminRoleService extends BaseAdminRoleService {
     }
 
     public Mono<AdminRole> authAndAddAdminRole(
-            @NotNull String requesterAccount,
+            @NotNull Long requesterId,
             @NotNull Long roleId,
             @NotNull @NoWhitespace @Size(
                     min = MIN_ROLE_NAME_LIMIT,
@@ -102,11 +102,11 @@ public class AdminRoleService extends BaseAdminRoleService {
             return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
                     "The new role ID cannot be the root role ID"));
         }
-        return isAdminRankHigherThanRank(requesterAccount, rank)
-                .switchIfEmpty(adminService.errorRequesterAccountNotExist())
+        return isAdminRankHigherThanRank(requesterId, rank)
+                .switchIfEmpty(adminService.errorRequesterNotExist())
                 .flatMap(isHigher -> isHigher
-                        ? queryPermissions(requesterAccount)
-                                .switchIfEmpty(adminService.errorRequesterAccountNotExist())
+                        ? queryPermissions(requesterId)
+                                .switchIfEmpty(adminService.errorRequesterNotExist())
                         : MONO_ERROR_UPDATE_ROLE_WITH_HIGHER_RANK)
                 .flatMap(requesterPermissions -> {
                     if (requesterPermissions.containsAll(permissions)) {
@@ -115,7 +115,7 @@ public class AdminRoleService extends BaseAdminRoleService {
                     TreeSet<AdminPermission> missingPermissions = new TreeSet<>(permissions);
                     missingPermissions.removeAll(requesterPermissions);
                     return Mono.error(ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
-                            "The requester account does not have the permissions: "
+                            "The requester does not have the permissions: "
                                     + missingPermissions));
                 });
     }
@@ -150,14 +150,14 @@ public class AdminRoleService extends BaseAdminRoleService {
     }
 
     public Mono<DeleteResult> authAndDeleteAdminRoles(
-            @NotNull String requesterAccount,
+            @NotNull Long requesterId,
             @NotEmpty Set<Long> roleIds) {
         try {
             Validator.notEmpty(roleIds, "roleIds");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return checkIfAllowedToManageRoles(requesterAccount,
+        return checkIfAllowedToManageRoles(requesterId,
                 roleIds,
                 OperationResultPublisherPool.ACKNOWLEDGED_DELETE_RESULT,
                 () -> deleteAdminRoles(roleIds));
@@ -185,7 +185,7 @@ public class AdminRoleService extends BaseAdminRoleService {
     }
 
     public Mono<UpdateResult> authAndUpdateAdminRoles(
-            @NotNull String requesterAccount,
+            @NotNull Long requesterId,
             @NotEmpty Set<Long> roleIds,
             @Nullable @NoWhitespace @Size(
                     min = MIN_ROLE_NAME_LIMIT,
@@ -199,15 +199,15 @@ public class AdminRoleService extends BaseAdminRoleService {
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return checkIfAllowedToManageRoles(requesterAccount,
+        return checkIfAllowedToManageRoles(requesterId,
                 roleIds,
                 OperationResultPublisherPool.ACKNOWLEDGED_UPDATE_RESULT,
                 () -> {
                     if (permissions == null) {
                         return updateAdminRole(roleIds, newName, null, rank);
                     }
-                    return queryPermissions(requesterAccount)
-                            .switchIfEmpty(adminService.errorRequesterAccountNotExist())
+                    return queryPermissions(requesterId)
+                            .switchIfEmpty(adminService.errorRequesterNotExist())
                             .flatMap(requesterPermissions -> {
                                 if (requesterPermissions.containsAll(permissions)) {
                                     return updateAdminRole(roleIds, newName, permissions, rank);
@@ -215,10 +215,10 @@ public class AdminRoleService extends BaseAdminRoleService {
                                 TreeSet<AdminPermission> missingPermissions =
                                         new TreeSet<>(permissions);
                                 missingPermissions.removeAll(requesterPermissions);
-                                return Mono.error(ResponseException.get(
-                                        ResponseStatusCode.UNAUTHORIZED,
-                                        "The requester account does not have the permissions: "
-                                                + missingPermissions));
+                                return Mono.error(
+                                        ResponseException.get(ResponseStatusCode.UNAUTHORIZED,
+                                                "The requester does not have the permissions: "
+                                                        + missingPermissions));
                             });
                 });
     }
@@ -312,13 +312,13 @@ public class AdminRoleService extends BaseAdminRoleService {
                 .map(number -> number + 1);
     }
 
-    public Mono<Integer> queryHighestRankByAccount(@NotNull String account) {
+    public Mono<Integer> queryHighestRankByAdminId(@NotNull Long adminId) {
         try {
-            Validator.notNull(account, "account");
+            Validator.notNull(adminId, "adminId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return adminService.queryRoleIds(account)
+        return adminService.queryRoleIdsByAdminId(adminId)
                 .flatMap(this::queryHighestRankByRoleIds);
     }
 
@@ -337,22 +337,22 @@ public class AdminRoleService extends BaseAdminRoleService {
         return adminRoleRepository.findHighestRankByRoleIds(roleIds);
     }
 
-    public Mono<Boolean> isAdminRankHigherThanRank(@NotNull String account, @NotNull Integer rank) {
+    public Mono<Boolean> isAdminRankHigherThanRank(@NotNull Long adminId, @NotNull Integer rank) {
         try {
             Validator.notNull(rank, "rank");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return queryHighestRankByAccount(account).map(adminRank -> adminRank > rank);
+        return queryHighestRankByAdminId(adminId).map(adminRank -> adminRank > rank);
     }
 
-    public Mono<Set<AdminPermission>> queryPermissions(@NotNull String account) {
+    public Mono<Set<AdminPermission>> queryPermissions(@NotNull Long adminId) {
         try {
-            Validator.notNull(account, "account");
+            Validator.notNull(adminId, "adminId");
         } catch (ResponseException e) {
             return Mono.error(e);
         }
-        return adminService.queryRoleIds(account)
+        return adminService.queryRoleIdsByAdminId(adminId)
                 .flatMap(this::queryPermissions);
     }
 
@@ -376,13 +376,13 @@ public class AdminRoleService extends BaseAdminRoleService {
     }
 
     private <T> Mono<T> checkIfAllowedToManageRoles(
-            @NotNull String requesterAccount,
+            @NotNull Long requesterId,
             @NotEmpty Set<Long> roleIds,
             @NotNull Mono<T> noOpResult,
             @NotNull Supplier<Mono<T>> task) {
         return Mono.zip(
-                queryHighestRankByAccount(requesterAccount)
-                        .switchIfEmpty(adminService.errorRequesterAccountNotExist()),
+                queryHighestRankByAdminId(requesterId)
+                        .switchIfEmpty(adminService.errorRequesterNotExist()),
                 queryAndCacheRolesByRoleIds(roleIds).collect(CollectorUtil.toList(roleIds.size())))
                 .flatMap(tuple -> {
                     List<AdminRole> targetRoles = tuple.getT2();

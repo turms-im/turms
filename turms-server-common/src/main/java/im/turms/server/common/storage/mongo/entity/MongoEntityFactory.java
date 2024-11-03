@@ -505,8 +505,9 @@ public final class MongoEntityFactory {
         BsonValue index = indexType.equals(IndexType.RANGE)
                 ? BsonPool.BSON_INT32_1
                 : BsonPool.BSON_STRING_HASHED;
-        long expireAfterSeconds = indexed.expireAfterSeconds();
         IndexOptions options = new IndexOptions();
+        options.unique(indexed.unique());
+        long expireAfterSeconds = indexed.expireAfterSeconds();
         if (expireAfterSeconds > 0) {
             options.expireAfter(expireAfterSeconds, TimeUnit.SECONDS);
         }

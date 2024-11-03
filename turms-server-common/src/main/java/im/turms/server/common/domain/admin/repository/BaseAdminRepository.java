@@ -15,23 +15,28 @@
  * limitations under the License.
  */
 
-package im.turms.ai.domain.admin.repository;
+package im.turms.server.common.domain.admin.repository;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
-import im.turms.server.common.domain.admin.repository.BaseAdminRepository;
+import im.turms.server.common.domain.admin.po.Admin;
+import im.turms.server.common.domain.common.repository.BaseRepository;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
+import im.turms.server.common.storage.mongo.operation.option.Filter;
 
 /**
  * @author James Chen
  */
-@Repository
-public class AdminRepository extends BaseAdminRepository {
+public abstract class BaseAdminRepository extends BaseRepository<Admin, Long> {
 
-    public AdminRepository(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient) {
-        super(mongoClient);
+    protected BaseAdminRepository(TurmsMongoClient mongoClient) {
+        super(mongoClient, Admin.class);
         this.mongoClient = mongoClient;
     }
 
+    public Mono<Admin> findByLoginName(String loginName) {
+        return mongoClient.findOne(Admin.class,
+                Filter.newBuilder(1)
+                        .eq(Admin.Fields.LOGIN_NAME, loginName));
+    }
 }

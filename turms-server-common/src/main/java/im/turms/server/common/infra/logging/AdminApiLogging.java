@@ -36,7 +36,7 @@ public final class AdminApiLogging {
     }
 
     public static void log(
-            String account,
+            Long adminId,
             String ip,
             String requestId,
             long requestTime,
@@ -57,7 +57,7 @@ public final class AdminApiLogging {
         ByteBuf buffer = ByteBufUtil.join(estimatedSize,
                 CommonLogger.LOG_FIELD_DELIMITER,
                 // Session
-                account,
+                adminId,
                 ip,
                 // Request
                 requestId,

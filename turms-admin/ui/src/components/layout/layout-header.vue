@@ -23,7 +23,7 @@
             </div>
             <template #content>
                 <div class="layout-header__admin-info">
-                    {{ `${$t('account')}: ${admin.account}` }}
+                    {{ `${$t('loginName')}: ${admin.loginName}` }}
                 </div>
                 <div class="layout-header__admin-info">
                     {{ `${$t('name')}: ${admin.name}` }}
@@ -124,7 +124,7 @@ export default {
             const url = this.url.replace(/\/$/, '');
             this.$http.head(`${url}/admins`)
                 .then(() => {
-                    const token = btoa(`${this.$store.getters.admin.account}:${this.$store.getters.admin.password}`);
+                    const token = btoa(`${this.$store.getters.admin.loginName}:${this.$store.getters.admin.password}`);
                     this.$http.defaults.headers.common.Authorization = `Basic ${token}`;
                     this.$http.defaults.baseURL = url;
                     this.$store.setUrl(url);

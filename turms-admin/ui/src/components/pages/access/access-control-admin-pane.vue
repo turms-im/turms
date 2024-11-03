@@ -27,13 +27,16 @@ export default {
             name: 'admin-info',
             url: this.$rs.apis.admin,
             initialDataUrls: [this.$rs.apis.adminRole],
-            recordKey: 'account',
-            queryKey: 'accounts',
             filters: [
                 {
                     type: 'INPUT',
-                    name: 'accounts',
-                    placeholder: 'adminAccount',
+                    name: 'ids',
+                    placeholder: 'adminId'
+                },
+                {
+                    type: 'INPUT',
+                    name: 'loginNames',
+                    placeholder: 'loginName',
                     rules: {
                         nonSpace: true
                     }
@@ -57,7 +60,7 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
-                            id: 'account',
+                            id: 'loginName',
                             type: 'INPUT',
                             rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
@@ -67,7 +70,7 @@ export default {
                             rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
-                            id: 'name',
+                            id: 'displayName',
                             type: 'INPUT',
                             rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
@@ -89,7 +92,7 @@ export default {
                             rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
                         {
-                            id: 'name',
+                            id: 'displayName',
                             type: 'INPUT',
                             rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
@@ -103,12 +106,16 @@ export default {
             ],
             table: {
                 columns: [{
-                    key: 'account',
-                    width: '20%'
+                    key: 'id',
+                    width: '10%'
                 },
                 {
-                    key: 'name',
-                    width: '20%'
+                    key: 'loginName',
+                    width: '15%'
+                },
+                {
+                    key: 'displayName',
+                    width: '15%'
                 },
                 {
                     key: 'password',
@@ -130,14 +137,14 @@ export default {
         };
     },
     methods: {
-        onRecordsDeleted(accounts) {
-            if (accounts?.includes(this.$store.getters.admin.account)) {
+        onRecordsDeleted(ids) {
+            if (ids?.includes(this.$store.getters.admin.id)) {
                 this.$store.setAdmin();
             }
         },
-        onRecordsUpdated(accounts, updatedFields) {
+        onRecordsUpdated(ids, updatedFields) {
             const admin = this.$store.getters.admin;
-            if (accounts.includes(admin.account)) {
+            if (ids.includes(admin.id)) {
                 Object.assign(admin, updatedFields);
                 this.$store.setAdmin(admin);
             }

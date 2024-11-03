@@ -2,6 +2,7 @@
   "$jsonSchema": {
     "bsonType": "object",
     "required": [
+      "ln",
       "rd",
       "pw",
       "rid",
@@ -9,6 +10,9 @@
     ],
     "properties": {
       "_id": {
+        "bsonType": "long"
+      },
+      "ln": {
         "bsonType": "string"
       },
       "rd": {

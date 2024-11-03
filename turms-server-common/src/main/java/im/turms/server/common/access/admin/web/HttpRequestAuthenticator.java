@@ -37,6 +37,9 @@ import im.turms.server.common.infra.lang.StringUtil;
 public class HttpRequestAuthenticator {
 
     private static final String BASIC_AUTH_PREFIX = "Basic ";
+    private static final int BASIC_AUTH_PREFIX_LENGTH = BASIC_AUTH_PREFIX.length();
+    public static final Mono<Long> UNAUTHENTICATED = Mono
+            .error(new HttpResponseException(HttpHandlerResult.unauthorized("Unauthenticated")));
 
     private final BaseAdminService adminService;
 
@@ -44,64 +47,52 @@ public class HttpRequestAuthenticator {
         this.adminService = adminService;
     }
 
-    public Mono<Credentials> authenticate(
+    public Mono<Long> authenticate(
             MethodParameterInfo[] params,
             Object[] paramValues,
             HttpHeaders headers,
             @Nullable RequiredPermission permission) {
-        if (permission == null) {
-            return Mono.just(Credentials.EMPTY);
-        }
-        Credentials credentials = parseCredentials(headers);
+        Pair<String, String> credentials = parseCredentials(headers);
         if (credentials == null) {
+            if (permission == null) {
+                return Mono.empty();
+            }
             return Mono.error(new HttpResponseException(
                     HttpHandlerResult
                             .unauthorized("Could not find valid credentials from the header: \""
                                     + HttpHeaderNames.AUTHORIZATION
                                     + "\"")));
         }
-        return adminService.authenticate(credentials.account(), credentials.password())
-                .flatMap(authenticated -> {
-                    if (authenticated) {
-                        return adminService
-                                .isAdminAuthorized(params,
-                                        paramValues,
-                                        credentials.account(),
-                                        permission.value())
-                                .flatMap(authorized -> {
-                                    if (authorized) {
-                                        return Mono.just(credentials);
-                                    }
-                                    return Mono.error(new HttpResponseException(
-                                            HttpHandlerResult.unauthorized(
-                                                    "Unauthorized to access the resource: "
-                                                            + permission.value())));
-                                });
-                    }
-                    return Mono.error(new HttpResponseException(
-                            HttpHandlerResult.unauthorized("Unauthenticated")));
-                });
+        return adminService.authenticate(credentials.first(), credentials.second())
+                .flatMap(id -> adminService
+                        .isAdminAuthorized(params, paramValues, id, permission.value())
+                        .flatMap(authorized -> {
+                            if (authorized) {
+                                return Mono.just(id);
+                            }
+                            return Mono.error(new HttpResponseException(
+                                    HttpHandlerResult
+                                            .unauthorized("Unauthorized to access the resource: "
+                                                    + permission.value())));
+                        }))
+                .switchIfEmpty(UNAUTHENTICATED);
     }
 
     @Nullable
-    private Credentials parseCredentials(HttpHeaders headers) {
+    private Pair<String, String> parseCredentials(HttpHeaders headers) {
         String authorization = headers.get(HttpHeaderNames.AUTHORIZATION);
         if (authorization == null || !authorization.startsWith(BASIC_AUTH_PREFIX)) {
             return null;
         }
+        String encodedCredentials = authorization.substring(BASIC_AUTH_PREFIX_LENGTH);
+        byte[] decode;
         try {
-            String encodedCredentials = authorization.substring(BASIC_AUTH_PREFIX.length());
-            byte[] decode = Base64.getDecoder()
+            decode = Base64.getDecoder()
                     .decode(StringUtil.getBytes(encodedCredentials));
-            Pair<String, String> accountAndPassword =
-                    StringUtil.splitLatin1(StringUtil.newLatin1String(decode), AsciiCode.COLON);
-            if (accountAndPassword == null) {
-                return null;
-            }
-            return new Credentials(accountAndPassword.first(), accountAndPassword.second());
         } catch (Exception e) {
             return null;
         }
+        return StringUtil.splitLatin1(StringUtil.newLatin1String(decode), AsciiCode.COLON);
     }
 
 }
