@@ -94,6 +94,107 @@ Turms服务端开发环境的搭建其实也非常简单，具体步骤包括：
   * `dev`环境下，turms-service会自动向MongoDB数据库生成Fake数据，并且turms-gateway也会自动创建基于TCP的Fake客户端，这些客户端会随机地（请求类型随机、请求参数随机）向turms-gateway发送真实客户端请求，以方便开发者测试。
 * 如果您想替换MongoDB服务端的端口，您只需在Turms项目下全局替换`27017`为您的目标端口即可。
 
+## 自定义属性
+
+Turms的开发者用户经常会提出一类需求，即：希望Turms能够支持给用户、群组、关系等模型添加自定义的属性，以实现各种各样的定制化业务功能，如：
+
+* 需要给用户加上`所属公司`、`部门`、`邮箱`等信息，并且这些信息支持用户自定义，且支持其他用户查询。
+* 需要实现当前用户能够给他的联系人添加自定义`备注（note）`。
+* 需要在多个设备之间，共享给聊天会话的一些属性配置，如`置顶`与`新消息提醒`。
+
+尽管在Turms的系统设计上，它只被允许实现即时通讯的核心功能，并且我们也无计划对上述相对定制化的功能提供直接支持，但实现上述功能，开发者用户其实并不需要修改Turms的源码，只需要对turms-service服务端进行配置，即可实现对这些自定义属性的增删改查逻辑。
+
+### 自定义模型属性
+
+实现给用户与群组模型添加自定义的属性。
+
+#### turms-service服务相关属性
+
+| 属性                                                         | 作用                                                         | 默认值 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
+| turms.service.user.info.user-defined-attributes              | 用于定义`用户`模型的自定义属性                               |        |
+| turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert | 在turms-service服务端upsert自定义属性时，是否忽略未知（即未在`turms.service.user.info.user-defined-attributes.allowed-attributes`声明的属性）。如果该值为`false`，则当用户请求插入未知属性时，响应错误；如果该值为`true`，则turms-service会忽略该自定义属性，并不会响应错误，并且继续处理其他已知自定义属性 | false  |
+| turms.service.user.info.user-defined-attributes.allowed-attributes | 指定一组允许客户端使用的自定义属性。<br />注意：该属性是一个数组 |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].source-name | 指定从客户端请求中的`userDefinedAttributes`的哪个键（字段名）获取自定义属性值 | ""     |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].stored-name | 指定将客户端请求数据存储在数据库时的字段名。如果未指定该值，则使用source-name作为字段名 | ""     |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].immutable | 是否该值不可变。如果为`true`，则用户将无法修改已经存储的值   | false  |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.type | 值的类型。可以是下述类型：<br />* INT：对应MongoDB的`int`<br />* LONG：对应MongoDB的`long`<br />* DOUBLE：对应MongoDB的`double`<br />* BOOL：对应MongoDB的`bool`<br />* STRING：对应MongoDB的`string`<br />* LANGUAGE：对应MongoDB的`string`<br />* ARRAY：对应MongoDB的`array` |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.int-value.min | 当值类型为`INT`时，指定允许的最小值（包括min值）             |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.int-value.max | 当值类型为`INT`时，指定允许的最大值（包括max值）             |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.long-value.min | 当值类型为`LONG`时，指定允许的最小值（包括min值）            |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.long-value.max | 当值类型为`LONG`时，指定允许的最大值（包括max值）            |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.double-value.min | 当值类型为`DOUBLE`时，指定允许的最小值（包括min值）          |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.double-value.max | 当值类型为`DOUBLE`时，指定允许的最大值（包括max值）          |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.min-length | 当值类型为`STRING`时，指定允许的字符串最小长度（包括min-length值） | 0      |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.max-length | 当值类型为`STRING`时，指定允许的字符串最大长度（包括max-length值） | 100    |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.regexes[?] | 当值类型为`STRING`时，指定用于校验输入字符串值的正则表达式   |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.min-element-count | 当值类型为`ARRAY`时，指定允许的数组最小长度（包括min-element-count值） | 0      |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.max-element-count | 当值类型为`ARRAY`时，指定允许的数组最大长度（包括max-element-count值） | 10     |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.unique | 当值类型为`ARRAY`时，是否对数组的值进行去重                  | false  |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.allow-null-element | 当值类型为`ARRAY`时，是否允许数组中包含`null`值              | false  |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.element | 当值类型为`ARRAY`时，指定数组的元素类型                      |        |
+| turms.service.user.info.group-defined-attributes.allowed-attributes | 用于定义`群组`模型的自定义属性。<br />由于该属性的用法与上述的`turms.service.user.info.user-defined-attributes`的用法完全一致，故不赘述 |        |
+
+注意：Turms服务端目前只支持公开的自定义属性。换言之，任何用户都有权限查询所有用户与群组的自定义属性。
+
+#### 客户端相关接口
+
+* 更新用户自定义属性接口：`turmsClient.userService.updateProfile`
+* 更新群组自定义属性接口：`turmsClient.groupService.updateGroup`
+
+关于具体的接口逻辑细节，请阅读客户端SDK源码中的接口说明。
+
+### 自定义配置
+
+一些开发者用户希望Turms能够存储自定义的用户与会话配置，如用户配置：`客户端语言`、`UI主题`等，如会话配置：`置顶`、`新消息提醒`、`备注`等。
+
+#### turms-service服务相关属性
+
+| 属性                                                         | 作用                                                         | 默认值 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
+| turms.service.user.settings                                  | 用于自定义用户设置                                           |        |
+| turms.service.user.settings.ignore-unknown-settings-on-upsert | 在turms-service服务端upsert自定义设置时，是否忽略未知（即未在`turms.service.user.settings.allowed-settings`声明的设置）。如果该值为`false`，则当用户请求插入未知设置时，响应错误；如果该值为`true`，则turms-service会忽略该自定义设置，并不会响应错误，并且继续处理其他已知自定义设置 | false  |
+| turms.service.user.settings.ignore-unknown-settings-on-delete | 在turms-service服务端删除自定义设置时，是否忽略未知（即未在`turms.service.user.settings.allowed-settings`声明的设置）。如果该值为`false`，则当用户请求插入未知设置时，响应错误；如果该值为`true`，则turms-service会忽略该自定义设置，并不会响应错误，并且继续处理其他已知自定义设置 |        |
+| turms.service.user.settings.allowed-settings                 | 指定一组允许客户端使用的自定义设置。<br />注意：该属性是一个数组 |        |
+| turms.service.user.settings.allowed-settings[?].source-name  | 指定从客户端请求中的`settings`的哪个键（字段名）获取自定义设置值 | ""     |
+| turms.service.user.settings.allowed-settings[?].stored-name  | 指定将客户端请求数据存储在数据库时的字段名。如果未指定该值，则使用source-name作为字段名 | ""     |
+| turms.service.user.settings.allowed-settings[?].immutable    | 是否该值不可变。如果为`true`，则用户无法修改已经存储的值     | false  |
+| turms.service.user.settings.allowed-settings[?].deletable    | 是否该值可以被删除。如果为`true`，则用户可以删除已经存储的值 | true   |
+| turms.service.user.settings.allowed-settings[?].value        | 见上述的`turms.service.user.info.user-defined-attributes.allowed-attributes[?].value` |        |
+| turms.service.conversation.settings                          | 用于自定义会话设置。<br />由于该属性的用法与上述的`turms.service.user.settings`的用法完全一致，故不赘述 |        |
+
+#### 客户端相关接口
+
+* 用户自定义设置
+
+    * Upsert用户自定义设置接口：`turmsClient.userService.upsertUserSettings`
+    * 删除用户自定义设置接口：`turmsClient.userService.deleteUserSettings`
+    * 查询用户自定义设置接口：`turmsClient.userService.queryUserSettings`
+
+* 会话自定义设置
+
+    * Upsert会话自定义设置接口：
+        * `turmsClient.conversationService.upsertPrivateConversationSettings`
+        * `turmsClient.conversationService.upsertGroupConversationSettings`
+
+    * 删除会话自定义设置接口：`turmsClient.conversationService.deleteConversationSettings`
+
+    * 查询会话自定义设置接口：`turmsClient.conversationService.queryConversationSettings`
+
+关于具体的接口逻辑细节，请阅读客户端SDK源码中的接口说明。
+
+## 请求与响应模型
+
+为了方便开发者能够简易地、快捷地、高效地对Turms进行定制化开发，我们在设计Turms客户端与服务端的Protobuf传输模型时，都在这些模型上加上了`repeated Value custom_attributes = 15`字段，开发者根据自身业务场景，在客户端与服务端自行地、灵活地使用这些字段。
+
+Turms系统，包括所有Turms客户端与服务端，它们自身都不会去使用这些字段。
+
+提醒：在Turms系统的源码与接口中，我们为了区分各种各样的自定义属性，特别对下述特性的名称进行了区分：
+
+* Custom Attributes：特指Protobuf模型中自定义属性。
+* User Defined Attributes：特指存储模型（对应MongoDB的Collection）的自定义属性。
+* Properties：特指Turms服务端的属性配置。
+
 ## 关于任务难度
 
 对于准备基于Turms做二次开发（改Turms项目自身的源码）的团队，可以参考下述的任务难度表，给成员分配任务。
