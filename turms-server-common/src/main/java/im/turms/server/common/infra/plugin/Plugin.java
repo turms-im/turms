@@ -77,7 +77,8 @@ public abstract sealed class Plugin implements AutoCloseable permits JavaPlugin,
         return Mono.whenDelayError(startMonos)
                 .onErrorMap(t -> new RuntimeException(
                         "Caught errors while starting the extensions of the plugin: "
-                                + descriptor.getId()))
+                                + descriptor.getId(),
+                        t))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been started",
                                 descriptor.getId()));
@@ -134,7 +135,8 @@ public abstract sealed class Plugin implements AutoCloseable permits JavaPlugin,
         return Mono.whenDelayError(resumeMonos)
                 .onErrorMap(t -> new RuntimeException(
                         "Caught errors while resuming the extensions of the plugin: "
-                                + descriptor.getId()))
+                                + descriptor.getId(),
+                        t))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been resumed",
                                 descriptor.getId()));
@@ -153,7 +155,8 @@ public abstract sealed class Plugin implements AutoCloseable permits JavaPlugin,
         return Mono.whenDelayError(pauseMonos)
                 .onErrorMap(t -> new RuntimeException(
                         "Caught errors while pausing the extensions of the plugin: "
-                                + descriptor.getId()))
+                                + descriptor.getId(),
+                        t))
                 .doOnSuccess(
                         unused -> LOGGER.info("The extensions of the plugin ({}) have been paused",
                                 descriptor.getId()));

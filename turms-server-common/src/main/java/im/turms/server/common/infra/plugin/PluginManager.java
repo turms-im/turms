@@ -670,7 +670,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(startMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while starting plugins")))
+                        .error(new RuntimeException("Caught errors while starting plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -691,7 +691,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(stopMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while stopping plugins")))
+                        .error(new RuntimeException("Caught errors while stopping plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -703,7 +703,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(resumeMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while resuming plugins")))
+                        .error(new RuntimeException("Caught errors while resuming plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -715,7 +715,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(pauseMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while pausing plugins")))
+                        .error(new RuntimeException("Caught errors while pausing plugins", t)))
                 .thenReturn(plugins.size());
     }
 
