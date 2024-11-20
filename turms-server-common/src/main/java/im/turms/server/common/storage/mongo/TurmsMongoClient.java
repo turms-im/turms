@@ -58,6 +58,10 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return context.getEntities();
     }
 
+    public <T> MongoEntity<T> getEntity(Class<T> entityClass) {
+        return context.getEntity(entityClass);
+    }
+
     public static Mono<TurmsMongoClient> of(MongoProperties properties, String name) {
         return of(properties, name, Collections.emptySet());
     }
