@@ -4,10 +4,13 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
 
       - name: Init - Playground
         working-directory: './terraform/alicloud/playground'

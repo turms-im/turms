@@ -4,18 +4,18 @@ on: [ push, pull_request ]
 
 jobs:
   publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
 
       - name: Set up QEMU
         id: qemu
-        uses: docker/setup-qemu-action@v3.0.0
+        uses: docker/setup-qemu-action@v3.2.0
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3.0.0
+        uses: docker/setup-buildx-action@v3.7.1
 
       - name: Build turms-service image
         run: DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64,linux/arm64 --rm=false -t "ghcr.io/turms-im/turms-service:latest" -f turms-service/Dockerfile .
