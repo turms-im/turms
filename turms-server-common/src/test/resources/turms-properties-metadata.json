@@ -2264,6 +2264,18 @@
         "mutable": false,
         "sensitive": false,
         "type": "boolean"
+      },
+      "duplicateClassLoadStrategy": {
+        "deprecated": false,
+        "description": "The strategy to handle duplicate classes defined by both the Turms server and the plugin when loading classes by the plugin classloader",
+        "global": false,
+        "mutable": false,
+        "options": [
+          "THROW_EXCEPTION",
+          "PARENT_FIRST"
+        ],
+        "sensitive": false,
+        "type": "enum"
       }
     },
     "js": {

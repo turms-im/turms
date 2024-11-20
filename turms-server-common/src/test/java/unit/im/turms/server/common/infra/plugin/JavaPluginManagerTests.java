@@ -41,6 +41,8 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.plugin.TurmsExtension;
 import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.constant.DuplicateClassLoadStrategy;
+import im.turms.server.common.infra.property.env.common.plugin.JavaPluginProperties;
 import im.turms.server.common.infra.property.env.common.plugin.PluginProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -168,6 +170,10 @@ class JavaPluginManagerTests {
                 .plugin(new PluginProperties().toBuilder()
                         .enabled(true)
                         .dir(".")
+                        .java(new JavaPluginProperties().toBuilder()
+                                .duplicateClassLoadStrategy(
+                                        DuplicateClassLoadStrategy.THROW_EXCEPTION)
+                                .build())
                         .build())
                 .build());
 
