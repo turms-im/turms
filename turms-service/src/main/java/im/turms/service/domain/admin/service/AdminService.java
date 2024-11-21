@@ -62,6 +62,7 @@ import im.turms.service.domain.admin.repository.AdminRepository;
 import im.turms.service.storage.mongo.OperationResultPublisherPool;
 
 import static im.turms.server.common.domain.admin.constant.AdminConst.ADMIN_ROLE_ROOT_ID;
+import static im.turms.server.common.domain.admin.constant.AdminConst.ROOT_ADMIN_ID;
 import static im.turms.server.common.domain.admin.constant.AdminConst.ROOT_ADMIN_LOGIN_NAME;
 
 /**
@@ -172,7 +173,8 @@ public class AdminService extends BaseAdminService {
         }
         return checkIfAllowedToAddRolesToAdmins(requesterId,
                 roleIds,
-                requesterRank -> addAdmin(loginName,
+                requesterRank -> addAdmin(null,
+                        loginName,
                         rawPassword,
                         roleIds,
                         displayName,
@@ -225,6 +227,7 @@ public class AdminService extends BaseAdminService {
     }
 
     public Mono<Admin> addAdmin(
+            @Nullable Long id,
             @Nullable @NoWhitespace @Size(
                     min = MIN_LOGIN_NAME_LIMIT,
                     max = MAX_LOGIN_NAME_LIMIT) String loginName,
@@ -263,21 +266,25 @@ public class AdminService extends BaseAdminService {
         registrationDate = registrationDate == null
                 ? new Date()
                 : registrationDate;
-        Long id = node.nextLargeGapId(ServiceType.ADMIN);
+        if (id == null) {
+            id = node.nextLargeGapId(ServiceType.ADMIN);
+        }
         Admin admin = new Admin(id, loginName, password, displayName, roleIds, registrationDate);
         AdminInfo adminInfo = new AdminInfo(admin, rawPassword);
         Mono<Void> result = upsert
                 ? adminRepository.upsert(admin)
                         .then()
                 : adminRepository.insert(admin);
+        Long finalId = id;
         return result.then(Mono.fromCallable(() -> {
-            idToAdmin.put(id, adminInfo);
+            idToAdmin.put(finalId, adminInfo);
             return admin;
         }));
     }
 
     protected Mono<Admin> addRootAdmin() {
-        return addAdmin(ROOT_ADMIN_LOGIN_NAME,
+        return addAdmin(ROOT_ADMIN_ID,
+                ROOT_ADMIN_LOGIN_NAME,
                 propertiesManager.getLocalProperties()
                         .getSecurity()
                         .getPassword()
@@ -304,7 +311,7 @@ public class AdminService extends BaseAdminService {
             Validator.notNull(requesterId, "requesterId");
             Validator.notEmpty(adminIds, "adminIds");
             Validator.notContains(adminIds,
-                    ROOT_ADMIN_LOGIN_NAME,
+                    ROOT_ADMIN_ID,
                     "The root admin is reserved and cannot be deleted");
         } catch (ResponseException e) {
             return Mono.error(e);

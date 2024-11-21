@@ -32,6 +32,7 @@ import org.bson.BsonValue;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import im.turms.server.common.domain.admin.constant.AdminConst;
 import im.turms.server.common.domain.admin.po.Admin;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.collection.CollectorUtil;
@@ -124,31 +125,35 @@ public final class MongoCollectionMigrator {
     }
 
     private Pair<String, Admin> convertLegacyAdminRecord(BsonDocument doc, Set<Long> ids) {
-        long id;
-        do {
-            id = RandomUtil.nextPositiveLong();
-        } while (!ids.add(id));
         String oldRecordId = doc.getString(DomainFieldName.ID)
                 .getValue();
         BsonValue rawRoleIds = doc.get(Admin.Fields.ROLE_IDS);
-        Set<Long> roleIds;
-        if (rawRoleIds instanceof BsonInt64 rawRoleId) {
-            roleIds = Set.of(rawRoleId.getValue());
-        } else if (rawRoleIds instanceof BsonArray rawRoleIdList) {
-            if (rawRoleIdList.isEmpty()) {
-                throw new CorruptedDocumentException(
-                        "The admin must have at least one role. Admin ID: "
-                                + oldRecordId);
+        Set<Long> roleIds = switch (rawRoleIds) {
+            case BsonInt64 rawRoleId -> Set.of(rawRoleId.getValue());
+            case BsonArray rawRoleIdList -> {
+                if (rawRoleIdList.isEmpty()) {
+                    throw new CorruptedDocumentException(
+                            "The admin must have at least one role. Admin ID: "
+                                    + oldRecordId);
+                }
+                roleIds = CollectionUtil.newSetWithExpectedSize(rawRoleIdList.size());
+                for (BsonValue roleId : rawRoleIdList) {
+                    roleIds.add(roleId.asInt64()
+                            .getValue());
+                }
+                yield roleIds;
             }
-            roleIds = CollectionUtil.newSetWithExpectedSize(rawRoleIdList.size());
-            for (BsonValue roleId : rawRoleIdList) {
-                roleIds.add(roleId.asInt64()
-                        .getValue());
-            }
-        } else {
-            throw new CorruptedDocumentException(
+            default -> throw new CorruptedDocumentException(
                     "The admin must have at least one role. Admin ID: "
                             + oldRecordId);
+        };
+        long id;
+        if (roleIds.contains(AdminConst.ADMIN_ROLE_ROOT_ID)) {
+            id = AdminConst.ROOT_ADMIN_ID;
+        } else {
+            do {
+                id = RandomUtil.nextPositiveLong();
+            } while (!ids.add(id));
         }
         try {
             return Pair.of(oldRecordId,
