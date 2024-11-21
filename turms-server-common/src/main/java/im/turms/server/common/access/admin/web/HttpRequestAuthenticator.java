@@ -63,19 +63,19 @@ public class HttpRequestAuthenticator {
                                     + HttpHeaderNames.AUTHORIZATION
                                     + "\"")));
         }
-        return adminService.authenticate(credentials.first(), credentials.second())
-                .flatMap(id -> adminService
+        Mono<Long> authenticate =
+                adminService.authenticate(credentials.first(), credentials.second())
+                        .switchIfEmpty(UNAUTHENTICATED);
+        return permission == null
+                ? authenticate
+                : authenticate.flatMap(id -> adminService
                         .isAdminAuthorized(params, paramValues, id, permission.value())
-                        .flatMap(authorized -> {
-                            if (authorized) {
-                                return Mono.just(id);
-                            }
-                            return Mono.error(new HttpResponseException(
-                                    HttpHandlerResult
-                                            .unauthorized("Unauthorized to access the resource: "
-                                                    + permission.value())));
-                        }))
-                .switchIfEmpty(UNAUTHENTICATED);
+                        .flatMap(authorized -> authorized
+                                ? Mono.just(id)
+                                : Mono.error(new HttpResponseException(
+                                        HttpHandlerResult.unauthorized(
+                                                "Unauthorized to access the resource: "
+                                                        + permission.value())))));
     }
 
     @Nullable
