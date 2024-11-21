@@ -34,4 +34,4 @@
 
 尽管Turms没计划提供现成的压测报告，但我们近期会为Turms服务端定制一套分布式压测平台。该平台的UI展示与报告分析会由turms-admin负责，而节点管控与任务执行分别由turms-performance-testing中的Controller节点与Agent节点负责。
 
-特别一提的是：Turms之所以能快速定制与开发众多平台，也得益于我们在[基于Turms做二次开发的原因](https://turms-im.github.io/docs/zh-CN/server/development/redevelopment#%E5%9F%BA%E4%BA%8Eturms%E5%81%9A%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E7%9A%84%E5%8E%9F%E5%9B%A0)提到的“可控性。Turms项目100%开源，并对很多基础中间件进行了自研，保证了底层技术的可控，避免了项目后期发展动力不足”，因此我们做新项目不会受制于第三方依赖，动力十足。
+特别一提的是：Turms之所以能快速定制与开发众多平台，也得益于我们在[基于Turms做定制化开发的原因](https://turms-im.github.io/docs/zh-CN/server/development/customization#%E5%9F%BA%E4%BA%8Eturms%E5%81%9A%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E7%9A%84%E5%8E%9F%E5%9B%A0)提到的“可控性。Turms项目100%开源，并对很多基础中间件进行了自研，保证了底层技术的可控，避免了项目后期发展动力不足”，因此我们做新项目不会受制于第三方依赖，动力十足。

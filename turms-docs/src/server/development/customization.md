@@ -1,6 +1,6 @@
-# About Secondary Development
+# About Custom Development
 
-## Reasons for Secondary Development Based on Turms
+## Reasons for Custom Development Based on Turms
 
 ### Objective Reasons
 
@@ -8,7 +8,7 @@
 
 * Normative. Since the architecture design of Turms is a variant of the standard commercial instant messaging architecture, if your professional team is based on common commercial standards, the architecture designed by your team is similar to the current architecture of Turms, and there is no need to start from scratch. Zero self-development.
 
-* Simplicity. The entire architecture of Turms and the implementation of each module are actually relatively simple and lightweight, and the secondary development is not difficult.
+* Simplicity. The entire architecture of Turms and the implementation of each module are actually relatively simple and lightweight, and the custom development is not difficult.
 
 * Controllability. Turms is developed based on the Apache V2 protocol, 100% open source, and has self-developed many basic middleware, which ensures the controllability of the underlying technology and avoids insufficient development momentum in the later stage of the project.
 
@@ -44,7 +44,7 @@ In addition, if you are still hesitating whether to adopt other open source IM p
 
 * The core business of your project is related to instant messaging, or you have plans to further develop instant messaging business.
 * The extended functions required by your project are not currently available in Turms, especially the extended functions that need to be implemented through auxiliary index tables (for auxiliary index tables, please refer to [Turms Collection Design](https://turms-im.github.io/docs/design/schema)).
-* Your project has a large number of project-specific IM implementation details. Although Turms provides hundreds of configuration items, these are only general configurations. According to the specific business needs, the specific implementation of IM-related functions is extremely rich, but it is impossible for Turms to directly provide the realization of these relatively niche business functions, otherwise the amount of code will increase exponentially, so you need to do secondary development by yourself.
+* Your project has a large number of project-specific IM implementation details. Although Turms provides hundreds of configuration items, these are only general configurations. According to the specific business needs, the specific implementation of IM-related functions is extremely rich, but it is impossible for Turms to directly provide the realization of these relatively niche business functions, otherwise the amount of code will increase exponentially, so you need to do custom development.
 
 ## Project Import
 
@@ -94,9 +94,110 @@ Notes:
     * In the `dev` environment, turms-service will automatically generate fake data to the MongoDB database, and turms-gateway will also automatically create TCP-based fake clients, and these clients will randomly (random request type, random request parameters) send turms-gateway sends real client requests to facilitate testing by developers.
 * If you want to replace the port of the MongoDB server, you only need to globally replace `27017` with your target port under the Turms project.
 
+## Custom Attributes
+
+Developers using Turms often request a feature: the ability to add custom attributes to models such as users, groups, and relationships. This allows for various customized business functionalities, such as:
+
+- Adding information like `company`, `department`, and `email` to users, with support for custom attributes that can be queried by other users.
+- Allowing the current user to add custom `notes` for their contacts.
+- Sharing certain attributes for chat sessions across multiple devices, such as `pinning` and `new message notifications`.
+
+Although Turms is designed to focus solely on core instant messaging functionalities and we do not plan to provide direct support for the aforementioned relatively customized features, developers do not need to modify Turms' source code to implement these functionalities. Instead, they can configure the turms-service server to manage the logic for adding, deleting, updating, and querying these custom attributes.
+
+### User-Defined Attributes of the Model
+
+Used to add user-defined attributes to user and group models.
+
+#### turms-service Related Properties
+
+| Property                                                     | Description                                                  | Default Value |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| turms.service.user.info.user-defined-attributes              | Used to define user-defined attributes for the `User` model  |               |
+| turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert | Whether to ignore unknown attributes (i.e., attributes not declared in `turms.service.user.info.user-defined-attributes.allowed-attributes`) when upserting user-defined attributes on the turms-service server. If set to `false`, an error will be returned when a user attempts to insert an unknown attribute; if set to `true`, the turms-service will ignore the unknown user-defined attribute, will not return an error, and will continue processing other known user-defined attributes. | false         |
+| turms.service.user.info.user-defined-attributes.allowed-attributes | Specifies a set of user-defined attributes that the client is allowed to use. Note: This attribute is an array. |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].source-name | Specifies which key (field name) from the client's request in `userDefinedAttributes` to retrieve the user-defined attribute value. | ""            |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].stored-name | Specifies the field name to store the client request data in the database. If not specified, the source-name will be used as the field name. | ""            |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].immutable | Whether the value is immutable. If set to `true`, the user will not be able to modify the stored value. | false         |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.type | The type of the value. Possible types include: * INT: corresponds to MongoDB's `int` * LONG: corresponds to MongoDB's `long` * DOUBLE: corresponds to MongoDB's `double` * BOOL: corresponds to MongoDB's `bool` * STRING: corresponds to MongoDB's `string` * LANGUAGE: corresponds to MongoDB's `string` * ARRAY: corresponds to MongoDB's `array` |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.int-value.min | When the value type is `INT`, specifies the allowed minimum value (inclusive of min value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.int-value.max | When the value type is `INT`, specifies the allowed maximum value (inclusive of max value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.long-value.min | When the value type is `LONG`, specifies the allowed minimum value (inclusive of min value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.long-value.max | When the value type is `LONG`, specifies the allowed maximum value (inclusive of max value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.double-value.min | When the value type is `DOUBLE`, specifies the allowed minimum value (inclusive of min value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.double-value.max | When the value type is `DOUBLE`, specifies the allowed maximum value (inclusive of max value). |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.min-length | When the value type is `STRING`, specifies the allowed minimum string length (inclusive of min-length value). | 0             |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.max-length | When the value type is `STRING`, specifies the allowed maximum string length (inclusive of max-length value). | 100           |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.string-value.regexes[?] | When the value type is `STRING`, specifies the regular expressions used to validate the input string value. |               |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.min-element-count | When the value type is `ARRAY`, specifies the allowed minimum array length (inclusive of min-element-count value). | 0             |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.max-element-count | When the value type is `ARRAY`, specifies the allowed maximum array length (inclusive of max-element-count value). | 10            |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.unique | When the value type is `ARRAY`, whether to deduplicate the values in the array. | false         |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.allow-null-element | When the value type is `ARRAY`, whether to allow `null` values in the array. | false         |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.element | When the value type is `ARRAY`, specifies the type of elements in the array. |               |
+| turms.service.user.info.group-defined-attributes.allowed-attributes | Used to define user-defined attributes for the `Group` model. Since the usage of this attribute is identical to that of `turms.service.user.info.user-defined-attributes`, it will not be elaborated further. |               |
+
+**Note**: The Turms server currently only supports public user-defined attributes. In other words, any user has permission to query the user-defined attributes of all users and groups.
+
+#### Client-Related Interfaces
+
+* Update User User-defined Attributes Interface: `turmsClient.userService.updateProfile`
+* Update Group User-defined Attributes Interface: `turmsClient.groupService.updateGroup`
+
+For specific interface logic details, please refer to the interface documentation in the client SDK source code.
+
+### Custom Settings
+
+Some developer users wish for Turms to store custom user and session settings, such as user settings: `Client Language`, `UI Theme`, etc., and session settings: `Pin`, `New Message Notifications`, `Notes`, etc.
+
+#### turms-service Service Related Properties
+
+| Property                                                     | Description                                                  | Default Value |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------- |
+| turms.service.user.settings                                  | Used for custom user settings                                |               |
+| turms.service.user.settings.ignore-unknown-settings-on-upsert | Whether to ignore unknown settings (i.e., settings not declared in `turms.service.user.settings.allowed-settings`) when upserting custom settings on the turms-service server. If set to `false`, an error will be returned when a user attempts to insert an unknown setting; if set to `true`, the turms-service will ignore the unknown custom setting, will not return an error, and will continue processing other known custom settings. | false         |
+| turms.service.user.settings.ignore-unknown-settings-on-delete | Whether to ignore unknown settings (i.e., settings not declared in `turms.service.user.settings.allowed-settings`) when deleting custom settings on the turms-service server. If set to `false`, an error will be returned when a user attempts to delete an unknown setting; if set to `true`, the turms-service will ignore the unknown custom setting, will not return an error, and will continue processing other known custom settings. |               |
+| turms.service.user.settings.allowed-settings                 | Specifies a set of custom settings that the client is allowed to use.<br />Note: This attribute is an array. |               |
+| turms.service.user.settings.allowed-settings[?].source-name  | Specifies which key (field name) from the client's request in `settings` to retrieve the custom setting value. | ""            |
+| turms.service.user.settings.allowed-settings[?].stored-name  | Specifies the field name to store the client request data in the database. If not specified, the source-name will be used as the field name. | ""            |
+| turms.service.user.settings.allowed-settings[?].immutable    | Whether the value is immutable. If set to `true`, the user will not be able to modify the stored value. | false         |
+| turms.service.user.settings.allowed-settings[?].deletable    | Whether the value can be deleted. If set to `true`, the user can delete the stored value. | true          |
+| turms.service.user.settings.allowed-settings[?].value        | See the above `turms.service.user.info.user-defined-attributes.allowed-attributes[?].value`. |               |
+| turms.service.conversation.settings                          | Used for custom conversation settings.<br />Since the usage of this attribute is identical to that of `turms.service.user.settings`, it will not be elaborated further. |               |
+
+#### Client-Related Interfaces
+
+* User Custom Settings
+
+  * Upsert User Custom Settings Interface: `turmsClient.userService.upsertUserSettings`
+  * Delete User Custom Settings Interface: `turmsClient.userService.deleteUserSettings`
+  * Query User Custom Settings Interface: `turmsClient.userService.queryUserSettings`
+
+* Conversation Custom Settings
+
+  * Upsert Conversation Custom Settings Interface:
+    * `turmsClient.conversationService.upsertPrivateConversationSettings`
+    * `turmsClient.conversationService.upsertGroupConversationSettings`
+
+  * Delete Conversation Custom Settings Interface: `turmsClient.conversationService.deleteConversationSettings`
+
+  * Query Conversation Custom Settings Interface: `turmsClient.conversationService.queryConversationSettings`
+
+For specific interface logic details, please refer to the interface documentation in the client SDK source code.
+
+## Request and Response Model
+
+To facilitate developers in easily, quickly, and efficiently customizing Turms, we have added the `repeated Value custom_attributes = 15` field to the Protobuf transmission model for both the Turms client and server. Developers can flexibly use these fields according to their specific business scenarios on both the client and server sides.
+
+The Turms system, including all Turms clients and servers, will not use these fields itself.
+
+Note: In the source code and interfaces of the Turms system, we have made distinctions in the names of various custom attributes to clarify their meanings:
+
+* **Custom Attributes**: Specifically refers to custom attributes in the Protobuf model.
+* **User Defined Attributes**: Specifically refers to custom attributes in the storage model (corresponding to MongoDB's Collection).
+* **Properties**: Specifically refers to properties of the Turms server.
+
 ## About Task Difficulty
 
-For teams that are planning to do secondary development based on Turms (change the source code of the Turms project itself), you can refer to the task difficulty table below to assign tasks to members.
+For teams that are planning to do custom development based on Turms (change the source code of the Turms project itself), you can refer to the task difficulty table below to assign tasks to members.
 
 The difficulty value of the task ranges from 0 to 10, where:
 

@@ -1,6 +1,6 @@
-# 关于二次开发
+# 关于定制化开发
 
-## 基于Turms做二次开发的原因
+## 基于Turms做定制化开发的原因
 
 ### 客观原因
 
@@ -8,7 +8,7 @@
 
    * 规范性。由于Turms的架构设计是标准商用即时通讯架构的变种，因此如果您的专业团队是以常见的商用标准为要求，您的团队设计出来的架构也与Turms现在的架构相差不多的，没有必要另起炉灶从零自研。
 
-   * 简易性。Turms整个架构与各个模块的实现其实都比较简洁与轻量的，二次开发难度不高。
+   * 简易性。Turms整个架构与各个模块的实现其实都比较简洁与轻量的，定制化开发难度不高。
 
    * 可控性。Turms基于Apache V2协议进行开发，100%开源，并对很多基础中间件进行了自研，保证了底层技术的可控，避免了项目后期发展动力不足。
 
@@ -44,7 +44,7 @@
 
    * 您项目的核心业务与即时通讯相关，或者有深耕于即时通讯业务的计划。
    * 您项目所需要的拓展功能Turms目前暂未提供，尤其是需要通过辅助索引表来实现的拓展功能（关于辅助索引表，可查看[Turms集合设计](https://turms-im.github.io/docs/zh-CN/design/schema)）。
-   * 您项目存在大量项目独有的IM实现细节。Turms虽然提供了上百个配置项，但这些也只是普适的配置。根据具体业务需求的不同，IM相关功能的具体实现极其丰富，但Turms不可能直接提供这些相对小众业务功能的实现，否则代码量将会指数级增加，因此需要您自行做二次开发。
+   * 您项目存在大量项目独有的IM实现细节。Turms虽然提供了上百个配置项，但这些也只是普适的配置。根据具体业务需求的不同，IM相关功能的具体实现极其丰富，但Turms不可能直接提供这些相对小众业务功能的实现，否则代码量将会指数级增加，因此需要您自行做定制化开发。
 
 ## 项目引入
 
@@ -98,24 +98,24 @@ Turms服务端开发环境的搭建其实也非常简单，具体步骤包括：
 
 Turms的开发者用户经常会提出一类需求，即：希望Turms能够支持给用户、群组、关系等模型添加自定义的属性，以实现各种各样的定制化业务功能，如：
 
-* 需要给用户加上`所属公司`、`部门`、`邮箱`等信息，并且这些信息支持用户自定义，且支持其他用户查询。
+* 需要给用户加上`所属公司`、`部门`、`邮箱`等信息，并且这些信息支持自定义，且支持其他用户查询。
 * 需要实现当前用户能够给他的联系人添加自定义`备注（note）`。
 * 需要在多个设备之间，共享给聊天会话的一些属性配置，如`置顶`与`新消息提醒`。
 
 尽管在Turms的系统设计上，它只被允许实现即时通讯的核心功能，并且我们也无计划对上述相对定制化的功能提供直接支持，但实现上述功能，开发者用户其实并不需要修改Turms的源码，只需要对turms-service服务端进行配置，即可实现对这些自定义属性的增删改查逻辑。
 
-### 自定义模型属性
+### 模型的用户自定义属性（User-Defined Attributes）
 
-实现给用户与群组模型添加自定义的属性。
+用于给用户与群组模型添加用户自定义属性。
 
 #### turms-service服务相关属性
 
 | 属性                                                         | 作用                                                         | 默认值 |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
-| turms.service.user.info.user-defined-attributes              | 用于定义`用户`模型的自定义属性                               |        |
-| turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert | 在turms-service服务端upsert自定义属性时，是否忽略未知（即未在`turms.service.user.info.user-defined-attributes.allowed-attributes`声明的属性）。如果该值为`false`，则当用户请求插入未知属性时，响应错误；如果该值为`true`，则turms-service会忽略该自定义属性，并不会响应错误，并且继续处理其他已知自定义属性 | false  |
-| turms.service.user.info.user-defined-attributes.allowed-attributes | 指定一组允许客户端使用的自定义属性。<br />注意：该属性是一个数组 |        |
-| turms.service.user.info.user-defined-attributes.allowed-attributes[?].source-name | 指定从客户端请求中的`userDefinedAttributes`的哪个键（字段名）获取自定义属性值 | ""     |
+| turms.service.user.info.user-defined-attributes              | 用于定义`用户`模型的用户自定义属性                           |        |
+| turms.service.user.info.user-defined-attributes.ignore-unknown-attributes-on-upsert | 在turms-service服务端upsert用户自定义属性时，是否忽略未知（即未在`turms.service.user.info.user-defined-attributes.allowed-attributes`声明的属性）。如果该值为`false`，则当用户请求插入未知属性时，响应错误；如果该值为`true`，则turms-service会忽略该用户自定义属性，并不会响应错误，并且继续处理其他已知用户自定义属性 | false  |
+| turms.service.user.info.user-defined-attributes.allowed-attributes | 指定一组允许客户端使用的用户自定义属性。<br />注意：该属性是一个数组 |        |
+| turms.service.user.info.user-defined-attributes.allowed-attributes[?].source-name | 指定从客户端请求中的`userDefinedAttributes`的哪个键（字段名）获取用户自定义属性值 | ""     |
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].stored-name | 指定将客户端请求数据存储在数据库时的字段名。如果未指定该值，则使用source-name作为字段名 | ""     |
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].immutable | 是否该值不可变。如果为`true`，则用户将无法修改已经存储的值   | false  |
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.type | 值的类型。可以是下述类型：<br />* INT：对应MongoDB的`int`<br />* LONG：对应MongoDB的`long`<br />* DOUBLE：对应MongoDB的`double`<br />* BOOL：对应MongoDB的`bool`<br />* STRING：对应MongoDB的`string`<br />* LANGUAGE：对应MongoDB的`string`<br />* ARRAY：对应MongoDB的`array` |        |
@@ -133,9 +133,9 @@ Turms的开发者用户经常会提出一类需求，即：希望Turms能够支�
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.unique | 当值类型为`ARRAY`时，是否对数组的值进行去重                  | false  |
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.allow-null-element | 当值类型为`ARRAY`时，是否允许数组中包含`null`值              | false  |
 | turms.service.user.info.user-defined-attributes.allowed-attributes[?].value.array-value.element | 当值类型为`ARRAY`时，指定数组的元素类型                      |        |
-| turms.service.user.info.group-defined-attributes.allowed-attributes | 用于定义`群组`模型的自定义属性。<br />由于该属性的用法与上述的`turms.service.user.info.user-defined-attributes`的用法完全一致，故不赘述 |        |
+| turms.service.user.info.group-defined-attributes.allowed-attributes | 用于定义`群组`模型的用户自定义属性。<br />由于该属性的用法与上述的`turms.service.user.info.user-defined-attributes`的用法完全一致，故不赘述 |        |
 
-注意：Turms服务端目前只支持公开的自定义属性。换言之，任何用户都有权限查询所有用户与群组的自定义属性。
+注意：Turms服务端目前只支持公开的用户自定义属性。换言之，任何用户都有权限查询所有用户与群组的用户自定义属性。
 
 #### 客户端相关接口
 
@@ -144,7 +144,7 @@ Turms的开发者用户经常会提出一类需求，即：希望Turms能够支�
 
 关于具体的接口逻辑细节，请阅读客户端SDK源码中的接口说明。
 
-### 自定义配置
+### 自定义配置（Custom Settings）
 
 一些开发者用户希望Turms能够存储自定义的用户与会话配置，如用户配置：`客户端语言`、`UI主题`等，如会话配置：`置顶`、`新消息提醒`、`备注`等。
 
@@ -197,7 +197,7 @@ Turms系统，包括所有Turms客户端与服务端，它们自身都不会去�
 
 ## 关于任务难度
 
-对于准备基于Turms做二次开发（改Turms项目自身的源码）的团队，可以参考下述的任务难度表，给成员分配任务。
+对于准备基于Turms做定制化开发（改Turms项目自身的源码）的团队，可以参考下述的任务难度表，给成员分配任务。
 
 任务的难度值为0~10，其中：
 
