@@ -17,8 +17,10 @@
 
 package im.turms.service.domain.conversation.repository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import jakarta.annotation.Nullable;
 
@@ -55,7 +57,7 @@ public class ConversationSettingsRepository extends BaseRepository<ConversationS
             Long ownerId,
             Long targetId,
             Map<String, Object> settings) {
-        Filter filter = Filter.newBuilder(2)
+        Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID, new ConversationSettings.Key(ownerId, targetId));
         Update update = Update.newBuilder(settings.size() + 1)
                 .set(ConversationSettings.Fields.LAST_UPDATED_DATE, new Date());
@@ -76,8 +78,12 @@ public class ConversationSettingsRepository extends BaseRepository<ConversationS
             filter = Filter.newBuilder(1)
                     .eq(ConversationSettings.Fields.ID_OWNER_ID, ownerId);
         } else {
+            List<ConversationSettings.Key> keys = new ArrayList<>(targetIds.size());
+            for (Long targetId : targetIds) {
+                keys.add(new ConversationSettings.Key(ownerId, targetId));
+            }
             filter = Filter.newBuilder(1)
-                    .in(DomainFieldName.ID, targetIds);
+                    .in(DomainFieldName.ID, keys);
         }
         Update update = Update.newBuilder(1)
                 .set(ConversationSettings.Fields.LAST_UPDATED_DATE, new Date());
@@ -90,7 +96,7 @@ public class ConversationSettingsRepository extends BaseRepository<ConversationS
                         + settingName);
             }
         }
-        return mongoClient.updateOne(entityClass, filter, update);
+        return mongoClient.updateMany(entityClass, filter, update);
     }
 
     public Flux<ConversationSettings> findByIdAndSettingNames(
