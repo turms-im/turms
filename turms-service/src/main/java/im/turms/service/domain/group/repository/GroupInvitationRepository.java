@@ -137,7 +137,9 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupInvitation.Fields.GROUP_ID,
                         GroupInvitation.Fields.INVITEE_ID,
-                        GroupInvitation.Fields.STATUS);
+                        GroupInvitation.Fields.STATUS,
+                        // Required by findExpirableDoc
+                        GroupInvitation.Fields.CREATION_DATE);
         return findExpirableDoc(filter, options);
     }
 
@@ -148,7 +150,9 @@ public class GroupInvitationRepository extends ExpirableEntityRepository<GroupIn
                 .include(GroupInvitation.Fields.GROUP_ID,
                         GroupInvitation.Fields.INVITER_ID,
                         GroupInvitation.Fields.INVITEE_ID,
-                        GroupInvitation.Fields.STATUS);
+                        GroupInvitation.Fields.STATUS,
+                        // Required by findExpirableDoc
+                        GroupInvitation.Fields.CREATION_DATE);
         return findExpirableDoc(filter, options);
     }
 

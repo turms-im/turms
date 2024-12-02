@@ -147,7 +147,9 @@ public class GroupJoinRequestRepository extends ExpirableEntityRepository<GroupJ
         QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupJoinRequest.Fields.REQUESTER_ID,
                         GroupJoinRequest.Fields.STATUS,
-                        GroupJoinRequest.Fields.GROUP_ID);
+                        GroupJoinRequest.Fields.GROUP_ID,
+                        // Required by findExpirableDoc
+                        GroupJoinRequest.Fields.CREATION_DATE);
         return findExpirableDoc(filter, options);
     }
 
