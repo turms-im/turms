@@ -177,7 +177,7 @@ public class GroupVersionService extends BaseService {
         }
         GroupVersion version =
                 new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp);
-        return groupVersionRepository.insert(version)
+        return groupVersionRepository.upsert(version)
                 .thenReturn(version);
     }
 
