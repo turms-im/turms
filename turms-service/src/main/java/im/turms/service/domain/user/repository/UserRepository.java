@@ -117,8 +117,14 @@ public class UserRepository extends BaseRepository<User, Long> {
     }
 
     public Mono<Long> countDeletedUsers(@Nullable DateRange dateRange) {
-        Filter filter = Filter.newBuilder(2)
-                .addBetweenIfNotNull(User.Fields.DELETION_DATE, dateRange);
+        Filter filter;
+        if (DateRange.hasDate(dateRange)) {
+            filter = Filter.newBuilder(2)
+                    .addBetweenIfNotNull(User.Fields.DELETION_DATE, dateRange);
+        } else {
+            filter = Filter.newBuilder(1)
+                    .ne(User.Fields.DELETION_DATE, null);
+        }
         return mongoClient.count(entityClass, filter);
     }
 

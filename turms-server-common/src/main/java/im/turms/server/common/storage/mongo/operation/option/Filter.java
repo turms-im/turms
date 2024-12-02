@@ -63,14 +63,16 @@ public class Filter extends BaseBson {
             @NotNull String key,
             @Nullable Date start,
             @Nullable Date end) {
-        if (start != null && end == null) {
-            document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
-        } else if (start == null && end != null) {
+        if (start != null) {
+            if (end == null) {
+                document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
+            } else {
+                document.append(key,
+                        new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
+                                .append("$lt", new BsonDateTime(end.getTime())));
+            }
+        } else if (end != null) {
             document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
-        } else if (start != null) {
-            document.append(key,
-                    new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
-                            .append("$lt", new BsonDateTime(end.getTime())));
         }
         return this;
     }

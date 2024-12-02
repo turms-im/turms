@@ -24,8 +24,8 @@ import jakarta.annotation.Nullable;
  * @author James Chen
  */
 public record DateRange(
-        Date start,
-        Date end
+        @Nullable Date start,
+        @Nullable Date end
 ) {
 
     public static final DateRange NULL = new DateRange(null, null);
@@ -37,13 +37,17 @@ public record DateRange(
     }
 
     @Nullable
-    public static DateRange of(Date start, Date end) {
+    public static DateRange of(@Nullable Date start, @Nullable Date end) {
         return start == null && end == null
                 ? null
                 : new DateRange(start, end);
     }
 
-    public DateRange intersect(DateRange range) {
+    public static boolean hasDate(@Nullable DateRange range) {
+        return range != null && (range.start != null || range.end != null);
+    }
+
+    public DateRange intersect(@Nullable DateRange range) {
         return range == null || equals(range)
                 ? this
                 : new DateRange(DateUtil.max(start, range.start()), DateUtil.min(end, range.end()));
@@ -58,5 +62,4 @@ public record DateRange(
                 : new Date(end.getTime() + millis);
         return new DateRange(newStart, newEnd);
     }
-
 }
