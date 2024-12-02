@@ -333,7 +333,7 @@ public class UserRelationshipGroupService extends BaseService {
                 });
     }
 
-    public Mono<Void> deleteRelationshipGroupAndMoveMembers(
+    public Mono<Void> deleteRelationshipGroupAndMoveMembersToNewGroup(
             @NotNull Long ownerId,
             @NotNull Integer deleteGroupIndex,
             @NotNull Integer newGroupIndex) {
@@ -372,6 +372,8 @@ public class UserRelationshipGroupService extends BaseService {
                     return userRelationshipGroupMemberRepository.insertAllOfSameType(newMembers)
                             .onErrorComplete(DuplicateKeyException.class);
                 })
+                .then(userRelationshipGroupMemberRepository
+                        .deleteAllRelatedUserFromRelationshipGroup(ownerId, deleteGroupIndex))
                 .then(userRelationshipGroupRepository
                         .deleteById(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)))
                 .then(userVersionService.updateRelationshipGroupsVersion(ownerId)

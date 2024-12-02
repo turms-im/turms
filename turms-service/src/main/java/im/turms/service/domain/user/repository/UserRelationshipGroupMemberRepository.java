@@ -46,6 +46,15 @@ public class UserRelationshipGroupMemberRepository
         super(mongoClient, UserRelationshipGroupMember.class);
     }
 
+    public Mono<DeleteResult> deleteAllRelatedUserFromRelationshipGroup(
+            Long ownerId,
+            Integer groupIndex) {
+        Filter filter = Filter.newBuilder(2)
+                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
+        return mongoClient.deleteMany(null, entityClass, filter);
+    }
+
     public Mono<DeleteResult> deleteRelatedUserFromRelationshipGroup(
             Long ownerId,
             Long relatedUserId,
@@ -132,5 +141,4 @@ public class UserRelationshipGroupMemberRepository
                 .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
         return mongoClient.findMany(entityClass, filterMember);
     }
-
 }
