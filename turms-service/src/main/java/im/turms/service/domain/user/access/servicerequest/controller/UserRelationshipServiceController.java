@@ -573,23 +573,30 @@ public class UserRelationshipServiceController extends BaseServiceController {
             Mono<UpdateResult> updateRelationshipGroup = userRelationshipGroupService
                     .updateRelationshipGroupName(ownerId, groupIndex, request.getNewName());
             if (notifyRelationshipGroupMembersOfOneSidedRelationshipGroupUpdated) {
-                Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
-                return userRelationshipGroupService
-                        .queryRelationshipGroupMemberIds(ownerId, groupIndex)
-                        .collect(Collectors.toCollection(recyclableSet::getValue))
-                        .map(memberIds -> memberIds.isEmpty()
-                                ? RequestHandlerResult.of(
-                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                                        clientRequest.turmsRequest())
-                                : RequestHandlerResult.of(
-                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                                        CollectionUtil.newSet(memberIds),
-                                        clientRequest.turmsRequest()))
-                        .doFinally(signalType -> recyclableSet.recycle());
+                return updateRelationshipGroup.flatMap(result -> {
+                    if (result.getModifiedCount() == 0) {
+                        return Mono.just(RequestHandlerResult.OK);
+                    }
+                    Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
+                    return userRelationshipGroupService
+                            .queryRelationshipGroupMemberIds(ownerId, groupIndex)
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
+                            .map(memberIds -> memberIds.isEmpty()
+                                    ? RequestHandlerResult.of(
+                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                                            clientRequest.turmsRequest())
+                                    : RequestHandlerResult.of(
+                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                                            CollectionUtil.newSet(memberIds),
+                                            clientRequest.turmsRequest()))
+                            .doFinally(signalType -> recyclableSet.recycle());
+                });
             }
-            return updateRelationshipGroup.thenReturn(RequestHandlerResult.of(
-                    notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                    clientRequest.turmsRequest()));
+            return updateRelationshipGroup.map(result -> result.getModifiedCount() == 0
+                    ? RequestHandlerResult.OK
+                    : RequestHandlerResult.of(
+                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                            clientRequest.turmsRequest()));
         };
     }
 
