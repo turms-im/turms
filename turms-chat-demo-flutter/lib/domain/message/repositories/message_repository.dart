@@ -84,7 +84,6 @@ class MessageRepository {
           MessageType messageType) =>
       MessageTableCompanion.insert(
         id: messageId,
-        // groupId: groupId == null ? const Value.absent() : Value(groupId),
         isGroupMessage: isGroupMessage,
         contactId: contactId,
         senderId: senderId,

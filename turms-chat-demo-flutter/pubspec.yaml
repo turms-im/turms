@@ -149,8 +149,6 @@ dev_dependencies:
     sdk: flutter
   #  matcher: ^0.12.16
   #  mockito: ^5.4.2
-  # Flutter
-  # TODO: Wait for Linux support: https://github.com/flutter/flutter/issues/73740
   integration_test:
     sdk: flutter
   riverpod_lint: ^2.3.13
