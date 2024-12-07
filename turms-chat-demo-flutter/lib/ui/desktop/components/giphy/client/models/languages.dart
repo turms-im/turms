@@ -1,0 +1,34 @@
+class GiphyLanguage {
+  static const bengali = 'bn';
+  static const chineseSimplified = 'zh-CN';
+  static const chineseTraditional = 'zh-TW';
+  static const czech = 'cs';
+  static const english = 'en';
+  static const spanish = 'es';
+  static const portuguese = 'pt';
+  static const indonesian = 'id';
+  static const french = 'fr';
+  static const arabic = 'ar';
+  static const turkish = 'tr';
+  static const thai = 'th';
+  static const vietnamese = 'vi';
+  static const german = 'de';
+  static const italian = 'it';
+  static const japanese = 'ja';
+  static const russian = 'ru';
+  static const korean = 'ko';
+  static const polish = 'pl';
+  static const dutch = 'nl';
+  static const romanian = 'ro';
+  static const hungarian = 'hu';
+  static const swedish = 'sv';
+  static const hindi = 'hi';
+  static const danish = 'da';
+  static const farsi = 'fa';
+  static const filipino = 'tl';
+  static const finnish = 'fi';
+  static const hebrew = 'iw';
+  static const malay = 'ms';
+  static const norwegian = 'no';
+  static const ukrainian = 'uk';
+}
