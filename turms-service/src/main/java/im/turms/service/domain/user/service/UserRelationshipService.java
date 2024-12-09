@@ -423,8 +423,8 @@ public class UserRelationshipService extends BaseService {
             Mono<List<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
                     .collect(Collectors.toCollection(recyclableList2::getValue));
             return Mono.zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
-                    .flatMapMany(tuple -> Flux
-                            .fromIterable(CollectionUtil.newSet(tuple.getT1(), tuple.getT2())))
+                    .flatMapMany(tuple -> Flux.fromIterable(
+                            CollectionUtil.newSetIntersection(tuple.getT1(), tuple.getT2())))
                     .doFinally(signalType -> {
                         recyclableList1.recycle();
                         recyclableList2.recycle();
