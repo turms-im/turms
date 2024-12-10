@@ -63,8 +63,19 @@ gen-env-vars:
 gen-l10n:
     fvm flutter gen-l10n
 
+[windows]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=windows
+
+[linux]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=linux
+
+[macos]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=macos
+
 gen-icons:
-    dart tool/gen_icons.dart
     fvm dart run flutter_launcher_icons:main
 
 ##
