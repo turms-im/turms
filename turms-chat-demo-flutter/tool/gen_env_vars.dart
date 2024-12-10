@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:turms_chat_demo/infra/built_in_types/built_in_type_helpers.dart';
 
 Future<void> generateEnvFile() async {
-  final envFile = File('.env');
+  final currentDir = Directory.current;
+  final baseDir =
+      (currentDir.path.endsWith('tool') ? currentDir.parent : currentDir).path;
+  final envFile = File('$baseDir/.env');
   final lines = envFile.readAsLinesSync();
 
   final code = StringBuffer()
@@ -32,7 +35,7 @@ Future<void> generateEnvFile() async {
     }
   }
   code.write('}');
-  final file = File('./lib/infra/env/env_vars.dart');
+  final file = File('$baseDir/lib/infra/env/env_vars.dart');
   await file.create(recursive: true);
   await file.writeAsString(code.toString());
   print('Generated the environment variables file: ${file.absolute.path}');
