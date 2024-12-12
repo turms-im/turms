@@ -83,12 +83,21 @@ class _ChatSessionPaneFooterState extends ConsumerState<ChatSessionPaneFooter> {
         if (currentConversation != null) {
           final previousDraft = currentConversation.draft;
           final draft = _getEditorDocument();
-          if (draft.isNotEmpty && draft != previousDraft) {
-            currentConversation.draft = draft;
+          if (draft.isEmpty) {
+            if (previousDraft != null) {
+              currentConversation.draft = null;
+              ref
+                  .read(selectedConversationViewModel.notifier)
+                  .notifyListeners();
+            }
           } else {
-            currentConversation.draft = null;
+            if (draft != previousDraft) {
+              currentConversation.draft = draft;
+              ref
+                  .read(selectedConversationViewModel.notifier)
+                  .notifyListeners();
+            }
           }
-          ref.read(selectedConversationViewModel.notifier).notifyListeners();
         }
         final currentDraft = newConversation?.draft;
         if (currentDraft?.isBlank ?? true) {
