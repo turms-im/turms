@@ -127,6 +127,9 @@ public class MessageService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
 
+    private static final Mono<MessageAndRecipientIds> ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE =
+            Mono.error(ResponseException.get(NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE));
+
     private static final Method GET_MESSAGES_TO_DELETE_METHOD;
 
     private final MessageRepository messageRepository;
@@ -1268,8 +1271,7 @@ public class MessageService extends BaseService {
                 message.getTargetId(),
                 message.getSenderId()).flatMap(isMessageRecipientOrSender -> {
                     if (!isMessageRecipientOrSender) {
-                        return Mono.error(ResponseException
-                                .get(NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE));
+                        return ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE;
                     }
                     return authAndSaveMessage(queryRecipientIds,
                             null,
@@ -1282,10 +1284,13 @@ public class MessageService extends BaseService {
                             message.getText(),
                             message.getRecords(),
                             message.getBurnAfter(),
-                            message.getDeliveryDate(),
+                            null,
                             referenceId,
                             null);
-                }));
+                }))
+                // We should not tell the client that the message was not found.
+                // Otherwise, the user can check if any message exists or not.
+                .switchIfEmpty(ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE);
     }
 
     public Mono<MessageAndRecipientIds> cloneAndSaveMessage(
