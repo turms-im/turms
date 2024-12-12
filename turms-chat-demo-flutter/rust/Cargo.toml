@@ -7,8 +7,8 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "=2.6.0"
+flutter_rust_bridge = "=2.7.0"
 image = "0.25.5"
-sysinfo = "0.32.0"
+sysinfo = "0.33.0"
 icu_collator = "1.5.0"
 icu_locid = "1.5.0"
