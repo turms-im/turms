@@ -46,6 +46,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     required this.tileBackgroundHoveredColor,
     required this.tileBackgroundFocusedColor,
     required this.conversationTileMessageTextStyle,
+    required this.conversationTileDraftTextStyle,
     required this.conversationTileHighlightedTextStyle,
     required this.conversationTileTimestampTextStyle,
     required this.messageAttachmentColor,
@@ -136,6 +137,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
         color: AppColors.gray7,
         fontSize: 12,
       ),
+      conversationTileDraftTextStyle: const TextStyle(color: Colors.red),
       conversationTileHighlightedTextStyle:
           TextStyle(backgroundColor: AppColors.primary.withValues(alpha: 0.3)),
       conversationTileTimestampTextStyle:
@@ -224,6 +226,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   final Color tileBackgroundFocusedColor;
 
   final TextStyle conversationTileMessageTextStyle;
+  final TextStyle conversationTileDraftTextStyle;
   final TextStyle conversationTileHighlightedTextStyle;
   final TextStyle conversationTileTimestampTextStyle;
 
@@ -283,6 +286,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     Color? tileBackgroundHoveredColor,
     Color? tileBackgroundFocusedColor,
     TextStyle? conversationTileMessageTextStyle,
+    TextStyle? conversationTileDraftTextStyle,
     TextStyle? conversationTileHighlightedTextStyle,
     TextStyle? conversationTileTimestampTextStyle,
     Color? messageAttachmentColor,
@@ -357,6 +361,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
             tileBackgroundFocusedColor ?? this.tileBackgroundFocusedColor,
         conversationTileMessageTextStyle: conversationTileMessageTextStyle ??
             this.conversationTileMessageTextStyle,
+        conversationTileDraftTextStyle: conversationTileDraftTextStyle ??
+            this.conversationTileDraftTextStyle,
         conversationTileHighlightedTextStyle:
             conversationTileHighlightedTextStyle ??
                 this.conversationTileHighlightedTextStyle,
@@ -472,6 +478,10 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       conversationTileMessageTextStyle: TextStyle.lerp(
           conversationTileMessageTextStyle,
           other.conversationTileMessageTextStyle,
+          t)!,
+      conversationTileDraftTextStyle: TextStyle.lerp(
+          conversationTileDraftTextStyle,
+          other.conversationTileDraftTextStyle,
           t)!,
       conversationTileHighlightedTextStyle: TextStyle.lerp(
           conversationTileHighlightedTextStyle,

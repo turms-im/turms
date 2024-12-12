@@ -298,9 +298,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             TextSpan(
                 text: '[${localizations.draft}]',
                 style: _useBoldText
-                    ? appThemeExtension.conversationTileHighlightedTextStyle
+                    ? appThemeExtension.conversationTileDraftTextStyle
                         .copyWith(fontWeight: _fontWeightBold)
-                    : appThemeExtension.conversationTileHighlightedTextStyle),
+                    : appThemeExtension.conversationTileDraftTextStyle),
             TextSpan(text: draft),
           ]
         : latestMessage == null
