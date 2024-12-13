@@ -8,6 +8,8 @@ import '../desktop/components/t_list_tile/t_list_tile.dart';
 class Sizes {
   const Sizes._();
 
+  static const unit = 2;
+
   // Space
   static const paddingH1 = EdgeInsets.symmetric(horizontal: 1);
   static const paddingV2 = EdgeInsets.symmetric(vertical: 2);

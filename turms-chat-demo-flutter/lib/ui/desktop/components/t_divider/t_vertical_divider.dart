@@ -61,7 +61,9 @@ class _TMovableVerticalDividerState extends State<TMovableVerticalDivider> {
         setState(() {});
       },
       onPointerMove: (event) {
-        final delta = event.position.dx - _dxOnPointerDown;
+        final delta = ((event.position.dx - _dxOnPointerDown) / Sizes.unit)
+                .floorToDouble() *
+            Sizes.unit;
         widget.onMoved(delta);
       },
       child: MouseRegion(

@@ -55,7 +55,9 @@ class _TMovableHorizontalDividerState extends State<TMovableHorizontalDivider> {
         setState(() {});
       },
       onPointerMove: (event) {
-        final delta = event.position.dy - _dyOnPointerDown;
+        final delta = ((event.position.dy - _dyOnPointerDown) / Sizes.unit)
+                .floorToDouble() *
+            Sizes.unit;
         widget.onMoved(delta);
       },
       child: MouseRegion(
