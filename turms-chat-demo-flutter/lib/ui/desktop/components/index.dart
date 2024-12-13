@@ -17,6 +17,7 @@ export 't_divider/t_vertical_divider.dart';
 export 't_drawer/t_drawer.dart';
 export 't_empty/t_empty.dart';
 export 't_empty/t_empty_result.dart';
+export 't_floating/t_floating.dart';
 export 't_focus_tracker/t_focus_tracker.dart';
 export 't_form/t_form.dart';
 export 't_image/t_image_broken.dart';
