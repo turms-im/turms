@@ -84,6 +84,8 @@ class Sizes {
   static const chatSessionPaneFooterHeight = 240.0;
   static const chatSessionPaneFooterMinHeight = 128.0;
   static const chatSessionPaneFooterMaxHeight = 512.0;
+  static const chatSessionDetailsDrawerWidth = subNavigationRailWidth;
+
   static const chatHistoryDialogWidth = 696.0;
   static const chatHistoryDialogHeight = 640.0;
 

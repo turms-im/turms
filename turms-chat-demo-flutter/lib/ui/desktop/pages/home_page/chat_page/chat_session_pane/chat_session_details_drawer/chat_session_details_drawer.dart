@@ -36,7 +36,7 @@ class ChatSessionDetailsDrawer extends StatelessWidget {
     final theme = context.theme;
     final appThemeExtension = theme.appThemeExtension;
     return SizedBox(
-      width: Sizes.subNavigationRailWidth,
+      width: Sizes.chatSessionDetailsDrawerWidth,
       height: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
