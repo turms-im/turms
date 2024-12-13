@@ -88,7 +88,7 @@ class _ChatSessionPaneFooter extends StatefulWidget {
 }
 
 class _ChatSessionPaneFooterState extends State<_ChatSessionPaneFooter> {
-  double _height = 240.0;
+  double _height = Sizes.chatSessionPaneFooterHeight;
   double _heightOnPointDown = 0;
 
   @override
@@ -100,8 +100,10 @@ class _ChatSessionPaneFooterState extends State<_ChatSessionPaneFooter> {
               _heightOnPointDown = _height;
             },
             onMoved: (delta) {
-              final newHeight =
-                  (_heightOnPointDown - delta).clamp(130, 500).roundToDouble();
+              final newHeight = (_heightOnPointDown - delta)
+                  .clamp(Sizes.chatSessionPaneFooterMinHeight,
+                      Sizes.chatSessionPaneFooterMaxHeight)
+                  .roundToDouble();
               if (newHeight != _height) {
                 _height = newHeight;
                 setState(() {});
