@@ -56,41 +56,44 @@ class _ContactProfilePageState extends ConsumerState<ContactProfilePage> {
             width: 300,
             child: Column(
               children: [
-                Row(
-                  spacing: 16,
-                  children: [
-                    TAvatar(
-                      id: selectedContact.id,
-                      name: selectedContact.name,
-                      image: selectedContact.image,
-                      icon: selectedContact.icon,
-                      size: TAvatarSize.large,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: Sizes.paddingV4,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              selectedContact.name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              softWrap: false,
-                            ),
-                            // TODO: Add more details
-                            if (selectedContact is UserContact)
-                              Text(
-                                  '${appLocalizations.userId}: ${selectedContact.userId}')
-                            else if (selectedContact is GroupContact)
-                              Text(
-                                  '${appLocalizations.groupId}: ${selectedContact.groupId}')
-                          ],
-                        ),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 16,
+                    children: [
+                      TAvatar(
+                        id: selectedContact.id,
+                        name: selectedContact.name,
+                        image: selectedContact.image,
+                        icon: selectedContact.icon,
+                        size: TAvatarSize.large,
                       ),
-                    )
-                  ],
+                      Expanded(
+                        child: Padding(
+                          padding: Sizes.paddingV2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                selectedContact.name,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: false,
+                              ),
+                              // TODO: Add more details
+                              if (selectedContact is UserContact)
+                                Text(
+                                    '${appLocalizations.userId}: ${selectedContact.userId}')
+                              else if (selectedContact is GroupContact)
+                                Text(
+                                    '${appLocalizations.groupId}: ${selectedContact.groupId}')
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 if (intro.isNotBlank) ...[
                   const SizedBox(
