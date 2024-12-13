@@ -112,8 +112,12 @@ build-release:
     fvm flutter build macos --release
 
 ##
-# Lint
+# Code Format
 ##
 
-lint:
+analyze:
     fvm flutter analyze
+
+lint:
+    fvm dart fix --apply
+    fvm dart format .
