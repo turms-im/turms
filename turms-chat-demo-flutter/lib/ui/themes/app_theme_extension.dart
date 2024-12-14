@@ -30,6 +30,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     required this.menuItemTextStyle,
     required this.popupDecoration,
     required this.tabTextStyle,
+    required this.textFieldHintTextStyle,
     required this.toastDecoration,
     required this.homePageBackgroundColor,
     required this.mainNavigationRailBackgroundColor,
@@ -99,6 +100,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
           borderRadius: Sizes.borderRadiusCircular4,
           boxShadow: Styles.boxShadow),
       tabTextStyle: const TextStyle(color: Color.fromARGB(255, 89, 89, 89)),
+      textFieldHintTextStyle: TextStyle(color: Colors.grey.shade600),
       toastDecoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: Sizes.borderRadiusCircular8,
@@ -205,6 +207,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
 
   final TextStyle tabTextStyle;
 
+  final TextStyle textFieldHintTextStyle;
+
   final BoxDecoration toastDecoration;
 
   // Page colors/styles
@@ -270,6 +274,7 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     TextStyle? menuItemTextStyle,
     BoxDecoration? popupDecoration,
     TextStyle? tabTextStyle,
+    TextStyle? textFieldHintTextStyle,
     BoxDecoration? toastDecoration,
     Color? homePageBackgroundColor,
     Color? mainNavigationRailBackgroundColor,
@@ -327,6 +332,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
         menuItemTextStyle: menuItemTextStyle ?? this.menuItemTextStyle,
         popupDecoration: popupDecoration ?? this.popupDecoration,
         tabTextStyle: tabTextStyle ?? this.tabTextStyle,
+        textFieldHintTextStyle:
+            textFieldHintTextStyle ?? this.textFieldHintTextStyle,
         toastDecoration: toastDecoration ?? this.toastDecoration,
         homePageBackgroundColor:
             homePageBackgroundColor ?? this.homePageBackgroundColor,
@@ -435,6 +442,8 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       popupDecoration:
           BoxDecoration.lerp(popupDecoration, other.popupDecoration, t)!,
       tabTextStyle: TextStyle.lerp(tabTextStyle, other.tabTextStyle, t)!,
+      textFieldHintTextStyle: TextStyle.lerp(
+          textFieldHintTextStyle, other.textFieldHintTextStyle, t)!,
       toastDecoration:
           BoxDecoration.lerp(toastDecoration, other.toastDecoration, t)!,
       homePageBackgroundColor: Color.lerp(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../themes/app_theme_extension.dart';
 import '../t_text_field/t_text_field.dart';
 
 class TSearchBar extends StatelessWidget {
@@ -12,7 +13,7 @@ class TSearchBar extends StatelessWidget {
       this.autofocus = false,
       this.keepFocusOnSubmit = false,
       this.focusNode,
-      this.prefixIcon = const Icon(Symbols.search_rounded, size: 16),
+      this.prefixIcon,
       this.debounceTimeout,
       this.transformValue,
       this.onChanged,
@@ -21,7 +22,7 @@ class TSearchBar extends StatelessWidget {
   final TextEditingController? textEditingController;
   final TextStyle? style;
   final String hintText;
-  final Widget prefixIcon;
+  final Widget? prefixIcon;
   final bool autofocus;
   final bool keepFocusOnSubmit;
   final FocusNode? focusNode;
@@ -38,7 +39,12 @@ class TSearchBar extends StatelessWidget {
         focusNode: focusNode,
         style: style,
         hintText: hintText,
-        prefixIcon: prefixIcon,
+        prefixIcon: prefixIcon ??
+            Icon(
+              Symbols.search_rounded,
+              size: 16,
+              color: context.appThemeExtension.textFieldHintTextStyle.color,
+            ),
         prefixIconConstraints: const BoxConstraints.tightFor(width: 24),
         showDeleteButtonIfHasText: true,
         debounceTimeout: debounceTimeout,

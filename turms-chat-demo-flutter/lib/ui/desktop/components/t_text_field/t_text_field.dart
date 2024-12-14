@@ -6,6 +6,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../infra/task/debouncer.dart';
 import '../../../l10n/view_models/app_localizations_view_model.dart';
+import '../../../themes/app_theme_extension.dart';
 import '../index.dart';
 import '../t_menu/t_context_menu.dart';
 
@@ -103,6 +104,7 @@ class _TTextFieldState extends ConsumerState<TTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final appThemeExtension = context.appThemeExtension;
     final prefixIcon = widget.prefixIcon;
     final controller =
         (widget.textEditingController ?? _textEditingController)!;
@@ -180,7 +182,7 @@ class _TTextFieldState extends ConsumerState<TTextField> {
               height: 1.2),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(color: Colors.grey.shade600),
+        hintStyle: appThemeExtension.textFieldHintTextStyle,
         filled: true,
         fillColor: const Color.fromARGB(255, 226, 226, 226),
         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -194,7 +196,8 @@ class _TTextFieldState extends ConsumerState<TTextField> {
                     addContainer: false,
                     iconData: Symbols.close_rounded,
                     iconSize: 20,
-                    tooltip: ref.watch(appLocalizationsViewModel).close,
+                    iconColor:
+                        context.appThemeExtension.textFieldHintTextStyle.color,
                     onTap: () {
                       controller.clear();
                       widget.onChanged?.call('');
