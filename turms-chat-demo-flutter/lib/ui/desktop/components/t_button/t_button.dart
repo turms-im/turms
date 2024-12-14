@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../themes/index.dart';
+import '../t_badge/t_badge.dart';
 import '../t_tooltip/t_tooltip.dart';
 
 class TButton extends StatefulWidget {
@@ -23,6 +24,7 @@ class TButton extends StatefulWidget {
       this.isLoading = false,
       this.disabled = false,
       this.tooltip,
+      this.showBadge = false,
       this.onTap,
       this.onPanDown,
       this.prefix,
@@ -46,6 +48,7 @@ class TButton extends StatefulWidget {
   final bool isLoading;
   final bool disabled;
   final String? tooltip;
+  final bool showBadge;
   final VoidCallback? onTap;
   final GestureDragDownCallback? onPanDown;
 
@@ -70,6 +73,19 @@ class _TButtonState extends State<TButton> {
         : _isHovered
             ? widget.childHovered ?? widget.child
             : widget.child;
+    if (widget.showBadge) {
+      child = Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          child,
+          const Positioned(
+              top: -badgeDimension / 4,
+              right: -badgeDimension / 4,
+              child: TBadge())
+        ],
+      );
+    }
     if (widget.prefix case final prefix?) {
       child = Row(
           mainAxisSize: MainAxisSize.min,
@@ -86,11 +102,11 @@ class _TButtonState extends State<TButton> {
           Positioned.fill(child: Center(
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
-                final size =
+                final dimension =
                     min(constraints.maxWidth, constraints.maxHeight) * 0.8;
                 return SizedBox(
-                  width: size,
-                  height: size,
+                  width: dimension,
+                  height: dimension,
                   child: const CircularProgressIndicator(
                     color: Colors.white,
                   ),
@@ -121,6 +137,7 @@ class _TButtonState extends State<TButton> {
                 ? (widget.containerBorderHovered ?? widget.containerBorder)
                 : widget.containerBorder,
           ),
+          alignment: Alignment.center,
           padding: widget.containerPadding,
           width: widget.containerWidth,
           height: widget.containerHeight,

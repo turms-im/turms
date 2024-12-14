@@ -173,6 +173,7 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
   void _selectConversationWhenNotSearching(Conversation conversation) {
     conversation.unreadMessageCount = 0;
     ref.read(selectedConversationViewModel.notifier).update(conversation);
+    ref.read(conversationsDataViewModel.notifier).notifyListeners();
     unawaited(ref
         .read(conversationServiceProvider)!
         .resetSharedUnreadMessageCount(

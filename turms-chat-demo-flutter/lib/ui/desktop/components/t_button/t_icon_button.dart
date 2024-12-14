@@ -26,6 +26,7 @@ class TIconButton extends StatelessWidget {
       this.iconRotate,
       this.disabled = false,
       this.tooltip,
+      this.showBadge = false,
       this.onTap,
       this.onPanDown});
 
@@ -44,6 +45,7 @@ class TIconButton extends StatelessWidget {
           BlendMode? containerBlendMode,
           bool disabled = false,
           String? tooltip,
+          bool showBadge = false,
           VoidCallback? onTap}) =>
       TIconButton(
         iconData: iconData,
@@ -63,6 +65,7 @@ class TIconButton extends StatelessWidget {
         containerBorderHovered: Border.all(color: theme.primaryColor),
         disabled: disabled,
         tooltip: tooltip,
+        showBadge: showBadge,
       );
 
   final bool addContainer;
@@ -77,6 +80,7 @@ class TIconButton extends StatelessWidget {
 
   final bool disabled;
   final String? tooltip;
+  final bool showBadge;
 
   final VoidCallback? onTap;
   final GestureDragDownCallback? onPanDown;
@@ -112,6 +116,7 @@ class TIconButton extends StatelessWidget {
             containerBorderRadius ?? Sizes.borderRadiusCircular4,
         disabled: disabled,
         tooltip: tooltip,
+        showBadge: showBadge,
         onTap: onTap,
         onPanDown: onPanDown,
         childHovered: _buildIcon(iconTheme, isHovered: true),

@@ -25,6 +25,8 @@ class ConversationsDataViewModelNotifier
     return data;
   }
 
+  void notifyListeners() => ref.notifyListeners();
+
   List<Conversation> getConversations() => state.value ?? [];
 
   void setData(TAsyncData<List<Conversation>> data) {
