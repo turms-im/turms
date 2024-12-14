@@ -24,7 +24,7 @@ import 'files_page/files_page.dart';
 import 'home_page_action.dart';
 import 'home_page_tab.dart';
 import 'main_navigation_rail/main_navigation_rail.dart';
-import 'shared_view_models/home_page_tab_view_model.dart';
+import 'shared_view_models/current_home_page_tab_view_model.dart';
 
 const _taskIdCheckDiskSpace = 'checkDiskSpace';
 const _taskIdCheckForUpdates = 'checkForUpdates';
@@ -40,7 +40,7 @@ class HomePageLandscape extends ConsumerStatefulWidget {
 class _HomePageLandscapeState extends ConsumerState<HomePageLandscape> {
   @override
   Widget build(BuildContext context) {
-    final tab = ref.watch(homePageTabViewModel);
+    final tab = ref.watch(currentHomePageTabViewModel);
     final actionToShortcut = ref.watch(actionToShortcutViewModel);
     final bindings = <ShortcutActivator, VoidCallback>{};
     for (final action in HomePageAction.values) {

@@ -19,7 +19,7 @@ import '../../../infra/window/window_utils.dart';
 import '../../../ui/desktop/components/index.dart';
 import '../../../ui/desktop/pages/app.dart';
 import '../../../ui/desktop/pages/home_page/chat_page/chat_session_pane/message.dart';
-import '../../../ui/desktop/pages/home_page/chat_page/view_models/conversations_view_model.dart';
+import '../../../ui/desktop/pages/home_page/chat_page/view_models/conversations_data_view_model.dart';
 import '../../../ui/desktop/pages/home_page/chat_page/view_models/selected_conversation_view_model.dart';
 import '../../../ui/desktop/pages/home_page/contacts_page/view_models/contacts_view_model.dart';
 import '../../../ui/desktop/pages/home_page/contacts_page/view_models/relationship_groups_view_model.dart';

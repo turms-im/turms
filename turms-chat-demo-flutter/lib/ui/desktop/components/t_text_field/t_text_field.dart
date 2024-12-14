@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../infra/task/debouncer.dart';
-import '../../../l10n/view_models/app_localizations_view_model.dart';
 import '../../../themes/app_theme_extension.dart';
 import '../index.dart';
 import '../t_menu/t_context_menu.dart';

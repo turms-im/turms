@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../../domain/conversation/models/conversation.dart';
 import '../../../../../../domain/user/models/index.dart';
 import '../../home_page_tab.dart';
-import '../../shared_view_models/home_page_tab_view_model.dart';
+import '../../shared_view_models/current_home_page_tab_view_model.dart';
 import '../chat_session_pane/message.dart';
-import 'conversations_view_model.dart';
+import 'conversations_data_view_model.dart';
 
 class SelectedConversationViewModelNotifier extends Notifier<Conversation?> {
   Conversation? get value => state;
@@ -20,7 +20,7 @@ class SelectedConversationViewModelNotifier extends Notifier<Conversation?> {
 
   void selectByContact(Contact contact) {
     // 1. Go to the chat page
-    ref.read(homePageTabViewModel.notifier).state = HomePageTab.chat;
+    ref.read(currentHomePageTabViewModel.notifier).state = HomePageTab.chat;
     // 2. Check if the conversation already selected
     final selectedConversation = state;
     if (selectedConversation?.hasSameContact(contact) ?? false) {

@@ -185,7 +185,7 @@ final _userContacts = _contactConversations.indexed.map((item) {
           UserPresence.values[1 + (index % (UserPresence.values.length - 1))]);
 }).toList();
 
-final contactIdToMessages = <Int64, List<String>>{
+final userContactIdToMessages = <Int64, List<String>>{
   for (final userContact in _userContacts)
     userContact.userId: _contactConversations
         .firstWhere((item) => item.userName == userContact.name)

@@ -7,7 +7,7 @@ import '../../../../domain/user/models/user_setting.dart';
 import 'about_page/about_page.dart';
 import 'home_page_tab.dart';
 import 'settings_page/settings_page.dart';
-import 'shared_view_models/home_page_tab_view_model.dart';
+import 'shared_view_models/current_home_page_tab_view_model.dart';
 
 enum HomePageAction {
   showChatPage(
@@ -44,13 +44,15 @@ extension HomePageActionExtension on HomePageAction {
   void trigger({required BuildContext context, required WidgetRef ref}) {
     switch (this) {
       case HomePageAction.showChatPage:
-        ref.read(homePageTabViewModel.notifier).state = HomePageTab.chat;
+        ref.read(currentHomePageTabViewModel.notifier).state = HomePageTab.chat;
         break;
       case HomePageAction.showContactsPage:
-        ref.read(homePageTabViewModel.notifier).state = HomePageTab.contacts;
+        ref.read(currentHomePageTabViewModel.notifier).state =
+            HomePageTab.contacts;
         break;
       case HomePageAction.showFilesPage:
-        ref.read(homePageTabViewModel.notifier).state = HomePageTab.files;
+        ref.read(currentHomePageTabViewModel.notifier).state =
+            HomePageTab.files;
         break;
       case HomePageAction.showSettingsDialog:
         showSettingsDialog(context);

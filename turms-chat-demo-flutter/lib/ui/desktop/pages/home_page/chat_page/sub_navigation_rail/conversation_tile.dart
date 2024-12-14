@@ -19,7 +19,7 @@ import '../../../../../l10n/view_models/date_format_view_models.dart';
 import '../../../../../themes/index.dart';
 import '../../../../components/index.dart';
 import '../chat_session_pane/message.dart';
-import '../view_models/conversations_view_model.dart';
+import '../view_models/conversations_data_view_model.dart';
 
 const _messageIconSize = 16.0;
 const _fontWeightBold = FontWeight.w600;

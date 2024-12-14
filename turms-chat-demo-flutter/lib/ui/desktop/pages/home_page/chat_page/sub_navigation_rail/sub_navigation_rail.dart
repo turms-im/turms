@@ -30,7 +30,7 @@ import '../../contacts_page/view_models/contacts_view_model.dart';
 import '../../create_group_page/create_group_page.dart';
 import '../../new_relationship_page/new_relationship_page.dart';
 import '../chat_session_pane/message.dart';
-import '../view_models/conversations_view_model.dart';
+import '../view_models/conversations_data_view_model.dart';
 import '../view_models/selected_conversation_view_model.dart';
 import 'conversation_tile.dart';
 import 'conversation_tiles.dart';

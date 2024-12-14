@@ -25,7 +25,7 @@ extension FixturesExtensions on Fixtures {
       switch (contact) {
         case UserContact():
           final timestamps = <DateTime>[];
-          final rawMessages = contactIdToMessages[contact.userId]!;
+          final rawMessages = userContactIdToMessages[contact.userId]!;
           final count = rawMessages.length;
           var date = now;
           for (var i = 0; i < count; i++) {
@@ -68,7 +68,7 @@ extension FixturesExtensions on Fixtures {
           }
           for (var i = 0; i < maxMessageCount; i++) {
             final memberId = memberIds[RandomUtils.nextInt() % memberCount];
-            final rawMessages = contactIdToMessages[memberId] ?? [];
+            final rawMessages = userContactIdToMessages[memberId] ?? [];
             final messageCount = rawMessages.length;
             if (messageCount == 0) {
               continue;
