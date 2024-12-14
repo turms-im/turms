@@ -4,6 +4,7 @@ export 't_alert/t_alert.dart';
 export 't_async_builder/t_async_builder.dart';
 export 't_audio_player/t_audio_player.dart';
 export 't_avatar/t_avatar.dart';
+export 't_badge/t_badge.dart';
 export 't_button/t_icon_button.dart';
 export 't_button/t_text_button.dart';
 export 't_checkbox/t_checkbox.dart';
