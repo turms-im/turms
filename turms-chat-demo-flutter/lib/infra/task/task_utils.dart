@@ -59,8 +59,8 @@ class TaskUtils {
     _idToTimer[id] = Timer.periodic(duration, (timer) async {
       if (!await callback()) {
         timer.cancel();
+        _idToTimer.remove(id);
       }
-      _idToTimer.remove(id);
     });
     return true;
   }
