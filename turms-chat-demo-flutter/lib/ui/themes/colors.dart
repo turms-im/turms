@@ -24,4 +24,13 @@ class AppColors {
   /// Colors.white.withValues(alpha: 0.0)
   /// Reference: https://github.com/flutter/flutter/issues/14151#issuecomment-424104489
   static const transparentWhite = Color(0x00FFFFFF);
+
+  // color filters
+
+  static const greyscale = ColorFilter.matrix([
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0.2126, 0.7152, 0.0722, 0, 0,
+    0.2126, 0.7152, 0.0722, 0, 0,
+    0, 0, 0, 1, 0,
+  ]);
 }

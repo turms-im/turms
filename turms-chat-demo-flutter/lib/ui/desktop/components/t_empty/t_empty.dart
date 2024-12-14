@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../infra/assets/assets.gen.dart';
+import '../../../themes/colors.dart';
 
 class TEmpty extends StatelessWidget {
   const TEmpty({super.key});
@@ -11,13 +12,7 @@ class TEmpty extends StatelessWidget {
           child: Opacity(
         opacity: 0.2,
         child: ColorFiltered(
-          //  greyscale color filter
-          colorFilter: const ColorFilter.matrix(<double>[
-            0.2126, 0.7152, 0.0722, 0, 0, //
-            0.2126, 0.7152, 0.0722, 0, 0,
-            0.2126, 0.7152, 0.0722, 0, 0,
-            0, 0, 0, 1, 0,
-          ]),
+          colorFilter: AppColors.greyscale,
           child: SvgPicture.asset(
             width: 100,
             Assets.images.iconSvg,

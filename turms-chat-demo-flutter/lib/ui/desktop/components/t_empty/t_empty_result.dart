@@ -5,13 +5,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../../l10n/view_models/app_localizations_view_model.dart';
 import '../../../themes/index.dart';
 
-const _colorFilter = ColorFilter.matrix([
-  0.2126, 0.7152, 0.0722, 0, 0, //
-  0.2126, 0.7152, 0.0722, 0, 0,
-  0.2126, 0.7152, 0.0722, 0, 0,
-  0, 0, 0, 1, 0,
-]);
-
 class TEmptyResult extends ConsumerWidget {
   const TEmptyResult({super.key, this.icon = Symbols.description_rounded});
 
@@ -20,7 +13,7 @@ class TEmptyResult extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => Center(
           child: ColorFiltered(
-        colorFilter: _colorFilter,
+        colorFilter: AppColors.greyscale,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
