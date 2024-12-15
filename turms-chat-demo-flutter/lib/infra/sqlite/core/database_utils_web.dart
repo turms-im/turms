@@ -1,5 +1,7 @@
-import 'package:drift/backends.dart';
+import 'package:drift/drift.dart';
 import 'package:drift/web.dart';
+
+import 'sql_logging_query_executor.dart';
 
 class DatabaseUtils {
   DatabaseUtils._();
@@ -9,12 +11,15 @@ class DatabaseUtils {
     required bool isAppDatabase,
     bool inMemory = false,
     required bool logStatements,
-  }) =>
-      inMemory
-          ? WebDatabase.withStorage(DriftWebStorage.volatile(),
-              logStatements: logStatements,
-              // We set this to true because we need to store int64
-              readIntsAsBigInt: true)
-          : WebDatabase('$dbName.sqlite',
-              logStatements: logStatements, readIntsAsBigInt: true);
+  }) {
+    QueryExecutor database = inMemory
+        ? WebDatabase.withStorage(DriftWebStorage.volatile(),
+            // We set this to true because we need to store int64
+            readIntsAsBigInt: true)
+        : WebDatabase('$dbName.sqlite', readIntsAsBigInt: true);
+    if (logStatements) {
+      database = database.interceptWith(SqlLoggingQueryInterceptor());
+    }
+    return database;
+  }
 }
