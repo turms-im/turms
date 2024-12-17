@@ -69,7 +69,7 @@ import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
@@ -240,12 +240,12 @@ public class GroupService extends BaseService {
                     .then(Mono.defer(() -> {
                         createdGroupsCounter.increment();
                         return groupVersionService.upsert(groupId, now)
-                                .onErrorResume(t -> {
+                                .onErrorComplete(t -> {
                                     LOGGER.error(
                                             "Caught an error while upserting a version for the group ({}) after creating the group",
                                             groupId,
                                             t);
-                                    return Mono.empty();
+                                    return true;
                                 });
                     }))
                     .thenReturn(group);
@@ -947,7 +947,7 @@ public class GroupService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryJoinedGroupVersion(memberId)
                 .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return groupMemberService.queryUserJoinedGroupIds(memberId)
@@ -970,7 +970,7 @@ public class GroupService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryJoinedGroupVersion(memberId)
                 .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryJoinedGroups(memberId).collect(CollectorUtil.toChunkedList())

@@ -27,6 +27,7 @@ import lombok.AllArgsConstructor;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties;
 import im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties.BlockLevel;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -66,19 +67,20 @@ public class AutoBlockManager<T> {
             return;
         }
         blockedClientIdToStatus.compute(id, (key, status) -> {
-            long now = System.currentTimeMillis();
+            long now = System.nanoTime();
             if (status == null) {
                 status = new BlockStatus(UNSET_BLOCK_LEVEL, null, 0, now);
+            } else {
+                status.lastBlockTriggerTimeNanos = now;
             }
             // Update status
-            long previousBlockTriggerTime = status.lastBlockTriggerTime;
-            status.lastBlockTriggerTime = now;
-            int reduceOneTriggerTimeInterval =
+            long previousBlockTriggerTimeNanos = status.lastBlockTriggerTimeNanos;
+            int reduceOneTriggerTimeIntervalMillis =
                     status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
             int times = status.triggerTimes;
-            if (reduceOneTriggerTimeInterval > 0) {
-                times -= (int) (status.lastBlockTriggerTime - previousBlockTriggerTime)
-                        / reduceOneTriggerTimeInterval;
+            if (reduceOneTriggerTimeIntervalMillis > 0) {
+                times -= (int) ((status.lastBlockTriggerTimeNanos - previousBlockTriggerTimeNanos)
+                        / (reduceOneTriggerTimeIntervalMillis * DateTimeUtil.NANOS_PER_MILLI));
                 if (times < 0) {
                     times = 0;
                 }
@@ -116,7 +118,7 @@ public class AutoBlockManager<T> {
         if (!isEnabled) {
             return;
         }
-        long now = System.currentTimeMillis();
+        long now = System.nanoTime();
         Iterator<BlockStatus> iterator = blockedClientIdToStatus.values()
                 .iterator();
         while (iterator.hasNext()) {
@@ -124,8 +126,8 @@ public class AutoBlockManager<T> {
             int reduceOneTriggerTimeInterval =
                     status.currentLevelProperties.getReduceOneTriggerTimeIntervalMillis();
             if (reduceOneTriggerTimeInterval > 0) {
-                int times = status.triggerTimes
-                        - (int) (now - status.lastBlockTriggerTime) / reduceOneTriggerTimeInterval;
+                int times = status.triggerTimes - (int) ((now - status.lastBlockTriggerTimeNanos)
+                        / (reduceOneTriggerTimeInterval * DateTimeUtil.NANOS_PER_MILLI));
                 if (times <= 0) {
                     iterator.remove();
                 }
@@ -138,7 +140,7 @@ public class AutoBlockManager<T> {
         private int currentLevel;
         private BlockLevel currentLevelProperties;
         private int triggerTimes;
-        private long lastBlockTriggerTime;
+        private long lastBlockTriggerTimeNanos;
     }
 
 }

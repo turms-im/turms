@@ -64,6 +64,7 @@ import im.turms.server.common.infra.property.env.common.cluster.connection.Conne
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.thread.TurmsThread;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 import static im.turms.server.common.infra.metrics.CommonMetricNameConst.TURMS_RPC_CLIENT_TCP;
 
@@ -94,8 +95,8 @@ public class ConnectionService implements ClusterService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionService.class);
 
     private final SslProperties clientSsl;
-    private final long keepaliveIntervalMillis;
-    private final long keepaliveTimeoutMillis;
+    private final long keepaliveIntervalNanos;
+    private final long keepaliveTimeoutNanos;
     private final Duration reconnectInterval;
 
     // Thread resources
@@ -132,8 +133,10 @@ public class ConnectionService implements ClusterService {
         serverProperties = connectionProperties.getServer();
         ConnectionClientProperties clientProperties = connectionProperties.getClient();
         clientSsl = clientProperties.getSsl();
-        keepaliveIntervalMillis = clientProperties.getKeepaliveIntervalSeconds() * 1000L;
-        keepaliveTimeoutMillis = clientProperties.getKeepaliveTimeoutSeconds() * 1000L;
+        keepaliveIntervalNanos =
+                DateTimeUtil.secondsToNanos(clientProperties.getKeepaliveIntervalSeconds());
+        keepaliveTimeoutNanos =
+                DateTimeUtil.secondsToNanos(clientProperties.getKeepaliveTimeoutSeconds());
         reconnectInterval = Duration.ofSeconds(clientProperties.getReconnectIntervalSeconds());
         eventLoopGroupForClients = new NioEventLoopGroup(
                 Runtime.getRuntime()
@@ -356,7 +359,7 @@ public class ConnectionService implements ClusterService {
                     "Received a keepalive request from a non-connected node: "
                             + nodeId);
         }
-        connection.setLastKeepaliveTimestamp(System.currentTimeMillis());
+        connection.setLastKeepaliveTimestampNanos(System.nanoTime());
     }
 
     private void sendKeepaliveToConnectionsForever() {
@@ -391,23 +394,22 @@ public class ConnectionService implements ClusterService {
         if (!connection.isLocalNodeClient()) {
             return;
         }
-        long now = System.currentTimeMillis();
-        long elapsedTime = now - connection.getLastKeepaliveTimestamp();
-        if (elapsedTime > keepaliveTimeoutMillis) {
+        long elapsedTime = System.nanoTime() - connection.getLastKeepaliveTimestampNanos();
+        if (elapsedTime > keepaliveTimeoutNanos) {
             LOGGER.warn("Reconnecting to the member ({}) due to keepalive timeout", nodeId);
             // onConnectionClosed() will reconnect the member
             disconnectConnection(connection);
             iterator.remove();
             return;
         }
-        if (elapsedTime < keepaliveIntervalMillis) {
+        if (elapsedTime < keepaliveIntervalNanos) {
             return;
         }
         rpcService.requestResponse(nodeId, new KeepaliveRequest())
                 .subscribe(null,
                         t -> LOGGER.warn("Failed to send a keepalive request to the member: "
                                 + nodeId, t),
-                        () -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()));
+                        () -> connection.setLastKeepaliveTimestampNanos(System.nanoTime()));
     }
 
     // Handshake

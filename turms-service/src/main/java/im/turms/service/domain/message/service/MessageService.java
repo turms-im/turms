@@ -83,7 +83,7 @@ import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
@@ -725,7 +725,8 @@ public class MessageService extends BaseService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        Date expirationDate = DateUtil.addHours(System.currentTimeMillis(), -retentionPeriodHours);
+        Date expirationDate =
+                DateTimeUtil.addHours(System.currentTimeMillis(), -retentionPeriodHours);
         return messageRepository.findExpiredMessageIds(expirationDate);
     }
 

@@ -25,7 +25,7 @@ import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -61,7 +61,7 @@ public final class AdminApiLogging {
                 ip,
                 // Request
                 requestId,
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 action,
                 params.toString(),
                 // Response

@@ -49,7 +49,7 @@ import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.random.RandomUtil;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidUserRelationshipGroupKey;
 import im.turms.server.common.infra.validation.ValidUserRelationshipKey;
 import im.turms.server.common.infra.validation.Validator;
@@ -153,7 +153,7 @@ public class UserRelationshipGroupService extends BaseService {
         }
         return userVersionService.queryRelationshipGroupsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     UserRelationshipGroupsWithVersion.Builder builder =

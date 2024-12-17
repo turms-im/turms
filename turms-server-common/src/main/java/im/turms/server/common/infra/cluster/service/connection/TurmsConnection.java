@@ -46,7 +46,7 @@ public class TurmsConnection {
     private boolean isClosing;
 
     private final boolean isLocalNodeClient;
-    private volatile long lastKeepaliveTimestamp;
+    private volatile long lastKeepaliveTimestampNanos;
 
     private final List<MemberConnectionListener> listeners;
 
@@ -62,7 +62,7 @@ public class TurmsConnection {
                 ? Collections.emptyList()
                 : listeners;
 
-        lastKeepaliveTimestamp = System.currentTimeMillis();
+        lastKeepaliveTimestampNanos = System.nanoTime();
         isClosing = false;
     }
 }

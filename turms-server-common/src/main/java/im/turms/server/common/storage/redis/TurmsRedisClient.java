@@ -51,6 +51,7 @@ import im.turms.server.common.infra.netty.ByteBufUtil;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
 import im.turms.server.common.infra.reactor.PublisherUtil;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.storage.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.storage.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.storage.redis.command.TurmsCommandEncoder;
@@ -125,16 +126,17 @@ public class TurmsRedisClient {
 
     public Mono<Void> destroy(long timeoutMillis) {
         return Mono.defer(() -> {
-            long startTime = System.currentTimeMillis();
+            long startTime = System.nanoTime();
             return Mono
                     .fromFuture(nativeClient.shutdownAsync(0, timeoutMillis, TimeUnit.MILLISECONDS))
                     .then(Mono.defer(() -> {
-                        long elapsedTime = System.currentTimeMillis() - startTime;
-                        long timeout = timeoutMillis - elapsedTime;
-                        return PublisherUtil.whenDelayError(eventExecutorGroup
-                                .shutdownGracefully(0, Math.max(1, timeout), TimeUnit.MILLISECONDS),
-                                eventLoopGroupProvider
-                                        .shutdown(0, Math.max(1, timeout), TimeUnit.MILLISECONDS));
+                        long elapsedTime =
+                                (System.nanoTime() - startTime) / DateTimeUtil.NANOS_PER_MILLI;
+                        long timeout = Math.max(1, timeoutMillis - elapsedTime);
+                        return PublisherUtil.whenDelayError(
+                                eventExecutorGroup
+                                        .shutdownGracefully(0, timeout, TimeUnit.MILLISECONDS),
+                                eventLoopGroupProvider.shutdown(0, timeout, TimeUnit.MILLISECONDS));
                     }));
         });
     }

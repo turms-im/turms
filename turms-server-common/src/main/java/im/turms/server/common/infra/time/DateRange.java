@@ -50,7 +50,9 @@ public record DateRange(
     public DateRange intersect(@Nullable DateRange range) {
         return range == null || equals(range)
                 ? this
-                : new DateRange(DateUtil.max(start, range.start()), DateUtil.min(end, range.end()));
+                : new DateRange(
+                        DateTimeUtil.max(start, range.start()),
+                        DateTimeUtil.min(end, range.end()));
     }
 
     public DateRange move(long millis) {

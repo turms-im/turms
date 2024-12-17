@@ -53,7 +53,7 @@ import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.ValidUserRelationshipKey;
 import im.turms.server.common.infra.validation.Validator;
@@ -332,7 +332,7 @@ public class UserRelationshipService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
@@ -370,7 +370,7 @@ public class UserRelationshipService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<Set<UserRelationship>> recyclableSet = SetRecycler.obtain();

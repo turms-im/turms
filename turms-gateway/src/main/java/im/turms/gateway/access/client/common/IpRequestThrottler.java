@@ -32,6 +32,7 @@ import im.turms.server.common.infra.property.env.gateway.clientapi.ClientApiProp
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -41,10 +42,10 @@ public class IpRequestThrottler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IpRequestThrottler.class);
 
-    private static final long IDLE_ENTRY_TTL = 30 * 60 * 1000L;
-    private static final long INTERVAL_TO_CHECK = 30 * 60 * 1000L;
+    private static final long IDLE_ENTRY_TTL_NANOS = 30 * 60 * DateTimeUtil.NANOS_PER_SECOND;
+    private static final long INTERVAL_TO_CHECK_MILLIS = 30L * 60 * 1000;
     private static final int BATCH_SIZE = 10_000;
-    private static final long SLEEP_THRESHOLD_MILLIS = 1000;
+    private static final long SLEEP_THRESHOLD_NANOS = 1000 * DateTimeUtil.NANOS_PER_MILLI;
     private static final long SLEEP_MILLIS = 1000;
 
     /**
@@ -94,7 +95,7 @@ public class IpRequestThrottler {
                     LOGGER.error("Failed to remove expired request token buckets", e);
                 }
                 try {
-                    Thread.sleep(INTERVAL_TO_CHECK);
+                    Thread.sleep(INTERVAL_TO_CHECK_MILLIS);
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -107,11 +108,11 @@ public class IpRequestThrottler {
         Iterator<TokenBucket> iterator = ipToRequestTokenBucket.values()
                 .iterator();
         int processed = 0;
-        long startTime = System.currentTimeMillis();
+        long startTimeNanos = System.nanoTime();
         while (iterator.hasNext()) {
             TokenBucket bucket = iterator.next();
-            long lastAccessTime = bucket.getLastRefillTime();
-            if ((startTime - lastAccessTime) > IDLE_ENTRY_TTL
+            long lastAccessTimeNanos = bucket.getLastRefillTimeNanos();
+            if ((startTimeNanos - lastAccessTimeNanos) > IDLE_ENTRY_TTL_NANOS
                     && bucket.isTokensMoreThanOrEqualsToInitialTokens()) {
                 iterator.remove();
             }
@@ -120,9 +121,9 @@ public class IpRequestThrottler {
             // and cause the server cannot serve for users
             if (processed >= BATCH_SIZE) {
                 processed = 0;
-                if (System.currentTimeMillis() - startTime > SLEEP_THRESHOLD_MILLIS) {
+                if (System.nanoTime() - startTimeNanos > SLEEP_THRESHOLD_NANOS) {
                     Thread.sleep(SLEEP_MILLIS);
-                    startTime = System.currentTimeMillis();
+                    startTimeNanos = System.nanoTime();
                 }
             }
         }

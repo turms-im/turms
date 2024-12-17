@@ -65,6 +65,7 @@ import im.turms.server.common.infra.property.env.gateway.session.SessionProperti
 import im.turms.server.common.infra.reactor.HashedWheelScheduler;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.test.VisibleForTesting;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.redis.TurmsRedisClientManager;
@@ -77,7 +78,7 @@ import im.turms.server.common.storage.redis.script.RedisScript;
 @Service
 public class UserStatusService extends BaseService {
 
-    private static final long NODE_STATUS_TTL_MILLIS = 15_000L;
+    private static final long NODE_STATUS_TTL_NANOS = 15 * DateTimeUtil.NANOS_PER_SECOND;
 
     private final RedisScript<ByteBuf> addOnlineUserScript;
     private final RedisScript<List<Object>> getUsersDeviceDetailsScript =
@@ -483,18 +484,17 @@ public class UserStatusService extends BaseService {
         Mono<NodeStatus> nodeStatusMono = nodeIdToStatusCache.computeIfAbsent(nodeId,
                 id -> node.getDiscoveryService()
                         .checkIfMemberExists(nodeId)
-                        .map(isActive -> new NodeStatus(System.currentTimeMillis(), isActive)));
+                        .map(isActive -> new NodeStatus(System.nanoTime(), isActive)));
         return nodeStatusMono
                 // To not cache error
                 .doOnError(t -> nodeIdToStatusCache.remove(nodeId, nodeStatusMono))
                 .flatMap(status -> {
-                    if ((System.currentTimeMillis()
-                            - status.recordTimestampMillis) < NODE_STATUS_TTL_MILLIS) {
+                    if ((System.nanoTime() - status.recordTimestampNanos) < NODE_STATUS_TTL_NANOS) {
                         return Mono.just(status);
                     }
                     Mono<NodeStatus> newStatus = Mono.defer(() -> node.getDiscoveryService()
                             .checkIfMemberExists(nodeId)
-                            .map(isActive -> new NodeStatus(System.currentTimeMillis(), isActive)));
+                            .map(isActive -> new NodeStatus(System.nanoTime(), isActive)));
                     boolean replaced =
                             nodeIdToStatusCache.replace(nodeId, nodeStatusMono, newStatus);
                     return replaced
@@ -724,7 +724,7 @@ public class UserStatusService extends BaseService {
     }
 
     private record NodeStatus(
-            long recordTimestampMillis,
+            long recordTimestampNanos,
             boolean isActive
     ) {
     }

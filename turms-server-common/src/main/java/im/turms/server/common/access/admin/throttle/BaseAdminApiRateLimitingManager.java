@@ -44,7 +44,7 @@ public abstract class BaseAdminApiRateLimitingManager {
                 () -> {
                     Iterator<TokenBucket> iterator = ipToTokenBucket.values()
                             .iterator();
-                    long now = System.currentTimeMillis();
+                    long now = System.nanoTime();
                     while (iterator.hasNext()) {
                         TokenBucket bucket = iterator.next();
                         bucket.refill(now);
@@ -60,7 +60,7 @@ public abstract class BaseAdminApiRateLimitingManager {
     public boolean tryAcquireTokenByIp(String ip) {
         TokenBucket bucket =
                 ipToTokenBucket.computeIfAbsent(ip, key -> new TokenBucket(tokenBucketContext));
-        return bucket.tryAcquire(System.currentTimeMillis());
+        return bucket.tryAcquire(System.nanoTime());
     }
 
 }

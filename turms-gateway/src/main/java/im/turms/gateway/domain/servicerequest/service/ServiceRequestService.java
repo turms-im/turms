@@ -56,7 +56,7 @@ public class ServiceRequestService extends BaseService {
             ServiceRequest serviceRequest) {
         try {
             // Update request timestamp
-            session.setLastRequestTimestampMillis(System.currentTimeMillis());
+            session.setLastRequestTimestampToNow();
             // Forward request
             serviceRequest.getTurmsRequestBuffer()
                     .retain();

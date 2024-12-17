@@ -82,6 +82,7 @@ import im.turms.server.common.infra.property.env.gateway.session.DeviceDetailsPr
 import im.turms.server.common.infra.property.env.gateway.session.SessionProperties;
 import im.turms.server.common.infra.reactor.PublisherPool;
 import im.turms.server.common.infra.reactor.PublisherUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidDeviceType;
 import im.turms.server.common.infra.validation.Validator;
 
@@ -180,10 +181,10 @@ public class SessionService extends BaseService implements RpcSessionService {
                     newSessionProperties.getClientHeartbeatIntervalSeconds());
             heartbeatManager.setCloseIdleSessionAfterSeconds(
                     newSessionProperties.getCloseIdleSessionAfterSeconds());
-            heartbeatManager.setMinHeartbeatIntervalMillis(
-                    newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
-            heartbeatManager.setSwitchProtocolAfterMillis(
-                    newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
+            heartbeatManager.setMinHeartbeatIntervalNanos(DateTimeUtil
+                    .secondsToNanos(newSessionProperties.getMinHeartbeatIntervalSeconds()));
+            heartbeatManager.setSwitchProtocolAfterNanos(DateTimeUtil
+                    .secondsToNanos(newSessionProperties.getSwitchProtocolAfterSeconds()));
         });
         propertiesManager.addLocalPropertiesChangeListener(this::updateLocalProperties);
 
@@ -222,7 +223,7 @@ public class SessionService extends BaseService implements RpcSessionService {
     }
 
     public void handleHeartbeatUpdateRequest(UserSession session) {
-        session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
+        session.setLastHeartbeatRequestTimestampToNow();
     }
 
     public Mono<UserSession> handleLoginRequest(
@@ -596,7 +597,7 @@ public class SessionService extends BaseService implements RpcSessionService {
                     && session.getId() == sessionId
                     && !session.getConnection()
                             .isConnectionRecovering()) {
-                session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
+                session.setLastHeartbeatRequestTimestampToNow();
                 return session;
             }
         }

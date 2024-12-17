@@ -27,7 +27,7 @@ import org.springframework.boot.jackson.JsonComponent;
 import im.turms.server.common.domain.blocklist.bo.BlockedClient;
 import im.turms.server.common.infra.lang.ByteArrayWrapper;
 import im.turms.server.common.infra.net.InetAddressUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -47,7 +47,7 @@ public class BlockedClientSerializer {
                 gen.writeStringField("id",
                         InetAddressUtil.ipBytesToString(((ByteArrayWrapper) id).getBytes()));
             }
-            gen.writeStringField("blockEndTime", DateUtil.toStr(value.blockEndTimeMillis()));
+            gen.writeStringField("blockEndTime", DateTimeUtil.toStr(value.blockEndTimeMillis()));
             gen.writeEndObject();
         }
     }

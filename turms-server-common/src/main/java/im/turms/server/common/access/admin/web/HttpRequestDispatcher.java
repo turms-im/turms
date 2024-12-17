@@ -80,6 +80,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.adminapi.AdminHttpProperties;
 import im.turms.server.common.infra.property.env.common.adminapi.BaseAdminApiProperties;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
@@ -310,6 +311,7 @@ public class HttpRequestDispatcher {
                     .send();
         }
         long requestTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         TracingContext tracingContext = new TracingContext();
         RequestContext requestContext = new RequestContext();
         String ip = request.remoteAddress()
@@ -336,7 +338,7 @@ public class HttpRequestDispatcher {
                     requestTime,
                     requestContext.getAction(),
                     requestContext.getParamValues(),
-                    (int) (System.currentTimeMillis() - requestTime),
+                    (int) ((System.nanoTime() - startTime) / DateTimeUtil.NANOS_PER_MILLI),
                     signal.getThrowable());
         })
                 .onErrorResume(t -> {

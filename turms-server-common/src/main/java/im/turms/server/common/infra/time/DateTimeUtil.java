@@ -29,13 +29,17 @@ import io.netty.util.concurrent.FastThreadLocal;
 import org.apache.commons.lang3.tuple.Pair;
 
 import im.turms.server.common.infra.collection.ArrayUtil;
+import im.turms.server.common.infra.lang.MathUtil;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 
 /**
  * @author James Chen
  */
-public final class DateUtil {
+public final class DateTimeUtil {
+
+    public static final long NANOS_PER_MILLI = 1_000_000L;
+    public static final long NANOS_PER_SECOND = 1_000_000_000L;
 
     private static final FastThreadLocal<Calendar> CALENDAR_THREAD_LOCAL = new FastThreadLocal<>() {
         @Override
@@ -46,7 +50,7 @@ public final class DateUtil {
 
     // "1970-01-01 00:00:00.000"
     public static final int DATE_TIME_LENGTH = 23;
-    private static final long HOURS_IN_MILLIS = 60 * 60 * 1000L;
+    private static final long MILLIS_PER_HOUR = 60 * 60 * 1000L;
     private static final int MAX_TWO_DIGITS_CACHE_NUMBER = 59;
     private static final int MAX_THREE_DIGITS_CACHE_NUMBER = 100;
 
@@ -75,11 +79,19 @@ public final class DateUtil {
         }
     }
 
-    private DateUtil() {
+    private DateTimeUtil() {
+    }
+
+    public static long secondsToNanos(long seconds) {
+        return MathUtil.multiply(seconds, NANOS_PER_SECOND, Long.MAX_VALUE);
+    }
+
+    public static long millisToNanos(long millis) {
+        return MathUtil.multiply(millis, NANOS_PER_MILLI, Long.MAX_VALUE);
     }
 
     public static Date addHours(long date, int hours) {
-        return new Date(date + hours * HOURS_IN_MILLIS);
+        return new Date(date + hours * MILLIS_PER_HOUR);
     }
 
     public static String toStr(long timeInMillis) {

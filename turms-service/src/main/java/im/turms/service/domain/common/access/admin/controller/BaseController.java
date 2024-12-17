@@ -34,7 +34,7 @@ import im.turms.server.common.infra.property.TurmsProperties;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.env.adminapi.AdminApiProperties;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.time.DivideBy;
 import im.turms.service.domain.common.access.admin.dto.response.StatisticsRecordDTO;
 
@@ -80,7 +80,7 @@ public abstract class BaseController {
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
         List<Pair<Date, Date>> dates =
-                DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
+                DateTimeUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             Mono<Long> result =
@@ -97,7 +97,7 @@ public abstract class BaseController {
             DivideBy divideBy,
             Function<DateRange, Mono<Long>> function) {
         List<Pair<Date, Date>> dates =
-                DateUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
+                DateTimeUtil.divideDuration(dateRange.start(), dateRange.end(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
             DateRange range = DateRange.of(datePair.getLeft(), datePair.getRight());

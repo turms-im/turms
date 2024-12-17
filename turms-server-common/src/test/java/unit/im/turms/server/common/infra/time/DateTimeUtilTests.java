@@ -24,14 +24,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
  */
-class DateUtilTests {
+class DateTimeUtilTests {
 
     @Test
     void test() {
@@ -50,7 +50,7 @@ class DateUtilTests {
         dateTimes.forEach(dateTime -> {
             long millis = formatter.parse(dateTime, Instant::from)
                     .toEpochMilli();
-            String actual = DateUtil.toStr(millis);
+            String actual = DateTimeUtil.toStr(millis);
             assertThat(actual).isEqualTo(dateTime);
         });
     }

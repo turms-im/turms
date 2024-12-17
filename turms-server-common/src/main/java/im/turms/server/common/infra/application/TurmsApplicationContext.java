@@ -56,6 +56,7 @@ import im.turms.server.common.infra.system.OsConfigurationAdvisor;
 import im.turms.server.common.infra.system.SystemUtil;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -86,7 +87,7 @@ public class TurmsApplicationContext {
     private final BuildProperties buildProperties;
 
     private long shutdownJobGracefulTimeoutMillis;
-    private long shutdownJobForcedTimeoutMillis;
+    private long shutdownJobForcedTimeoutNanos;
     private final TreeMap<JobShutdownOrder, ShutdownHook> shutdownHooks = new TreeMap<>();
 
     public TurmsApplicationContext(Environment environment) {
@@ -177,8 +178,8 @@ public class TurmsApplicationContext {
         ShutdownProperties properties = propertiesManager.getLocalProperties()
                 .getShutdown();
         shutdownJobGracefulTimeoutMillis = properties.getJobGracefulTimeoutMillis();
-        shutdownJobForcedTimeoutMillis =
-                Math.max(properties.getJobForcedTimeoutMillis(), shutdownJobGracefulTimeoutMillis);
+        shutdownJobForcedTimeoutNanos = DateTimeUtil.millisToNanos(
+                Math.max(properties.getJobForcedTimeoutMillis(), shutdownJobGracefulTimeoutMillis));
     }
 
     @EventListener(classes = ContextClosedEvent.class)
@@ -193,20 +194,20 @@ public class TurmsApplicationContext {
             Future<Mono<Void>> shutdownFuture = executor.submit(() -> orderAndJob.getValue()
                     .run(shutdownJobGracefulTimeoutMillis));
             try {
-                long time = System.currentTimeMillis();
+                long time = System.nanoTime();
                 Mono<Void> mono =
-                        shutdownFuture.get(shutdownJobForcedTimeoutMillis, TimeUnit.MILLISECONDS);
+                        shutdownFuture.get(shutdownJobForcedTimeoutNanos, TimeUnit.NANOSECONDS);
                 if (mono == null) {
                     throw new IllegalArgumentException(
                             "The result of the job \""
                                     + jobName
                                     + "\" must not be null");
                 }
-                time = shutdownJobForcedTimeoutMillis - (System.currentTimeMillis() - time);
+                time = shutdownJobForcedTimeoutNanos - (System.nanoTime() - time);
                 if (time <= 0) {
                     throw new TimeoutException();
                 }
-                mono.block(Duration.ofMillis(time));
+                mono.block(Duration.ofNanos(time));
             } catch (TimeoutException e) {
                 shutdownFuture.cancel(true);
                 if (!isClosingLogProcessor) {

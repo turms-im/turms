@@ -38,7 +38,7 @@ import org.jctools.maps.NonBlockingIdentityHashMap;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -177,7 +177,7 @@ public final class JsonUtil {
                 }
                 yield size;
             }
-            case Date ignored -> DateUtil.DATE_TIME_LENGTH;
+            case Date ignored -> DateTimeUtil.DATE_TIME_LENGTH;
             case String str -> StringUtil.getLength(str);
             case byte[] array -> array.length;
             case Object[] array -> {
