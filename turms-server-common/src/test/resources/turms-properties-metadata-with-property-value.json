@@ -2678,7 +2678,7 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2686,29 +2686,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2716,13 +2707,13 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2730,29 +2721,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2760,13 +2742,13 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2774,29 +2756,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2804,7 +2777,7 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           }
         },
@@ -2830,7 +2803,7 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2838,29 +2811,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2868,13 +2832,13 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2882,29 +2846,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2912,13 +2867,13 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
@@ -2926,29 +2881,20 @@
               "value": [
                 {
                   "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
                   "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
                   "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2956,7 +2902,7 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           }
         },

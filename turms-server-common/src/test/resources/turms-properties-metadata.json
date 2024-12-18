@@ -2404,19 +2404,11 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,
@@ -2429,19 +2421,11 @@
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,
@@ -2454,19 +2438,11 @@
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,
@@ -2497,19 +2473,11 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,
@@ -2522,19 +2490,11 @@
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,
@@ -2547,19 +2507,11 @@
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List"
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int"
             },
             "enabled": {
               "deprecated": false,

@@ -976,6 +976,11 @@ turms:
       # global property: false
       # mutable property: false
       allow-save: false
+      # The strategy to handle duplicate classes defined by both the Turms server and the plugin when loading classes by the plugin classloader.
+      # global property: false
+      # mutable property: false
+      # enum values: [throw_exception, parent_first]
+      duplicate-class-load-strategy: parent_first
     js:
       # Whether to allow saving plugins using HTTP API.
       # global property: false
@@ -1041,61 +1046,49 @@ turms:
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
           corrupted-request:
             # global property: false
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
           frequent-request:
             # global property: false
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
         # global property: false
         # mutable property: false
         enabled: true
@@ -1109,61 +1102,49 @@ turms:
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
           corrupted-request:
             # global property: false
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
           frequent-request:
             # global property: false
             # mutable property: false
             block-levels:
               - block-duration-seconds: 600
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 5
               - block-duration-seconds: 1800
-                go-next-level-trigger-times: 1
                 reduce-one-trigger-time-interval-millis: 60000
+                trigger-times-threshold: 1
               - block-duration-seconds: 3600
-                go-next-level-trigger-times: 0
                 reduce-one-trigger-time-interval-millis: 60000
-            # Block the client when the block condition is triggered the times.
+                trigger-times-threshold: 1
             # global property: false
             # mutable property: false
-            block-trigger-times: 5
-            # global property: false
-            # mutable property: false
-            enabled: false
+            enabled: true
         # global property: false
         # mutable property: false
         enabled: true

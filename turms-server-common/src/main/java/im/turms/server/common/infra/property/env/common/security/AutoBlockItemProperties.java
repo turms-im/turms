@@ -36,38 +36,37 @@ import im.turms.server.common.infra.property.metadata.Description;
 @NoArgsConstructor
 public class AutoBlockItemProperties {
 
-    public static final List<BlockLevel> DEFAULT_BLOCK_LEVELS =
-            List.of(new BlockLevel(10 * 60, 60 * 1000, 1),
-                    new BlockLevel(30 * 60, 60 * 1000, 1),
-                    new BlockLevel(60 * 60, 60 * 1000, 0));
+    public static final List<BlockLevelProperties> DEFAULT_BLOCK_LEVELS =
+            List.of(new BlockLevelProperties(10 * 60, 60 * 1000, 5),
+                    new BlockLevelProperties(30 * 60, 60 * 1000, 1),
+                    new BlockLevelProperties(60 * 60, 60 * 1000, 1));
 
-    protected boolean enabled;
+    protected boolean enabled = true;
 
-    @Description("Block the client when the block condition is triggered the times")
-    @Min(0)
-    protected int blockTriggerTimes = 5;
-
-    protected List<BlockLevel> blockLevels = DEFAULT_BLOCK_LEVELS;
+    protected List<BlockLevelProperties> blockLevels = DEFAULT_BLOCK_LEVELS;
 
     @AllArgsConstructor
     @Builder(toBuilder = true)
     @Data
     @NoArgsConstructor
-    public static class BlockLevel {
+    public static class BlockLevelProperties {
 
-        @Description("Block the client for the specified duration in seconds")
+        @Description("Block the client for the specified duration in seconds. "
+                + "After the block duration, the block level will be reset, "
+                + "and the client will be unblocked automatically")
         @Min(1)
         protected long blockDurationSeconds = 10L * 60;
 
-        @Description("Reduce the trigger time by 1 when the time passes. "
+        @Description("If a user's block level is the previous level of this level, "
+                + "reduce the trigger time by 1 when the time passes. "
                 + "If 0, never reduce the trigger times and "
                 + "the block status will remain in the memory until the server is closed")
         @Min(0)
         protected int reduceOneTriggerTimeIntervalMillis = 60 * 1000;
 
-        @Description("Go to the next block level when the block condition is triggered the times")
-        @Min(0)
-        protected int goNextLevelTriggerTimes = 1;
+        @Description("When the block condition is triggered the specified times, advance to this block level")
+        @Min(1)
+        protected int triggerTimesThreshold = 1;
 
     }
 
