@@ -82,7 +82,7 @@ public abstract class BaseAdminService extends BaseService {
                     for (Admin admin : admins) {
                         if (admin.getRoleIds()
                                 .contains(ADMIN_ROLE_ROOT_ID)) {
-                            break;
+                            return Mono.empty();
                         }
                     }
                     return addRootAdmin().onErrorMap(t -> new RuntimeException(
