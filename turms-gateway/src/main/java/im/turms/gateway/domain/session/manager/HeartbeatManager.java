@@ -236,7 +236,8 @@ public class HeartbeatManager {
                             t -> LOGGER.error(
                                     "Caught an error while closing the local user session ({}) with the close reason: {}",
                                     session,
-                                    HEARTBEAT_TIMEOUT));
+                                    HEARTBEAT_TIMEOUT,
+                                    t));
             return null;
         }
         session.setLastHeartbeatUpdateTimestampNanos(nowNanos);

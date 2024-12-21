@@ -249,7 +249,8 @@ public class HttpRequestDispatcher {
             } catch (Exception e) {
                 LOGGER.error("Caught an error while notifying the endpoint change listener: "
                         + listener.getClass()
-                                .getName());
+                                .getName(),
+                        e);
             }
         }
     }

@@ -338,7 +338,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         } catch (Exception e) {
             return Mono.error(new IllegalArgumentException(
                     "Invalid plugin URL: "
-                            + url));
+                            + url,
+                    e));
         }
         String fileName = Paths.get(uri.getPath())
                 .getFileName()

@@ -468,15 +468,15 @@ public class RollingFileAppender extends ChannelAppender {
         try {
             Files.deleteIfExists(path);
         } catch (Exception e) {
-            InternalLogger.INSTANCE.error("Caught an error while delete the log file: "
-                    + path);
+            InternalLogger.INSTANCE.error("Caught an error while deleting the log file: "
+                    + path, e);
         }
         if (archivePath != null) {
             try {
                 Files.deleteIfExists(archivePath);
             } catch (Exception e) {
-                InternalLogger.INSTANCE.error("Caught an error while delete the log file: "
-                        + archivePath);
+                InternalLogger.INSTANCE.error("Caught an error while deleting the log file: "
+                        + archivePath, e);
             }
         }
     }

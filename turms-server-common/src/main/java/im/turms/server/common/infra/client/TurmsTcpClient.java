@@ -148,7 +148,7 @@ public class TurmsTcpClient extends TurmsClient {
     @Override
     public Mono<TurmsNotification> sendRequest(TurmsRequest request) {
         if (connection == null) {
-            return Mono.error(new IllegalStateException("The connection has not established"));
+            return Mono.error(new IllegalStateException("The connection has not been established"));
         }
         if (connection.isDisposed()) {
             return Mono.error(new IllegalStateException("The connection has been closed"));
