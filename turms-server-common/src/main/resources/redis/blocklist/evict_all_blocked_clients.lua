@@ -1,12 +1,11 @@
 local keys = KEYS
 local redis_call = redis.call
-local tonumber = tonumber
 
 local remove_all = #keys == 0
 
 local function remove_blocklist(name)
-    local now = tonumber(redis_call('TIME')[1])
-    redis_call('SET', name .. ':timestamp', now)
+    local now = redis_call('TIME')
+    redis_call('SET', name .. ':timestamp', math.floor(now[1] * 1000 + now[2] / 1000))
     redis_call('DEL', name .. ':log_id')
     redis_call('DEL', name .. ':log')
     redis_call('DEL', name .. ':target')

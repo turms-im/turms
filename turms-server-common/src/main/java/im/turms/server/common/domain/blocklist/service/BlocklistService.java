@@ -54,6 +54,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.security.BlocklistProperties;
 import im.turms.server.common.infra.task.CronConst;
 import im.turms.server.common.infra.task.TaskManager;
+import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
 import im.turms.server.common.infra.thread.ThreadUtil;
@@ -69,6 +70,7 @@ public class BlocklistService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlocklistService.class);
 
+    @VisibleForTesting
     public static int maxLogQueueSize = 100_000;
 
     private final boolean isIpBlocklistEnabled;
@@ -111,7 +113,10 @@ public class BlocklistService extends BaseService {
         isUserIdBlocklistEnabled = userIdBlocklistProperties.isEnabled();
         boolean isGateway = node.getNodeType() == NodeType.GATEWAY;
 
-        Map<String, Object> params = Map.of("MAX_LOG_QUEUE_SIZE", maxLogQueueSize);
+        Map<String, Object> params = Map.of("MAX_LOG_QUEUE_SIZE",
+                maxLogQueueSize,
+                "LOG_ENTRY_ELEMENT_COUNT",
+                BlocklistServiceManager.LOG_ENTRY_ELEMENT_COUNT);
 
         RedisScript<List<Object>> blockClientsScript =
                 RedisScript.get(new ClassPathResource("redis/blocklist/block_clients.lua"),
@@ -261,44 +266,44 @@ public class BlocklistService extends BaseService {
 
     // Block
 
-    public void blockIp(ByteArrayWrapper address, long blockDurationSeconds) {
+    public void blockIp(ByteArrayWrapper address, long blockDurationMillis) {
         if (!isIpBlocklistEnabled) {
             throw ResponseException.get(ResponseStatusCode.IP_BLOCKLIST_IS_DISABLED);
         }
-        ipBlocklistServiceManager.blockClients(Set.of(address), blockDurationSeconds)
+        ipBlocklistServiceManager.blockClients(Set.of(address), blockDurationMillis)
                 .subscribe(null, t -> LOGGER.error("Caught an error while blocking clients", t));
     }
 
-    public Mono<Void> blockIpStrings(Set<String> ips, long blockDurationSeconds) {
+    public Mono<Void> blockIpStrings(Set<String> ips, long blockDurationMillis) {
         if (!isIpBlocklistEnabled) {
             return ResponseExceptionPublisherPool.ipBlocklistIsDisabled();
         }
-        return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockDurationSeconds);
+        return ipBlocklistServiceManager.blockClients(ipsToBytes(ips), blockDurationMillis);
     }
 
-    public Mono<Void> blockIps(Set<ByteArrayWrapper> ips, long blockDurationSeconds) {
+    public Mono<Void> blockIps(Set<ByteArrayWrapper> ips, long blockDurationMillis) {
         if (!isIpBlocklistEnabled) {
             return ResponseExceptionPublisherPool.ipBlocklistIsDisabled();
         }
-        return ipBlocklistServiceManager.blockClients(ips, blockDurationSeconds);
+        return ipBlocklistServiceManager.blockClients(ips, blockDurationMillis);
     }
 
-    public void blockUserId(Long userId, long blockDurationSeconds) {
+    public void blockUserId(Long userId, long blockDurationMillis) {
         if (!isUserIdBlocklistEnabled) {
             throw ResponseException.get(ResponseStatusCode.USER_ID_BLOCKLIST_IS_DISABLED);
         }
-        userIdBlocklistServiceManager.blockClients(Set.of(userId), blockDurationSeconds)
+        userIdBlocklistServiceManager.blockClients(Set.of(userId), blockDurationMillis)
                 .subscribe(null,
                         t -> LOGGER.error(
                                 "Caught an error while deleting expired group invitations",
                                 t));
     }
 
-    public Mono<Void> blockUserIds(Set<Long> userIds, long blockDurationSeconds) {
+    public Mono<Void> blockUserIds(Set<Long> userIds, long blockDurationMillis) {
         if (!isUserIdBlocklistEnabled) {
             return ResponseExceptionPublisherPool.userIdBlocklistIsDisabled();
         }
-        return userIdBlocklistServiceManager.blockClients(userIds, blockDurationSeconds);
+        return userIdBlocklistServiceManager.blockClients(userIds, blockDurationMillis);
     }
 
     public void tryBlockIpForCorruptedFrame(ByteArrayWrapper ip) {

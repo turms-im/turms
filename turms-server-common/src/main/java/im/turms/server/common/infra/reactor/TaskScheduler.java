@@ -33,12 +33,12 @@ import im.turms.server.common.infra.thread.ThreadSafe;
 public class TaskScheduler {
 
     private volatile boolean hasRunningTask;
-    private final ArrayDeque<Sinks.One<?>> tasks = new ArrayDeque<>(16);
+    private final ArrayDeque<Sinks.One<?>> pendingTasks = new ArrayDeque<>(16);
 
     public <T> Mono<T> schedule(Mono<T> mono) {
         mono = mono.doFinally(signalType -> {
             synchronized (this) {
-                Sinks.One<?> sink = tasks.poll();
+                Sinks.One<?> sink = pendingTasks.poll();
                 if (sink == null) {
                     hasRunningTask = false;
                 } else {
@@ -52,7 +52,7 @@ public class TaskScheduler {
                 return mono;
             }
             Sinks.One<T> sink = Sinks.one();
-            tasks.add(sink);
+            pendingTasks.add(sink);
             return sink.asMono()
                     .then(mono);
         }

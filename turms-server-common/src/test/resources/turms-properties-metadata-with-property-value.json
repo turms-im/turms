@@ -2685,17 +2685,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }
@@ -2720,17 +2720,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }
@@ -2755,17 +2755,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }
@@ -2810,17 +2810,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }
@@ -2845,17 +2845,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }
@@ -2880,17 +2880,17 @@
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
+                  "blockDurationMillis": 600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
+                  "blockDurationMillis": 1800000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
+                  "blockDurationMillis": 3600000,
                   "reduceOneTriggerTimeIntervalMillis": 60000,
                   "triggerTimesThreshold": 1
                 }

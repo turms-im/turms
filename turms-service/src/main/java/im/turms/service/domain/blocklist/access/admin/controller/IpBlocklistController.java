@@ -69,7 +69,7 @@ public class IpBlocklistController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> addBlockedIps(
             @RequestBody AddBlockedIpsDTO addBlockedIpsDTO) {
         Mono<Void> result = blocklistService.blockIpStrings(addBlockedIpsDTO.ids(),
-                addBlockedIpsDTO.blockDurationSeconds());
+                addBlockedIpsDTO.blockDurationMillis());
         return HttpHandlerResult.okIfTruthy(result);
     }
 

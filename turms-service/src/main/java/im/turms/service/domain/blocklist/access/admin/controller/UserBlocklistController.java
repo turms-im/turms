@@ -67,7 +67,7 @@ public class UserBlocklistController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Void>>> addBlockedUserIds(
             @RequestBody AddBlockedUserIdsDTO addBlockedUserIdsDTO) {
         Mono<Void> result = blocklistService.blockUserIds(addBlockedUserIdsDTO.ids(),
-                addBlockedUserIdsDTO.blockDurationSeconds());
+                addBlockedUserIdsDTO.blockDurationMillis());
         return HttpHandlerResult.okIfTruthy(result);
     }
 

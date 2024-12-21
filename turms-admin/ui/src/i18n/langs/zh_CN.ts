@@ -55,8 +55,8 @@ const zh_CN = {
         'end': '拉黑结束时间',
         'start': '拉黑开始时间'
     },
+    'blockDurationMillis': '封禁时长(毫秒)',
     'blockEndTime': '封禁结束时间',
-    'blockMinutes': '封禁时长(分钟)',
     'blockedUser': '拉黑用户',
     'blockedUserId': '被拉黑用户ID',
     'blocklist': '黑名单',

@@ -55,8 +55,8 @@ const ja_JP = {
         'end': 'ブロック終了タイムスタンプ',
         'start': 'ブロック開始タイムスタンプ'
     },
+    'blockDurationMillis': 'ブロック時間(ミリ秒)',
     'blockEndTime': 'ブロック終了タイムスタンプ',
-    'blockMinutes': 'ブロック時間(分)',
     'blockedUser': 'ブロックされたユーザー',
     'blockedUserId': 'ブロックされたユーザーID',
     'blocklist': 'ブロックリスト',

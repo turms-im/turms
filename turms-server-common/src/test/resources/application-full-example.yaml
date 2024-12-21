@@ -1045,13 +1045,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false
@@ -1061,13 +1061,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false
@@ -1077,13 +1077,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false
@@ -1101,13 +1101,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false
@@ -1117,13 +1117,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false
@@ -1133,13 +1133,13 @@ turms:
             # global property: false
             # mutable property: false
             block-levels:
-              - block-duration-seconds: 600
+              - block-duration-millis: 600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 5
-              - block-duration-seconds: 1800
+              - block-duration-millis: 1800000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
-              - block-duration-seconds: 3600
+              - block-duration-millis: 3600000
                 reduce-one-trigger-time-interval-millis: 60000
                 trigger-times-threshold: 1
             # global property: false

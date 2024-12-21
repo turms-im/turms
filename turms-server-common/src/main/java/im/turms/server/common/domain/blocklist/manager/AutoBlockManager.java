@@ -55,7 +55,7 @@ public class AutoBlockManager<T> {
         blockLevelPropertiesList =
                 CollectionUtil.transformAsList(autoBlockProperties.getBlockLevels(),
                         properties -> new ParsedBlockLevelProperties(
-                                properties.getBlockDurationSeconds(),
+                                properties.getBlockDurationMillis(),
                                 DateTimeUtil.millisToNanos(
                                         properties.getReduceOneTriggerTimeIntervalMillis()),
                                 properties.getTriggerTimesThreshold()));
@@ -90,7 +90,7 @@ public class AutoBlockManager<T> {
             if (nextLevelProperties == null) {
                 status.lastBlockTriggerTimeNanos = now;
                 status.triggerTimes++;
-                onClientBlocked.accept(id, status.currentLevelProperties.blockDurationSeconds);
+                onClientBlocked.accept(id, status.currentLevelProperties.blockDurationMillis);
                 return status;
             }
 
@@ -101,8 +101,8 @@ public class AutoBlockManager<T> {
                     nextLevelProperties.reduceOneTriggerTimeIntervalNanos;
             int triggerTimes = status.triggerTimes;
             if (reduceOneTriggerTimeIntervalNanos > 0) {
-                triggerTimes -= MathUtil.toInt(((now - previousBlockTriggerTimeNanos)
-                        / reduceOneTriggerTimeIntervalNanos));
+                triggerTimes -= MathUtil.toInt(
+                        (now - previousBlockTriggerTimeNanos) / reduceOneTriggerTimeIntervalNanos);
                 if (triggerTimes <= 0) {
                     status.triggerTimes = 1;
                 } else {
@@ -124,11 +124,11 @@ public class AutoBlockManager<T> {
                     status.nextLevelProperties = null;
                 }
                 status.triggerTimes = 0;
-                onClientBlocked.accept(id, status.currentLevelProperties.blockDurationSeconds);
+                onClientBlocked.accept(id, status.currentLevelProperties.blockDurationMillis);
             } else if (currentLevelProperties != null) {
                 // If already blocked,
                 // notify the callback to refresh the block end time.
-                onClientBlocked.accept(id, currentLevelProperties.blockDurationSeconds);
+                onClientBlocked.accept(id, currentLevelProperties.blockDurationMillis);
             }
             return status;
         });
@@ -155,7 +155,7 @@ public class AutoBlockManager<T> {
             // remove if the block duration has expired.
             if (currentLevelProperties != null) {
                 if ((now - status.lastBlockTriggerTimeNanos)
-                        / DateTimeUtil.NANOS_PER_SECOND > currentLevelProperties.blockDurationSeconds) {
+                        / DateTimeUtil.NANOS_PER_MILLI > currentLevelProperties.blockDurationMillis) {
                     iterator.remove();
                 }
                 continue;
@@ -194,7 +194,7 @@ public class AutoBlockManager<T> {
     }
 
     public record ParsedBlockLevelProperties(
-            long blockDurationSeconds,
+            long blockDurationMillis,
             long reduceOneTriggerTimeIntervalNanos,
             int triggerTimesThreshold
     ) {

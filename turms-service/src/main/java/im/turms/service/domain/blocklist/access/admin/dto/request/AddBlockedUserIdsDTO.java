@@ -26,6 +26,6 @@ import im.turms.server.common.domain.common.access.dto.ControllerDTO;
  */
 public record AddBlockedUserIdsDTO(
         Set<Long> ids,
-        long blockDurationSeconds
+        long blockDurationMillis
 ) implements ControllerDTO {
 }

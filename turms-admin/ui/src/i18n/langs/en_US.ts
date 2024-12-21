@@ -55,8 +55,8 @@ const en_US = {
         'end': 'Unblock Date',
         'start': 'Block Date'
     },
+    'blockDurationMillis': 'Block Duration (Milliseconds)',
     'blockEndTime': 'Block End Time',
-    'blockMinutes': 'Block Time (Minutes)',
     'blockedUser': 'Blocked User',
     'blockedUserId': 'Blocked User ID',
     'blocklist': 'Blocklist',

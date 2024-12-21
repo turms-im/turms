@@ -38,10 +38,10 @@ class AutoBlockManagerTest {
     void tryBlockClient() {
         Map<Long, BlockStats> clientIdToBlockStats = new HashMap<>();
         ObjLongConsumer<Long> onClientBlocked =
-                (clientId, blockDurationSeconds) -> clientIdToBlockStats.compute(clientId,
+                (clientId, blockDurationMillis) -> clientIdToBlockStats.compute(clientId,
                         (id, stats) -> stats == null
-                                ? new BlockStats(1, blockDurationSeconds)
-                                : new BlockStats(stats.triggerTimes + 1, blockDurationSeconds));
+                                ? new BlockStats(1, blockDurationMillis)
+                                : new BlockStats(stats.triggerTimes + 1, blockDurationMillis));
         AutoBlockItemProperties properties = new AutoBlockItemProperties();
         List<AutoBlockItemProperties.BlockLevelProperties> blockLevelPropertiesList =
                 properties.getBlockLevels();
@@ -79,9 +79,9 @@ class AutoBlockManagerTest {
         blockStatus = manager.tryBlockClient(clientIdToBlock);
         assertThat(clientIdToBlockStats).isNotEmpty();
         assertThat(clientIdToBlockStats.get(clientIdToBlock).triggerTimes).isOne();
-        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockTriggerSeconds)
+        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockDurationMillis)
                 .isEqualTo(blockLevelPropertiesList.getFirst()
-                        .getBlockDurationSeconds());
+                        .getBlockDurationMillis());
         assertThat(blockStatus.getCurrentLevel()).isZero();
         assertThat(blockStatus.getCurrentLevelProperties()).isNotNull();
         assertThat(blockStatus.getNextLevelProperties()).isNotNull();
@@ -91,9 +91,9 @@ class AutoBlockManagerTest {
         blockStatus = manager.tryBlockClient(clientIdToBlock);
         assertThat(clientIdToBlockStats).isNotEmpty();
         assertThat(clientIdToBlockStats.get(clientIdToBlock).triggerTimes).isEqualTo(2);
-        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockTriggerSeconds)
+        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockDurationMillis)
                 .isEqualTo(blockLevelPropertiesList.get(1)
-                        .getBlockDurationSeconds());
+                        .getBlockDurationMillis());
         assertThat(blockStatus.getCurrentLevel()).isOne();
         assertThat(blockStatus.getCurrentLevelProperties()).isNotNull();
         assertThat(blockStatus.getNextLevelProperties()).isNotNull();
@@ -103,9 +103,9 @@ class AutoBlockManagerTest {
         blockStatus = manager.tryBlockClient(clientIdToBlock);
         assertThat(clientIdToBlockStats).isNotEmpty();
         assertThat(clientIdToBlockStats.get(clientIdToBlock).triggerTimes).isEqualTo(3);
-        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockTriggerSeconds)
+        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockDurationMillis)
                 .isEqualTo(blockLevelPropertiesList.get(2)
-                        .getBlockDurationSeconds());
+                        .getBlockDurationMillis());
         assertThat(blockStatus.getCurrentLevel()).isEqualTo(2);
         assertThat(blockStatus.getCurrentLevelProperties()).isNotNull();
         assertThat(blockStatus.getNextLevelProperties()).isNull();
@@ -115,9 +115,9 @@ class AutoBlockManagerTest {
         blockStatus = manager.tryBlockClient(clientIdToBlock);
         assertThat(clientIdToBlockStats).isNotEmpty();
         assertThat(clientIdToBlockStats.get(clientIdToBlock).triggerTimes).isEqualTo(4);
-        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockTriggerSeconds)
+        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockDurationMillis)
                 .isEqualTo(blockLevelPropertiesList.get(2)
-                        .getBlockDurationSeconds());
+                        .getBlockDurationMillis());
         assertThat(blockStatus.getCurrentLevel()).isEqualTo(2);
         assertThat(blockStatus.getCurrentLevelProperties()).isNotNull();
         assertThat(blockStatus.getNextLevelProperties()).isNull();
@@ -127,9 +127,9 @@ class AutoBlockManagerTest {
         blockStatus = manager.tryBlockClient(clientIdToBlock);
         assertThat(clientIdToBlockStats).isNotEmpty();
         assertThat(clientIdToBlockStats.get(clientIdToBlock).triggerTimes).isEqualTo(5);
-        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockTriggerSeconds)
+        assertThat(clientIdToBlockStats.get(clientIdToBlock).lastBlockDurationMillis)
                 .isEqualTo(blockLevelPropertiesList.get(2)
-                        .getBlockDurationSeconds());
+                        .getBlockDurationMillis());
         assertThat(blockStatus.getCurrentLevel()).isEqualTo(2);
         assertThat(blockStatus.getCurrentLevelProperties()).isNotNull();
         assertThat(blockStatus.getNextLevelProperties()).isNull();
@@ -138,7 +138,7 @@ class AutoBlockManagerTest {
 
     record BlockStats(
             int triggerTimes,
-            long lastBlockTriggerSeconds
+            long lastBlockDurationMillis
     ) {
     }
 
