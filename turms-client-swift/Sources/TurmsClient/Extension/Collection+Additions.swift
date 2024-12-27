@@ -9,7 +9,7 @@ public extension Array {
             )
         }
         var dict: [String: String] = [:]
-        for i in stride(from: 0, through: count, by: 2) {
+        for i in stride(from: 0, to: count, by: 2) {
             dict[String(describing: self[i])] = String(describing: self[i + 1])
         }
         return dict
