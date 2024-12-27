@@ -21,6 +21,7 @@ import com.mongodb.ExplainVerbosity;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoNamespace;
 import com.mongodb.MongoQueryException;
+import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.internal.async.AsyncBatchCursor;
 import com.mongodb.internal.async.SingleResultCallback;
 import com.mongodb.internal.async.function.AsyncCallbackSupplier;
@@ -28,7 +29,6 @@ import com.mongodb.internal.async.function.RetryState;
 import com.mongodb.internal.binding.AsyncReadBinding;
 import com.mongodb.internal.binding.ReadBinding;
 import com.mongodb.internal.connection.NoOpSessionContext;
-import com.mongodb.internal.session.SessionContext;
 import com.mongodb.lang.Nullable;
 import lombok.Getter;
 import org.bson.BsonDocument;
@@ -84,7 +84,9 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     public void executeAsync(
             final AsyncReadBinding binding,
             final SingleResultCallback<AsyncBatchCursor<T>> callback) {
-        RetryState retryState = initialRetryState(retryReads);
+        RetryState retryState = initialRetryState(retryReads,
+                binding.getOperationContext()
+                        .getTimeoutContext());
         binding.retain();
         AsyncCallbackSupplier<AsyncBatchCursor<T>> asyncRead = decorateReadWithRetriesAsync(
                 retryState,
@@ -97,17 +99,17 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
                             if (retryState
                                     .breakAndCompleteIfRetryAnd(
                                             () -> !canRetryRead(source.getServerDescription(),
-                                                    binding.getSessionContext()),
+                                                    binding.getOperationContext()),
                                             releasingCallback)) {
                                 return;
                             }
                             SingleResultCallback<AsyncBatchCursor<T>> wrappedCallback =
                                     exceptionTransformingCallback(releasingCallback);
                             createReadCommandAndExecuteAsync(retryState,
-                                    binding,
+                                    binding.getOperationContext(),
                                     source,
                                     namespace.getDatabaseName(),
-                                    getCommandCreator(binding.getSessionContext()),
+                                    getCommandCreator(),
                                     CommandResultDocumentCodec.create(decoder, FIRST_BATCH),
                                     asyncTransformer(),
                                     connection,
@@ -157,10 +159,9 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
                 resultDecoder);
     }
 
-    private CommandOperationHelper.CommandCreator getCommandCreator(
-            final SessionContext sessionContext) {
-        return (serverDescription, connectionDescription) -> {
-            appendReadConcernToCommand(sessionContext,
+    private CommandOperationHelper.CommandCreator getCommandCreator() {
+        return (operationContext, serverDescription, connectionDescription) -> {
+            appendReadConcernToCommand(operationContext.getSessionContext(),
                     connectionDescription.getMaxWireVersion(),
                     command);
             return command;
@@ -169,6 +170,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
 
     private AsyncOperationHelper.CommandReadTransformerAsync<BsonDocument, AsyncBatchCursor<T>> asyncTransformer() {
         return (result, source, connection) -> new AsyncCommandBatchCursor<>(
+                TimeoutMode.CURSOR_LIFETIME,
                 result,
                 getBatchSize(),
                 0,
@@ -187,12 +189,4 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
                 .getValue();
     }
 
-    private int getLimit() {
-        BsonValue limit = command.get("limit");
-        if (limit == null) {
-            return 0;
-        }
-        return limit.asInt32()
-                .getValue();
-    }
 }

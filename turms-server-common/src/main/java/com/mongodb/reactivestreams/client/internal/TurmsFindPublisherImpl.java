@@ -18,14 +18,18 @@
 package com.mongodb.reactivestreams.client.internal;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import com.mongodb.CursorType;
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.MongoNamespace;
+import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
+import com.mongodb.internal.TimeoutSettings;
 import com.mongodb.internal.async.AsyncBatchCursor;
 import com.mongodb.internal.client.model.FindOptions;
 import com.mongodb.internal.operation.AsyncExplainableReadOperation;
+import com.mongodb.internal.operation.AsyncOperations;
 import com.mongodb.internal.operation.AsyncReadOperation;
 import com.mongodb.internal.operation.FindOperation;
 import com.mongodb.internal.operation.TurmsFindOperation;
@@ -180,6 +184,11 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     }
 
     @Override
+    public FindPublisher<T> timeoutMode(final TimeoutMode timeoutMode) {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public Publisher<Document> explain() {
         return publishExplain(Document.class, null);
     }
@@ -205,8 +214,9 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
             final Class<E> explainResultClass,
             @Nullable final ExplainVerbosity verbosity) {
         notNull("explainDocumentClass", explainResultClass);
-        return getMongoOperationPublisher().createReadOperationMono(() -> asAsyncReadOperation(0)
-                .asAsyncExplainableOperation(verbosity, getCodecRegistry().get(explainResultClass)),
+        return getMongoOperationPublisher().createReadOperationMono(getTimeoutSettings(),
+                () -> asAsyncReadOperation(0).asAsyncExplainableOperation(verbosity,
+                        getCodecRegistry().get(explainResultClass)),
                 getClientSession());
     }
 
@@ -214,6 +224,11 @@ public class TurmsFindPublisherImpl<T> extends BatchCursorPublisher<T> implement
     AsyncExplainableReadOperation<AsyncBatchCursor<T>> asAsyncReadOperation(
             final int initialBatchSize) {
         return getFindOperation(queryOptions.batchSize(initialBatchSize));
+    }
+
+    @Override
+    Function<AsyncOperations<?>, TimeoutSettings> getTimeoutSettings() {
+        return (asyncOperations -> asyncOperations.createTimeoutSettings(0, 0));
     }
 
     @Override

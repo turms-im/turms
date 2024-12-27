@@ -18,7 +18,7 @@
 package im.turms.service.storage.elasticsearch.model;
 
 import java.util.Map;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

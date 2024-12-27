@@ -17,7 +17,7 @@
 
 package im.turms.service.storage.elasticsearch.model;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * @author James Chen
