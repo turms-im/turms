@@ -17,12 +17,18 @@
 
 package im.turms.server.common.storage.mongo.exception;
 
+import jakarta.annotation.Nullable;
+
 /**
  * @author James Chen
  */
 public class CorruptedDocumentException extends RuntimeException {
 
-    public CorruptedDocumentException(String message, Throwable cause) {
+    public CorruptedDocumentException(String message) {
+        super(message);
+    }
+
+    public CorruptedDocumentException(String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 

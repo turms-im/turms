@@ -27,7 +27,7 @@ import im.turms.server.common.access.client.dto.request.TurmsRequest;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 import static im.turms.server.common.infra.logging.CommonLogger.CLIENT_API_LOGGER;
 import static im.turms.server.common.infra.logging.CommonLogger.LOG_FIELD_DELIMITER;
@@ -70,7 +70,7 @@ public final class ClientApiLogging {
                 NumberFormatter.toCharBytes(requestId),
                 requestType.name(),
                 NumberFormatter.toCharBytes(requestSize),
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 // response information
                 NumberFormatter.toCharBytes(response.getCode()),
                 response.hasData()
@@ -107,7 +107,7 @@ public final class ClientApiLogging {
                 NumberFormatter.toCharBytes(requestId),
                 requestType.name(),
                 NumberFormatter.toCharBytes(requestSize),
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 // response information
                 NumberFormatter.toCharBytes(responseCode),
                 null, // Response data type
@@ -142,7 +142,7 @@ public final class ClientApiLogging {
                 NumberFormatter.toCharBytes(requestId),
                 requestType,
                 NumberFormatter.toCharBytes(requestSize),
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 // response information
                 NumberFormatter.toCharBytes(responseCode),
                 responseDataType,

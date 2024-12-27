@@ -27,7 +27,6 @@ import reactor.netty.channel.ChannelMetricsRecorder;
 
 import static reactor.netty.Metrics.DATA_RECEIVED;
 import static reactor.netty.Metrics.DATA_SENT;
-import static reactor.netty.Metrics.ERRORS;
 import static reactor.netty.Metrics.REGISTRY;
 
 /**

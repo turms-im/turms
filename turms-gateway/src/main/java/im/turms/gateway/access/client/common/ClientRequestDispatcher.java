@@ -53,6 +53,7 @@ import im.turms.server.common.infra.metrics.CommonMetricNameConst;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 
@@ -166,6 +167,7 @@ public class ClientRequestDispatcher {
         }
         // Parse and handle service requests
         long requestTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         int requestSize = serviceRequestBuffer.readableBytes();
         SimpleTurmsRequest request;
         SimpleTurmsRequest tempRequest;
@@ -250,7 +252,7 @@ public class ClientRequestDispatcher {
                                     requestSize,
                                     requestTime,
                                     notification,
-                                    System.currentTimeMillis() - requestTime);
+                                    (System.nanoTime() - startTime) / DateTimeUtil.NANOS_PER_MILLI);
                         }
                     }
                     return ProtoEncoder.getDirectByteBuffer(notification);
@@ -287,8 +289,7 @@ public class ClientRequestDispatcher {
             }
 
             // Rate limiting
-            long now = System.currentTimeMillis();
-            if (!ipRequestThrottler.tryAcquireToken(sessionWrapper.getIp(), now)) {
+            if (!ipRequestThrottler.tryAcquireToken(sessionWrapper.getIp(), System.nanoTime())) {
                 blocklistService.tryBlockIpForFrequentRequest(sessionWrapper.getIp());
                 UserSession userSession = sessionWrapper.getUserSession();
                 if (userSession != null) {

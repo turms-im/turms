@@ -95,8 +95,8 @@ export default defineConfig({
                                 text: 'Development',
                                 items: [
                                     {
-                                        text: 'About Secondary Development',
-                                        link: '/server/development/redevelopment.md'
+                                        text: 'About Custom Development',
+                                        link: '/server/development/customization.md'
                                     },
                                     {
                                         text: 'Basic Development Rules',
@@ -313,8 +313,8 @@ export default defineConfig({
                                 text: '开发',
                                 items: [
                                     {
-                                        text: '关于二次开发',
-                                        link: '/zh-CN/server/development/redevelopment.md'
+                                        text: '关于定制化开发',
+                                        link: '/zh-CN/server/development/customization.md'
                                     },
                                     {
                                         text: '基本开发规约',

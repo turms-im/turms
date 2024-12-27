@@ -178,6 +178,30 @@ public final class CollectionUtil {
         return UnifiedSet.newSet(expectedSize);
     }
 
+    public static <T> Set<T> newSetIntersection(Collection<T> c1, Collection<T> c2) {
+        int count;
+        Collection<T> smaller;
+        Collection<T> larger;
+        int c1Size = c1.size();
+        int c2Size = c2.size();
+        if (c1Size < c2Size) {
+            count = c1Size;
+            smaller = c1;
+            larger = c2;
+        } else {
+            count = c2Size;
+            smaller = c2;
+            larger = c1;
+        }
+        Set<T> set = newSetWithExpectedSize(count);
+        for (T value : smaller) {
+            if (larger.contains(value)) {
+                set.add(value);
+            }
+        }
+        return set;
+    }
+
     public static <T> SequencedSet<T> newSequencedSet(Collection<T> values) {
         LinkedHashSet<T> set = LinkedHashSet.newLinkedHashSet(values.size());
         set.addAll(values);

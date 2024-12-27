@@ -20,18 +20,17 @@ package helper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import im.turms.server.common.domain.admin.po.Admin;
-import im.turms.server.common.domain.common.repository.BaseRepository;
+import im.turms.server.common.domain.admin.repository.BaseAdminRepository;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
 
 /**
  * @author James Chen
  */
 @Repository
-public class AdminRepository extends BaseRepository<Admin, String> {
+public class AdminRepository extends BaseAdminRepository {
 
     public AdminRepository(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient) {
-        super(mongoClient, Admin.class);
+        super(mongoClient);
         this.mongoClient = mongoClient;
     }
 

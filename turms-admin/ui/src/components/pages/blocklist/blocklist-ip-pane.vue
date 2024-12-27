@@ -47,7 +47,7 @@ export default {
                             rules: this.$validator.create({required: true, isIp: true})
                         },
                         {
-                            id: 'blockDurationSeconds',
+                            id: 'blockDurationMillis',
                             type: 'INPUT-NUMBER',
                             value: 1,
                             min: 1,

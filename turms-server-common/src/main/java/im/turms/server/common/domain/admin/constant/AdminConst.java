@@ -25,10 +25,11 @@ public final class AdminConst {
     }
 
     /**
-     * Use the hard-coded account because it is immutable.
+     * Use the hard-coded login name because it is immutable.
      */
-    public static final String ROOT_ADMIN_ACCOUNT = "turms";
+    public static final String ROOT_ADMIN_LOGIN_NAME = "turms";
     public static final Long ADMIN_ROLE_ROOT_ID = 0L;
+    public static final Long ROOT_ADMIN_ID = 0L;
     public static final Long ADMIN_REQUESTER_ID = 0L;
     public static final Long ADMIN_REQUEST_ID = 0L;
 }

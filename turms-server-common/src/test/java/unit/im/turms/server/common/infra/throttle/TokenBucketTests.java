@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import im.turms.server.common.infra.throttle.TokenBucket;
 import im.turms.server.common.infra.throttle.TokenBucketContext;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +35,7 @@ class TokenBucketTests {
         TokenBucketContext context = new TokenBucketContext();
         context.setInitialTokens(0);
         TokenBucket bucket = new TokenBucket(context);
-        boolean acquired = bucket.tryAcquire(System.currentTimeMillis());
+        boolean acquired = bucket.tryAcquire(System.nanoTime());
         assertThat(acquired).isFalse();
     }
 
@@ -44,23 +45,23 @@ class TokenBucketTests {
         context.setCapacity(1);
         context.setInitialTokens(1);
         TokenBucket bucket = new TokenBucket(context);
-        boolean acquired = bucket.tryAcquire(System.currentTimeMillis());
+        boolean acquired = bucket.tryAcquire(System.nanoTime());
         assertThat(acquired).isTrue();
     }
 
     @Test
     void shouldAcquire_afterRefill() {
         int tokensPerPeriod = 10;
-        int refillIntervalMillis = 1;
+        long refillIntervalNanos = DateTimeUtil.NANOS_PER_MILLI;
 
         TokenBucketContext context = new TokenBucketContext();
         context.setTokensPerPeriod(tokensPerPeriod);
         context.setCapacity(tokensPerPeriod);
-        context.setRefillIntervalMillis(refillIntervalMillis);
+        context.setRefillIntervalNanos(refillIntervalNanos);
         TokenBucket bucket = new TokenBucket(context);
-        long time = System.currentTimeMillis();
+        long time = System.nanoTime();
         drain(bucket, time);
-        time += refillIntervalMillis;
+        time += refillIntervalNanos;
         boolean acquired;
         for (int i = 0; i < tokensPerPeriod; i++) {
             acquired = bucket.tryAcquire(time);
@@ -70,10 +71,10 @@ class TokenBucketTests {
         assertThat(acquired).isFalse();
     }
 
-    private void drain(TokenBucket bucket, long time) {
+    private void drain(TokenBucket bucket, long timestampNanos) {
         boolean acquired;
         do {
-            acquired = bucket.tryAcquire(time);
+            acquired = bucket.tryAcquire(timestampNanos);
         } while (acquired);
     }
 

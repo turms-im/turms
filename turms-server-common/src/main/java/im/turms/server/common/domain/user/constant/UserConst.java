@@ -24,6 +24,6 @@ public final class UserConst {
     private UserConst() {
     }
 
-    public static final Long DEFAULT_USER_PERMISSION_GROUP_ID = 0L;
+    public static final Long DEFAULT_USER_ROLE_ID = 0L;
     public static final Integer DEFAULT_RELATIONSHIP_GROUP_INDEX = 0;
 }

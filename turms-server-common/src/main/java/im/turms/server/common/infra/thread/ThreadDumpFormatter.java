@@ -30,7 +30,7 @@ import io.netty.buffer.PooledByteBufAllocator;
 
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -72,7 +72,7 @@ public class ThreadDumpFormatter {
 
     public static ByteBuf format(ThreadInfo[] threads) {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer(threads.length * 512);
-        buffer.writeBytes(DateUtil.toBytes(System.currentTimeMillis()))
+        buffer.writeBytes(DateTimeUtil.toBytes(System.currentTimeMillis()))
                 .writeByte('\n')
                 .writeBytes(FULL_THREAD_DUMP)
                 .writeByte('\n');

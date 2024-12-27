@@ -74,11 +74,19 @@ public abstract class ExpirableEntityRepository<T extends Expirable, K>
                 .map(request -> transformExpiredRequest(request, getEntityExpireAfterSeconds()));
     }
 
+    /**
+     * @param options Note that the projection must specify the creation date field to return. The
+     *                method does not specify the creation date field here for better performance.
+     */
     protected Flux<T> findExpirableDocs(Filter filter, QueryOptions options) {
         return mongoClient.findMany(entityClass, filter, options)
                 .map(request -> transformExpiredRequest(request, getEntityExpireAfterSeconds()));
     }
 
+    /**
+     * @param options Note that the projection must specify the creation date field to return. The
+     *                method does not specify the creation date field here for better performance.
+     */
     protected Mono<T> findExpirableDoc(Filter filter, QueryOptions options) {
         return mongoClient.findOne(entityClass, filter, options)
                 .map(request -> transformExpiredRequest(request, getEntityExpireAfterSeconds()));

@@ -61,13 +61,19 @@
                 "USER_FRIEND_REQUEST_UPDATE",
                 "USER_FRIEND_REQUEST_QUERY"
             ],
+            "USER_ROLE": [
+                "USER_ROLE_CREATE",
+                "USER_ROLE_DELETE",
+                "USER_ROLE_UPDATE",
+                "USER_ROLE_QUERY"
+            ],
             "USER_ONLINE_INFO": [
                 "USER_ONLINE_INFO_UPDATE",
                 "USER_ONLINE_INFO_QUERY"
             ]
         },
         "GROUP": {
-            "GROUP_INFO": [
+            "GROUP": [
                 "GROUP_CREATE",
                 "GROUP_DELETE",
                 "GROUP_UPDATE",
@@ -136,12 +142,18 @@
                 "ADMIN_ROLE_DELETE",
                 "ADMIN_ROLE_UPDATE",
                 "ADMIN_ROLE_QUERY"
+            ],
+            "ADMIN_PERMISSION": [
+                "ADMIN_PERMISSION_QUERY"
             ]
         },
         "CLIENT_BLOCKLIST": [
             "CLIENT_BLOCKLIST_CREATE",
             "CLIENT_BLOCKLIST_DELETE",
             "CLIENT_BLOCKLIST_QUERY"
+        ],
+        "CLIENT_REQUEST": [
+            "CLIENT_REQUEST_CREATE"
         ],
         "CLUSTER_MEMBER": [
             "CLUSTER_MEMBER_CREATE",
@@ -153,7 +165,7 @@
             "CLUSTER_LEADER_UPDATE",
             "CLUSTER_LEADER_QUERY"
         ],
-        "CLUSTER_CONFIG": [
+        "CLUSTER_SETTING": [
             "CLUSTER_SETTING_UPDATE",
             "CLUSTER_SETTING_QUERY"
         ],
@@ -190,9 +202,9 @@
 
         "user": "/users",
         "userOnline": "/users/online-infos/count",
-        "userPermissionGroup": "/users/permission-groups",
         "userRelationship": "/users/relationships",
         "userRelationshipGroup": "/users/relationships/groups",
+        "userRole": "/users/roles",
         "userSession": "/users/online-infos/sessions",
         "userStatus": "/users/online-infos/statuses",
         "friendRequest": "/users/relationships/friend-requests",

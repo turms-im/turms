@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import im.turms.server.common.domain.common.po.BaseEntity;
+import im.turms.server.common.domain.common.po.Customizable;
 import im.turms.server.common.storage.mongo.entity.annotation.Document;
 import im.turms.server.common.storage.mongo.entity.annotation.Field;
 import im.turms.server.common.storage.mongo.entity.annotation.Id;
@@ -42,7 +43,7 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 @Data
 @Document(Group.COLLECTION_NAME)
 @Sharded
-public final class Group extends BaseEntity {
+public final class Group extends BaseEntity implements Customizable {
 
     public static final String COLLECTION_NAME = "group";
 

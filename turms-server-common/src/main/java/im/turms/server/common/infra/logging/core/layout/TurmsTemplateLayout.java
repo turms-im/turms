@@ -34,7 +34,7 @@ import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.logging.core.context.LogThreadContext;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.netty.ReferenceCountUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.tracing.TracingContext;
 
 /**
@@ -141,7 +141,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             @Nullable CharSequence msg,
             @Nullable Object[] args,
             @Nullable Throwable throwable) {
-        byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
+        byte[] timestamp = DateTimeUtil.toBytes(System.currentTimeMillis());
 
         String threadName = Thread.currentThread()
                 .getName();
@@ -193,7 +193,7 @@ public class TurmsTemplateLayout extends TemplateLayout {
             @Nullable byte[] className,
             LogLevel level,
             ByteBuf msg) {
-        byte[] timestamp = DateUtil.toBytes(System.currentTimeMillis());
+        byte[] timestamp = DateTimeUtil.toBytes(System.currentTimeMillis());
 
         String threadName = Thread.currentThread()
                 .getName();

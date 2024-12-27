@@ -18,7 +18,7 @@
 package im.turms.server.common.infra.task;
 
 /**
- * Place all cron expressions here, so we know what happens at the specific times clearly
+ * Place all cron expressions here, so we know what happens at the specific times clearly.
  *
  * @author James Chen
  * @see org.springframework.scheduling.support.CronExpression

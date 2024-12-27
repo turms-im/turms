@@ -53,7 +53,7 @@ import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.time.DurationConst;
 import im.turms.server.common.infra.validation.ValidUserRelationshipKey;
 import im.turms.server.common.infra.validation.Validator;
@@ -332,7 +332,7 @@ public class UserRelationshipService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
@@ -370,7 +370,7 @@ public class UserRelationshipService extends BaseService {
             @Nullable Date lastUpdatedDate) {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, date)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, date)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<Set<UserRelationship>> recyclableSet = SetRecycler.obtain();
@@ -423,8 +423,8 @@ public class UserRelationshipService extends BaseService {
             Mono<List<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
                     .collect(Collectors.toCollection(recyclableList2::getValue));
             return Mono.zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
-                    .flatMapMany(tuple -> Flux
-                            .fromIterable(CollectionUtil.newSet(tuple.getT1(), tuple.getT2())))
+                    .flatMapMany(tuple -> Flux.fromIterable(
+                            CollectionUtil.newSetIntersection(tuple.getT1(), tuple.getT2())))
                     .doFinally(signalType -> {
                         recyclableList1.recycle();
                         recyclableList2.recycle();

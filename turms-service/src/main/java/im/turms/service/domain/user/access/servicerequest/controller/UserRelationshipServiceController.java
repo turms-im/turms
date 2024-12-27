@@ -320,33 +320,30 @@ public class UserRelationshipServiceController extends BaseServiceController {
                 return userRelationshipGroupService
                         .queryRelationshipGroupMemberIds(clientRequest.userId(), groupIndex)
                         .collect(Collectors.toCollection(recyclableList::getValue))
-                        .flatMap(
-                                memberIds -> userRelationshipGroupService
-                                        .deleteRelationshipGroupAndMoveMembers(clientRequest
-                                                .userId(), groupIndex, targetGroupIndex)
-                                        .then(Mono.fromCallable(() -> {
-                                            TurmsRequest notification =
-                                                    clientRequest.turmsRequest();
-                                            if (!request.hasTargetGroupIndex()) {
-                                                TurmsRequest.Builder builder =
-                                                        ClientMessagePool.getTurmsRequestBuilder()
-                                                                .mergeFrom(notification);
-                                                notification = builder
-                                                        .setDeleteRelationshipGroupRequest(builder
-                                                                .getDeleteRelationshipGroupRequestBuilder()
-                                                                .setTargetGroupIndex(
-                                                                        targetGroupIndex))
-                                                        .build();
-                                            }
-                                            return memberIds.isEmpty()
-                                                    ? RequestHandlerResult.of(
-                                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
-                                                            notification)
-                                                    : RequestHandlerResult.of(
-                                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
-                                                            CollectionUtil.newSet(memberIds),
-                                                            notification);
-                                        })))
+                        .flatMap(memberIds -> userRelationshipGroupService
+                                .deleteRelationshipGroupAndMoveMembersToNewGroup(clientRequest
+                                        .userId(), groupIndex, targetGroupIndex)
+                                .then(Mono.fromCallable(() -> {
+                                    TurmsRequest notification = clientRequest.turmsRequest();
+                                    if (!request.hasTargetGroupIndex()) {
+                                        TurmsRequest.Builder builder =
+                                                ClientMessagePool.getTurmsRequestBuilder()
+                                                        .mergeFrom(notification);
+                                        notification = builder
+                                                .setDeleteRelationshipGroupRequest(builder
+                                                        .getDeleteRelationshipGroupRequestBuilder()
+                                                        .setTargetGroupIndex(targetGroupIndex))
+                                                .build();
+                                    }
+                                    return memberIds.isEmpty()
+                                            ? RequestHandlerResult.of(
+                                                    notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
+                                                    notification)
+                                            : RequestHandlerResult.of(
+                                                    notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupDeleted,
+                                                    CollectionUtil.newSet(memberIds),
+                                                    notification);
+                                })))
                         .doFinally(signalType -> recyclableList.recycle());
             }
             TurmsRequest notification = clientRequest.turmsRequest();
@@ -360,7 +357,7 @@ public class UserRelationshipServiceController extends BaseServiceController {
                         .build();
             }
             return userRelationshipGroupService
-                    .deleteRelationshipGroupAndMoveMembers(clientRequest.userId(),
+                    .deleteRelationshipGroupAndMoveMembersToNewGroup(clientRequest.userId(),
                             groupIndex,
                             targetGroupIndex)
                     .thenReturn(RequestHandlerResult.of(
@@ -576,23 +573,30 @@ public class UserRelationshipServiceController extends BaseServiceController {
             Mono<UpdateResult> updateRelationshipGroup = userRelationshipGroupService
                     .updateRelationshipGroupName(ownerId, groupIndex, request.getNewName());
             if (notifyRelationshipGroupMembersOfOneSidedRelationshipGroupUpdated) {
-                Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
-                return userRelationshipGroupService
-                        .queryRelationshipGroupMemberIds(ownerId, groupIndex)
-                        .collect(Collectors.toCollection(recyclableSet::getValue))
-                        .map(memberIds -> memberIds.isEmpty()
-                                ? RequestHandlerResult.of(
-                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                                        clientRequest.turmsRequest())
-                                : RequestHandlerResult.of(
-                                        notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                                        CollectionUtil.newSet(memberIds),
-                                        clientRequest.turmsRequest()))
-                        .doFinally(signalType -> recyclableSet.recycle());
+                return updateRelationshipGroup.flatMap(result -> {
+                    if (result.getModifiedCount() == 0) {
+                        return Mono.just(RequestHandlerResult.OK);
+                    }
+                    Recyclable<Set<Long>> recyclableSet = SetRecycler.obtain();
+                    return userRelationshipGroupService
+                            .queryRelationshipGroupMemberIds(ownerId, groupIndex)
+                            .collect(Collectors.toCollection(recyclableSet::getValue))
+                            .map(memberIds -> memberIds.isEmpty()
+                                    ? RequestHandlerResult.of(
+                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                                            clientRequest.turmsRequest())
+                                    : RequestHandlerResult.of(
+                                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                                            CollectionUtil.newSet(memberIds),
+                                            clientRequest.turmsRequest()))
+                            .doFinally(signalType -> recyclableSet.recycle());
+                });
             }
-            return updateRelationshipGroup.thenReturn(RequestHandlerResult.of(
-                    notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
-                    clientRequest.turmsRequest()));
+            return updateRelationshipGroup.map(result -> result.getModifiedCount() == 0
+                    ? RequestHandlerResult.OK
+                    : RequestHandlerResult.of(
+                            notifyRequesterOtherOnlineSessionsOfOneSidedRelationshipGroupUpdated,
+                            clientRequest.turmsRequest()));
         };
     }
 

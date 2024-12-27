@@ -76,7 +76,7 @@ import im.turms.service.domain.group.bo.GroupJoinStrategy;
 import im.turms.service.domain.group.bo.GroupUpdateStrategy;
 import im.turms.service.domain.group.po.GroupType;
 import im.turms.service.domain.group.service.GroupTypeService;
-import im.turms.service.domain.user.service.UserPermissionGroupService;
+import im.turms.service.domain.user.service.UserRoleService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -118,7 +118,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
     private GroupTypeService groupTypeService;
 
     @Autowired
-    private UserPermissionGroupService userPermissionGroupService;
+    private UserRoleService userRoleService;
 
     // Prepare data
 
@@ -167,9 +167,9 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         true)
                 .block(timeout);
 
-        userPermissionGroupService.queryStoredOrDefaultUserPermissionGroupByUserId(USER_ID_1)
-                .flatMap(permissionGroup -> userPermissionGroupService.updateUserPermissionGroups(
-                        Set.of(permissionGroup.getId()),
+        userRoleService.queryStoredOrDefaultUserRoleByUserId(USER_ID_1)
+                .flatMap(userRole -> userRoleService.updateUserRoles(Set.of(userRole.getId()),
+                        null,
                         Set.of(0L,
                                 groupTypeWithInvitationStrategyOwnerManager.getId(),
                                 groupTypeWithInvitationStrategyOwnerManagerRequiringApproval

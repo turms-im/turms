@@ -566,7 +566,7 @@ public class RpcService implements ClusterService {
                         .isActive()) {
             return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND,
                     ResponseStatusCode.SERVER_UNAVAILABLE,
-                    "Some connections have not established"));
+                    "Some connections have not been established"));
         }
         return Mono.deferContextual(context -> {
             addTraceIdToRequestFromContext(context, request);

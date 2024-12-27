@@ -9,14 +9,14 @@
 
 ## User information function
 
-| **Function**                        | **Function Description**                                     | **Related Configuration**                                    |
-| :---------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Add User                            |                                                              | turms.service.user.activate-user-when-added                  |
-| Delete User                         |                                                              | turms.service.user.delete-user-logically                     |
-| Modify user profile                 | Users modify their own nickname, introduction, avatar URL    |                                                              |
-| Get user profile                    | User view own or other user's profile                        |                                                              |
-| Set user profile access permissions | Users can set access permissions for each personal profile. Access rights are: visible to everyone, visible to friends, visible only to yourself |                                                              |
-| User permission group               | Administrators can give different permissions to different users | Configuration model: im.turms.service.domain.user.po.UserPermissionGroup |
+| **Function**                        | **Function Description**                                                                                                                         | **Related Configuration**                                     |
+|:------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| Add User                            |                                                                                                                                                  | turms.service.user.activate-user-when-added                   |
+| Delete User                         |                                                                                                                                                  | turms.service.user.delete-user-logically                      |
+| Modify user profile                 | Users modify their own nickname, introduction, avatar URL                                                                                        |                                                               |
+| Get user profile                    | User view own or other user's profile                                                                                                            |                                                               |
+| Set user profile access permissions | Users can set access permissions for each personal profile. Access rights are: visible to everyone, visible to friends, visible only to yourself |                                                               |
+| User role                           | Administrators can assign different roles to users                                                                                     | Configuration model: im.turms.service.domain.user.po.UserRole |
 
 ## User Relationship Hosting
 

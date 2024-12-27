@@ -83,7 +83,7 @@ import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.test.VisibleForTesting;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.storage.mongo.operation.OperationResultConvertor;
@@ -126,6 +126,9 @@ import static im.turms.service.infra.metrics.MetricNameConst.TURMS_BUSINESS_MESS
 public class MessageService extends BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageService.class);
+
+    private static final Mono<MessageAndRecipientIds> ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE =
+            Mono.error(ResponseException.get(NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE));
 
     private static final Method GET_MESSAGES_TO_DELETE_METHOD;
 
@@ -722,7 +725,8 @@ public class MessageService extends BaseService {
         } catch (ResponseException e) {
             return Flux.error(e);
         }
-        Date expirationDate = DateUtil.addHours(System.currentTimeMillis(), -retentionPeriodHours);
+        Date expirationDate =
+                DateTimeUtil.addHours(System.currentTimeMillis(), -retentionPeriodHours);
         return messageRepository.findExpiredMessageIds(expirationDate);
     }
 
@@ -1268,8 +1272,7 @@ public class MessageService extends BaseService {
                 message.getTargetId(),
                 message.getSenderId()).flatMap(isMessageRecipientOrSender -> {
                     if (!isMessageRecipientOrSender) {
-                        return Mono.error(ResponseException
-                                .get(NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE));
+                        return ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE;
                     }
                     return authAndSaveMessage(queryRecipientIds,
                             null,
@@ -1282,10 +1285,13 @@ public class MessageService extends BaseService {
                             message.getText(),
                             message.getRecords(),
                             message.getBurnAfter(),
-                            message.getDeliveryDate(),
+                            null,
                             referenceId,
                             null);
-                }));
+                }))
+                // We should not tell the client that the message was not found.
+                // Otherwise, the user can check if any message exists or not.
+                .switchIfEmpty(ERROR_NOT_MESSAGE_RECIPIENT_OR_SENDER_TO_FORWARD_MESSAGE);
     }
 
     public Mono<MessageAndRecipientIds> cloneAndSaveMessage(

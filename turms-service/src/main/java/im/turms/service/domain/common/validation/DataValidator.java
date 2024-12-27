@@ -108,7 +108,7 @@ public final class DataValidator {
     }
 
     public static void validRelationshipGroupKey(UserRelationshipGroup.Key key) {
-        if (key != null && key.getOwnerId() != null && key.getGroupIndex() != null) {
+        if (key == null || key.getOwnerId() == null || key.getGroupIndex() == null) {
             throw NULL_USER_RELATIONSHIP_GROUP_KEY;
         }
     }

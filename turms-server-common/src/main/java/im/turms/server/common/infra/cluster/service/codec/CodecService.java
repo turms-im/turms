@@ -31,9 +31,9 @@ import im.turms.server.common.infra.cluster.service.codec.io.CodecStream;
  * Note that to get a better performance and serialize data with the least bytes, do NOT use
  * reflection to serialize/deserialize data.
  * <p>
- * The reason to use codec (Use independent codec to serialize data) instead of something like
+ * The reason to use codec (Use independent codecs to serialize data) instead of something like
  * Writeable interface (The code used to (de)serialize data is included in the data class) is to
- * separate the (de)serialization logic from the business logic or the code will tend to be messy.
+ * separate the (de)serialization logic from the business logic, or the code will tend to be messy.
  *
  * @author James Chen
  */

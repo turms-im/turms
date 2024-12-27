@@ -22,6 +22,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import im.turms.server.common.infra.property.constant.DuplicateClassLoadStrategy;
 import im.turms.server.common.infra.property.metadata.Description;
 
 /**
@@ -35,5 +36,9 @@ public class JavaPluginProperties {
 
     @Description("Whether to allow saving plugins using HTTP API")
     protected boolean allowSave;
+
+    @Description("The strategy to handle duplicate classes defined by both the Turms server and the plugin when loading classes by the plugin classloader")
+    protected DuplicateClassLoadStrategy duplicateClassLoadStrategy =
+            DuplicateClassLoadStrategy.PARENT_FIRST;
 
 }

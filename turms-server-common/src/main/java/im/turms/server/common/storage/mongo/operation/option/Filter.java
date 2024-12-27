@@ -29,6 +29,7 @@ import org.bson.BsonArrayUtil;
 import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
 import org.bson.BsonNull;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 
 import im.turms.server.common.access.client.dto.constant.RequestStatus;
@@ -62,14 +63,16 @@ public class Filter extends BaseBson {
             @NotNull String key,
             @Nullable Date start,
             @Nullable Date end) {
-        if (start != null && end == null) {
-            document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
-        } else if (start == null && end != null) {
+        if (start != null) {
+            if (end == null) {
+                document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
+            } else {
+                document.append(key,
+                        new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
+                                .append("$lt", new BsonDateTime(end.getTime())));
+            }
+        } else if (end != null) {
             document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
-        } else if (start != null) {
-            document.append(key,
-                    new BsonDocument().append("$gte", new BsonDateTime(start.getTime()))
-                            .append("$lt", new BsonDateTime(end.getTime())));
         }
         return this;
     }
@@ -213,6 +216,11 @@ public class Filter extends BaseBson {
             values.add(filter.document);
         }
         document.append("$or", BsonArrayUtil.newArray(values));
+        return this;
+    }
+
+    public Filter type(String id, String string) {
+        document.append(id, new BsonDocument("$type", new BsonString(string)));
         return this;
     }
 

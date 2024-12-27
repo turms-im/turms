@@ -25,7 +25,7 @@ import jakarta.annotation.Nullable;
  * @author James Chen
  */
 public record AdminAction(
-        @Nullable String account,
+        @Nullable Long adminId,
         String ip,
         Date requestTime,
         @Nullable String action,

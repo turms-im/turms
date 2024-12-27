@@ -24,7 +24,6 @@ import jakarta.annotation.Nullable;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import reactor.core.scheduler.Schedulers;
 
 import im.turms.server.common.infra.cluster.node.Node;
 import im.turms.server.common.infra.logging.core.logger.Logger;

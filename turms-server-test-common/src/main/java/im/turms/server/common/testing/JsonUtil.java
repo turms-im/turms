@@ -63,7 +63,7 @@ public final class JsonUtil {
 
     public static JsonNode getSortedMapJsonNode(Map<String, Object> map) {
         Map<String, Object> sortedMap = sortMapEntries(map);
-        String json = null;
+        String json;
         try {
             json = MAPPER.writeValueAsString(sortedMap);
             return MAPPER.readTree(json);

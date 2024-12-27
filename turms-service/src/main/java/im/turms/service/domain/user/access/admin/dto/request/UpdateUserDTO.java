@@ -33,7 +33,7 @@ public record UpdateUserDTO(
         String intro,
         String profilePicture,
         ProfileAccessStrategy profileAccessStrategy,
-        Long permissionGroupId,
+        Long roleId,
         Date registrationDate,
         Boolean isActive
 ) implements ControllerDTO {
@@ -50,8 +50,8 @@ public record UpdateUserDTO(
                 + profilePicture
                 + ", profileAccessStrategy="
                 + profileAccessStrategy
-                + ", permissionGroupId="
-                + permissionGroupId
+                + ", roleId="
+                + roleId
                 + ", registrationDate="
                 + registrationDate
                 + ", isActive="

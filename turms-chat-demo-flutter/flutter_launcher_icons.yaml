@@ -1,0 +1,12 @@
+flutter_launcher_icons:
+  # TODO: Add support for mobile platforms
+  web:
+    generate: true
+    image_path: "assets/images/icon_1024.png"
+  windows:
+    generate: true
+    image_path: "assets/images/icon_1024.png"
+    icon_size: 256 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/images/icon_1024.png"

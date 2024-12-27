@@ -152,7 +152,7 @@ public class SmtpSession {
         session.establish(ehloHostname, username, password, accessToken, startTls)
                 .subscribe(null, t -> {
                     LOGGER.error("Failed to establish the SMTP session: "
-                            + session.id);
+                            + session.id, t);
                     session.onClose(connectSink, t);
                 }, () -> {
                     LOGGER.info("Established the SMTP session: "

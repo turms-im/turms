@@ -79,13 +79,13 @@ Turms服务端的接口文档采用[OpenAPI 3.0](https://swagger.io/specificatio
 
 #### 用户类
 
-| 类别             | Controller                      | 路径                                 |
-| :--------------- | :------------------------------ | ------------------------------------ |
-| 用户信息管理     | UserController                  | /users                               |
+| 类别       | Controller                      | 路径                                   |
+|:---------|:--------------------------------|--------------------------------------|
+| 用户信息管理   | UserController                  | /users                               |
 | 用户在线状态管理 | UserOnlineInfoController        | /users/online-infos                  |
-| 用户权限组管理   | UserPermissionGroupController   | /users/permission-groups             |
-| 用户关系管理     | UserRelationshipController      | /users/relationships                 |
-| 用户关系组管理   | UserRelationshipGroupController | /users/relationships/groups          |
+| 用户角色管理   | UserRoleController              | /users/roles                         |
+| 用户关系管理   | UserRelationshipController      | /users/relationships                 |
+| 用户关系组管理  | UserRelationshipGroupController | /users/relationships/groups          |
 | 用户好友请求管理 | UserFriendRequestController     | /users/relationships/friend-requests |
 
 #### 群组类

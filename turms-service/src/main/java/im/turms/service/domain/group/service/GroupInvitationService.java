@@ -54,7 +54,7 @@ import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidRequestStatus;
 import im.turms.server.common.infra.validation.ValidResponseAction;
 import im.turms.server.common.infra.validation.Validator;
@@ -425,7 +425,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                 ? userVersionService.querySentGroupInvitationsLastUpdatedDate(userId)
                 : userVersionService.queryReceivedGroupInvitationsLastUpdatedDate(userId);
         return versionMono.flatMap(version -> {
-            if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+            if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                 return ResponseExceptionPublisherPool.alreadyUpToUpdate();
             }
             Flux<GroupInvitation> invitationFlux = areSentByUser
@@ -469,7 +469,7 @@ public class GroupInvitationService extends ExpirableEntityService<GroupInvitati
                     }
                     return groupVersionService.queryGroupInvitationsVersion(groupId)
                             .flatMap(version -> {
-                                if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                                if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                                     return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                                 }
                                 Recyclable<List<GroupInvitation>> recyclableList =

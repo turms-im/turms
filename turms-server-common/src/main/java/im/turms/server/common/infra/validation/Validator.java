@@ -83,9 +83,9 @@ public final class Validator {
         return (value1 == null) == (value2 == null);
     }
 
-    public static void notContains(
-            @Nullable Collection<?> collection,
-            Object value,
+    public static <T> void notContains(
+            @Nullable Collection<T> collection,
+            T value,
             String message) {
         if (collection != null && collection.contains(value)) {
             throw ResponseException.get(ResponseStatusCode.ILLEGAL_ARGUMENT, message);

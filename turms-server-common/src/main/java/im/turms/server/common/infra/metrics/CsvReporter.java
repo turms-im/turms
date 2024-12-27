@@ -157,7 +157,7 @@ public final class CsvReporter {
         return tagJoiner.toString();
     }
 
-    private static record IdAndMeasure(
+    private record IdAndMeasure(
             Meter.Id id,
             Measurement measurement
     ) {

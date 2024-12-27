@@ -29,9 +29,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import im.turms.server.common.BaseTurmsApplication;
+import im.turms.server.common.infra.archive.ZipUtils;
 import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.io.InputOutputException;
 import im.turms.server.common.infra.lang.PackageConst;
+import im.turms.server.common.infra.property.constant.DuplicateClassLoadStrategy;
 
 /**
  * @author James Chen
@@ -53,10 +55,15 @@ public class PluginClassLoader extends ClassLoader implements AutoCloseable {
      * purpose, which just waste unnecessary resources.
      */
     private final ZipFile zipFile;
+    private final boolean throwIfFoundDuplicateClass;
 
-    public PluginClassLoader(ZipFile zipFile) {
+    public PluginClassLoader(
+            ZipFile zipFile,
+            DuplicateClassLoadStrategy duplicateClassLoadStrategy) {
         super(PARENT_CLASS_LOADER);
         this.zipFile = zipFile;
+        throwIfFoundDuplicateClass =
+                duplicateClassLoadStrategy == DuplicateClassLoadStrategy.THROW_EXCEPTION;
     }
 
     @Override
@@ -81,23 +88,16 @@ public class PluginClassLoader extends ClassLoader implements AutoCloseable {
         if (loadedClass.getClassLoader() == this) {
             return loadedClass;
         }
-        // Check if the class loaded by the parent class loader is also defined in the JAR file.
-        // If so, throw an exception to prevent duplicate classes
-        // because defining different classes of the same name is an error-prone practice:
-        // 1. If we use the class loaded by the parent class loader, the plugin developer may be
-        // confused as their defined class in plugin doesn't work.
-        // 2. If we use the class defined in the JAR file, JVM will throw an error if an instance of
-        // the class is passed from the plugin to Turms
-        // (Same class name but different class loaders).
-        // As a result, we don't use either of them, but throw.
-        String binaryName = name.replace('.', '/')
-                .concat(".class");
-        if (zipFile.getEntry(binaryName) != null) {
-            throw new ConflictedClassException(
-                    "The class ("
-                            + name
-                            + ") in the JAR file conflicts with the class defined by Turms server. "
-                            + "The plugin developer needs to rename the class in the JAR file to avoid conflicts");
+        if (throwIfFoundDuplicateClass) {
+            String binaryName = name.replace('.', '/')
+                    .concat(".class");
+            if (zipFile.getEntry(binaryName) != null) {
+                throw new ConflictedClassException(
+                        "The class ("
+                                + name
+                                + ") in the JAR file conflicts with the class defined by Turms server. "
+                                + "The plugin developer needs to rename the class in the JAR file to avoid conflicts");
+            }
         }
         return loadedClass;
     }
@@ -118,17 +118,24 @@ public class PluginClassLoader extends ClassLoader implements AutoCloseable {
                     "Could not find the class: "
                             + name);
         }
-        byte[] bytes = new byte[(int) entry.getSize()];
-        int size;
-        try (InputStream inputStream = zipFile.getInputStream(entry)) {
-            size = inputStream.read(bytes);
+
+        byte[] bytes;
+        try {
+            bytes = ZipUtils.readEntry(zipFile, entry);
         } catch (IOException e) {
             throw new InputOutputException(
-                    "Failed to load class: "
+                    "Failed to load the class: "
                             + name,
                     e);
         }
-        return defineClass(name, bytes, 0, size);
+        try {
+            return defineClass(name, bytes, 0, bytes.length);
+        } catch (Throwable e) {
+            throw new InputOutputException(
+                    "Failed to create the class: "
+                            + name,
+                    e);
+        }
     }
 
     @Override

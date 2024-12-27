@@ -49,7 +49,7 @@ public final class BackoffIdleStrategy {
                             + ") must be less than 1, "
                             + "and the maximum park ("
                             + maxParkPeriodNs
-                            + ") period must less than the minimum park period");
+                            + ") period must be less than the minimum park period");
         }
         this.maxSpins = maxSpins;
         this.maxYields = maxYields;

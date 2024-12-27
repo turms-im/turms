@@ -48,10 +48,10 @@ public class UserMongoProperties extends MongoProperties {
         protected WriteConcern user = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userFriendRequest = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userMaxDailyOnlineUser = WriteConcern.ACKNOWLEDGED;
-        protected WriteConcern userPermissionGroup = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userRelationship = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userRelationshipGroup = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userRelationshipGroupMember = WriteConcern.ACKNOWLEDGED;
+        protected WriteConcern userRole = WriteConcern.ACKNOWLEDGED;
         protected WriteConcern userVersion = WriteConcern.ACKNOWLEDGED;
     }
 

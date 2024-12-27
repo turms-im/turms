@@ -32,6 +32,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.thread.NamedThreadFactory;
 import im.turms.server.common.infra.thread.ThreadNameConst;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * Handle tasks in a thread
@@ -42,7 +43,7 @@ import im.turms.server.common.infra.thread.ThreadNameConst;
 public class TaskManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskManager.class);
-    private static final int SLOW_LOG_THRESHOLD_MILLIS = 1000;
+    private static final long SLOW_LOG_THRESHOLD_NANOS = 1000 * DateTimeUtil.NANOS_PER_MILLI;
 
     private final Map<String, ScheduledFuture<?>> scheduledTaskMap;
 
@@ -78,7 +79,7 @@ public class TaskManager {
 
         @Override
         public void run() {
-            long startTime = System.currentTimeMillis();
+            long startTime = System.nanoTime();
             try {
                 runnable.run();
             } catch (Exception e) {
@@ -89,16 +90,15 @@ public class TaskManager {
                                 .getName(),
                         e);
             }
-            long endTime = System.currentTimeMillis();
-            long diff = endTime - startTime;
-            if (diff > SLOW_LOG_THRESHOLD_MILLIS) {
+            long took = System.nanoTime() - startTime;
+            if (took > SLOW_LOG_THRESHOLD_NANOS) {
                 LOGGER.warn("The task \""
                         + taskName
                         + "\" defined in the class ("
                         + runnable.getClass()
                                 .getName()
                         + ") was slow and took ("
-                        + diff
+                        + (took / DateTimeUtil.NANOS_PER_MILLI)
                         + ") millis to execute");
             }
         }

@@ -44,7 +44,7 @@ public class CreateUserRequest extends RpcRequest<Long> {
     private final String intro;
     private final String profilePicture;
     private final ProfileAccessStrategy profileAccessStrategy;
-    private final Long permissionGroupId;
+    private final Long roleId;
     private final Date registrationDate;
     private final Boolean isActive;
 
@@ -84,7 +84,7 @@ public class CreateUserRequest extends RpcRequest<Long> {
                 intro,
                 profilePicture,
                 profileAccessStrategy,
-                permissionGroupId,
+                roleId,
                 registrationDate,
                 isActive);
     }

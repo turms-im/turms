@@ -67,7 +67,7 @@ public class AdminController extends BaseController {
     }
 
     @HeadMapping
-    public HttpHandlerResult<Void> checkAccountAndPassword() {
+    public HttpHandlerResult<Void> checkLoginNameAndPassword() {
         return HttpHandlerResult.OK;
     }
 
@@ -76,11 +76,11 @@ public class AdminController extends BaseController {
     public Mono<HttpHandlerResult<ResponseDTO<Admin>>> addAdmin(
             RequestContext requestContext,
             @RequestBody AddAdminDTO addAdminDTO) {
-        Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(requestContext.getAccount(),
-                addAdminDTO.account(),
+        Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(requestContext.getRequesterId(),
+                addAdminDTO.loginName(),
                 addAdminDTO.password(),
                 addAdminDTO.roleIds(),
-                addAdminDTO.name(),
+                addAdminDTO.displayName(),
                 new Date(),
                 false);
         return HttpHandlerResult.okIfTruthy(generatedAdmin);
@@ -89,12 +89,13 @@ public class AdminController extends BaseController {
     @GetMapping
     @RequiredPermission(ADMIN_QUERY)
     public Mono<HttpHandlerResult<ResponseDTO<Collection<Admin>>>> queryAdmins(
-            @QueryParam(required = false) Set<String> accounts,
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<String> loginNames,
             @QueryParam(required = false) Set<Long> roleIds,
             boolean withPassword,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Flux<Admin> admins = adminService.queryAdmins(accounts, roleIds, 0, size)
+        Flux<Admin> admins = adminService.queryAdmins(ids, loginNames, roleIds, 0, size)
                 .map(admin -> withPassword
                         ? admin
                         : admin.toBuilder()
@@ -106,14 +107,15 @@ public class AdminController extends BaseController {
     @GetMapping("page")
     @RequiredPermission(ADMIN_QUERY)
     public Mono<HttpHandlerResult<ResponseDTO<PaginationDTO<Admin>>>> queryAdmins(
-            @QueryParam(required = false) Set<String> accounts,
+            @QueryParam(required = false) Set<Long> ids,
+            @QueryParam(required = false) Set<String> loginNames,
             @QueryParam(required = false) Set<Long> roleIds,
             boolean withPassword,
             int page,
             @QueryParam(required = false) Integer size) {
         size = getPageSize(size);
-        Mono<Long> count = adminService.countAdmins(accounts, roleIds);
-        Flux<Admin> admins = adminService.queryAdmins(accounts, roleIds, page, size)
+        Mono<Long> count = adminService.countAdmins(ids, roleIds);
+        Flux<Admin> admins = adminService.queryAdmins(ids, loginNames, roleIds, page, size)
                 .map(admin -> withPassword
                         ? admin
                         : admin.toBuilder()
@@ -126,13 +128,13 @@ public class AdminController extends BaseController {
     @RequiredPermission(ADMIN_UPDATE)
     public Mono<HttpHandlerResult<ResponseDTO<UpdateResultDTO>>> updateAdmins(
             RequestContext requestContext,
-            Set<String> accounts,
+            Set<Long> ids,
             @RequestBody UpdateAdminDTO updateAdminDTO) {
         Mono<UpdateResult> updateMono =
-                adminService.authAndUpdateAdmins(requestContext.getAccount(),
-                        accounts,
+                adminService.authAndUpdateAdmins(requestContext.getRequesterId(),
+                        ids,
                         updateAdminDTO.password(),
-                        updateAdminDTO.name(),
+                        updateAdminDTO.displayName(),
                         updateAdminDTO.roleIds());
         return HttpHandlerResult.updateResult(updateMono);
     }
@@ -141,9 +143,9 @@ public class AdminController extends BaseController {
     @RequiredPermission(ADMIN_DELETE)
     public Mono<HttpHandlerResult<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
             RequestContext requestContext,
-            Set<String> accounts) {
+            Set<Long> ids) {
         Mono<DeleteResult> deleteMono =
-                adminService.authAndDeleteAdmins(requestContext.getAccount(), accounts);
+                adminService.authAndDeleteAdmins(requestContext.getRequesterId(), ids);
         return HttpHandlerResult.deleteResult(deleteMono);
     }
 

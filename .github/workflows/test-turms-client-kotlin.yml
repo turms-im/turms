@@ -4,17 +4,17 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         java: [ '8', '17' ]
     name: Test in Java ${{ matrix.Java }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
 
       - name: Set up Java
-        uses: actions/setup-java@v3.13.0
+        uses: actions/setup-java@v4.5.0
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}

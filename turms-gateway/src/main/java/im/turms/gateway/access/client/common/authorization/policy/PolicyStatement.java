@@ -19,22 +19,15 @@ package im.turms.gateway.access.client.common.authorization.policy;
 
 import java.util.Set;
 
+import lombok.experimental.FieldNameConstants;
+
 /**
  * @author James Chen
  */
+@FieldNameConstants
 public record PolicyStatement(
         PolicyStatementEffect effect,
         Set<PolicyStatementAction> actions,
         Set<PolicyStatementResource> resources
 ) {
-
-    public static class Fields {
-        private Fields() {
-        }
-
-        public static final String effect = "effect";
-        public static final String actions = "actions";
-        public static final String resources = "resources";
-    }
-
 }

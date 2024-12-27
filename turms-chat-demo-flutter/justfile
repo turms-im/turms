@@ -1,0 +1,123 @@
+default:
+    just --list
+
+set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
+
+##
+# Install and Upgrade
+##
+
+# Used to set up the project the first time
+install:
+    install-bridge-codegen
+    install-flutter
+    install-deps
+    gen-icons
+
+install-bridge-codegen:
+    cargo install flutter_rust_bridge_codegen
+
+install-flutter:
+    fvm install -s --skip-pub-get
+
+[windows]
+install-deps:
+    fvm flutter pub get
+
+[linux]
+install-deps:
+    fvm flutter pub get
+    . /etc/os-release
+    case "$ID" in
+      ubuntu) sudo apt-get install libayatana-appindicator3-dev ;;
+           *) apt-get install appindicator3-0.1 libappindicator3-dev ;;
+    esac
+
+[macos]
+install-deps:
+    fvm flutter pub get
+
+show-outdated:
+    fvm flutter pub outdated
+    cd rust && cargo update -n
+
+upgrade-deps:
+    fvm flutter pub upgrade
+    cargo install flutter_rust_bridge_codegen && flutter_rust_bridge_codegen generate
+    cd rust && cargo update
+
+##
+# Generate
+##
+
+gen-bridge:
+    flutter_rust_bridge_codegen generate
+
+# Generate assets and database dart files
+gen-code:
+    fvm dart run build_runner build --delete-conflicting-outputs
+
+gen-env-vars:
+    fvm dart tool/gen_env_vars.dart
+
+gen-l10n:
+    fvm flutter gen-l10n
+
+[windows]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=windows
+
+[linux]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=linux
+
+[macos]
+gen-raw-icons:
+    fvm flutter run -t ./tool/gen_raw_icons.dart --device-id=macos
+
+gen-icons:
+    fvm dart run flutter_launcher_icons:main
+
+##
+# Watch
+##
+
+watch-bridge:
+    flutter_rust_bridge_codegen generate --watch
+
+watch-code:
+    fvm dart run build_runner watch --delete-conflicting-outputs
+
+##
+# Test
+##
+
+test:
+    fvm flutter test
+
+##
+# Build
+##
+
+[windows]
+build-release:
+    fvm flutter build windows --release
+
+[linux]
+build-release:
+    fvm flutter build linux --release
+
+[macos]
+build-release:
+    fvm flutter build macos --release
+
+##
+# Code Format
+##
+
+analyze:
+    fvm flutter analyze
+
+lint:
+    fvm dart fix --apply
+    fvm dart format .

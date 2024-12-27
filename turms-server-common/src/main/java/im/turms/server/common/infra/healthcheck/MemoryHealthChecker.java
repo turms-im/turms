@@ -34,6 +34,7 @@ import im.turms.server.common.infra.logging.core.logger.Logger;
 import im.turms.server.common.infra.logging.core.logger.LoggerFactory;
 import im.turms.server.common.infra.logging.core.model.LogLevel;
 import im.turms.server.common.infra.property.env.common.healthcheck.MemoryHealthCheckProperties;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 import static im.turms.server.common.infra.unit.ByteSizeUnit.MB;
 
@@ -73,13 +74,13 @@ public final class MemoryHealthChecker extends HealthChecker {
 
     private final int directMemoryWarningThresholdPercentage;
     private final int heapMemoryWarningThresholdPercentage;
-    private final int minMemoryWarningIntervalMillis;
-    private long lastDirectMemoryWarningTimestamp;
-    private long lastHeapMemoryWarningTimestamp;
+    private final long minMemoryWarningIntervalNanos;
+    private long lastDirectMemoryWarningTimestampNanos;
+    private long lastHeapMemoryWarningTimestampNanos;
 
     private final int heapMemoryGcThresholdPercentage;
-    private final int minHeapMemoryGcIntervalMillis;
-    private long lastHeapMemoryGcTimestamp;
+    private final long minHeapMemoryGcIntervalNanos;
+    private long lastHeapMemoryGcTimestampNanos;
 
     private boolean isMemoryHealthy;
     @Nullable
@@ -162,10 +163,12 @@ public final class MemoryHealthChecker extends HealthChecker {
         directMemoryWarningThresholdPercentage =
                 properties.getDirectMemoryWarningThresholdPercentage();
         heapMemoryWarningThresholdPercentage = properties.getHeapMemoryWarningThresholdPercentage();
-        minMemoryWarningIntervalMillis = properties.getMinMemoryWarningIntervalSeconds() * 1000;
+        minMemoryWarningIntervalNanos =
+                DateTimeUtil.secondsToNanos(properties.getMinMemoryWarningIntervalSeconds());
         minFreeSystemMemory = properties.getMinFreeSystemMemoryBytes();
         heapMemoryGcThresholdPercentage = properties.getHeapMemoryGcThresholdPercentage();
-        minHeapMemoryGcIntervalMillis = properties.getMinHeapMemoryGcIntervalSeconds() * 1000;
+        minHeapMemoryGcIntervalNanos =
+                DateTimeUtil.secondsToNanos(properties.getMinHeapMemoryGcIntervalSeconds());
     }
 
     @Override
@@ -261,12 +264,12 @@ public final class MemoryHealthChecker extends HealthChecker {
 
                     asMbString(usedNonHeapMemory));
         }
-        long now = System.currentTimeMillis();
+        long now = System.nanoTime();
         float usedMemoryPercentage = 100F * usedDirectMemory / maxDirectMemory;
         if (directMemoryWarningThresholdPercentage > 0
                 && directMemoryWarningThresholdPercentage < usedMemoryPercentage
-                && minMemoryWarningIntervalMillis < (now - lastDirectMemoryWarningTimestamp)) {
-            lastDirectMemoryWarningTimestamp = now;
+                && minMemoryWarningIntervalNanos < (now - lastDirectMemoryWarningTimestampNanos)) {
+            lastDirectMemoryWarningTimestampNanos = now;
             LOGGER.warn("The used direct memory has exceeded the warning threshold: {}/{}/{}/{}",
                     asMbString(usedDirectMemory),
                     asMbString(maxDirectMemory),
@@ -276,8 +279,8 @@ public final class MemoryHealthChecker extends HealthChecker {
         usedMemoryPercentage = 100F * usedHeapMemory / maxHeapMemory;
         if (heapMemoryWarningThresholdPercentage > 0
                 && heapMemoryWarningThresholdPercentage < usedMemoryPercentage
-                && minMemoryWarningIntervalMillis < (now - lastHeapMemoryWarningTimestamp)) {
-            lastHeapMemoryWarningTimestamp = now;
+                && minMemoryWarningIntervalNanos < (now - lastHeapMemoryWarningTimestampNanos)) {
+            lastHeapMemoryWarningTimestampNanos = now;
             LOGGER.warn("The used heap memory has exceeded the warning threshold: {}/{}/{}/{}",
                     asMbString(usedHeapMemory),
                     asMbString(maxHeapMemory),
@@ -288,8 +291,8 @@ public final class MemoryHealthChecker extends HealthChecker {
         if (!isHealthy
                 && heapMemoryGcThresholdPercentage > 0
                 && heapMemoryGcThresholdPercentage < usedMemoryPercentage
-                && minHeapMemoryGcIntervalMillis < (now - lastHeapMemoryGcTimestamp)) {
-            lastHeapMemoryGcTimestamp = now;
+                && minHeapMemoryGcIntervalNanos < (now - lastHeapMemoryGcTimestampNanos)) {
+            lastHeapMemoryGcTimestampNanos = now;
             LOGGER.info(
                     "Trying to start GC because the available memory has exceeded and the used heap memory has exceeded the GC threshold: {}/{}/{}/{}",
                     asMbString(usedHeapMemory),

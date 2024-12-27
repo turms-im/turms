@@ -73,7 +73,9 @@ import im.turms.server.common.infra.plugin.invoker.FirstExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.SequentialExtensionPointInvoker;
 import im.turms.server.common.infra.plugin.invoker.SimultaneousExtensionPointInvoker;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
+import im.turms.server.common.infra.property.constant.DuplicateClassLoadStrategy;
 import im.turms.server.common.infra.property.constant.PluginType;
+import im.turms.server.common.infra.property.env.common.plugin.JavaPluginProperties;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginDebugProperties;
 import im.turms.server.common.infra.property.env.common.plugin.JsPluginProperties;
 import im.turms.server.common.infra.property.env.common.plugin.NetworkPluginProperties;
@@ -97,6 +99,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
     private final Path pluginDir;
 
     private final boolean allowSaveJavaPlugins;
+    private final DuplicateClassLoadStrategy duplicateClassLoadStrategy;
 
     private final boolean allowSaveJsPlugins;
     private final boolean isJsEnabled;
@@ -130,6 +133,11 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         enabled = pluginProperties.isEnabled();
         pluginRepository = new PluginRepository();
         pluginDir = ensurePluginDirExists(applicationContext.getHome(), pluginProperties.getDir());
+
+        JavaPluginProperties javaPluginProperties = pluginProperties.getJava();
+        allowSaveJavaPlugins = javaPluginProperties.isAllowSave();
+        duplicateClassLoadStrategy = javaPluginProperties.getDuplicateClassLoadStrategy();
+
         isJsEnabled = ClassUtil.exists("org.graalvm.polyglot.Engine");
         PluginFinder.FindResult findResult = PluginFinder.find(pluginDir, isJsEnabled);
         List<ZipFile> zipFiles = findResult.zipFiles();
@@ -148,8 +156,6 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             }
             throw exception;
         }
-        allowSaveJavaPlugins = pluginProperties.getJava()
-                .isAllowSave();
         if (isJsEnabled) {
             JsPluginProperties jsPluginProperties = pluginProperties.getJs();
             JsPluginDebugProperties debugProperties = jsPluginProperties.getDebug();
@@ -332,7 +338,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         } catch (Exception e) {
             return Mono.error(new IllegalArgumentException(
                     "Invalid plugin URL: "
-                            + url));
+                            + url,
+                    e));
         }
         String fileName = Paths.get(uri.getPath())
                 .getFileName()
@@ -435,7 +442,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         for (MultipartFile file : files) {
             String fileName = file.name();
-            ZipFile zipFile = null;
+            ZipFile zipFile;
             File jarFile;
             if (save) {
                 fileName = file.basename()
@@ -494,7 +501,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
                                     + fileName
                                     + ") because it is not a Java plugin JAR file");
                 }
-                Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
+                Plugin plugin = JavaPluginFactory
+                        .create(descriptor, zipFile, duplicateClassLoadStrategy, nodeType, context);
                 initAndRegisterPlugin(plugin);
             } catch (Exception e) {
                 try {
@@ -514,7 +522,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
             if (descriptor == null) {
                 continue;
             }
-            Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
+            Plugin plugin = JavaPluginFactory
+                    .create(descriptor, zipFile, duplicateClassLoadStrategy, nodeType, context);
             initAndRegisterPlugin(plugin);
         }
     }
@@ -524,7 +533,8 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         if (descriptor == null) {
             return false;
         }
-        Plugin plugin = JavaPluginFactory.create(descriptor, zipFile, nodeType, context);
+        Plugin plugin = JavaPluginFactory
+                .create(descriptor, zipFile, duplicateClassLoadStrategy, nodeType, context);
         initAndRegisterPlugin(plugin);
         return true;
     }
@@ -670,7 +680,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(startMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while starting plugins")))
+                        .error(new RuntimeException("Caught errors while starting plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -691,7 +701,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(stopMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while stopping plugins")))
+                        .error(new RuntimeException("Caught errors while stopping plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -703,7 +713,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(resumeMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while resuming plugins")))
+                        .error(new RuntimeException("Caught errors while resuming plugins", t)))
                 .thenReturn(plugins.size());
     }
 
@@ -715,7 +725,7 @@ public class PluginManager implements ApplicationListener<ContextRefreshedEvent>
         }
         return Mono.whenDelayError(pauseMonos)
                 .onErrorResume(t -> Mono
-                        .error(new RuntimeException("Caught errors while pausing plugins")))
+                        .error(new RuntimeException("Caught errors while pausing plugins", t)))
                 .thenReturn(plugins.size());
     }
 

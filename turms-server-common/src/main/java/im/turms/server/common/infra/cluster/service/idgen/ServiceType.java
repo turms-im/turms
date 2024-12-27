@@ -21,6 +21,8 @@ package im.turms.server.common.infra.cluster.service.idgen;
  * @author James Chen
  */
 public enum ServiceType {
+    ADMIN,
+
     GROUP,
     GROUP_INVITATION,
     GROUP_JOIN_REQUEST,
@@ -30,10 +32,10 @@ public enum ServiceType {
     MESSAGE,
 
     USER,
-    USER_RELATIONSHIP_GROUP,
     USER_FRIEND_REQUEST,
     USER_LOCATION,
-    USER_PERMISSION_GROUP,
+    USER_RELATIONSHIP_GROUP,
+    USER_ROLE,
 
     STORAGE_MESSAGE_ATTACHMENT,
 

@@ -24,7 +24,7 @@ import im.turms.server.common.access.servicerequest.dto.ServiceRequest;
 import im.turms.server.common.access.servicerequest.dto.ServiceResponse;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
 
 import static im.turms.server.common.infra.logging.CommonLogger.CLIENT_API_LOGGER;
@@ -69,7 +69,7 @@ public final class ClientApiLogging {
                         .getKindCase()
                         .name(),
                 NumberFormatter.toCharBytes(requestSize),
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 // response information
                 NumberFormatter.toCharBytes(response.code()
                         .getBusinessCode()),

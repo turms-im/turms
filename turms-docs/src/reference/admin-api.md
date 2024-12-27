@@ -80,10 +80,10 @@ All API ports in the following table exist only on the turms-service server side
 #### User
 
 | Type                               | Controller                      | Path                                 |
-| :--------------------------------- | :------------------------------ | ------------------------------------ |
+|:-----------------------------------|:--------------------------------|--------------------------------------|
 | User Information Management        | UserController                  | /users                               |
 | User Online Info Management        | UserOnlineInfoController        | /users/online-infos                  |
-| User Permission Group Management   | UserPermissionGroupController   | /users/permission-groups             |
+| User Role Management               | UserRoleController              | /users/roles                         |
 | User Relationship Management       | UserRelationshipController      | /users/relationships                 |
 | User Relationship Group Management | UserRelationshipGroupController | /users/relationships/groups          |
 | User Friend Request Management     | UserFriendRequestController     | /users/relationships/friend-requests |

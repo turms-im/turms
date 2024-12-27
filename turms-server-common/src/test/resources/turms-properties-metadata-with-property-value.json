@@ -2524,6 +2524,19 @@
         "sensitive": false,
         "type": "boolean",
         "value": false
+      },
+      "duplicateClassLoadStrategy": {
+        "deprecated": false,
+        "description": "The strategy to handle duplicate classes defined by both the Turms server and the plugin when loading classes by the plugin classloader",
+        "global": false,
+        "mutable": false,
+        "options": [
+          "THROW_EXCEPTION",
+          "PARENT_FIRST"
+        ],
+        "sensitive": false,
+        "type": "enum",
+        "value": "PARENT_FIRST"
       }
     },
     "js": {
@@ -2665,37 +2678,28 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2703,43 +2707,34 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2747,43 +2742,34 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2791,7 +2777,7 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           }
         },
@@ -2817,37 +2803,28 @@
           "corruptedFrame": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2855,43 +2832,34 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "corruptedRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2899,43 +2867,34 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           },
           "frequentRequest": {
             "blockLevels": {
               "deprecated": false,
-              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevel",
+              "elementType": "im.turms.server.common.infra.property.env.common.security.AutoBlockItemProperties$BlockLevelProperties",
               "global": false,
               "mutable": false,
               "sensitive": false,
               "type": "java.util.List",
               "value": [
                 {
-                  "blockDurationSeconds": 600,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 5
                 },
                 {
-                  "blockDurationSeconds": 1800,
-                  "goNextLevelTriggerTimes": 1,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 1800000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 },
                 {
-                  "blockDurationSeconds": 3600,
-                  "goNextLevelTriggerTimes": 0,
-                  "reduceOneTriggerTimeIntervalMillis": 60000
+                  "blockDurationMillis": 3600000,
+                  "reduceOneTriggerTimeIntervalMillis": 60000,
+                  "triggerTimesThreshold": 1
                 }
               ]
-            },
-            "blockTriggerTimes": {
-              "deprecated": false,
-              "description": "Block the client when the block condition is triggered the times",
-              "global": false,
-              "mutable": false,
-              "sensitive": false,
-              "type": "int",
-              "value": 5
             },
             "enabled": {
               "deprecated": false,
@@ -2943,7 +2902,7 @@
               "mutable": false,
               "sensitive": false,
               "type": "boolean",
-              "value": false
+              "value": true
             }
           }
         },

@@ -33,7 +33,6 @@ import reactor.core.publisher.Mono;
 
 import im.turms.server.common.storage.mongo.DomainFieldName;
 import im.turms.server.common.storage.mongo.TurmsMongoClient;
-import im.turms.server.common.storage.mongo.codec.EntityCodec;
 import im.turms.server.common.storage.mongo.operation.option.Filter;
 import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 
@@ -43,7 +42,7 @@ import im.turms.server.common.storage.mongo.operation.option.QueryOptions;
 public abstract class BaseRepository<T, K> {
 
     protected TurmsMongoClient mongoClient;
-    protected Class<T> entityClass;
+    protected final Class<T> entityClass;
 
     protected BaseRepository(TurmsMongoClient mongoClient, Class<T> entityClass) {
         this.mongoClient = mongoClient;

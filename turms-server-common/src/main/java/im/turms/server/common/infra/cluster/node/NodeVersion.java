@@ -145,7 +145,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
         RELEASE((byte) 0),
         SNAPSHOT((byte) 1);
 
-        byte id;
+        final byte id;
 
         Qualifier(byte id) {
             this.id = id;

@@ -85,13 +85,15 @@ public final class UserSession {
      * other types of requests
      */
     private volatile long lastHeartbeatRequestTimestampMillis;
+    private volatile long lastHeartbeatRequestTimestampNanos;
     /**
      * Record the timestamp of the last requests except heartbeat requests
      */
     private volatile long lastRequestTimestampMillis;
+    private volatile long lastRequestTimestampNanos;
     // No need to add volatile because it can only be accessed by one thread
     // (the thread "turms-client-heartbeat-refresher" in HeartbeatManager)
-    private long lastHeartbeatUpdateTimestampMillis;
+    private long lastHeartbeatUpdateTimestampNanos;
 
     /**
      * Note that it is acceptable that the session is still open even if the connection is closed
@@ -118,6 +120,8 @@ public final class UserSession {
             @Nullable Map<String, String> deviceDetails,
             @Nullable Location loginLocation) {
         Date now = new Date();
+        long nowMillis = now.getTime();
+        long nowNanos = System.nanoTime();
         this.version = version;
         this.permissions = permissions;
         this.userId = userId;
@@ -127,13 +131,25 @@ public final class UserSession {
                 : deviceDetails;
         this.loginLocation = loginLocation;
         this.loginDate = now;
-        this.lastHeartbeatRequestTimestampMillis = now.getTime();
-        this.lastRequestTimestampMillis = now.getTime();
+        this.lastHeartbeatRequestTimestampMillis = nowMillis;
+        this.lastHeartbeatRequestTimestampNanos = nowNanos;
+        this.lastRequestTimestampMillis = nowMillis;
+        this.lastRequestTimestampNanos = nowNanos;
     }
 
     public void setConnection(NetConnection connection, ByteArrayWrapper ip) {
         this.connection = connection;
         this.ip = ip;
+    }
+
+    public void setLastHeartbeatRequestTimestampToNow() {
+        lastHeartbeatRequestTimestampMillis = System.currentTimeMillis();
+        lastHeartbeatRequestTimestampNanos = System.nanoTime();
+    }
+
+    public void setLastRequestTimestampToNow() {
+        lastRequestTimestampMillis = System.currentTimeMillis();
+        lastRequestTimestampNanos = System.nanoTime();
     }
 
     /**

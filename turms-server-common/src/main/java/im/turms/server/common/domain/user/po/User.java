@@ -66,8 +66,8 @@ public final class User extends BaseEntity implements Customizable {
     @EnumNumber
     private final ProfileAccessStrategy profileAccessStrategy;
 
-    @Field(Fields.PERMISSION_GROUP_ID)
-    private final Long permissionGroupId;
+    @Field(Fields.ROLE_ID)
+    private final Long roleId;
 
     @Field(Fields.REGISTRATION_DATE)
     private final Date registrationDate;
@@ -90,7 +90,11 @@ public final class User extends BaseEntity implements Customizable {
         public static final String INTRO = "intro";
         public static final String PROFILE_PICTURE = "pp";
         public static final String PROFILE_ACCESS_STRATEGY = "pas";
-        public static final String PERMISSION_GROUP_ID = "pgid";
+        /**
+         * FIXME: "pgid" is the legacy name for "permissionGroupId", we keep it for backward
+         * compatibility.
+         */
+        public static final String ROLE_ID = "pgid";
         public static final String REGISTRATION_DATE = "rd";
         public static final String DELETION_DATE = "dd";
         public static final String LAST_UPDATED_DATE = "lud";

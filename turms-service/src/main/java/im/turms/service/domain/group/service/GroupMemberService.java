@@ -68,7 +68,7 @@ import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidGroupMemberRole;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -1186,7 +1186,7 @@ public class GroupMemberService extends BaseService {
                         : Mono.error(ResponseException.get(
                                 ResponseStatusCode.NOT_GROUP_MEMBER_TO_QUERY_GROUP_MEMBER_INFO)))
                 .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     return queryGroupMembers(Set.of(groupId), null, null, null, null, null, null)

@@ -57,6 +57,13 @@ public interface MongoOperationsSupport {
 
     <T> Mono<T> findOne(Class<T> clazz, Filter filter, @Nullable QueryOptions options);
 
+    Flux<BsonDocument> findMany(String collectionName, Filter filter);
+
+    Flux<BsonDocument> findMany(
+            String collectionName,
+            Filter filter,
+            @Nullable QueryOptions options);
+
     <T> Flux<T> findMany(Class<T> clazz, Filter filter);
 
     <T> Flux<T> findMany(Class<T> clazz, Filter filter, @Nullable QueryOptions options);
@@ -160,10 +167,18 @@ public interface MongoOperationsSupport {
             Document minimum,
             Document maximum);
 
+    Flux<String> listCollectionNames();
+
+    Mono<Void> renameCollection(String oldCollectionName, String newCollectionName);
+
     /**
      * @return whether the collection has already existed
      */
     Mono<Boolean> createCollectionIfNotExists(Class<?> clazz);
+
+    Mono<Boolean> createCollectionIfNotExists(
+            Class<?> clazz,
+            Collection<String> existingCollectionNames);
 
     Mono<Boolean> collectionExists(Class<?> clazz);
 

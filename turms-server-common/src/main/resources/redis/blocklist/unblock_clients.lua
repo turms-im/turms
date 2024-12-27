@@ -33,12 +33,12 @@ local new_log_id = redis_call('INCRBY', blocklist_log_id_key, count)
 if (new_log_id - count) == 0 then
     local current_timestamp = redis_call('GET', blocklist_timestamp_key)
     if not current_timestamp then
-        local now = tonumber(redis_call('TIME')[1])
-        redis_call('SET', blocklist_timestamp_key, now)
+        local now = redis_call('TIME')
+        redis_call('SET', blocklist_timestamp_key, math.floor(now[1] * 1000 + now[2] / 1000))
     end
 end
 
-local diff = redis_call('LLEN', blocklist_log_key) - MAX_LOG_QUEUE_SIZE * 3
+local diff = redis_call('LLEN', blocklist_log_key) - MAX_LOG_QUEUE_SIZE * LOG_ENTRY_ELEMENT_COUNT
 if diff > 0 then
     redis_call('LTRIM', blocklist_log_key, diff, -1)
 end

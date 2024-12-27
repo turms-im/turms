@@ -38,7 +38,7 @@ public class TokenBucket {
     @Getter
     private volatile int tokens;
     @Getter
-    private volatile long lastRefillTime;
+    private volatile long lastRefillTimeNanos;
 
     /**
      * @implNote We don't validate properties here, and it should be validated when the properties
@@ -47,22 +47,22 @@ public class TokenBucket {
     public TokenBucket(TokenBucketContext context) {
         this.context = context;
         tokens = context.initialTokens;
-        lastRefillTime = System.currentTimeMillis();
+        lastRefillTimeNanos = System.nanoTime();
     }
 
-    public boolean tryAcquire(long time) {
+    public boolean tryAcquire(long timestampNanos) {
         int tokenCount = tokens;
         if (tokenCount > 0) {
             if (TOKENS_UPDATER.compareAndSet(this, tokenCount, tokenCount - 1)) {
                 return true;
             }
-            return tryAcquire(time);
+            return tryAcquire(timestampNanos);
         }
-        int refillInterval = context.refillIntervalMillis;
-        if (refillInterval <= 0) {
+        long refillIntervalNanos = context.refillIntervalNanos;
+        if (refillIntervalNanos <= 0) {
             return false;
         }
-        int periods = (int) (time - lastRefillTime) / refillInterval;
+        int periods = MathUtil.toInt((timestampNanos - lastRefillTimeNanos) / refillIntervalNanos);
         if (periods <= 0) {
             return false;
         }
@@ -75,18 +75,18 @@ public class TokenBucket {
             tokenCount = capacity - 1;
         }
         if (TOKENS_UPDATER.compareAndSet(this, 0, tokenCount)) {
-            lastRefillTime = time;
+            lastRefillTimeNanos = timestampNanos;
             return true;
         }
-        return tryAcquire(time);
+        return tryAcquire(timestampNanos);
     }
 
-    public void refill(long time) {
-        int refillInterval = context.refillIntervalMillis;
-        if (refillInterval <= 0) {
+    public void refill(long timeNanos) {
+        long refillIntervalNanos = context.refillIntervalNanos;
+        if (refillIntervalNanos <= 0) {
             return;
         }
-        int periods = (int) (time - lastRefillTime) / refillInterval;
+        int periods = MathUtil.toInt((timeNanos - lastRefillTimeNanos) / refillIntervalNanos);
         if (periods <= 0) {
             return;
         }
@@ -99,9 +99,9 @@ public class TokenBucket {
             newTokenCount = capacity;
         }
         if (TOKENS_UPDATER.compareAndSet(this, tokenCount, newTokenCount)) {
-            lastRefillTime = time;
+            lastRefillTimeNanos = timeNanos;
         } else {
-            refill(time);
+            refill(timeNanos);
         }
     }
 

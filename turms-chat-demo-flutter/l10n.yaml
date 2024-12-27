@@ -1,0 +1,7 @@
+# https://docs.flutter.dev/ui/accessibility-and-internationalization/internationalization#configuring-the-l10nyaml-file
+arb-dir: lib/ui/l10n/arb
+output-dir: lib/ui/l10n
+output-localization-file: app_localizations.dart
+synthetic-package: false
+template-arb-file: app_en.arb
+nullable-getter: false

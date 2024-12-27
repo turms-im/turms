@@ -49,7 +49,7 @@ import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.service.business.user.FriendRequestProperties;
 import im.turms.server.common.infra.task.TaskManager;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidRequestStatus;
 import im.turms.server.common.infra.validation.ValidResponseAction;
 import im.turms.server.common.infra.validation.Validator;
@@ -567,7 +567,7 @@ public class UserFriendRequestService extends ExpirableEntityService<UserFriendR
                 ? userVersionService.querySentFriendRequestsVersion(userId)
                 : userVersionService.queryReceivedFriendRequestsVersion(userId);
         return versionMono.flatMap(version -> {
-            if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+            if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                 return ResponseExceptionPublisherPool.alreadyUpToUpdate();
             }
             Flux<UserFriendRequest> requestFlux = areSentByUser

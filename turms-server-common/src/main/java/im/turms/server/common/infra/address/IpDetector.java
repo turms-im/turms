@@ -34,6 +34,7 @@ import reactor.netty.http.client.HttpClient;
 import im.turms.server.common.infra.net.InetAddressUtil;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.property.env.common.IpProperties;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -49,10 +50,10 @@ public class IpDetector {
     private final TurmsPropertiesManager propertiesManager;
     @Nullable
     private String cachedPrivateIp;
-    private long privateIpLastUpdatedDate;
+    private long privateIpLastUpdatedTimeNanos;
     @Nullable
     private String cachedPublicIp;
-    private long publicIpLastUpdatedDate;
+    private long publicIpLastUpdatedTimeNanos;
 
     public IpDetector(TurmsPropertiesManager propertiesManager) {
         this.propertiesManager = propertiesManager;
@@ -65,8 +66,8 @@ public class IpDetector {
         String localCachedPrivateIp = cachedPrivateIp;
         if (cachedPrivateIpExpireAfterMillis > 0
                 && localCachedPrivateIp != null
-                && System.currentTimeMillis()
-                        - privateIpLastUpdatedDate < cachedPrivateIpExpireAfterMillis) {
+                && System.nanoTime() - privateIpLastUpdatedTimeNanos < DateTimeUtil
+                        .millisToNanos(cachedPrivateIpExpireAfterMillis)) {
             return localCachedPrivateIp;
         }
         DatagramChannel channel = null;
@@ -83,7 +84,7 @@ public class IpDetector {
                                 + ip
                                 + ") is not a site local IP address");
             }
-            privateIpLastUpdatedDate = System.currentTimeMillis();
+            privateIpLastUpdatedTimeNanos = System.nanoTime();
             cachedPrivateIp = ip;
             return ip;
         } catch (Exception e) {
@@ -105,8 +106,8 @@ public class IpDetector {
         String localCachedPublicIp = cachedPublicIp;
         if (cachedPublicIpExpireAfterMillis > 0
                 && localCachedPublicIp != null
-                && System.currentTimeMillis()
-                        - publicIpLastUpdatedDate < cachedPublicIpExpireAfterMillis) {
+                && System.nanoTime() - publicIpLastUpdatedTimeNanos < DateTimeUtil
+                        .millisToNanos(cachedPublicIpExpireAfterMillis)) {
             return Mono.just(localCachedPublicIp);
         }
         List<String> ipDetectorAddresses = ipProperties.getPublicIpDetectorAddresses();
@@ -134,7 +135,7 @@ public class IpDetector {
         }
         return Mono.firstWithValue(monos)
                 .doOnNext(ip -> {
-                    publicIpLastUpdatedDate = System.currentTimeMillis();
+                    publicIpLastUpdatedTimeNanos = System.nanoTime();
                     cachedPublicIp = ip;
                 })
                 .switchIfEmpty(EXCEPTION_NO_AVAILABLE_ADDRESS_FOUND)

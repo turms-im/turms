@@ -29,8 +29,8 @@ if first_log_id < 0 then
     first_log_id = 0
 end
 if first_log_id <= log_id and log_id < last_log_id then
-    local logs = redis_call('LRANGE', blocklist_key .. ':log', (log_id - first_log_id) * 3, -1)
-    for i = 1, #logs, 3 do
+    local logs = redis_call('LRANGE', blocklist_key .. ':log', (log_id - first_log_id) * LOG_ENTRY_ELEMENT_COUNT, -1)
+    for i = 1, #logs, LOG_ENTRY_ELEMENT_COUNT do
         logs[i + 2] = tonumber(logs[i + 2])
     end
     return {

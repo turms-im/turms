@@ -65,6 +65,7 @@ import im.turms.server.common.infra.plugin.PluginManager;
 import im.turms.server.common.infra.property.TurmsPropertiesManager;
 import im.turms.server.common.infra.proto.ProtoDecoder;
 import im.turms.server.common.infra.proto.ProtoEncoder;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.tracing.TracingCloseableContext;
 import im.turms.server.common.infra.tracing.TracingContext;
 import im.turms.service.access.servicerequest.dto.ClientRequest;
@@ -235,6 +236,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private Mono<ServiceResponse> dispatch0(TracingContext context, ServiceRequest serviceRequest) {
         long requestTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         // 1. Validate ServiceResponse
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
@@ -393,7 +395,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     requestSize,
                                     requestTime,
                                     response,
-                                    System.currentTimeMillis() - requestTime);
+                                    (System.nanoTime() - startTime) / DateTimeUtil.NANOS_PER_MILLI);
                         }
                         return response;
                     });

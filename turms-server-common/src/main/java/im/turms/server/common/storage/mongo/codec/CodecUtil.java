@@ -67,7 +67,7 @@ public final class CodecUtil {
     }
 
     /**
-     * TODO: unify the logic of {@link CodecUtil#encode} and {@link CodecUtil#write}
+     * TODO: unify the logic of {@link #encode} and {@link #write}
      */
     public static BsonValue encode(Object value) {
         return switch (value) {
@@ -316,7 +316,7 @@ public final class CodecUtil {
                 yield BsonPool.MAX_KEY;
             }
             case END_OF_DOCUMENT -> throw new UnsupportedOperationException(
-                    "The end of document should be handled by the caller");
+                    "The caller must handle the end of a document");
         };
     }
 

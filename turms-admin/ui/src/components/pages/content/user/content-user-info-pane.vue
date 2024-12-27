@@ -90,7 +90,7 @@ export default {
                             type: 'INPUT'
                         },
                         {
-                            id: 'permissionGroupId',
+                            id: 'roleId',
                             type: 'INPUT',
                             rules: this.$validator.create({onlyNumber: true})
                         },
@@ -160,7 +160,7 @@ export default {
                             type: 'INPUT'
                         },
                         {
-                            id: 'permissionGroupId',
+                            id: 'roleId',
                             type: 'INPUT',
                             rules: this.$validator.create({onlyNumber: true})
                         },
@@ -236,7 +236,7 @@ export default {
                         width: '10%'
                     },
                     {
-                        key: 'permissionGroupId',
+                        key: 'roleId',
                         width: '7.5%'
                     },
                     {

@@ -25,7 +25,7 @@ import im.turms.server.common.infra.lang.AsciiCode;
 import im.turms.server.common.infra.lang.NumberFormatter;
 import im.turms.server.common.infra.lang.StringUtil;
 import im.turms.server.common.infra.netty.ByteBufUtil;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 
 /**
  * @author James Chen
@@ -36,7 +36,7 @@ public final class AdminApiLogging {
     }
 
     public static void log(
-            String account,
+            Long adminId,
             String ip,
             String requestId,
             long requestTime,
@@ -57,11 +57,11 @@ public final class AdminApiLogging {
         ByteBuf buffer = ByteBufUtil.join(estimatedSize,
                 CommonLogger.LOG_FIELD_DELIMITER,
                 // Session
-                account,
+                adminId,
                 ip,
                 // Request
                 requestId,
-                DateUtil.toBytes(requestTime),
+                DateTimeUtil.toBytes(requestTime),
                 action,
                 params.toString(),
                 // Response

@@ -36,7 +36,10 @@ import static im.turms.server.common.storage.mongo.entity.annotation.IndexedReas
 
 /**
  * @author James Chen
- * @implNote No need to shard because there should be only a few admins for most groups.
+ * @implNote 1. No need to shard because there should be only a few admin users for most groups.
+ *           <p>
+ *           2. We call it "admin" for "administrator" instead of "admin user" for "administrative
+ *           user" that is verbose.
  */
 @Data
 @AllArgsConstructor
@@ -47,7 +50,20 @@ public final class Admin extends BaseEntity {
     public static final String COLLECTION_NAME = "admin";
 
     @Id
-    private final String account;
+    private final Long id;
+
+    /**
+     * We call it "loginName" instead of "username" or "userId" because:
+     * <p>
+     * 1. Though most systems use the word "username", it is very confusing for users because a lot
+     * of people consider "username" as the display name, which is not the case.
+     * <p>
+     * 2. "userId" is a good name, but it is error-prone for users to distinguish "userId" and "id"
+     * (record ID) for our cases, especially calling admin APIs.
+     */
+    @Field(Fields.LOGIN_NAME)
+    @Indexed(unique = true)
+    private final String loginName;
 
     /**
      * @see PasswordProperties#adminPasswordEncodingAlgorithm
@@ -55,8 +71,12 @@ public final class Admin extends BaseEntity {
     @Field(Fields.PASSWORD)
     private final byte[] password;
 
-    @Field(Fields.NAME)
-    private final String name;
+    /**
+     * As the name indicates, this is the name for display only (e.g., "James Chen"), and is not
+     * used for authentication.
+     */
+    @Field(Fields.DISPLAY_NAME)
+    private final String displayName;
 
     @Field(Fields.ROLE_IDS)
     @Indexed(optional = true, value = HASH, reason = SMALL_COLLECTION)
@@ -67,8 +87,9 @@ public final class Admin extends BaseEntity {
     private final Date registrationDate;
 
     public static final class Fields {
+        public static final String LOGIN_NAME = "ln";
         public static final String PASSWORD = "pw";
-        public static final String NAME = "n";
+        public static final String DISPLAY_NAME = "n";
         public static final String ROLE_IDS = "rid";
         public static final String REGISTRATION_DATE = "rd";
 

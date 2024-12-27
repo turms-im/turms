@@ -50,7 +50,7 @@ import im.turms.server.common.infra.recycler.ListRecycler;
 import im.turms.server.common.infra.recycler.Recyclable;
 import im.turms.server.common.infra.recycler.SetRecycler;
 import im.turms.server.common.infra.time.DateRange;
-import im.turms.server.common.infra.time.DateUtil;
+import im.turms.server.common.infra.time.DateTimeUtil;
 import im.turms.server.common.infra.validation.ValidGroupBlockedUserKey;
 import im.turms.server.common.infra.validation.Validator;
 import im.turms.server.common.storage.mongo.IMongoCollectionInitializer;
@@ -267,7 +267,7 @@ public class GroupBlocklistService extends BaseService {
         }
         return groupVersionService.queryBlocklistVersion(groupId)
                 .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<List<Long>> recyclableList = ListRecycler.obtain();
@@ -298,7 +298,7 @@ public class GroupBlocklistService extends BaseService {
         }
         return groupVersionService.queryBlocklistVersion(groupId)
                 .flatMap(version -> {
-                    if (DateUtil.isAfterOrSame(lastUpdatedDate, version)) {
+                    if (DateTimeUtil.isAfterOrSame(lastUpdatedDate, version)) {
                         return ResponseExceptionPublisherPool.alreadyUpToUpdate();
                     }
                     Recyclable<List<Long>> recyclableList = ListRecycler.obtain();

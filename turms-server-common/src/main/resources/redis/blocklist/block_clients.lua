@@ -1,10 +1,9 @@
 local keys = KEYS
 local redis_call = redis.call
-local struct_unpack = struct.unpack
 local tonumber = tonumber
 
 local blocklist_key = keys[1] == 'i' and 'blocklist:ip' or 'blocklist:uid'
-local block_end_date = struct_unpack('>l', keys[2])
+local block_end_date = struct.unpack('>l', keys[2])
 
 local id_count = #keys - 2
 local blocklist_target_key = blocklist_key .. ':target'
@@ -23,8 +22,8 @@ local new_log_id = redis_call('INCRBY', blocklist_log_id_key, id_count)
 if (new_log_id - id_count) == 0 then
     local current_timestamp = redis_call('GET', blocklist_timestamp_key)
     if not current_timestamp then
-        local now = tonumber(redis_call('TIME')[1])
-        redis_call('SET', blocklist_timestamp_key, now)
+        local now = redis_call('TIME')
+        redis_call('SET', blocklist_timestamp_key, math.floor(now[1] * 1000 + now[2] / 1000))
     end
 end
 
@@ -35,7 +34,7 @@ for i = 1, id_count do
     redis_call('RPUSH', blocklist_log_key, type, id, block_end_date)
 end
 
-local diff = redis_call('LLEN', blocklist_log_key) - MAX_LOG_QUEUE_SIZE * 3
+local diff = redis_call('LLEN', blocklist_log_key) - MAX_LOG_QUEUE_SIZE * LOG_ENTRY_ELEMENT_COUNT
 if diff > 0 then
     redis_call('LTRIM', blocklist_log_key, diff, -1)
 end

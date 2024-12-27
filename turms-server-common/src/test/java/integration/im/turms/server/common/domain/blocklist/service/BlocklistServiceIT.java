@@ -48,7 +48,7 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BlocklistServiceIT extends BaseIntegrationTest {
 
-    private static final long BLOCK_DURATION_SECONDS = 60;
+    private static final long BLOCK_DURATION_MILLIS = 60 * 1000;
     private static final Duration TIMEOUT = Duration.ofSeconds(15);
 
     private static BlocklistService sharedBlocklistService;
@@ -74,7 +74,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
 
         Set<Long> userIds = Set.of(1L, 2L, 3L);
 
-        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_SECONDS)
+        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_MILLIS)
                 .block(TIMEOUT);
         waitToSync();
 
@@ -132,7 +132,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
 
         Set<Long> userIds = Set.of(1L, 2L, 3L, 4L, 5L);
 
-        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_SECONDS)
+        sharedBlocklistService.blockUserIds(userIds, BLOCK_DURATION_MILLIS)
                 .block(TIMEOUT);
         waitToSync();
 
@@ -317,7 +317,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
             BlocklistService localBlocklistService,
             long userId,
             String desc) {
-        localBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_SECONDS)
+        localBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_MILLIS)
                 .block(TIMEOUT);
         waitToSync();
         assertThat(localBlocklistService.isUserIdBlocked(userId)).as(desc)
@@ -339,7 +339,7 @@ class BlocklistServiceIT extends BaseIntegrationTest {
             BlocklistService localBlocklistService,
             long userId,
             String desc) {
-        sharedBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_SECONDS)
+        sharedBlocklistService.blockUserIds(Set.of(userId), BLOCK_DURATION_MILLIS)
                 .block(TIMEOUT);
         waitToSync();
         assertThat(localBlocklistService.isUserIdBlocked(userId)).as(desc)
