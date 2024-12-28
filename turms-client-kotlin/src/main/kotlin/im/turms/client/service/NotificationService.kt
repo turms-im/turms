@@ -24,7 +24,9 @@ import java.util.LinkedList
 /**
  * @author James Chen
  */
-class NotificationService(turmsClient: TurmsClient) {
+class NotificationService(
+    turmsClient: TurmsClient,
+) {
     private var notificationListeners: MutableList<((Notification) -> Unit)> = LinkedList()
 
     init {

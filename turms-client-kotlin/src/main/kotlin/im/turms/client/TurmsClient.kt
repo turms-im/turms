@@ -57,7 +57,5 @@ class TurmsClient(
     val conferenceService: ConferenceService = ConferenceService(this)
     val notificationService: NotificationService = NotificationService(this)
 
-    suspend fun close() {
-        return this.driver.close()
-    }
+    suspend fun close() = this.driver.close()
 }

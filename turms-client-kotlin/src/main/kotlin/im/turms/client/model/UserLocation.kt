@@ -19,8 +19,9 @@ package im.turms.client.model
 /**
  * @author James Chen
  */
-data class UserLocation(val longitude: Float, val latitude: Float) {
-    override fun toString(): String {
-        return "$longitude:$latitude"
-    }
+data class UserLocation(
+    val longitude: Float,
+    val latitude: Float,
+) {
+    override fun toString(): String = "$longitude:$latitude"
 }

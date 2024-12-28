@@ -45,7 +45,9 @@ import java.util.regex.Pattern
 /**
  * @author James Chen
  */
-class MessageService(private val turmsClient: TurmsClient) {
+class MessageService(
+    private val turmsClient: TurmsClient,
+) {
     private var mentionedUserIdsParser: ((Message) -> Set<Long>)? = null
     private var messageListeners: MutableList<(Message, MessageAddition) -> Unit> = LinkedList()
 
@@ -237,8 +239,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                         text?.let { this.text = it }
                         records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
                     },
-                )
-                .toResponse()
+                ).toResponse()
         }
 
     /**
@@ -374,8 +375,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     this.messageId = messageId
                     this.recallDate = recallDate.time
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Check if the mention feature is enabled.
@@ -422,7 +422,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         requesterId: Long,
         request: CreateMessageRequest,
     ): Message =
-        Message.newBuilder()
+        Message
+            .newBuilder()
             .run {
                 if (request.hasMessageId()) {
                     id = request.messageId
@@ -499,8 +500,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                         format?.let { this.format = it }
                         size?.let { this.size = it }
                     },
-                )
-                    .build()
+                ).build()
                     .toByteString()
                     .asReadOnlyByteBuffer()
             }
@@ -529,15 +529,15 @@ class MessageService(private val turmsClient: TurmsClient) {
                         format?.let { this.format = it }
                         size?.let { this.size = it }
                     },
-                )
-                    .build()
+                ).build()
                     .toByteString()
                     .asReadOnlyByteBuffer()
             }
 
         @JvmStatic
         fun generateVideoRecordByData(data: ByteArray): ByteBuffer =
-            VideoFile.newBuilder()
+            VideoFile
+                .newBuilder()
                 .setData(ByteString.copyFrom(data))
                 .build()
                 .toByteString()
@@ -545,7 +545,8 @@ class MessageService(private val turmsClient: TurmsClient) {
 
         @JvmStatic
         fun generateImageRecordByData(data: ByteArray): ByteBuffer =
-            ImageFile.newBuilder()
+            ImageFile
+                .newBuilder()
                 .setData(ByteString.copyFrom(data))
                 .build()
                 .toByteString()
@@ -558,7 +559,8 @@ class MessageService(private val turmsClient: TurmsClient) {
             imageSize: Int? = null,
             original: Boolean? = null,
         ): ByteBuffer =
-            ImageFile.newBuilder()
+            ImageFile
+                .newBuilder()
                 .setDescription(
                     ImageFile.Description.newBuilder().apply {
                         setUrl(url)
@@ -566,14 +568,14 @@ class MessageService(private val turmsClient: TurmsClient) {
                         imageSize?.let { this.imageSize = it }
                         original?.let { this.original = it }
                     },
-                )
-                .build()
+                ).build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
 
         @JvmStatic
         fun generateFileRecordByDate(data: ByteArray): ByteBuffer =
-            File.newBuilder()
+            File
+                .newBuilder()
                 .setData(ByteString.copyFrom(data))
                 .build()
                 .toByteString()
@@ -585,15 +587,15 @@ class MessageService(private val turmsClient: TurmsClient) {
             format: String? = null,
             size: Int? = null,
         ): ByteBuffer =
-            File.newBuilder()
+            File
+                .newBuilder()
                 .setDescription(
                     File.Description.newBuilder().apply {
                         setUrl(url)
                         format?.let { this.format = it }
                         size?.let { this.size = it }
                     },
-                )
-                .build()
+                ).build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
     }

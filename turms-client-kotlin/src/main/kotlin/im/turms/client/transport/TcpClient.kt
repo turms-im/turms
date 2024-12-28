@@ -46,7 +46,9 @@ import kotlin.coroutines.CoroutineContext
 /**
  * @author James Chen
  */
-class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScope {
+class TcpClient(
+    override val coroutineContext: CoroutineContext,
+) : CoroutineScope {
     var port: Int? = null
     lateinit var host: String
 
@@ -241,7 +243,8 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
                     throw exception
                 } else {
                     readBuffer =
-                        ByteBuffer.allocate(readBuffer.capacity() * 2)
+                        ByteBuffer
+                            .allocate(readBuffer.capacity() * 2)
                             .put(readBuffer.flip() as ByteBuffer)
                             .put(data.toByte())
                 }
@@ -330,13 +333,12 @@ class TcpClient(override val coroutineContext: CoroutineContext) : CoroutineScop
             }
         }
 
-    private fun getSslContext(protocol: String): SSLContext? {
-        return try {
+    private fun getSslContext(protocol: String): SSLContext? =
+        try {
             SSLContext.getInstance(protocol)
         } catch (e: NoSuchAlgorithmException) {
             null
         }
-    }
 
     companion object {
         const val INITIAL_READ_BUFFER_CAPACITY: Int = 1024 * 1024

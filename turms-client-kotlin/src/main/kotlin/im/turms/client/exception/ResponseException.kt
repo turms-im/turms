@@ -31,13 +31,12 @@ data class ResponseException internal constructor(
         private fun formatMessage(
             code: Int,
             reason: String?,
-        ): String {
-            return if (reason != null) {
+        ): String =
+            if (reason != null) {
                 "code: $code, reason: $reason"
             } else {
                 "code: $code"
             }
-        }
 
         fun from(notification: TurmsNotification): ResponseException {
             val code = notification.code
@@ -53,8 +52,6 @@ data class ResponseException internal constructor(
             code: Int,
             reason: String? = null,
             cause: Throwable? = null,
-        ): ResponseException {
-            return ResponseException(null, code, reason, cause)
-        }
+        ): ResponseException = ResponseException(null, code, reason, cause)
     }
 }

@@ -55,7 +55,10 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * @author James Chen
  */
-class StorageService(private val turmsClient: TurmsClient, storageServerUrl: String?) {
+class StorageService(
+    private val turmsClient: TurmsClient,
+    storageServerUrl: String?,
+) {
     private val httpClient: OkHttpClient = OkHttpClient().newBuilder().build()
     var serverUrl = storageServerUrl ?: "http://localhost:9000"
 
@@ -113,14 +116,13 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         name: String? = null,
         mediaType: String? = null,
         customAttributes: List<Value>? = null,
-    ): Response<Map<String, String>> {
-        return queryResourceUploadInfo(
+    ): Response<Map<String, String>> =
+        queryResourceUploadInfo(
             StorageResourceType.USER_PROFILE_PICTURE,
             name = name,
             mediaType = mediaType,
             customAttributes = customAttributes,
         )
-    }
 
     suspend fun queryUserProfilePictureDownloadInfo(
         userId: Long,
@@ -227,15 +229,14 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         mediaType: String? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
         customAttributes: List<Value>? = null,
-    ): Response<StorageUploadResult> {
-        return uploadMessageAttachment0(
+    ): Response<StorageUploadResult> =
+        uploadMessageAttachment0(
             data,
             name = name,
             mediaType = mediaType,
             urlKeyName = urlKeyName,
             customAttributes = customAttributes,
         )
-    }
 
     suspend fun uploadMessageAttachmentInPrivateConversation(
         userId: Long,
@@ -244,8 +245,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         mediaType: String? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
         customAttributes: List<Value>? = null,
-    ): Response<StorageUploadResult> {
-        return uploadMessageAttachment0(
+    ): Response<StorageUploadResult> =
+        uploadMessageAttachment0(
             data,
             userId = userId,
             name = name,
@@ -253,7 +254,6 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             urlKeyName = urlKeyName,
             customAttributes = customAttributes,
         )
-    }
 
     suspend fun uploadMessageAttachmentInGroupConversation(
         groupId: Long,
@@ -262,8 +262,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         mediaType: String? = null,
         urlKeyName: String = DEFAULT_URL_KEY_NAME,
         customAttributes: List<Value>? = null,
-    ): Response<StorageUploadResult> {
-        return uploadMessageAttachment0(
+    ): Response<StorageUploadResult> =
+        uploadMessageAttachment0(
             data,
             groupId = groupId,
             name = name,
@@ -271,7 +271,6 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             urlKeyName = urlKeyName,
             customAttributes = customAttributes,
         )
-    }
 
     private suspend fun uploadMessageAttachment0(
         data: ByteArray,
@@ -359,13 +358,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val request =
-            UpdateMessageAttachmentInfoRequest.newBuilder()
+            UpdateMessageAttachmentInfoRequest
+                .newBuilder()
                 .apply {
                     attachmentIdNum?.let { this.attachmentIdNum = it }
                     attachmentIdStr?.let { this.attachmentIdStr = it }
                     userIdToShareWith = userId
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse()
     }
 
@@ -381,13 +382,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val request =
-            UpdateMessageAttachmentInfoRequest.newBuilder()
+            UpdateMessageAttachmentInfoRequest
+                .newBuilder()
                 .apply {
                     attachmentIdNum?.let { this.attachmentIdNum = it }
                     attachmentIdStr?.let { this.attachmentIdStr = it }
                     groupIdToShareWith = groupId
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse()
     }
 
@@ -403,13 +406,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val request =
-            UpdateMessageAttachmentInfoRequest.newBuilder()
+            UpdateMessageAttachmentInfoRequest
+                .newBuilder()
                 .apply {
                     attachmentIdNum?.let { this.attachmentIdNum = it }
                     attachmentIdStr?.let { this.attachmentIdStr = it }
                     userIdToUnshareWith = userId
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse()
     }
 
@@ -425,13 +430,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val request =
-            UpdateMessageAttachmentInfoRequest.newBuilder()
+            UpdateMessageAttachmentInfoRequest
+                .newBuilder()
                 .apply {
                     attachmentIdNum?.let { this.attachmentIdNum = it }
                     attachmentIdStr?.let { this.attachmentIdStr = it }
                     groupIdToUnshareWith = groupId
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse()
     }
 
@@ -523,7 +530,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     ): Response<List<StorageResourceInfo>> {
         val n =
             turmsClient.driver.send(
-                QueryMessageAttachmentInfosRequest.newBuilder()
+                QueryMessageAttachmentInfosRequest
+                    .newBuilder()
                     .apply {
                         creationDateStart?.let { this.creationDateStart = it.time }
                         creationDateEnd?.let { this.creationDateEnd = it.time }
@@ -540,7 +548,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     ): Response<List<StorageResourceInfo>> {
         val n =
             turmsClient.driver.send(
-                QueryMessageAttachmentInfosRequest.newBuilder()
+                QueryMessageAttachmentInfosRequest
+                    .newBuilder()
                     .addAllUserIds(userIds)
                     .apply {
                         areSharedByMe?.let { this.areSharedByMe = it }
@@ -559,7 +568,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     ): Response<List<StorageResourceInfo>> {
         val n =
             turmsClient.driver.send(
-                QueryMessageAttachmentInfosRequest.newBuilder()
+                QueryMessageAttachmentInfosRequest
+                    .newBuilder()
                     .addAllGroupIds(groupIds)
                     .apply {
                         userIds?.let {
@@ -601,7 +611,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             )
         }
         val requestBody =
-            MultipartBody.Builder()
+            MultipartBody
+                .Builder()
                 .setType(MultipartBody.FORM)
                 .apply {
                     for (entry in formData.entries) {
@@ -610,12 +621,12 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     mediaType?.let {
                         addFormDataPart("Content-Type", it.toString())
                     }
-                }
-                .addFormDataPart("key", id)
+                }.addFormDataPart("key", id)
                 .addFormDataPart("file", name ?: id, data.toRequestBody(mediaType))
                 .build()
         val request: Request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(httpUrl)
                 .post(requestBody)
                 .build()
@@ -683,7 +694,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         customAttributes: List<Value>? = null,
     ): Response<Unit> {
         val request =
-            DeleteResourceRequest.newBuilder()
+            DeleteResourceRequest
+                .newBuilder()
                 .setType(type)
                 .apply {
                     idNum?.let { this.idNum = it }
@@ -708,7 +720,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                 )
             }
             val request =
-                Request.Builder()
+                Request
+                    .Builder()
                     .url(httpUrl)
                     .build()
             httpClient.newCall(request).enqueue(
@@ -729,21 +742,19 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     override fun onResponse(
                         call: Call,
                         response: okhttp3.Response,
-                    ) {
-                        return if (response.isSuccessful) {
-                            it.resume(
-                                Response.value(
-                                    StorageResource(httpUrl.toString(), response.headers.toMap(), response.body!!.bytes()),
-                                ),
-                            )
-                        } else {
-                            it.resumeWithException(
-                                ResponseException.from(
-                                    ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
-                                    "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
-                                ),
-                            )
-                        }
+                    ) = if (response.isSuccessful) {
+                        it.resume(
+                            Response.value(
+                                StorageResource(httpUrl.toString(), response.headers.toMap(), response.body!!.bytes()),
+                            ),
+                        )
+                    } else {
+                        it.resumeWithException(
+                            ResponseException.from(
+                                ResponseStatusCode.HTTP_NOT_SUCCESSFUL_RESPONSE,
+                                "Failed to retrieve the resource because the HTTP response status code is: ${response.code}",
+                            ),
+                        )
                     }
                 },
             )
@@ -758,7 +769,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         val request =
-            QueryResourceUploadInfoRequest.newBuilder()
+            QueryResourceUploadInfoRequest
+                .newBuilder()
                 .setType(type)
                 .apply {
                     idNum?.let { this.idNum = it }
@@ -767,7 +779,8 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
                     mediaType?.let { this.mediaType = it }
                     customAttributes?.let { addAllCustomAttributes(customAttributes) }
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
 
@@ -778,20 +791,20 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         customAttributes: List<Value>? = null,
     ): Response<Map<String, String>> {
         val request =
-            QueryResourceDownloadInfoRequest.newBuilder()
+            QueryResourceDownloadInfoRequest
+                .newBuilder()
                 .setType(type)
                 .apply {
                     idNum?.let { this.idNum = it }
                     idStr?.let { this.idStr = it }
                     customAttributes?.let { addAllCustomAttributes(customAttributes) }
                 }
-        return turmsClient.driver.send(request)
+        return turmsClient.driver
+            .send(request)
             .toResponse { it.stringsWithVersion.stringsList.toMap() }
     }
 
-    private fun getBucketName(resourceType: StorageResourceType): String {
-        return RESOURCE_TYPE_TO_BUCKET_NAME[resourceType]!!
-    }
+    private fun getBucketName(resourceType: StorageResourceType): String = RESOURCE_TYPE_TO_BUCKET_NAME[resourceType]!!
 
     private fun parseMediaType(mediaType: String): MediaType {
         try {
@@ -808,31 +821,30 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
     private fun getResourceUrl(
         data: Map<String, String>,
         urlKeyName: String,
-    ): String {
-        return data[urlKeyName]
+    ): String =
+        data[urlKeyName]
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
                 "Could not get the resource URL because the key \"$urlKeyName\" does not exist in the data: $data",
             )
-    }
 
     private fun getAndRemoveResourceUrl(
         data: MutableMap<String, String>,
         urlKeyName: String,
-    ): String {
-        return data.remove(urlKeyName)
+    ): String =
+        data.remove(urlKeyName)
             ?: throw ResponseException.from(
                 ResponseStatusCode.DATA_NOT_FOUND,
                 "Could not get the resource URL because the key \"$urlKeyName\" does not exist in the data: $data",
             )
-    }
 
     companion object {
         private const val RESOURCE_ID_KEY_NAME = "id"
         private const val DEFAULT_URL_KEY_NAME = "url"
         private val RESOURCE_TYPE_TO_BUCKET_NAME =
             EnumMap(
-                StorageResourceType.values()
+                StorageResourceType
+                    .values()
                     .filter { it !== StorageResourceType.UNRECOGNIZED }
                     .associateBy({ it }, { it.name.lowercase().replace('_', '-') }),
             )

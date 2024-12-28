@@ -106,7 +106,8 @@ internal class ConversationServiceET {
         runBlocking {
             val targetIds = setOf(RELATED_USER_ID)
             val conversations: List<PrivateConversation> =
-                client.conversationService.queryPrivateConversations(targetIds)
+                client.conversationService
+                    .queryPrivateConversations(targetIds)
                     .data
             assertTrue(conversations.isNotEmpty())
         }
@@ -118,7 +119,8 @@ internal class ConversationServiceET {
         runBlocking {
             val groupIds = setOf(GROUP_ID)
             val conversations: List<GroupConversation> =
-                client.conversationService.queryGroupConversations(groupIds)
+                client.conversationService
+                    .queryGroupConversations(groupIds)
                     .data
             assertTrue(conversations.isNotEmpty())
         }

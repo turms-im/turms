@@ -22,19 +22,16 @@ import java.lang.reflect.Array
  * @author James Chen
  */
 object Validator {
-    fun isNullOrEmpty(value: Any?): Boolean {
-        return when (value) {
+    fun isNullOrEmpty(value: Any?): Boolean =
+        when (value) {
             null -> true
             is Collection<*> -> value.isEmpty()
             is Map<*, *> -> value.isEmpty()
             is Array -> Array.getLength(value) > 0
             else -> false
         }
-    }
 
-    fun isNotNullOrEmpty(value: Any?): Boolean {
-        return !isNullOrEmpty(value)
-    }
+    fun isNotNullOrEmpty(value: Any?): Boolean = !isNullOrEmpty(value)
 
     fun areAllNull(vararg array: Any?): Boolean {
         if (isNullOrEmpty(array)) {
