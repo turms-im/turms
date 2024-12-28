@@ -1,21 +1,16 @@
 #ifndef TURMS_CLIENT_MODEL_SESSION_CLOSE_INFO_H
 #define TURMS_CLIENT_MODEL_SESSION_CLOSE_INFO_H
 
-#include <boost/optional.hpp>
+#include <optional>
+#include <string>
 
-namespace turms {
-namespace client {
-namespace model {
-
+namespace turms::client::model {
 struct SessionCloseInfo {
     int closeStatus;
-    boost::optional<int> businessStatus;
-    boost::optional<std::string> reason;
-    boost::optional<std::exception> cause;
+    std::optional<int> businessStatus;
+    std::optional<std::string> reason;
+    std::optional<std::exception> cause;
 };
-
-}  // namespace model
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::model
 
 #endif  // TURMS_CLIENT_MODEL_SESSION_CLOSE_INFO_H

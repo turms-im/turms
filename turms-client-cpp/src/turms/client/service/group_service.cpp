@@ -1,22 +1,21 @@
 #include "turms/client/service/group_service.h"
 
+#include "turms/client/time/time_util.h"
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-namespace service {
+namespace turms::client::service {
 GroupService::GroupService(TurmsClient& turmsClient)
     : turmsClient_(turmsClient) {
 }
 
-auto GroupService::createGroup(const absl::string_view& name,
-                               const boost::optional<absl::string_view>& intro,
-                               const boost::optional<absl::string_view>& announcement,
-                               const boost::optional<int>& minScore,
-                               const boost::optional<time_point>& muteEndDate,
-                               const boost::optional<int64_t>& typeId,
+auto GroupService::createGroup(absl::string_view name,
+                               const std::optional<absl::string_view>& intro,
+                               const std::optional<absl::string_view>& announcement,
+                               const std::optional<int>& minScore,
+                               const std::optional<time_point>& muteEndDate,
+                               const std::optional<int64_t>& typeId,
                                const std::unordered_map<std::string, Value>& userDefinedAttributes)
-    -> boost::future<Response<int64_t>> {
+    const -> boost::future<Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_group_request();
     request->set_name(name);
@@ -48,7 +47,7 @@ auto GroupService::createGroup(const absl::string_view& name,
         });
 }
 
-auto GroupService::deleteGroup(int64_t groupId) -> boost::future<Response<void>> {
+auto GroupService::deleteGroup(int64_t groupId) const -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_group_request();
     request->set_group_id(groupId);
@@ -60,16 +59,16 @@ auto GroupService::deleteGroup(int64_t groupId) -> boost::future<Response<void>>
 }
 
 auto GroupService::updateGroup(int64_t groupId,
-                               const boost::optional<absl::string_view>& name,
-                               const boost::optional<absl::string_view>& intro,
-                               const boost::optional<absl::string_view>& announcement,
-                               const boost::optional<int>& minScore,
-                               const boost::optional<int64_t>& typeId,
-                               const boost::optional<time_point>& muteEndDate,
-                               const boost::optional<int64_t>& successorId,
-                               const boost::optional<bool>& quitAfterTransfer,
+                               const std::optional<absl::string_view>& name,
+                               const std::optional<absl::string_view>& intro,
+                               const std::optional<absl::string_view>& announcement,
+                               const std::optional<int>& minScore,
+                               const std::optional<int64_t>& typeId,
+                               const std::optional<time_point>& muteEndDate,
+                               const std::optional<int64_t>& successorId,
+                               const std::optional<bool>& quitAfterTransfer,
                                const std::unordered_map<std::string, Value>& userDefinedAttributes)
-    -> boost::future<Response<void>> {
+    const -> boost::future<Response<void>> {
     if (!name && !intro && !announcement && !minScore && !typeId && !muteEndDate && !successorId &&
         userDefinedAttributes.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -112,30 +111,33 @@ auto GroupService::updateGroup(int64_t groupId,
         });
 }
 
-auto GroupService::transferOwnership(int64_t groupId, int64_t successorId, bool quitAfterTransfer)
+auto GroupService::transferOwnership(int64_t groupId,
+                                     int64_t successorId,
+                                     bool quitAfterTransfer) const
     -> boost::future<Response<void>> {
     return updateGroup(groupId,
-                       boost::none,
-                       boost::none,
-                       boost::none,
-                       boost::none,
-                       boost::none,
-                       boost::none,
+                       std::nullopt,
+                       std::nullopt,
+                       std::nullopt,
+                       std::nullopt,
+                       std::nullopt,
+                       std::nullopt,
                        successorId,
                        quitAfterTransfer);
 }
 
-auto GroupService::muteGroup(int64_t groupId, const GroupService::time_point& muteEndDate)
+auto GroupService::muteGroup(int64_t groupId, const time_point& muteEndDate) const
     -> boost::future<Response<void>> {
     return updateGroup(
-        groupId, boost::none, boost::none, boost::none, boost::none, boost::none, muteEndDate);
+        groupId, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, muteEndDate);
 }
-auto GroupService::unmuteGroup(int64_t groupId) -> boost::future<Response<void>> {
+
+auto GroupService::unmuteGroup(int64_t groupId) const -> boost::future<Response<void>> {
     return muteGroup(groupId, time::kEpoch);
 }
 
 auto GroupService::queryGroups(const std::unordered_set<int64_t>& groupIds,
-                               const boost::optional<time_point>& lastUpdatedDate)
+                               const std::optional<time_point>& lastUpdatedDate) const
     -> boost::future<Response<std::vector<Group>>> {
     if (groupIds.empty()) {
         return boost::make_ready_future<>(Response<Group>::emptyList());
@@ -159,8 +161,8 @@ auto GroupService::queryGroups(const std::unordered_set<int64_t>& groupIds,
 
 auto GroupService::searchGroups(const std::string& name,
                                 bool highlight,
-                                const boost::optional<int>& skip,
-                                const boost::optional<int>& limit)
+                                const std::optional<int>& skip,
+                                const std::optional<int>& limit) const
     -> boost::future<Response<std::vector<Group>>> {
     if (name.empty()) {
         return boost::make_ready_future<>(Response<Group>::emptyList());
@@ -188,8 +190,8 @@ auto GroupService::searchGroups(const std::string& name,
         });
 }
 
-auto GroupService::queryJoinedGroupIds(const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<LongsWithVersion>>> {
+auto GroupService::queryJoinedGroupIds(const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<LongsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_joined_group_ids_request();
     if (lastUpdatedDate) {
@@ -198,18 +200,18 @@ auto GroupService::queryJoinedGroupIds(const boost::optional<time_point>& lastUp
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<LongsWithVersion>>{
+            return Response<std::optional<LongsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_longs_with_version()) {
-                        return boost::make_optional(data.longs_with_version());
+                        return std::optional(data.longs_with_version());
                     }
-                    return boost::optional<LongsWithVersion>{};
+                    return std::optional<LongsWithVersion>{};
                 }};
         });
 }
 
-auto GroupService::queryJoinedGroupInfos(const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupsWithVersion>>> {
+auto GroupService::queryJoinedGroupInfos(const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_joined_group_infos_request();
     if (lastUpdatedDate) {
@@ -218,18 +220,18 @@ auto GroupService::queryJoinedGroupInfos(const boost::optional<time_point>& last
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupsWithVersion>>{
+            return Response<std::optional<GroupsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_groups_with_version()) {
-                        return boost::make_optional(data.groups_with_version());
+                        return std::optional(data.groups_with_version());
                     }
-                    return boost::optional<GroupsWithVersion>();
+                    return std::optional<GroupsWithVersion>();
                 }};
         });
 }
 
-auto GroupService::addGroupJoinQuestions(int64_t groupId,
-                                         const std::vector<model::NewGroupJoinQuestion>& questions)
+auto GroupService::addGroupJoinQuestions(
+    int64_t groupId, const std::vector<model::NewGroupJoinQuestion>& questions) const
     -> boost::future<Response<std::vector<int64_t>>> {
     if (questions.empty()) {
         return boost::make_ready_future<>(Response<int64_t>::emptyList());
@@ -240,17 +242,16 @@ auto GroupService::addGroupJoinQuestions(int64_t groupId,
     google::protobuf::RepeatedPtrField<model::proto::GroupJoinQuestion>* mutableQuestions =
         request->mutable_questions();
     mutableQuestions->Reserve(questions.size());
-    for (const auto& question : questions) {
-        const std::unordered_set<std::string>& answers = question.answers;
+    for (const auto& [question, answers, score] : questions) {
         if (answers.empty()) {
             return boost::make_exceptional_future<Response<std::vector<int64_t>>>(
                 ResponseException{model::ResponseStatusCode::kIllegalArgument,
                                   "The answers of group must not be empty"});
         }
         GroupJoinQuestion q;
-        q.set_question(question.question);
+        q.set_question(question);
         q.mutable_answers()->Add(answers.cbegin(), answers.cend());
-        q.set_score(question.score);
+        q.set_score(score);
         mutableQuestions->Add(std::move(q));
     }
     return turmsClient_.driver()
@@ -264,7 +265,7 @@ auto GroupService::addGroupJoinQuestions(int64_t groupId,
         });
 }
 
-auto GroupService::deleteGroupJoinQuestions(const std::unordered_set<int64_t>& questionIds)
+auto GroupService::deleteGroupJoinQuestions(const std::unordered_set<int64_t>& questionIds) const
     -> boost::future<Response<void>> {
     if (questionIds.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -280,9 +281,9 @@ auto GroupService::deleteGroupJoinQuestions(const std::unordered_set<int64_t>& q
 }
 
 auto GroupService::updateGroupJoinQuestion(int64_t questionId,
-                                           const boost::optional<absl::string_view>& question,
+                                           const std::optional<absl::string_view>& question,
                                            const std::vector<std::string>& answers,
-                                           const boost::optional<int> score)
+                                           const std::optional<int>& score) const
     -> boost::future<Response<void>> {
     if (!question && answers.empty() && !score) {
         return boost::make_ready_future<>(Response<void>{});
@@ -306,7 +307,8 @@ auto GroupService::updateGroupJoinQuestion(int64_t questionId,
         });
 }
 
-auto GroupService::blockUser(int64_t groupId, int64_t userId) -> boost::future<Response<void>> {
+auto GroupService::blockUser(int64_t groupId, int64_t userId) const
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_group_blocked_user_request();
     request->set_group_id(groupId);
@@ -318,7 +320,8 @@ auto GroupService::blockUser(int64_t groupId, int64_t userId) -> boost::future<R
         });
 }
 
-auto GroupService::unblockUser(int64_t groupId, int64_t userId) -> boost::future<Response<void>> {
+auto GroupService::unblockUser(int64_t groupId, int64_t userId) const
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_group_blocked_user_request();
     request->set_user_id(userId);
@@ -331,8 +334,8 @@ auto GroupService::unblockUser(int64_t groupId, int64_t userId) -> boost::future
 }
 
 auto GroupService::queryBlockedUserIds(int64_t groupId,
-                                       const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<LongsWithVersion>>> {
+                                       const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<LongsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_blocked_user_ids_request();
     request->set_group_id(groupId);
@@ -342,19 +345,19 @@ auto GroupService::queryBlockedUserIds(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<LongsWithVersion>>{
+            return Response<std::optional<LongsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_longs_with_version()) {
-                        return boost::make_optional(data.longs_with_version());
+                        return std::optional(data.longs_with_version());
                     }
-                    return boost::optional<LongsWithVersion>{};
+                    return std::optional<LongsWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::queryBlockedUserInfos(int64_t groupId,
-                                         const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<UserInfosWithVersion>>> {
+                                         const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<UserInfosWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_blocked_user_infos_request();
     request->set_group_id(groupId);
@@ -364,19 +367,19 @@ auto GroupService::queryBlockedUserInfos(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<UserInfosWithVersion>>{
+            return Response<std::optional<UserInfosWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_user_infos_with_version()) {
-                        return boost::make_optional(data.user_infos_with_version());
+                        return std::optional(data.user_infos_with_version());
                     }
-                    return boost::optional<UserInfosWithVersion>{};
+                    return std::optional<UserInfosWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::createInvitation(int64_t groupId,
                                     int64_t inviteeId,
-                                    const absl::string_view& content)
+                                    absl::string_view content) const
     -> boost::future<Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_group_invitation_request();
@@ -392,7 +395,7 @@ auto GroupService::createInvitation(int64_t groupId,
         });
 }
 
-auto GroupService::deleteInvitation(int64_t invitationId) -> boost::future<Response<void>> {
+auto GroupService::deleteInvitation(int64_t invitationId) const -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_group_invitation_request();
     request->set_invitation_id(invitationId);
@@ -405,7 +408,7 @@ auto GroupService::deleteInvitation(int64_t invitationId) -> boost::future<Respo
 
 auto GroupService::replyInvitation(int64_t invitationId,
                                    ResponseAction responseAction,
-                                   const absl::string_view& reason)
+                                   absl::string_view reason) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_group_invitation_request();
@@ -420,8 +423,8 @@ auto GroupService::replyInvitation(int64_t invitationId,
 }
 
 auto GroupService::queryInvitations(int64_t groupId,
-                                    const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupInvitationsWithVersion>>> {
+                                    const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupInvitationsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_invitations_request();
     request->set_group_id(groupId);
@@ -431,19 +434,19 @@ auto GroupService::queryInvitations(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupInvitationsWithVersion>>{
+            return Response<std::optional<GroupInvitationsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_invitations_with_version()) {
-                        return boost::make_optional(data.group_invitations_with_version());
+                        return std::optional(data.group_invitations_with_version());
                     }
-                    return boost::optional<GroupInvitationsWithVersion>{};
+                    return std::optional<GroupInvitationsWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::queryInvitations(bool areSentByMe,
-                                    const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupInvitationsWithVersion>>> {
+                                    const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupInvitationsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_invitations_request();
     request->set_are_sent_by_me(areSentByMe);
@@ -453,17 +456,17 @@ auto GroupService::queryInvitations(bool areSentByMe,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupInvitationsWithVersion>>{
+            return Response<std::optional<GroupInvitationsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_invitations_with_version()) {
-                        return boost::make_optional(data.group_invitations_with_version());
+                        return std::optional(data.group_invitations_with_version());
                     }
-                    return boost::optional<GroupInvitationsWithVersion>{};
+                    return std::optional<GroupInvitationsWithVersion>{};
                 }};
         });
 }
 
-auto GroupService::createJoinRequest(int64_t groupId, const absl::string_view& content)
+auto GroupService::createJoinRequest(int64_t groupId, absl::string_view content) const
     -> boost::future<Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_group_join_request_request();
@@ -478,7 +481,7 @@ auto GroupService::createJoinRequest(int64_t groupId, const absl::string_view& c
         });
 }
 
-auto GroupService::deleteJoinRequest(int64_t requestId) -> boost::future<Response<void>> {
+auto GroupService::deleteJoinRequest(int64_t requestId) const -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_group_join_request_request();
     request->set_request_id(requestId);
@@ -491,7 +494,7 @@ auto GroupService::deleteJoinRequest(int64_t requestId) -> boost::future<Respons
 
 auto GroupService::replyJoinRequest(int64_t requestId,
                                     ResponseAction responseAction,
-                                    const absl::string_view& reason)
+                                    absl::string_view reason) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_group_join_request_request();
@@ -506,8 +509,8 @@ auto GroupService::replyJoinRequest(int64_t requestId,
 }
 
 auto GroupService::queryJoinRequests(int64_t groupId,
-                                     const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupJoinRequestsWithVersion>>> {
+                                     const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupJoinRequestsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_join_requests_request();
     request->set_group_id(groupId);
@@ -517,18 +520,18 @@ auto GroupService::queryJoinRequests(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupJoinRequestsWithVersion>>{
+            return Response<std::optional<GroupJoinRequestsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_join_requests_with_version()) {
-                        return boost::make_optional(data.group_join_requests_with_version());
+                        return std::optional(data.group_join_requests_with_version());
                     }
-                    return boost::optional<GroupJoinRequestsWithVersion>{};
+                    return std::optional<GroupJoinRequestsWithVersion>{};
                 }};
         });
 }
 
-auto GroupService::querySentJoinRequests(const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupJoinRequestsWithVersion>>> {
+auto GroupService::querySentJoinRequests(const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupJoinRequestsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_join_requests_request();
     if (lastUpdatedDate) {
@@ -537,20 +540,20 @@ auto GroupService::querySentJoinRequests(const boost::optional<time_point>& last
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupJoinRequestsWithVersion>>{
+            return Response<std::optional<GroupJoinRequestsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_join_requests_with_version()) {
-                        return boost::make_optional(data.group_join_requests_with_version());
+                        return std::optional(data.group_join_requests_with_version());
                     }
-                    return boost::optional<GroupJoinRequestsWithVersion>{};
+                    return std::optional<GroupJoinRequestsWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::queryGroupJoinQuestions(int64_t groupId,
                                            bool withAnswers,
-                                           const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupJoinQuestionsWithVersion>>> {
+                                           const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupJoinQuestionsWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_join_questions_request();
     request->set_group_id(groupId);
@@ -561,18 +564,18 @@ auto GroupService::queryGroupJoinQuestions(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupJoinQuestionsWithVersion>>{
+            return Response<std::optional<GroupJoinQuestionsWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_join_questions_with_version()) {
-                        return boost::make_optional(data.group_join_questions_with_version());
+                        return std::optional(data.group_join_questions_with_version());
                     }
-                    return boost::optional<GroupJoinQuestionsWithVersion>{};
+                    return std::optional<GroupJoinQuestionsWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::answerGroupQuestions(
-    const std::unordered_map<int64_t, std::string>& questionIdToAnswer)
+    const std::unordered_map<int64_t, std::string>& questionIdToAnswer) const
     -> boost::future<Response<GroupJoinQuestionsAnswerResult>> {
     if (questionIdToAnswer.empty()) {
         return boost::make_exceptional_future<Response<GroupJoinQuestionsAnswerResult>>(
@@ -598,9 +601,9 @@ auto GroupService::answerGroupQuestions(
 
 auto GroupService::addGroupMembers(int64_t groupId,
                                    const std::unordered_set<int64_t>& userIds,
-                                   const boost::optional<absl::string_view>& name,
-                                   const boost::optional<GroupMemberRole>& role,
-                                   const boost::optional<time_point>& muteEndDate)
+                                   const std::optional<absl::string_view>& name,
+                                   const std::optional<GroupMemberRole>& role,
+                                   const std::optional<time_point>& muteEndDate) const
     -> boost::future<Response<void>> {
     if (userIds.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -627,21 +630,21 @@ auto GroupService::addGroupMembers(int64_t groupId,
         });
 }
 
-auto GroupService::joinGroup(int64_t groupId, const boost::optional<absl::string_view>& name)
+auto GroupService::joinGroup(int64_t groupId, const std::optional<absl::string_view>& name) const
     -> boost::future<Response<void>> {
-    const boost::optional<User>& info = turmsClient_.userService().userInfo();
+    const std::optional<User>& info = turmsClient_.userService().userInfo();
     if (!info) {
         return boost::make_exceptional_future<Response<void>>(
             ResponseException{model::ResponseStatusCode::kClientSessionHasBeenClosed});
     }
-    return addGroupMembers(groupId, std::unordered_set<int64_t>{(*info).userId}, name);
+    return addGroupMembers(groupId, std::unordered_set{info->userId}, name);
 }
 
 auto GroupService::quitGroup(int64_t groupId,
-                             const boost::optional<int64_t>& successorId,
-                             const boost::optional<bool>& quitAfterTransfer)
+                             const std::optional<int64_t>& successorId,
+                             const std::optional<bool>& quitAfterTransfer) const
     -> boost::future<Response<void>> {
-    const boost::optional<User>& info = turmsClient_.userService().userInfo();
+    const std::optional<User>& info = turmsClient_.userService().userInfo();
     if (!info) {
         return boost::make_exceptional_future<Response<void>>(
             ResponseException{model::ResponseStatusCode::kClientSessionHasBeenClosed});
@@ -663,7 +666,8 @@ auto GroupService::quitGroup(int64_t groupId,
         });
 }
 
-auto GroupService::removeGroupMembers(int64_t groupId, const std::unordered_set<int64_t>& memberIds)
+auto GroupService::removeGroupMembers(int64_t groupId,
+                                      const std::unordered_set<int64_t>& memberIds) const
     -> boost::future<Response<void>> {
     if (memberIds.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -681,9 +685,9 @@ auto GroupService::removeGroupMembers(int64_t groupId, const std::unordered_set<
 
 auto GroupService::updateGroupMemberInfo(int64_t groupId,
                                          int64_t memberId,
-                                         const boost::optional<absl::string_view>& name,
-                                         const boost::optional<GroupMemberRole>& role,
-                                         const boost::optional<time_point>& muteEndDate)
+                                         const std::optional<absl::string_view>& name,
+                                         const std::optional<GroupMemberRole>& role,
+                                         const std::optional<time_point>& muteEndDate) const
     -> boost::future<Response<void>> {
     if (!name && !role && !muteEndDate) {
         return boost::make_ready_future<>(Response<void>{});
@@ -710,20 +714,20 @@ auto GroupService::updateGroupMemberInfo(int64_t groupId,
 
 auto GroupService::muteGroupMember(int64_t groupId,
                                    int64_t memberId,
-                                   const GroupService::time_point& muteEndDate)
+                                   const time_point& muteEndDate) const
     -> boost::future<Response<void>> {
-    return updateGroupMemberInfo(groupId, memberId, boost::none, boost::none, muteEndDate);
+    return updateGroupMemberInfo(groupId, memberId, std::nullopt, std::nullopt, muteEndDate);
 }
 
-auto GroupService::unmuteGroupMember(int64_t groupId, int64_t memberId)
+auto GroupService::unmuteGroupMember(int64_t groupId, int64_t memberId) const
     -> boost::future<Response<void>> {
     return muteGroupMember(groupId, memberId, time::kEpoch);
 }
 
 auto GroupService::queryGroupMembers(int64_t groupId,
                                      bool withStatus,
-                                     const boost::optional<time_point>& lastUpdatedDate)
-    -> boost::future<Response<boost::optional<GroupMembersWithVersion>>> {
+                                     const std::optional<time_point>& lastUpdatedDate) const
+    -> boost::future<Response<std::optional<GroupMembersWithVersion>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_members_request();
     request->set_group_id(groupId);
@@ -734,23 +738,23 @@ auto GroupService::queryGroupMembers(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupMembersWithVersion>>{
+            return Response<std::optional<GroupMembersWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_members_with_version()) {
-                        return boost::make_optional(data.group_members_with_version());
+                        return std::optional(data.group_members_with_version());
                     }
-                    return boost::optional<GroupMembersWithVersion>{};
+                    return std::optional<GroupMembersWithVersion>{};
                 }};
         });
 }
 
 auto GroupService::queryGroupMembersByMemberIds(int64_t groupId,
                                                 const std::unordered_set<int64_t>& memberIds,
-                                                bool withStatus)
-    -> boost::future<Response<boost::optional<GroupMembersWithVersion>>> {
+                                                bool withStatus) const
+    -> boost::future<Response<std::optional<GroupMembersWithVersion>>> {
     if (memberIds.empty()) {
         return boost::make_ready_future<>(
-            Response<boost::optional<GroupMembersWithVersion>>{boost::none});
+            Response<std::optional<GroupMembersWithVersion>>{std::nullopt});
     }
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_group_members_request();
@@ -760,15 +764,13 @@ auto GroupService::queryGroupMembersByMemberIds(int64_t groupId,
     return turmsClient_.driver()
         .send(turmsRequest)
         .then([](boost::future<TurmsNotification> response) {
-            return Response<boost::optional<GroupMembersWithVersion>>{
+            return Response<std::optional<GroupMembersWithVersion>>{
                 response.get(), [](const TurmsNotification::Data& data) {
                     if (data.has_group_members_with_version()) {
-                        return boost::make_optional(data.group_members_with_version());
+                        return std::optional(data.group_members_with_version());
                     }
-                    return boost::optional<GroupMembersWithVersion>{};
+                    return std::optional<GroupMembersWithVersion>{};
                 }};
         });
 }
-}  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::service

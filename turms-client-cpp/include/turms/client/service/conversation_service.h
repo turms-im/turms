@@ -9,15 +9,11 @@
 #include "turms/client/exception/response_exception.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/model/response.h"
-#include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 class TurmsClient;
 
 namespace service {
-
 class ConversationService : private boost::noncopyable {
    private:
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
@@ -59,7 +55,7 @@ class ConversationService : private boost::noncopyable {
      * these conversations will be filtered out on the server, and no error will be thrown.
      * @throws ResponseException if an error occurs.
      */
-    auto queryPrivateConversations(const std::unordered_set<int64_t>& userIds)
+    auto queryPrivateConversations(const std::unordered_set<int64_t>& userIds) const
         -> boost::future<Response<std::vector<PrivateConversation>>>;
 
     /**
@@ -83,7 +79,7 @@ class ConversationService : private boost::noncopyable {
      * these conversations will be filtered out on the server, and no error will be thrown.
      * @throws ResponseException if an error occurs.
      */
-    auto queryGroupConversations(const std::unordered_set<int64_t>& groupIds)
+    auto queryGroupConversations(const std::unordered_set<int64_t>& groupIds) const
         -> boost::future<Response<std::vector<GroupConversation>>>;
 
     /**
@@ -115,7 +111,7 @@ class ConversationService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto updatePrivateConversationReadDate(
-        int64_t userId, const time_point& readDate = std::chrono::system_clock::now())
+        int64_t userId, const time_point& readDate = std::chrono::system_clock::now()) const
         -> boost::future<Response<void>>;
 
     /**
@@ -153,7 +149,7 @@ class ConversationService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto updateGroupConversationReadDate(
-        int64_t groupId, const time_point& readDate = std::chrono::system_clock::now())
+        int64_t groupId, const time_point& readDate = std::chrono::system_clock::now()) const
         -> boost::future<Response<void>>;
 
     /**
@@ -176,8 +172,8 @@ class ConversationService : private boost::noncopyable {
      * `turms.service.conversation.settings.ignore-unknown-settings-on-upsert` is false (false by
      * default), throws ResponseException with the code ResponseStatusCode::kIllegalArgument.
      */
-    auto upsertPrivateConversationSettings(int64_t userId,
-                                           const std::unordered_map<std::string, Value>& settings)
+    auto upsertPrivateConversationSettings(
+        int64_t userId, const std::unordered_map<std::string, Value>& settings) const
         -> boost::future<Response<void>>;
 
     /**
@@ -200,8 +196,8 @@ class ConversationService : private boost::noncopyable {
      * `turms.service.conversation.settings.ignore-unknown-settings-on-upsert` is false (false by
      * default), throws ResponseException with the code ResponseStatusCode::kIllegalArgument.
      */
-    auto upsertGroupConversationSettings(int64_t groupId,
-                                         const std::unordered_map<std::string, Value>& settings)
+    auto upsertGroupConversationSettings(
+        int64_t groupId, const std::unordered_map<std::string, Value>& settings) const
         -> boost::future<Response<void>>;
 
     /**
@@ -231,7 +227,7 @@ class ConversationService : private boost::noncopyable {
      */
     auto deleteConversationSettings(const std::unordered_set<int64_t>& userIds,
                                     const std::unordered_set<int64_t>& groupIds,
-                                    const std::unordered_set<std::string>& names)
+                                    const std::unordered_set<std::string>& names) const
         -> boost::future<Response<void>>;
 
     /**
@@ -250,7 +246,7 @@ class ConversationService : private boost::noncopyable {
     auto queryConversationSettings(const std::unordered_set<int64_t>& userIds,
                                    const std::unordered_set<int64_t>& groupIds,
                                    const std::unordered_set<std::string>& names,
-                                   const boost::optional<time_point>& lastUpdatedDate)
+                                   const std::optional<time_point>& lastUpdatedDate) const
         -> boost::future<Response<std::vector<ConversationSettings>>>;
 
     /**
@@ -271,7 +267,8 @@ class ConversationService : private boost::noncopyable {
      * @param userId the target user ID.
      * @throws ResponseException if an error occurs.
      */
-    auto updatePrivateConversationTypingStatus(int64_t userId) -> boost::future<Response<void>>;
+    auto updatePrivateConversationTypingStatus(int64_t userId) const
+        -> boost::future<Response<void>>;
 
     /**
      * Update the typing status of the target group conversation.
@@ -291,14 +288,13 @@ class ConversationService : private boost::noncopyable {
      * @param groupId the target group ID.
      * @throws ResponseException if an error occurs.
      */
-    auto updateGroupConversationTypingStatus(int64_t groupId) -> boost::future<Response<void>>;
+    auto updateGroupConversationTypingStatus(int64_t groupId) const
+        -> boost::future<Response<void>>;
 
    private:
     TurmsClient& turmsClient_;
 };
-
 }  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
 
 #endif  // TURMS_CLIENT_SERVICE_CONVERSATION_SERVICE_H

@@ -4,9 +4,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace turms {
-namespace client {
-namespace model {
+namespace turms::client::model {
 
 struct NewGroupJoinQuestion {
     std::string question;
@@ -14,8 +12,6 @@ struct NewGroupJoinQuestion {
     int score;
 };
 
-}  // namespace model
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::model
 
 #endif  // TURMS_CLIENT_MODEL_NEW_GROUP_JOIN_QUESTION_H

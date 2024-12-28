@@ -10,13 +10,10 @@
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/model/response.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 class TurmsClient;
 
 namespace service {
-
 class ConferenceService : private boost::noncopyable {
    private:
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
@@ -89,12 +86,12 @@ class ConferenceService : private boost::noncopyable {
      * * If the server hasn't implemented the feature, throws ResponseException with the code
      * ResponseStatusCode::kConferenceNotImplemented.
      */
-    auto createMeeting(const boost::optional<int64_t>& userId = boost::none,
-                       const boost::optional<int64_t>& groupId = boost::none,
-                       const boost::optional<absl::string_view>& name = boost::none,
-                       const boost::optional<absl::string_view>& intro = boost::none,
-                       const boost::optional<absl::string_view>& password = boost::none,
-                       const boost::optional<time_point>& startDate = boost::none)
+    auto createMeeting(const std::optional<int64_t>& userId = std::nullopt,
+                       const std::optional<int64_t>& groupId = std::nullopt,
+                       const std::optional<absl::string_view>& name = std::nullopt,
+                       const std::optional<absl::string_view>& intro = std::nullopt,
+                       const std::optional<absl::string_view>& password = std::nullopt,
+                       const std::optional<time_point>& startDate = std::nullopt) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -124,7 +121,7 @@ class ConferenceService : private boost::noncopyable {
      * * If the server hasn't implemented the feature, throws ResponseException with the code
      * ResponseStatusCode::kConferenceNotImplemented.
      */
-    auto cancelMeeting(int64_t meetingId) -> boost::future<Response<void>>;
+    auto cancelMeeting(int64_t meetingId) const -> boost::future<Response<void>>;
 
     /**
      * Update a meeting.
@@ -158,9 +155,9 @@ class ConferenceService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto updateMeeting(int64_t meetingId,
-                       const boost::optional<absl::string_view>& name = boost::none,
-                       const boost::optional<absl::string_view>& intro = boost::none,
-                       const boost::optional<absl::string_view>& password = boost::none)
+                       const std::optional<absl::string_view>& name = std::nullopt,
+                       const std::optional<absl::string_view>& intro = std::nullopt,
+                       const std::optional<absl::string_view>& password = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -180,10 +177,10 @@ class ConferenceService : private boost::noncopyable {
                        const std::unordered_set<int64_t>& creatorIds = {},
                        const std::unordered_set<int64_t>& userIds = {},
                        const std::unordered_set<int64_t>& groupIds = {},
-                       const boost::optional<time_point>& creationDateStart = boost::none,
-                       const boost::optional<time_point>& creationDateEnd = boost::none,
-                       const boost::optional<int>& skip = boost::none,
-                       const boost::optional<int>& limit = boost::none)
+                       const std::optional<time_point>& creationDateStart = std::nullopt,
+                       const std::optional<time_point>& creationDateEnd = std::nullopt,
+                       const std::optional<int>& skip = std::nullopt,
+                       const std::optional<int>& limit = std::nullopt) const
         -> boost::future<Response<std::vector<Meeting>>>;
 
     /**
@@ -214,16 +211,14 @@ class ConferenceService : private boost::noncopyable {
      * * If the server hasn't implemented the feature, throws ResponseException with the code
      * ResponseStatusCode::kConferenceNotImplemented.
      */
-    auto acceptMeetingInvitation(int64_t meetingId,
-                                 const boost::optional<absl::string_view>& password = boost::none)
+    auto acceptMeetingInvitation(
+        int64_t meetingId, const std::optional<absl::string_view>& password = std::nullopt) const
         -> boost::future<Response<std::string>>;
 
    private:
     TurmsClient& turmsClient_;
 };
-
 }  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
 
 #endif  // TURMS_CLIENT_SERVICE_CONFERENCE_SERVICE_H

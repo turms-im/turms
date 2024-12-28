@@ -1,16 +1,16 @@
 #include "turms/client/driver/service/heartbeat_service.h"
 
+#include <boost/chrono.hpp>
+#include <boost/thread.hpp>
+
 #include "turms/client/exception/response_exception.h"
 #include "turms/client/model/response_status_code.h"
+#include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-namespace driver {
-namespace service {
-
+namespace turms::client::driver::service {
 HeartbeatService::HeartbeatService(boost::asio::io_context& ioContext,
                                    StateStore& stateStore,
-                                   const boost::optional<int>& heartbeatIntervalMillis)
+                                   const std::optional<int>& heartbeatIntervalMillis)
     : BaseService(ioContext, stateStore),
       heartbeatInterval_((heartbeatIntervalMillis && *heartbeatIntervalMillis > 0)
                              ? *heartbeatIntervalMillis
@@ -31,28 +31,28 @@ void HeartbeatService::start() {
 }
 
 void HeartbeatService::sendHeartbeatForever() {
-    int64_t now = time::nowMillis();
-    int64_t difference = now - std::max(stateStore_.lastRequestDate, lastHeartbeatRequestDate_);
-    if (difference > heartbeatInterval_) {
+    if (const int64_t now = time::nowMillis();
+        now - std::max(stateStore_.lastRequestDate, lastHeartbeatRequestDate_) >
+        heartbeatInterval_) {
         // TODO: handle exception
         send();
         lastHeartbeatRequestDate_ = now;
     }
     heartbeatTimer_->expires_after(std::chrono::milliseconds{heartbeatTimerInterval_});
-    heartbeatTimer_->async_wait([weakThis = std::weak_ptr<HeartbeatService>(shared_from_this())](
-                                    const boost::system::error_code& e) {
-        if (e == boost::asio::error::operation_aborted) {
-            return;
-        }
-        auto sharedThis = weakThis.lock();
-        if (sharedThis == nullptr) {
-            return;
-        }
-        sharedThis->sendHeartbeatForever();
-    });
+    heartbeatTimer_->async_wait(
+        [weakThis = std::weak_ptr(shared_from_this())](const boost::system::error_code& e) {
+            if (e == boost::asio::error::operation_aborted) {
+                return;
+            }
+            const auto sharedThis = weakThis.lock();
+            if (sharedThis == nullptr) {
+                return;
+            }
+            sharedThis->sendHeartbeatForever();
+        });
 }
 
-void HeartbeatService::stop(const boost::optional<std::exception>& exception) {
+void HeartbeatService::stop(const std::optional<std::exception>& exception) {
     if (heartbeatTimer_.has_value()) {
         heartbeatTimer_->cancel();
     }
@@ -72,11 +72,11 @@ auto HeartbeatService::send() -> boost::future<void> {
     boost::promise<void> promise;
     boost::future<void> future = promise.get_future();
     heartbeatPromises_.push_back(std::move(promise));
-    tcp->write(std::make_shared<std::array<uint8_t, 1>>(HeartbeatService::kHeartbeat));
+    tcp->write(std::make_shared<std::array<uint8_t, 1>>(kHeartbeat));
     return future;
 }
 
-auto HeartbeatService::rejectHeartbeatRequests(const boost::optional<std::exception>& exception)
+auto HeartbeatService::rejectHeartbeatRequests(const std::optional<std::exception>& exception)
     -> void {
     while (!heartbeatPromises_.empty()) {
         boost::promise<void>& promise = heartbeatPromises_.back();
@@ -107,16 +107,12 @@ auto HeartbeatService::rejectHeartbeatPromisesIfFail(
 }
 
 boost::future<void> HeartbeatService::close() {
-    onDisconnected(boost::none);
+    onDisconnected(std::nullopt);
     return boost::make_ready_future();
 }
 
-void HeartbeatService::onDisconnected(const boost::optional<std::exception>& exception) {
+void HeartbeatService::onDisconnected(const std::optional<std::exception>& exception) {
     stop(exception);
     rejectHeartbeatRequests(exception);
 }
-
-}  // namespace service
-}  // namespace driver
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::driver::service

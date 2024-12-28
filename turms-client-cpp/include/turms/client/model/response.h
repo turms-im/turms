@@ -1,23 +1,20 @@
 #ifndef TURMS_CLIENT_MODEL_RESPONSE_H
 #define TURMS_CLIENT_MODEL_RESPONSE_H
 
-#include <boost/optional.hpp>
 #include <chrono>
+#include <optional>
 #include <vector>
 
 #include "turms/client/model/notification_util.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/model/response_status_code.h"
 
-namespace turms {
-namespace client {
-namespace model {
-
+namespace turms::client::model {
 template <typename T>
 class Response {
    public:
-    Response(std::chrono::time_point<std::chrono::system_clock> timestamp,
-             boost::optional<int64_t> requestId,
+    Response(const std::chrono::time_point<std::chrono::system_clock> timestamp,
+             const std::optional<int64_t> requestId,
              int code,
              const T& data)
         : timestamp_(timestamp),
@@ -28,14 +25,14 @@ class Response {
 
     explicit Response(const T& data)
         : timestamp_(std::chrono::system_clock::now()),
-          requestId_(boost::none),
+          requestId_(std::nullopt),
           code_(ResponseStatusCode::kOk),
           data_(data) {
     }
 
     explicit Response(T&& data)
         : timestamp_(std::chrono::system_clock::now()),
-          requestId_(boost::none),
+          requestId_(std::nullopt),
           code_(ResponseStatusCode::kOk),
           data_(std::move(data)) {
     }
@@ -43,14 +40,14 @@ class Response {
     Response(const proto::TurmsNotification& notification,
              const std::function<T(const proto::TurmsNotification_Data&)>& dataTransformer)
         : timestamp_(std::chrono::system_clock::from_time_t(notification.timestamp())),
-          requestId_(notification.has_request_id() ? boost::make_optional(notification.request_id())
-                                                   : boost::none),
-          code_(static_cast<int>(notification.code())) {
+          requestId_(notification.has_request_id() ? std::optional(notification.request_id())
+                                                   : std::nullopt),
+          code_(notification.code()) {
         if (!notification.has_code()) {
             throw std::runtime_error(
                 "Could not parse a success response from a notification without code");
         }
-        if (turms::client::model::notification::isError(notification)) {
+        if (notification::isError(notification)) {
             throw std::runtime_error(
                 "Could not parse a success response from non-success notification");
         }
@@ -65,21 +62,23 @@ class Response {
     auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& {
         return timestamp_;
     }
-    auto requestId() -> boost::optional<int64_t>& {
+
+    auto requestId() -> std::optional<int64_t>& {
         return requestId_;
     }
+
     auto code() const -> int {
         return code_;
     }
 
     static auto emptyList() -> Response<std::vector<T>> {
         return Response<std::vector<T>>(
-            std::chrono::system_clock::now(), boost::none, ResponseStatusCode::kOk, {});
+            std::chrono::system_clock::now(), std::nullopt, ResponseStatusCode::kOk, {});
     }
 
    private:
     std::chrono::time_point<std::chrono::system_clock> timestamp_;
-    boost::optional<int64_t> requestId_;
+    std::optional<int64_t> requestId_;
     int code_{};
     T data_;
 };
@@ -89,32 +88,33 @@ class Response<void> {
    public:
     Response()
         : timestamp_(std::chrono::system_clock::now()),
-          requestId_(boost::none) {
+          requestId_(std::nullopt) {
     }
+
     explicit Response(const proto::TurmsNotification& notification)
         : timestamp_(std::chrono::system_clock::from_time_t(notification.timestamp())),
-          requestId_(notification.has_request_id() ? boost::make_optional(notification.request_id())
-                                                   : boost::none) {
+          requestId_(notification.has_request_id() ? std::optional(notification.request_id())
+                                                   : std::nullopt),
+          code_(notification.code()) {
     }
 
     auto timestamp() -> std::chrono::time_point<std::chrono::system_clock>& {
         return timestamp_;
     }
-    auto requestId() -> boost::optional<int64_t>& {
+
+    auto requestId() -> std::optional<int64_t>& {
         return requestId_;
     }
+
     auto code() const -> int {
         return code_;
     }
 
    private:
     std::chrono::time_point<std::chrono::system_clock> timestamp_;
-    boost::optional<int64_t> requestId_;
+    std::optional<int64_t> requestId_;
     int code_{ResponseStatusCode::kOk};
 };
-
-}  // namespace model
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::model
 
 #endif  // TURMS_CLIENT_MODEL_RESPONSE_H

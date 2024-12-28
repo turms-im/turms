@@ -7,15 +7,9 @@
 #include "turms/client/driver/service/base_service.h"
 #include "turms/client/driver/state_store.h"
 #include "turms/client/exception/response_exception.h"
-#include "turms/client/model/notification_util.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
-#include "turms/client/model/response_status_code.h"
-#include "turms/client/random/random_util.h"
 
-namespace turms {
-namespace client {
-namespace driver {
-namespace service {
+namespace turms::client::driver::service {
 
 class ProtocolMessageService : public BaseService,
                                private std::enable_shared_from_this<ProtocolMessageService> {
@@ -29,8 +23,8 @@ class ProtocolMessageService : public BaseService,
 
     ProtocolMessageService(boost::asio::io_context& ioContext,
                            StateStore& stateStore,
-                           const boost::optional<int>& requestTimeout,
-                           const boost::optional<int>& minRequestInterval);
+                           const std::optional<int>& requestTimeout,
+                           const std::optional<int>& minRequestInterval);
 
     // Listeners
 
@@ -47,12 +41,12 @@ class ProtocolMessageService : public BaseService,
 
     auto close() -> boost::future<void> override;
 
-    auto onDisconnected(const boost::optional<std::exception>& exception) -> void override;
+    auto onDisconnected(const std::optional<std::exception>& exception) -> void override;
 
    private:
     struct TurmsRequestContext {
         boost::promise<TurmsNotification> promise;
-        boost::optional<boost::asio::steady_timer> timeoutTimer;
+        std::optional<boost::asio::steady_timer> timeoutTimer;
     };
 
     std::map<int64_t, TurmsRequestContext> idToRequest_{};
@@ -70,9 +64,6 @@ class ProtocolMessageService : public BaseService,
     std::vector<std::function<void(const TurmsNotification&)>> notificationListeners_;
 };
 
-}  // namespace service
-}  // namespace driver
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::driver::service
 
 #endif  // TURMS_CLIENT_DRIVER_SERVICE_PROTOCOL_MESSAGE_SERVICE_H

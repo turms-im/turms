@@ -1,10 +1,9 @@
 #include "turms/client/service/notification_service.h"
 
+#include "turms/client/time/time_util.h"
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-namespace service {
+namespace turms::client::service {
 NotificationService::NotificationService(TurmsClient& turmsClient) {
     turmsClient.driver().addNotificationListener([this](const TurmsNotification& notification) {
         const bool isBusinessNotification =
@@ -21,7 +20,4 @@ NotificationService::NotificationService(TurmsClient& turmsClient) {
         }
     });
 }
-
-}  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::service

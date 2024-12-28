@@ -1,11 +1,10 @@
 #ifndef TURMS_CLIENT_MODEL_MESSAGE_ADDITION_H
 #define TURMS_CLIENT_MODEL_MESSAGE_ADDITION_H
 
+#include <cstdint>
 #include <set>
 
-namespace turms {
-namespace client {
-namespace model {
+namespace turms::client::model {
 
 struct MessageAddition {
     bool isMentioned;
@@ -13,8 +12,6 @@ struct MessageAddition {
     std::set<int64_t> recalledMessageIds;
 };
 
-}  // namespace model
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::model
 
 #endif  // TURMS_CLIENT_MODEL_MESSAGE_ADDITION_H

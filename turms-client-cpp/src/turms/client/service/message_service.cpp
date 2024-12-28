@@ -1,16 +1,14 @@
 #include "turms/client/service/message_service.h"
 
+#include "turms/client/time/time_util.h"
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-namespace service {
+namespace turms::client::service {
 MessageService::MessageService(TurmsClient& turmsClient)
     : turmsClient_(turmsClient) {
     turmsClient.driver().addNotificationListener(
-        [weakThis = std::weak_ptr<MessageService>(shared_from_this())](
-            const TurmsNotification& notification) {
-            auto sharedThis = weakThis.lock();
+        [weakThis = std::weak_ptr(shared_from_this())](const TurmsNotification& notification) {
+            const auto sharedThis = weakThis.lock();
             if (sharedThis == nullptr) {
                 return;
             }
@@ -30,13 +28,14 @@ MessageService::MessageService(TurmsClient& turmsClient)
             }
         });
 }
+
 auto MessageService::sendMessage(bool isGroupMessage,
                                  int64_t targetId,
-                                 const boost::optional<time_point>& deliveryDate,
-                                 const boost::optional<absl::string_view>& text,
+                                 const std::optional<time_point>& deliveryDate,
+                                 const std::optional<absl::string_view>& text,
                                  const std::vector<std::string>& records,
-                                 const boost::optional<int>& burnAfter,
-                                 const boost::optional<int64_t>& preMessageId)
+                                 const std::optional<int>& burnAfter,
+                                 const std::optional<int64_t>& preMessageId) const
     -> boost::future<model::Response<int64_t>> {
     if (!text && records.empty()) {
         throw ResponseException(model::ResponseStatusCode::kIllegalArgument,
@@ -73,7 +72,7 @@ auto MessageService::sendMessage(bool isGroupMessage,
         });
 }
 
-auto MessageService::forwardMessage(int64_t messageId, bool isGroupMessage, int64_t targetId)
+auto MessageService::forwardMessage(int64_t messageId, bool isGroupMessage, int64_t targetId) const
     -> boost::future<model::Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_message_request();
@@ -93,8 +92,8 @@ auto MessageService::forwardMessage(int64_t messageId, bool isGroupMessage, int6
 }
 
 auto MessageService::updateSentMessage(int64_t messageId,
-                                       const boost::optional<absl::string_view>& text,
-                                       const std::vector<std::string>& records)
+                                       const std::optional<absl::string_view>& text,
+                                       const std::vector<std::string>& records) const
     -> boost::future<model::Response<void>> {
     if (!text && records.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -116,13 +115,13 @@ auto MessageService::updateSentMessage(int64_t messageId,
 }
 
 auto MessageService::queryMessages(const std::unordered_set<int64_t>& ids,
-                                   const boost::optional<bool>& areGroupMessages,
-                                   const boost::optional<bool>& areSystemMessages,
+                                   const std::optional<bool>& areGroupMessages,
+                                   const std::optional<bool>& areSystemMessages,
                                    const std::unordered_set<int64_t>& fromIds,
-                                   const boost::optional<time_point>& deliveryDateStart,
-                                   const boost::optional<time_point>& deliveryDateEnd,
+                                   const std::optional<time_point>& deliveryDateStart,
+                                   const std::optional<time_point>& deliveryDateEnd,
                                    int maxCount,
-                                   const boost::optional<bool>& descending)
+                                   const std::optional<bool>& descending) const
     -> boost::future<model::Response<std::vector<Message>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_messages_request();
@@ -161,13 +160,13 @@ auto MessageService::queryMessages(const std::unordered_set<int64_t>& ids,
 }
 
 auto MessageService::queryMessagesWithTotal(const std::unordered_set<int64_t>& ids,
-                                            const boost::optional<bool>& areGroupMessages,
-                                            const boost::optional<bool>& areSystemMessages,
+                                            const std::optional<bool>& areGroupMessages,
+                                            const std::optional<bool>& areSystemMessages,
                                             const std::unordered_set<int64_t>& fromIds,
-                                            const boost::optional<time_point>& deliveryDateStart,
-                                            const boost::optional<time_point>& deliveryDateEnd,
+                                            const std::optional<time_point>& deliveryDateStart,
+                                            const std::optional<time_point>& deliveryDateEnd,
                                             int maxCount,
-                                            const boost::optional<bool>& descending)
+                                            const std::optional<bool>& descending) const
     -> boost::future<model::Response<std::vector<MessagesWithTotal>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_messages_request();
@@ -208,7 +207,7 @@ auto MessageService::queryMessagesWithTotal(const std::unordered_set<int64_t>& i
 }
 
 auto MessageService::recallMessage(
-    int64_t messageId, const std::chrono::time_point<std::chrono::system_clock>& recallDate)
+    int64_t messageId, const std::chrono::time_point<std::chrono::system_clock>& recallDate) const
     -> boost::future<model::Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_message_request();
@@ -229,22 +228,22 @@ auto MessageService::enableMention() noexcept -> void {
     isMentionUserEnabled = true;
 }
 
-auto MessageService::parseMessageAddition(const model::proto::Message& message)
+auto MessageService::parseMessageAddition(const model::proto::Message& message) const
     -> model::MessageAddition {
     std::set<int64_t> mentionedUserIds;
     if (isMentionUserEnabled) {
         mentionedUserIds = mentionedUserIdsParser_.has_value()
-                               ? mentionedUserIdsParser_.get()(message)
+                               ? (*mentionedUserIdsParser_)(message)
                                : defaultMentionedUserIdsParser(message);
     }
-    const boost::optional<User>& userInfo = turmsClient_.userService().userInfo();
-    bool isMentioned =
-        userInfo && mentionedUserIds.find((*userInfo).userId) != mentionedUserIds.end();
+    const std::optional<User>& userInfo = turmsClient_.userService().userInfo();
+    const bool isMentioned =
+        userInfo && mentionedUserIds.find(userInfo->userId) != mentionedUserIds.end();
     const auto& records = message.records();
     bool isRecallMessage = false;
     if (message.is_system_message() && !records.empty()) {
-        const auto& bytes = records[0];
-        if (!bytes.empty() &&
+        if (const auto& bytes = records[0];
+            !bytes.empty() &&
             static_cast<int>(BuiltinSystemMessageType::kRecallMessage) == bytes[0]) {
             isRecallMessage = true;
         }
@@ -308,6 +307,4 @@ auto MessageService::defaultMentionedUserIdsParser(const model::proto::Message& 
     }
     return userIds;
 }
-}  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::service
