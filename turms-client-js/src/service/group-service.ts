@@ -483,6 +483,7 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryJoinedGroupIdsRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                userIdsForCommonGroups: [],
                 customAttributes: []
             },
             customAttributes: []
@@ -505,6 +506,7 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             queryJoinedGroupInfosRequest: {
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
+                userIdsForCommonGroups: [],
                 customAttributes: []
             },
             customAttributes: []

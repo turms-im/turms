@@ -749,6 +749,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 userIds: relatedUserIds || [],
+                userIdsForCommonRelationships: [],
                 blocked: isBlocked,
                 groupIndexes: groupIndexes || [],
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
@@ -784,6 +785,7 @@ export default class UserService {
     } = {}): Promise<Response<ParsedModel.LongsWithVersion | undefined>> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
+                userIdsForCommonRelationships: [],
                 blocked: isBlocked,
                 groupIndexes: groupIndexes || [],
                 lastUpdatedDate: DataParser.getDateTimeStr(lastUpdatedDate),
