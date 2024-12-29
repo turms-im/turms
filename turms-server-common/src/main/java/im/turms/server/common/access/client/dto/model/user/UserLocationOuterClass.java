@@ -25,8 +25,8 @@ public final class UserLocationOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserLocationOuterClass.class.getName());
     }
@@ -65,7 +65,7 @@ public final class UserLocationOuterClass {
                         im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UserLocation_descriptor = getDescriptor().getMessageTypes()
-                .get(0);
+                .getFirst();
         internal_static_im_turms_proto_UserLocation_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_descriptor,
@@ -76,7 +76,7 @@ public final class UserLocationOuterClass {
                                 "CustomAttributes",});
         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor =
                 internal_static_im_turms_proto_UserLocation_descriptor.getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserLocation_DetailsEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserLocation_DetailsEntry_descriptor,

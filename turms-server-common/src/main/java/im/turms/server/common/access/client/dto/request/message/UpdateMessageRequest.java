@@ -28,8 +28,8 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateMessageRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
 
     private int bitField0_;
     public static final int MESSAGE_ID_FIELD_NUMBER = 1;
-    private long messageId_;
+    private long messageId_ = 0L;
 
     /**
      * <pre>
@@ -172,7 +172,7 @@ public final class UpdateMessageRequest extends com.google.protobuf.GeneratedMes
     }
 
     public static final int RECALL_DATE_FIELD_NUMBER = 4;
-    private long recallDate_;
+    private long recallDate_ = 0L;
 
     /**
      * <code>optional int64 recall_date = 4;</code>

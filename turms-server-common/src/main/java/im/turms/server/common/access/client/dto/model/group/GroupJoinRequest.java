@@ -28,8 +28,8 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupJoinRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -82,7 +82,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 2;
-    private long creationDate_;
+    private long creationDate_ = 0L;
 
     /**
      * <code>optional int64 creation_date = 2;</code>
@@ -155,7 +155,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int STATUS_FIELD_NUMBER = 4;
-    private int status_;
+    private int status_ = 0;
 
     /**
      * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
@@ -192,7 +192,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int EXPIRATION_DATE_FIELD_NUMBER = 5;
-    private long expirationDate_;
+    private long expirationDate_ = 0L;
 
     /**
      * <code>optional int64 expiration_date = 5;</code>
@@ -215,7 +215,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 6;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 6;</code>
@@ -238,7 +238,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 7;
-    private long requesterId_;
+    private long requesterId_ = 0L;
 
     /**
      * <code>optional int64 requester_id = 7;</code>
@@ -261,7 +261,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int RESPONDER_ID_FIELD_NUMBER = 8;
-    private long responderId_;
+    private long responderId_ = 0L;
 
     /**
      * <code>optional int64 responder_id = 8;</code>
@@ -1124,7 +1124,7 @@ public final class GroupJoinRequest extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
-        private int status_;
+        private int status_ = 0;
 
         /**
          * <code>optional .im.turms.proto.RequestStatus status = 4;</code>

@@ -28,8 +28,8 @@ public final class MessagesWithTotal extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 MessagesWithTotal.class.getName());
     }
@@ -161,7 +161,7 @@ public final class MessagesWithTotal extends com.google.protobuf.GeneratedMessag
             output.writeInt32(1, total_);
         }
         if (isGroupMessage_) {
-            output.writeBool(2, isGroupMessage_);
+            output.writeBool(2, true);
         }
         if (fromId_ != 0L) {
             output.writeInt64(3, fromId_);
@@ -184,7 +184,7 @@ public final class MessagesWithTotal extends com.google.protobuf.GeneratedMessag
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(1, total_);
         }
         if (isGroupMessage_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, isGroupMessage_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, true);
         }
         if (fromId_ != 0L) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(3, fromId_);
@@ -212,10 +212,8 @@ public final class MessagesWithTotal extends com.google.protobuf.GeneratedMessag
         if (getIsGroupMessage() != other.getIsGroupMessage()) {
             return false;
         }
-        if (getFromId() != other.getFromId()) {
-            return false;
-        }
-        return getMessagesList().equals(other.getMessagesList())
+        return getFromId() == other.getFromId()
+                && getMessagesList().equals(other.getMessagesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -473,7 +471,7 @@ public final class MessagesWithTotal extends com.google.protobuf.GeneratedMessag
                 setTotal(other.getTotal());
             }
             if (other.getIsGroupMessage()) {
-                setIsGroupMessage(other.getIsGroupMessage());
+                setIsGroupMessage(true);
             }
             if (other.getFromId() != 0L) {
                 setFromId(other.getFromId());

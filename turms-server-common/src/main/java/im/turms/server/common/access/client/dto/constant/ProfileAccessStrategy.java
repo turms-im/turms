@@ -39,8 +39,8 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 ProfileAccessStrategy.class.getName());
     }
@@ -93,7 +93,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
     }
 
     private static final com.google.protobuf.Internal.EnumLiteMap<ProfileAccessStrategy> internalValueMap =
-            number -> ProfileAccessStrategy.forNumber(number);
+            ProfileAccessStrategy::forNumber;
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         if (this == UNRECOGNIZED) {
@@ -112,7 +112,7 @@ public enum ProfileAccessStrategy implements com.google.protobuf.ProtocolMessage
         return im.turms.server.common.access.client.dto.constant.ProfileAccessStrategyOuterClass
                 .getDescriptor()
                 .getEnumTypes()
-                .get(0);
+                .getFirst();
     }
 
     private static final ProfileAccessStrategy[] VALUES = values();

@@ -28,8 +28,8 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 Value.class.getName());
     }
@@ -55,7 +55,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
                         im.turms.server.common.access.client.dto.model.common.Value.Builder.class);
     }
 
-    private int kindCase_;
+    private int kindCase_ = 0;
     @SuppressWarnings("serial")
     private java.lang.Object kind_;
 
@@ -181,7 +181,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 3) {
             return (java.lang.Float) kind_;
         }
-        return 0.0F;
+        return 0F;
     }
 
     public static final int DOUBLE_VALUE_FIELD_NUMBER = 4;
@@ -206,7 +206,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
         if (kindCase_ == 4) {
             return (java.lang.Double) kind_;
         }
-        return 0.0D;
+        return 0D;
     }
 
     public static final int BOOL_VALUE_FIELD_NUMBER = 5;
@@ -899,7 +899,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             return this;
         }
 
-        private int kindCase_;
+        private int kindCase_ = 0;
         private java.lang.Object kind_;
 
         public KindCase getKindCase() {
@@ -1031,7 +1031,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             if (kindCase_ == 3) {
                 return (java.lang.Float) kind_;
             }
-            return 0.0F;
+            return 0F;
         }
 
         /**
@@ -1080,7 +1080,7 @@ public final class Value extends com.google.protobuf.GeneratedMessage implements
             if (kindCase_ == 4) {
                 return (java.lang.Double) kind_;
             }
-            return 0.0D;
+            return 0D;
         }
 
         /**

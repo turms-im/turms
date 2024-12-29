@@ -25,8 +25,8 @@ public final class UpdateRelationshipRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateRelationshipRequestOuterClass.class.getName());
     }
@@ -49,16 +49,16 @@ public final class UpdateRelationshipRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n;request/user/relationship/update_relat"
                 + "ionship_request.proto\022\016im.turms.proto\032\030m"
-                + "odel/common/value.proto\"\206\002\n\031UpdateRelati"
+                + "odel/common/value.proto\"\242\002\n\031UpdateRelati"
                 + "onshipRequest\022\017\n\007user_id\030\001 \001(\003\022\024\n\007blocke"
                 + "d\030\002 \001(\010H\000\210\001\001\022\034\n\017new_group_index\030\003 \001(\005H\001\210"
                 + "\001\001\022\037\n\022delete_group_index\030\004 \001(\005H\002\210\001\001\022\021\n\004n"
-                + "ame\030\005 \001(\tH\003\210\001\001\0220\n\021custom_attributes\030\017 \003("
-                + "\0132\025.im.turms.proto.ValueB\n\n\010_blockedB\022\n\020"
-                + "_new_group_indexB\025\n\023_delete_group_indexB"
-                + "\007\n\005_nameBI\nBim.turms.server.common.acces"
-                + "s.client.dto.request.user.relationshipP\001"
-                + "\272\002\000b\006proto3"};
+                + "ame\030\005 \001(\tH\003\210\001\001\022\021\n\004note\030\006 \001(\tH\004\210\001\001\0220\n\021cus"
+                + "tom_attributes\030\017 \003(\0132\025.im.turms.proto.Va"
+                + "lueB\n\n\010_blockedB\022\n\020_new_group_indexB\025\n\023_"
+                + "delete_group_indexB\007\n\005_nameB\007\n\005_noteBI\nB"
+                + "im.turms.server.common.access.client.dto"
+                + ".request.user.relationshipP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -75,6 +75,7 @@ public final class UpdateRelationshipRequestOuterClass {
                                 "NewGroupIndex",
                                 "DeleteGroupIndex",
                                 "Name",
+                                "Note",
                                 "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();

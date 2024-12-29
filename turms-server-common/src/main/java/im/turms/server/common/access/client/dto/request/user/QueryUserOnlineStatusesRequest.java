@@ -29,8 +29,8 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryUserOnlineStatusesRequest.class.getName());
     }
@@ -158,7 +158,7 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         getSerializedSize();
-        if (getUserIdsList().size() > 0) {
+        if (!getUserIdsList().isEmpty()) {
             output.writeUInt32NoTag(10);
             output.writeUInt32NoTag(userIdsMemoizedSerializedSize);
         }
@@ -209,10 +209,8 @@ public final class QueryUserOnlineStatusesRequest extends com.google.protobuf.Ge
             return super.equals(obj);
         }
 
-        if (!getUserIdsList().equals(other.getUserIdsList())) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getUserIdsList().equals(other.getUserIdsList())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

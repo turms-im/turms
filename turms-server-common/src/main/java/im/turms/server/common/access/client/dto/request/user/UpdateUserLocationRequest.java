@@ -28,8 +28,8 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateUserLocationRequest.class.getName());
     }
@@ -47,16 +47,16 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
         return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 3 -> internalGetDetails();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 3) {
+            return internalGetDetails();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -68,7 +68,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
     }
 
     public static final int LATITUDE_FIELD_NUMBER = 1;
-    private float latitude_;
+    private float latitude_ = 0F;
 
     /**
      * <pre>
@@ -85,7 +85,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
     }
 
     public static final int LONGITUDE_FIELD_NUMBER = 2;
-    private float longitude_;
+    private float longitude_ = 0F;
 
     /**
      * <code>float longitude = 2;</code>
@@ -310,8 +310,11 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
                 .floatToIntBits(other.getLatitude())) {
             return false;
         }
-        return Float.floatToIntBits(getLongitude()) == Float.floatToIntBits(other.getLongitude())
-                && internalGetDetails().equals(other.internalGetDetails())
+        if (java.lang.Float.floatToIntBits(getLongitude()) != java.lang.Float
+                .floatToIntBits(other.getLongitude())) {
+            return false;
+        }
+        return internalGetDetails().equals(other.internalGetDetails())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -455,26 +458,26 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
             return im.turms.server.common.access.client.dto.request.user.UpdateUserLocationRequestOuterClass.internal_static_im_turms_proto_UpdateUserLocationRequest_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 3 -> internalGetDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 3) {
+                return internalGetDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 3 -> internalGetMutableDetails();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 3) {
+                return internalGetMutableDetails();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -500,8 +503,8 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
         public Builder clear() {
             super.clear();
             bitField0_ = 0;
-            latitude_ = 0.0F;
-            longitude_ = 0.0F;
+            latitude_ = 0F;
+            longitude_ = 0F;
             internalGetMutableDetails().clear();
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
@@ -592,10 +595,10 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
                     .getDefaultInstance()) {
                 return this;
             }
-            if (other.getLatitude() != 0.0F) {
+            if (other.getLatitude() != 0F) {
                 setLatitude(other.getLatitude());
             }
-            if (other.getLongitude() != 0.0F) {
+            if (other.getLongitude() != 0F) {
                 setLongitude(other.getLongitude());
             }
             internalGetMutableDetails().mergeFrom(other.internalGetDetails());
@@ -744,7 +747,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
          */
         public Builder clearLatitude() {
             bitField0_ &= ~0x00000001;
-            latitude_ = 0.0F;
+            latitude_ = 0F;
             onChanged();
             return this;
         }
@@ -782,7 +785,7 @@ public final class UpdateUserLocationRequest extends com.google.protobuf.Generat
          */
         public Builder clearLongitude() {
             bitField0_ &= ~0x00000002;
-            longitude_ = 0.0F;
+            longitude_ = 0F;
             onChanged();
             return this;
         }

@@ -29,8 +29,8 @@ public final class DeleteConversationSettingsRequest extends com.google.protobuf
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteConversationSettingsRequest.class.getName());
     }
@@ -323,8 +323,10 @@ public final class DeleteConversationSettingsRequest extends com.google.protobuf
         if (!getUserIdsList().equals(other.getUserIdsList())) {
             return false;
         }
-        return getGroupIdsList().equals(other.getGroupIdsList())
-                && getNamesList().equals(other.getNamesList())
+        if (!getGroupIdsList().equals(other.getGroupIdsList())) {
+            return false;
+        }
+        return getNamesList().equals(other.getNamesList())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

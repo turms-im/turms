@@ -28,8 +28,8 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 StorageResourceInfo.class.getName());
     }
@@ -60,7 +60,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
 
     private int bitField0_;
     public static final int ID_NUM_FIELD_NUMBER = 1;
-    private long idNum_;
+    private long idNum_ = 0L;
 
     /**
      * <code>optional int64 id_num = 1;</code>
@@ -233,7 +233,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
     }
 
     public static final int UPLOADER_ID_FIELD_NUMBER = 5;
-    private long uploaderId_;
+    private long uploaderId_ = 0L;
 
     /**
      * <code>int64 uploader_id = 5;</code>
@@ -246,7 +246,7 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 6;
-    private long creationDate_;
+    private long creationDate_ = 0L;
 
     /**
      * <code>int64 creation_date = 6;</code>
@@ -421,8 +421,10 @@ public final class StorageResourceInfo extends com.google.protobuf.GeneratedMess
                 return false;
             }
         }
-        return getUploaderId() == other.getUploaderId()
-                && getCreationDate() == other.getCreationDate()
+        if (getUploaderId() != other.getUploaderId()) {
+            return false;
+        }
+        return getCreationDate() == other.getCreationDate()
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

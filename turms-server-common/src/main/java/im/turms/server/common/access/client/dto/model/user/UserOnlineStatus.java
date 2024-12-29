@@ -28,8 +28,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserOnlineStatus.class.getName());
     }
@@ -41,7 +41,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
 
     private UserOnlineStatus() {
         userStatus_ = 0;
-        deviceTypes_ = java.util.Collections.emptyList();
+        deviceTypes_ = emptyIntList();
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -58,7 +58,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -71,7 +71,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int USER_STATUS_FIELD_NUMBER = 2;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
@@ -99,8 +99,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
 
     public static final int DEVICE_TYPES_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
-    private java.util.List<java.lang.Integer> deviceTypes_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
+    private com.google.protobuf.Internal.IntList deviceTypes_;
+    private static final com.google.protobuf.Internal.IntListAdapter.IntConverter<im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
             from -> {
                 im.turms.server.common.access.client.dto.constant.DeviceType result =
                         im.turms.server.common.access.client.dto.constant.DeviceType
@@ -117,7 +117,9 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
      */
     @java.lang.Override
     public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
+        return new com.google.protobuf.Internal.IntListAdapter<>(
+                deviceTypes_,
+                deviceTypes_converter_);
     }
 
     /**
@@ -138,7 +140,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index) {
-        return deviceTypes_converter_.convert(deviceTypes_.get(index));
+        return deviceTypes_converter_.convert(deviceTypes_.getInt(index));
     }
 
     /**
@@ -159,7 +161,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
      */
     @java.lang.Override
     public int getDeviceTypesValue(int index) {
-        return deviceTypes_.get(index);
+        return deviceTypes_.getInt(index);
     }
 
     private int deviceTypesMemoizedSerializedSize;
@@ -240,8 +242,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             output.writeUInt32NoTag(26);
             output.writeUInt32NoTag(deviceTypesMemoizedSerializedSize);
         }
-        for (Integer integer : deviceTypes_) {
-            output.writeEnumNoTag(integer);
+        for (int i = 0; i < deviceTypes_.size(); i++) {
+            output.writeEnumNoTag(deviceTypes_.getInt(i));
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
@@ -266,8 +268,9 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         }
         {
             int dataSize = 0;
-            for (Integer integer : deviceTypes_) {
-                dataSize += com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag(integer);
+            for (int i = 0; i < deviceTypes_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeEnumSizeNoTag(deviceTypes_.getInt(i));
             }
             size += dataSize;
             if (!getDeviceTypesList().isEmpty()) {
@@ -296,8 +299,10 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         if (getUserId() != other.getUserId()) {
             return false;
         }
-        return userStatus_ == other.userStatus_
-                && deviceTypes_.equals(other.deviceTypes_)
+        if (userStatus_ != other.userStatus_) {
+            return false;
+        }
+        return deviceTypes_.equals(other.deviceTypes_)
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -465,7 +470,8 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             bitField0_ = 0;
             userId_ = 0L;
             userStatus_ = 0;
-            deviceTypes_ = java.util.Collections.emptyList();
+            deviceTypes_ = emptyIntList();
+            bitField0_ &= ~0x00000004;
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
@@ -512,7 +518,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.model.user.UserOnlineStatus result) {
             if (((bitField0_ & 0x00000004) != 0)) {
-                deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
+                deviceTypes_.makeImmutable();
                 bitField0_ &= ~0x00000004;
             }
             result.deviceTypes_ = deviceTypes_;
@@ -633,7 +639,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                         case 24 -> {
                             int tmpRaw = input.readEnum();
                             ensureDeviceTypesIsMutable();
-                            deviceTypes_.add(tmpRaw);
+                            deviceTypes_.addInt(tmpRaw);
                         } // case 24
                         case 26 -> {
                             int length = input.readRawVarint32();
@@ -641,7 +647,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                             while (input.getBytesUntilLimit() > 0) {
                                 int tmpRaw = input.readEnum();
                                 ensureDeviceTypesIsMutable();
-                                deviceTypes_.add(tmpRaw);
+                                deviceTypes_.addInt(tmpRaw);
                             }
                             input.popLimit(oldLimit);
                         } // case 26
@@ -713,7 +719,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
-        private int userStatus_;
+        private int userStatus_ = 0;
 
         /**
          * <code>.im.turms.proto.UserStatus user_status = 2;</code>
@@ -782,11 +788,11 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
-        private java.util.List<java.lang.Integer> deviceTypes_ = java.util.Collections.emptyList();
+        private com.google.protobuf.Internal.IntList deviceTypes_ = emptyIntList();
 
         private void ensureDeviceTypesIsMutable() {
             if ((bitField0_ & 0x00000004) == 0) {
-                deviceTypes_ = new java.util.ArrayList<>(deviceTypes_);
+                deviceTypes_ = makeMutableCopy(deviceTypes_);
                 bitField0_ |= 0x00000004;
             }
         }
@@ -797,7 +803,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          * @return A list containing the deviceTypes.
          */
         public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-            return new com.google.protobuf.Internal.ListAdapter<>(
+            return new com.google.protobuf.Internal.IntListAdapter<>(
                     deviceTypes_,
                     deviceTypes_converter_);
         }
@@ -819,7 +825,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          */
         public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(
                 int index) {
-            return deviceTypes_converter_.convert(deviceTypes_.get(index));
+            return deviceTypes_converter_.convert(deviceTypes_.getInt(index));
         }
 
         /**
@@ -836,7 +842,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 throw new NullPointerException();
             }
             ensureDeviceTypesIsMutable();
-            deviceTypes_.set(index, value.getNumber());
+            deviceTypes_.setInt(index, value.getNumber());
             onChanged();
             return this;
         }
@@ -853,7 +859,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 throw new NullPointerException();
             }
             ensureDeviceTypesIsMutable();
-            deviceTypes_.add(value.getNumber());
+            deviceTypes_.addInt(value.getNumber());
             onChanged();
             return this;
         }
@@ -868,7 +874,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
                 java.lang.Iterable<? extends im.turms.server.common.access.client.dto.constant.DeviceType> values) {
             ensureDeviceTypesIsMutable();
             for (im.turms.server.common.access.client.dto.constant.DeviceType value : values) {
-                deviceTypes_.add(value.getNumber());
+                deviceTypes_.addInt(value.getNumber());
             }
             onChanged();
             return this;
@@ -880,7 +886,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          * @return This builder for chaining.
          */
         public Builder clearDeviceTypes() {
-            deviceTypes_ = java.util.Collections.emptyList();
+            deviceTypes_ = emptyIntList();
             bitField0_ &= ~0x00000004;
             onChanged();
             return this;
@@ -902,7 +908,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          * @return The enum numeric value on the wire of deviceTypes at the given index.
          */
         public int getDeviceTypesValue(int index) {
-            return deviceTypes_.get(index);
+            return deviceTypes_.getInt(index);
         }
 
         /**
@@ -914,7 +920,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          */
         public Builder setDeviceTypesValue(int index, int value) {
             ensureDeviceTypesIsMutable();
-            deviceTypes_.set(index, value);
+            deviceTypes_.setInt(index, value);
             onChanged();
             return this;
         }
@@ -927,7 +933,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
          */
         public Builder addDeviceTypesValue(int value) {
             ensureDeviceTypesIsMutable();
-            deviceTypes_.add(value);
+            deviceTypes_.addInt(value);
             onChanged();
             return this;
         }
@@ -941,7 +947,7 @@ public final class UserOnlineStatus extends com.google.protobuf.GeneratedMessage
         public Builder addAllDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
             ensureDeviceTypesIsMutable();
             for (int value : values) {
-                deviceTypes_.add(value);
+                deviceTypes_.addInt(value);
             }
             onChanged();
             return this;

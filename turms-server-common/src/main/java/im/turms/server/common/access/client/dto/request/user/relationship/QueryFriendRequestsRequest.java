@@ -29,8 +29,8 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryFriendRequestsRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
 
     private int bitField0_;
     public static final int ARE_SENT_BY_ME_FIELD_NUMBER = 1;
-    private boolean areSentByMe_;
+    private boolean areSentByMe_ = false;
 
     /**
      * <code>bool are_sent_by_me = 1;</code>
@@ -71,7 +71,7 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -158,7 +158,7 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         if (areSentByMe_) {
-            output.writeBool(1, areSentByMe_);
+            output.writeBool(1, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(2, lastUpdatedDate_);
@@ -178,7 +178,7 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
 
         size = 0;
         if (areSentByMe_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(1, areSentByMe_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(1, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, lastUpdatedDate_);
@@ -465,7 +465,7 @@ public final class QueryFriendRequestsRequest extends com.google.protobuf.Genera
                 return this;
             }
             if (other.getAreSentByMe()) {
-                setAreSentByMe(other.getAreSentByMe());
+                setAreSentByMe(true);
             }
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());

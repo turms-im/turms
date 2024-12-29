@@ -29,8 +29,8 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryJoinedGroupIdsRequest.class.getName());
     }
@@ -41,6 +41,7 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
     }
 
     private QueryJoinedGroupIdsRequest() {
+        userIdsForCommonGroups_ = emptyLongList();
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -79,6 +80,41 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
     public long getLastUpdatedDate() {
         return lastUpdatedDate_;
     }
+
+    public static final int USER_IDS_FOR_COMMON_GROUPS_FIELD_NUMBER = 2;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList userIdsForCommonGroups_ = emptyLongList();
+
+    /**
+     * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+     *
+     * @return A list containing the userIdsForCommonGroups.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long> getUserIdsForCommonGroupsList() {
+        return userIdsForCommonGroups_;
+    }
+
+    /**
+     * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+     *
+     * @return The count of userIdsForCommonGroups.
+     */
+    public int getUserIdsForCommonGroupsCount() {
+        return userIdsForCommonGroups_.size();
+    }
+
+    /**
+     * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The userIdsForCommonGroups at the given index.
+     */
+    public long getUserIdsForCommonGroups(int index) {
+        return userIdsForCommonGroups_.getLong(index);
+    }
+
+    private int userIdsForCommonGroupsMemoizedSerializedSize = -1;
 
     public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
     @SuppressWarnings("serial")
@@ -144,8 +180,16 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
+        getSerializedSize();
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(1, lastUpdatedDate_);
+        }
+        if (!getUserIdsForCommonGroupsList().isEmpty()) {
+            output.writeUInt32NoTag(18);
+            output.writeUInt32NoTag(userIdsForCommonGroupsMemoizedSerializedSize);
+        }
+        for (int i = 0; i < userIdsForCommonGroups_.size(); i++) {
+            output.writeInt64NoTag(userIdsForCommonGroups_.getLong(i));
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
@@ -163,6 +207,19 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
         size = 0;
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, lastUpdatedDate_);
+        }
+        {
+            int dataSize = 0;
+            for (int i = 0; i < userIdsForCommonGroups_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeInt64SizeNoTag(userIdsForCommonGroups_.getLong(i));
+            }
+            size += dataSize;
+            if (!getUserIdsForCommonGroupsList().isEmpty()) {
+                size += 1;
+                size += com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(dataSize);
+            }
+            userIdsForCommonGroupsMemoizedSerializedSize = dataSize;
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
@@ -189,7 +246,8 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
                 return false;
             }
         }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getUserIdsForCommonGroupsList().equals(other.getUserIdsForCommonGroupsList())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -203,6 +261,10 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
         if (hasLastUpdatedDate()) {
             hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getLastUpdatedDate());
+        }
+        if (getUserIdsForCommonGroupsCount() > 0) {
+            hash = (37 * hash) + USER_IDS_FOR_COMMON_GROUPS_FIELD_NUMBER;
+            hash = (53 * hash) + getUserIdsForCommonGroupsList().hashCode();
         }
         if (getCustomAttributesCount() > 0) {
             hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
@@ -351,13 +413,14 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
             super.clear();
             bitField0_ = 0;
             lastUpdatedDate_ = 0L;
+            userIdsForCommonGroups_ = emptyLongList();
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
                 customAttributes_ = null;
                 customAttributesBuilder_.clear();
             }
-            bitField0_ &= ~0x00000002;
+            bitField0_ &= ~0x00000004;
             return this;
         }
 
@@ -398,9 +461,9 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.request.group.QueryJoinedGroupIdsRequest result) {
             if (customAttributesBuilder_ == null) {
-                if (((bitField0_ & 0x00000002) != 0)) {
+                if (((bitField0_ & 0x00000004) != 0)) {
                     customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
-                    bitField0_ &= ~0x00000002;
+                    bitField0_ &= ~0x00000004;
                 }
                 result.customAttributes_ = customAttributes_;
             } else {
@@ -415,6 +478,10 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
             if (((from_bitField0_ & 0x00000001) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000001;
+            }
+            if (((from_bitField0_ & 0x00000002) != 0)) {
+                userIdsForCommonGroups_.makeImmutable();
+                result.userIdsForCommonGroups_ = userIdsForCommonGroups_;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -439,11 +506,22 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());
             }
+            if (!other.userIdsForCommonGroups_.isEmpty()) {
+                if (userIdsForCommonGroups_.isEmpty()) {
+                    userIdsForCommonGroups_ = other.userIdsForCommonGroups_;
+                    userIdsForCommonGroups_.makeImmutable();
+                    bitField0_ |= 0x00000002;
+                } else {
+                    ensureUserIdsForCommonGroupsIsMutable();
+                    userIdsForCommonGroups_.addAll(other.userIdsForCommonGroups_);
+                }
+                onChanged();
+            }
             if (customAttributesBuilder_ == null) {
                 if (!other.customAttributes_.isEmpty()) {
                     if (customAttributes_.isEmpty()) {
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000002;
+                        bitField0_ &= ~0x00000004;
                     } else {
                         ensureCustomAttributesIsMutable();
                         customAttributes_.addAll(other.customAttributes_);
@@ -456,7 +534,7 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
                         customAttributesBuilder_.dispose();
                         customAttributesBuilder_ = null;
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000002;
+                        bitField0_ &= ~0x00000004;
                         customAttributesBuilder_ =
                                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getCustomAttributesFieldBuilder()
@@ -494,6 +572,20 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000001;
                         } // case 8
+                        case 16 -> {
+                            long v = input.readInt64();
+                            ensureUserIdsForCommonGroupsIsMutable();
+                            userIdsForCommonGroups_.addLong(v);
+                        } // case 16
+                        case 18 -> {
+                            int length = input.readRawVarint32();
+                            int limit = input.pushLimit(length);
+                            ensureUserIdsForCommonGroupsIsMutable();
+                            while (input.getBytesUntilLimit() > 0) {
+                                userIdsForCommonGroups_.addLong(input.readInt64());
+                            }
+                            input.popLimit(limit);
+                        } // case 18
                         case 122 -> {
                             im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
@@ -572,13 +664,109 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
             return this;
         }
 
+        private com.google.protobuf.Internal.LongList userIdsForCommonGroups_ = emptyLongList();
+
+        private void ensureUserIdsForCommonGroupsIsMutable() {
+            if (!userIdsForCommonGroups_.isModifiable()) {
+                userIdsForCommonGroups_ = makeMutableCopy(userIdsForCommonGroups_);
+            }
+            bitField0_ |= 0x00000002;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @return A list containing the userIdsForCommonGroups.
+         */
+        public java.util.List<java.lang.Long> getUserIdsForCommonGroupsList() {
+            userIdsForCommonGroups_.makeImmutable();
+            return userIdsForCommonGroups_;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @return The count of userIdsForCommonGroups.
+         */
+        public int getUserIdsForCommonGroupsCount() {
+            return userIdsForCommonGroups_.size();
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @param index The index of the element to return.
+         * @return The userIdsForCommonGroups at the given index.
+         */
+        public long getUserIdsForCommonGroups(int index) {
+            return userIdsForCommonGroups_.getLong(index);
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @param index The index to set the value at.
+         * @param value The userIdsForCommonGroups to set.
+         * @return This builder for chaining.
+         */
+        public Builder setUserIdsForCommonGroups(int index, long value) {
+
+            ensureUserIdsForCommonGroupsIsMutable();
+            userIdsForCommonGroups_.setLong(index, value);
+            bitField0_ |= 0x00000002;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @param value The userIdsForCommonGroups to add.
+         * @return This builder for chaining.
+         */
+        public Builder addUserIdsForCommonGroups(long value) {
+
+            ensureUserIdsForCommonGroupsIsMutable();
+            userIdsForCommonGroups_.addLong(value);
+            bitField0_ |= 0x00000002;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @param values The userIdsForCommonGroups to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllUserIdsForCommonGroups(
+                java.lang.Iterable<? extends java.lang.Long> values) {
+            ensureUserIdsForCommonGroupsIsMutable();
+            com.google.protobuf.AbstractMessageLite.Builder.addAll(values, userIdsForCommonGroups_);
+            bitField0_ |= 0x00000002;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_groups = 2;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearUserIdsForCommonGroups() {
+            userIdsForCommonGroups_ = emptyLongList();
+            bitField0_ &= ~0x00000002;
+            onChanged();
+            return this;
+        }
+
         private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
                 java.util.Collections.emptyList();
 
         private void ensureCustomAttributesIsMutable() {
-            if ((bitField0_ & 0x00000002) == 0) {
+            if ((bitField0_ & 0x00000004) == 0) {
                 customAttributes_ = new java.util.ArrayList<>(customAttributes_);
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000004;
             }
         }
 
@@ -742,7 +930,7 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
         public Builder clearCustomAttributes() {
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
-                bitField0_ &= ~0x00000002;
+                bitField0_ &= ~0x00000004;
                 onChanged();
             } else {
                 customAttributesBuilder_.clear();
@@ -825,7 +1013,7 @@ public final class QueryJoinedGroupIdsRequest extends com.google.protobuf.Genera
             if (customAttributesBuilder_ == null) {
                 customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         customAttributes_,
-                        ((bitField0_ & 0x00000002) != 0),
+                        ((bitField0_ & 0x00000004) != 0),
                         getParentForChildren(),
                         isClean());
                 customAttributes_ = null;

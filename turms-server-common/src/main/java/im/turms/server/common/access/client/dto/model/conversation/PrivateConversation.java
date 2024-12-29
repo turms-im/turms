@@ -28,8 +28,8 @@ public final class PrivateConversation extends com.google.protobuf.GeneratedMess
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 PrivateConversation.class.getName());
     }
@@ -56,7 +56,7 @@ public final class PrivateConversation extends com.google.protobuf.GeneratedMess
     }
 
     public static final int OWNER_ID_FIELD_NUMBER = 1;
-    private long ownerId_;
+    private long ownerId_ = 0L;
 
     /**
      * <code>int64 owner_id = 1;</code>
@@ -69,7 +69,7 @@ public final class PrivateConversation extends com.google.protobuf.GeneratedMess
     }
 
     public static final int TARGET_ID_FIELD_NUMBER = 2;
-    private long targetId_;
+    private long targetId_ = 0L;
 
     /**
      * <code>int64 target_id = 2;</code>
@@ -82,7 +82,7 @@ public final class PrivateConversation extends com.google.protobuf.GeneratedMess
     }
 
     public static final int READ_DATE_FIELD_NUMBER = 3;
-    private long readDate_;
+    private long readDate_ = 0L;
 
     /**
      * <code>int64 read_date = 3;</code>
@@ -210,8 +210,10 @@ public final class PrivateConversation extends com.google.protobuf.GeneratedMess
         if (getOwnerId() != other.getOwnerId()) {
             return false;
         }
-        return getTargetId() == other.getTargetId()
-                && getReadDate() == other.getReadDate()
+        if (getTargetId() != other.getTargetId()) {
+            return false;
+        }
+        return getReadDate() == other.getReadDate()
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

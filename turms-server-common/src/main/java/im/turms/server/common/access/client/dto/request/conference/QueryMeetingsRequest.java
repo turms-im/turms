@@ -28,8 +28,8 @@ public final class QueryMeetingsRequest extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryMeetingsRequest.class.getName());
     }
@@ -201,7 +201,7 @@ public final class QueryMeetingsRequest extends com.google.protobuf.GeneratedMes
     private int groupIdsMemoizedSerializedSize = -1;
 
     public static final int CREATION_DATE_START_FIELD_NUMBER = 5;
-    private long creationDateStart_;
+    private long creationDateStart_ = 0L;
 
     /**
      * <code>optional int64 creation_date_start = 5;</code>
@@ -224,7 +224,7 @@ public final class QueryMeetingsRequest extends com.google.protobuf.GeneratedMes
     }
 
     public static final int CREATION_DATE_END_FIELD_NUMBER = 6;
-    private long creationDateEnd_;
+    private long creationDateEnd_ = 0L;
 
     /**
      * <code>optional int64 creation_date_end = 6;</code>
@@ -247,7 +247,7 @@ public final class QueryMeetingsRequest extends com.google.protobuf.GeneratedMes
     }
 
     public static final int SKIP_FIELD_NUMBER = 10;
-    private int skip_;
+    private int skip_ = 0;
 
     /**
      * <code>optional int32 skip = 10;</code>
@@ -270,7 +270,7 @@ public final class QueryMeetingsRequest extends com.google.protobuf.GeneratedMes
     }
 
     public static final int LIMIT_FIELD_NUMBER = 11;
-    private int limit_;
+    private int limit_ = 0;
 
     /**
      * <code>optional int32 limit = 11;</code>

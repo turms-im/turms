@@ -29,8 +29,8 @@ public final class CheckGroupJoinQuestionsAnswersRequest
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CheckGroupJoinQuestionsAnswersRequest.class.getName());
     }
@@ -49,16 +49,16 @@ public final class CheckGroupJoinQuestionsAnswersRequest
         return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 1 -> internalGetQuestionIdToAnswer();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 1) {
+            return internalGetQuestionIdToAnswer();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -403,26 +403,26 @@ public final class CheckGroupJoinQuestionsAnswersRequest
             return im.turms.server.common.access.client.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOuterClass.internal_static_im_turms_proto_CheckGroupJoinQuestionsAnswersRequest_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 1 -> internalGetQuestionIdToAnswer();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 1) {
+                return internalGetQuestionIdToAnswer();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 1 -> internalGetMutableQuestionIdToAnswer();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 1) {
+                return internalGetMutableQuestionIdToAnswer();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

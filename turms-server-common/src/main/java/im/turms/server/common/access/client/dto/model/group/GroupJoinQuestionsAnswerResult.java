@@ -29,8 +29,8 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupJoinQuestionsAnswerResult.class.getName());
     }
@@ -140,7 +140,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         if (score_ != 0) {
             output.writeInt32(1, score_);
         }
-        if (getQuestionIdsList().size() > 0) {
+        if (!getQuestionIdsList().isEmpty()) {
             output.writeUInt32NoTag(18);
             output.writeUInt32NoTag(questionIdsMemoizedSerializedSize);
         }
@@ -148,7 +148,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
             output.writeInt64NoTag(questionIds_.getLong(i));
         }
         if (joined_) {
-            output.writeBool(3, joined_);
+            output.writeBool(3, true);
         }
         getUnknownFields().writeTo(output);
     }
@@ -178,7 +178,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
             questionIdsMemoizedSerializedSize = dataSize;
         }
         if (joined_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(3, joined_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(3, true);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -197,10 +197,8 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
         if (getScore() != other.getScore()) {
             return false;
         }
-        if (!getQuestionIdsList().equals(other.getQuestionIdsList())) {
-            return false;
-        }
-        return getJoined() == other.getJoined()
+        return getQuestionIdsList().equals(other.getQuestionIdsList())
+                && getJoined() == other.getJoined()
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -447,7 +445,7 @@ public final class GroupJoinQuestionsAnswerResult extends com.google.protobuf.Ge
                 onChanged();
             }
             if (other.getJoined()) {
-                setJoined(other.getJoined());
+                setJoined(true);
             }
             this.mergeUnknownFields(other.getUnknownFields());
             onChanged();

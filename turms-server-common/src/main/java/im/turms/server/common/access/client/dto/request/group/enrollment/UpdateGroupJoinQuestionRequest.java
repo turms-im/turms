@@ -29,8 +29,8 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateGroupJoinQuestionRequest.class.getName());
     }
@@ -61,7 +61,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
 
     private int bitField0_;
     public static final int QUESTION_ID_FIELD_NUMBER = 1;
-    private long questionId_;
+    private long questionId_ = 0L;
 
     /**
      * <pre>
@@ -183,7 +183,7 @@ public final class UpdateGroupJoinQuestionRequest extends com.google.protobuf.Ge
     }
 
     public static final int SCORE_FIELD_NUMBER = 4;
-    private int score_;
+    private int score_ = 0;
 
     /**
      * <code>optional int32 score = 4;</code>

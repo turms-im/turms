@@ -28,8 +28,8 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryMessagesRequest.class.getName());
     }
@@ -378,7 +378,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         getSerializedSize();
-        if (getIdsList().size() > 0) {
+        if (!getIdsList().isEmpty()) {
             output.writeUInt32NoTag(10);
             output.writeUInt32NoTag(idsMemoizedSerializedSize);
         }
@@ -391,7 +391,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeBool(3, areSystemMessages_);
         }
-        if (getFromIdsList().size() > 0) {
+        if (!getFromIdsList().isEmpty()) {
             output.writeUInt32NoTag(34);
             output.writeUInt32NoTag(fromIdsMemoizedSerializedSize);
         }
@@ -408,7 +408,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             output.writeInt32(7, maxCount_);
         }
         if (withTotal_) {
-            output.writeBool(8, withTotal_);
+            output.writeBool(8, true);
         }
         if (((bitField0_ & 0x00000020) != 0)) {
             output.writeBool(9, descending_);
@@ -469,7 +469,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(7, maxCount_);
         }
         if (withTotal_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(8, withTotal_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(8, true);
         }
         if (((bitField0_ & 0x00000020) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeBoolSize(9, descending_);
@@ -902,7 +902,7 @@ public final class QueryMessagesRequest extends com.google.protobuf.GeneratedMes
                 setMaxCount(other.getMaxCount());
             }
             if (other.getWithTotal()) {
-                setWithTotal(other.getWithTotal());
+                setWithTotal(true);
             }
             if (other.hasDescending()) {
                 setDescending(other.getDescending());

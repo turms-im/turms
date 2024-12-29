@@ -29,8 +29,8 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateFriendRequestRequest.class.getName());
     }
@@ -60,7 +60,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
 
     private int bitField0_;
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <pre>
@@ -77,7 +77,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
     }
 
     public static final int RESPONSE_ACTION_FIELD_NUMBER = 2;
-    private int responseAction_;
+    private int responseAction_ = 0;
 
     /**
      * <pre>
@@ -704,7 +704,7 @@ public final class UpdateFriendRequestRequest extends com.google.protobuf.Genera
             return this;
         }
 
-        private int responseAction_;
+        private int responseAction_ = 0;
 
         /**
          * <pre>

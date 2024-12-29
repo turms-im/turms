@@ -29,8 +29,8 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateUserOnlineStatusRequest.class.getName());
     }
@@ -41,7 +41,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
     }
 
     private UpdateUserOnlineStatusRequest() {
-        deviceTypes_ = java.util.Collections.emptyList();
+        deviceTypes_ = emptyIntList();
         userStatus_ = 0;
         customAttributes_ = java.util.Collections.emptyList();
     }
@@ -60,8 +60,8 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
 
     public static final int DEVICE_TYPES_FIELD_NUMBER = 1;
     @SuppressWarnings("serial")
-    private java.util.List<java.lang.Integer> deviceTypes_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
+    private com.google.protobuf.Internal.IntList deviceTypes_;
+    private static final com.google.protobuf.Internal.IntListAdapter.IntConverter<im.turms.server.common.access.client.dto.constant.DeviceType> deviceTypes_converter_ =
             from -> {
                 im.turms.server.common.access.client.dto.constant.DeviceType result =
                         im.turms.server.common.access.client.dto.constant.DeviceType
@@ -82,7 +82,9 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      */
     @java.lang.Override
     public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<>(deviceTypes_, deviceTypes_converter_);
+        return new com.google.protobuf.Internal.IntListAdapter<>(
+                deviceTypes_,
+                deviceTypes_converter_);
     }
 
     /**
@@ -111,7 +113,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      */
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(int index) {
-        return deviceTypes_converter_.convert(deviceTypes_.get(index));
+        return deviceTypes_converter_.convert(deviceTypes_.getInt(index));
     }
 
     /**
@@ -140,13 +142,13 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
      */
     @java.lang.Override
     public int getDeviceTypesValue(int index) {
-        return deviceTypes_.get(index);
+        return deviceTypes_.getInt(index);
     }
 
     private int deviceTypesMemoizedSerializedSize;
 
     public static final int USER_STATUS_FIELD_NUMBER = 2;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <pre>
@@ -249,8 +251,8 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
             output.writeUInt32NoTag(10);
             output.writeUInt32NoTag(deviceTypesMemoizedSerializedSize);
         }
-        for (Integer integer : deviceTypes_) {
-            output.writeEnumNoTag(integer);
+        for (int i = 0; i < deviceTypes_.size(); i++) {
+            output.writeEnumNoTag(deviceTypes_.getInt(i));
         }
         if (userStatus_ != im.turms.server.common.access.client.dto.constant.UserStatus.AVAILABLE
                 .getNumber()) {
@@ -272,8 +274,9 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         size = 0;
         {
             int dataSize = 0;
-            for (Integer integer : deviceTypes_) {
-                dataSize += com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag(integer);
+            for (int i = 0; i < deviceTypes_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeEnumSizeNoTag(deviceTypes_.getInt(i));
             }
             size += dataSize;
             if (!getDeviceTypesList().isEmpty()) {
@@ -303,8 +306,10 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
             return super.equals(obj);
         }
 
-        return deviceTypes_.equals(other.deviceTypes_)
-                && userStatus_ == other.userStatus_
+        if (!deviceTypes_.equals(other.deviceTypes_)) {
+            return false;
+        }
+        return userStatus_ == other.userStatus_
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -468,7 +473,8 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         public Builder clear() {
             super.clear();
             bitField0_ = 0;
-            deviceTypes_ = java.util.Collections.emptyList();
+            deviceTypes_ = emptyIntList();
+            bitField0_ &= ~0x00000001;
             userStatus_ = 0;
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
@@ -517,7 +523,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.request.user.UpdateUserOnlineStatusRequest result) {
             if (((bitField0_ & 0x00000001) != 0)) {
-                deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
+                deviceTypes_.makeImmutable();
                 bitField0_ &= ~0x00000001;
             }
             result.deviceTypes_ = deviceTypes_;
@@ -624,7 +630,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
                         case 8 -> {
                             int tmpRaw = input.readEnum();
                             ensureDeviceTypesIsMutable();
-                            deviceTypes_.add(tmpRaw);
+                            deviceTypes_.addInt(tmpRaw);
                         } // case 8
                         case 10 -> {
                             int length = input.readRawVarint32();
@@ -632,7 +638,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
                             while (input.getBytesUntilLimit() > 0) {
                                 int tmpRaw = input.readEnum();
                                 ensureDeviceTypesIsMutable();
-                                deviceTypes_.add(tmpRaw);
+                                deviceTypes_.addInt(tmpRaw);
                             }
                             input.popLimit(oldLimit);
                         } // case 10
@@ -670,11 +676,11 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
 
         private int bitField0_;
 
-        private java.util.List<java.lang.Integer> deviceTypes_ = java.util.Collections.emptyList();
+        private com.google.protobuf.Internal.IntList deviceTypes_ = emptyIntList();
 
         private void ensureDeviceTypesIsMutable() {
             if ((bitField0_ & 0x00000001) == 0) {
-                deviceTypes_ = new java.util.ArrayList<>(deviceTypes_);
+                deviceTypes_ = makeMutableCopy(deviceTypes_);
                 bitField0_ |= 0x00000001;
             }
         }
@@ -689,7 +695,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * @return A list containing the deviceTypes.
          */
         public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getDeviceTypesList() {
-            return new com.google.protobuf.Internal.ListAdapter<>(
+            return new com.google.protobuf.Internal.IntListAdapter<>(
                     deviceTypes_,
                     deviceTypes_converter_);
         }
@@ -719,7 +725,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          */
         public im.turms.server.common.access.client.dto.constant.DeviceType getDeviceTypes(
                 int index) {
-            return deviceTypes_converter_.convert(deviceTypes_.get(index));
+            return deviceTypes_converter_.convert(deviceTypes_.getInt(index));
         }
 
         /**
@@ -740,7 +746,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
                 throw new NullPointerException();
             }
             ensureDeviceTypesIsMutable();
-            deviceTypes_.set(index, value.getNumber());
+            deviceTypes_.setInt(index, value.getNumber());
             onChanged();
             return this;
         }
@@ -761,7 +767,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
                 throw new NullPointerException();
             }
             ensureDeviceTypesIsMutable();
-            deviceTypes_.add(value.getNumber());
+            deviceTypes_.addInt(value.getNumber());
             onChanged();
             return this;
         }
@@ -780,7 +786,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
                 java.lang.Iterable<? extends im.turms.server.common.access.client.dto.constant.DeviceType> values) {
             ensureDeviceTypesIsMutable();
             for (im.turms.server.common.access.client.dto.constant.DeviceType value : values) {
-                deviceTypes_.add(value.getNumber());
+                deviceTypes_.addInt(value.getNumber());
             }
             onChanged();
             return this;
@@ -796,7 +802,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * @return This builder for chaining.
          */
         public Builder clearDeviceTypes() {
-            deviceTypes_ = java.util.Collections.emptyList();
+            deviceTypes_ = emptyIntList();
             bitField0_ &= ~0x00000001;
             onChanged();
             return this;
@@ -826,7 +832,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          * @return The enum numeric value on the wire of deviceTypes at the given index.
          */
         public int getDeviceTypesValue(int index) {
-            return deviceTypes_.get(index);
+            return deviceTypes_.getInt(index);
         }
 
         /**
@@ -842,7 +848,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          */
         public Builder setDeviceTypesValue(int index, int value) {
             ensureDeviceTypesIsMutable();
-            deviceTypes_.set(index, value);
+            deviceTypes_.setInt(index, value);
             onChanged();
             return this;
         }
@@ -859,7 +865,7 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
          */
         public Builder addDeviceTypesValue(int value) {
             ensureDeviceTypesIsMutable();
-            deviceTypes_.add(value);
+            deviceTypes_.addInt(value);
             onChanged();
             return this;
         }
@@ -877,13 +883,13 @@ public final class UpdateUserOnlineStatusRequest extends com.google.protobuf.Gen
         public Builder addAllDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
             ensureDeviceTypesIsMutable();
             for (int value : values) {
-                deviceTypes_.add(value);
+                deviceTypes_.addInt(value);
             }
             onChanged();
             return this;
         }
 
-        private int userStatus_;
+        private int userStatus_ = 0;
 
         /**
          * <pre>

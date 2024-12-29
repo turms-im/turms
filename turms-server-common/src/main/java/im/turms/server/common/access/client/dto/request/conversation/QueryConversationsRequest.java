@@ -28,8 +28,8 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryConversationsRequest.class.getName());
     }
@@ -287,8 +287,10 @@ public final class QueryConversationsRequest extends com.google.protobuf.Generat
             return super.equals(obj);
         }
 
-        return getUserIdsList().equals(other.getUserIdsList())
-                && getGroupIdsList().equals(other.getGroupIdsList())
+        if (!getUserIdsList().equals(other.getUserIdsList())) {
+            return false;
+        }
+        return getGroupIdsList().equals(other.getGroupIdsList())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

@@ -28,8 +28,8 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupMembersRequest.class.getName());
     }
@@ -60,7 +60,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -158,7 +158,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
     }
 
     public static final int ROLE_FIELD_NUMBER = 4;
-    private int role_;
+    private int role_ = 0;
 
     /**
      * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
@@ -195,7 +195,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 5;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 5;</code>
@@ -1026,7 +1026,7 @@ public final class CreateGroupMembersRequest extends com.google.protobuf.Generat
             return this;
         }
 
-        private int role_;
+        private int role_ = 0;
 
         /**
          * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>

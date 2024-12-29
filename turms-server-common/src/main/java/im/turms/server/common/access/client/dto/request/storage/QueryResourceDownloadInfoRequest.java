@@ -29,8 +29,8 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryResourceDownloadInfoRequest.class.getName());
     }
@@ -61,7 +61,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
 
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
+    private int type_ = 0;
 
     /**
      * <code>.im.turms.proto.StorageResourceType type = 1;</code>
@@ -89,7 +89,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
     }
 
     public static final int ID_NUM_FIELD_NUMBER = 2;
-    private long idNum_;
+    private long idNum_ = 0L;
 
     /**
      * <code>optional int64 id_num = 2;</code>
@@ -661,7 +661,7 @@ public final class QueryResourceDownloadInfoRequest extends com.google.protobuf.
 
         private int bitField0_;
 
-        private int type_;
+        private int type_ = 0;
 
         /**
          * <code>.im.turms.proto.StorageResourceType type = 1;</code>

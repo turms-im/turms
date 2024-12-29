@@ -28,8 +28,8 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupRequest.class.getName());
     }
@@ -54,12 +54,12 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 7 -> internalGetUserDefinedAttributes();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 7) {
+            return internalGetUserDefinedAttributes();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -561,10 +561,8 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
                 return false;
             }
         }
-        if (!internalGetUserDefinedAttributes().equals(other.internalGetUserDefinedAttributes())) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return internalGetUserDefinedAttributes().equals(other.internalGetUserDefinedAttributes())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -728,23 +726,23 @@ public final class CreateGroupRequest extends com.google.protobuf.GeneratedMessa
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 7 -> internalGetUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 7) {
+                return internalGetUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 7 -> internalGetMutableUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 7) {
+                return internalGetMutableUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

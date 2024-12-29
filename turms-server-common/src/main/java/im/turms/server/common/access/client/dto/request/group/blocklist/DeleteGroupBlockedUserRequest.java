@@ -29,8 +29,8 @@ public final class DeleteGroupBlockedUserRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupBlockedUserRequest.class.getName());
     }
@@ -57,7 +57,7 @@ public final class DeleteGroupBlockedUserRequest extends com.google.protobuf.Gen
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -70,7 +70,7 @@ public final class DeleteGroupBlockedUserRequest extends com.google.protobuf.Gen
     }
 
     public static final int USER_ID_FIELD_NUMBER = 2;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 2;</code>
@@ -189,8 +189,10 @@ public final class DeleteGroupBlockedUserRequest extends com.google.protobuf.Gen
             return super.equals(obj);
         }
 
-        return getGroupId() == other.getGroupId()
-                && getUserId() == other.getUserId()
+        if (getGroupId() != other.getGroupId()) {
+            return false;
+        }
+        return getUserId() == other.getUserId()
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

@@ -25,8 +25,8 @@ public final class UserFriendRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserFriendRequestOuterClass.class.getName());
     }
@@ -49,26 +49,30 @@ public final class UserFriendRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n$model/user/user_friend_request.proto\022\016"
                 + "im.turms.proto\032\035constant/request_status."
-                + "proto\"\364\002\n\021UserFriendRequest\022\017\n\002id\030\001 \001(\003H"
-                + "\000\210\001\001\022\032\n\rcreation_date\030\002 \001(\003H\001\210\001\001\022\024\n\007cont"
-                + "ent\030\003 \001(\tH\002\210\001\001\022:\n\016request_status\030\004 \001(\0162\035"
-                + ".im.turms.proto.RequestStatusH\003\210\001\001\022\023\n\006re"
-                + "ason\030\005 \001(\tH\004\210\001\001\022\034\n\017expiration_date\030\006 \001(\003"
-                + "H\005\210\001\001\022\031\n\014requester_id\030\007 \001(\003H\006\210\001\001\022\031\n\014reci"
-                + "pient_id\030\010 \001(\003H\007\210\001\001B\005\n\003_idB\020\n\016_creation_"
-                + "dateB\n\n\010_contentB\021\n\017_request_statusB\t\n\007_"
-                + "reasonB\022\n\020_expiration_dateB\017\n\r_requester"
-                + "_idB\017\n\r_recipient_idB:\n3im.turms.server."
-                + "common.access.client.dto.model.userP\001\272\002\000"
-                + "b\006proto3"};
+                + "proto\032\030model/common/value.proto\"\246\003\n\021User"
+                + "FriendRequest\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\032\n\rcreati"
+                + "on_date\030\002 \001(\003H\001\210\001\001\022\024\n\007content\030\003 \001(\tH\002\210\001\001"
+                + "\022:\n\016request_status\030\004 \001(\0162\035.im.turms.prot"
+                + "o.RequestStatusH\003\210\001\001\022\023\n\006reason\030\005 \001(\tH\004\210\001"
+                + "\001\022\034\n\017expiration_date\030\006 \001(\003H\005\210\001\001\022\031\n\014reque"
+                + "ster_id\030\007 \001(\003H\006\210\001\001\022\031\n\014recipient_id\030\010 \001(\003"
+                + "H\007\210\001\001\0220\n\021custom_attributes\030\017 \003(\0132\025.im.tu"
+                + "rms.proto.ValueB\005\n\003_idB\020\n\016_creation_date"
+                + "B\n\n\010_contentB\021\n\017_request_statusB\t\n\007_reas"
+                + "onB\022\n\020_expiration_dateB\017\n\r_requester_idB"
+                + "\017\n\r_recipient_idB:\n3im.turms.server.comm"
+                + "on.access.client.dto.model.userP\001\272\002\000b\006pr"
+                + "oto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
                         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass
+                                .getDescriptor(),
+                        im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UserFriendRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UserFriendRequest_descriptor,
@@ -79,9 +83,11 @@ public final class UserFriendRequestOuterClass {
                                 "Reason",
                                 "ExpirationDate",
                                 "RequesterId",
-                                "RecipientId",});
+                                "RecipientId",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.RequestStatusOuterClass.getDescriptor();
+        im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }
 
     // @@protoc_insertion_point(outer_class_scope)

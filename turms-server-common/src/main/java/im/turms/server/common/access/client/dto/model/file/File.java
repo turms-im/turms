@@ -28,8 +28,8 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 File.class.getName());
     }
@@ -121,8 +121,8 @@ public final class File extends com.google.protobuf.GeneratedMessage implements
             com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
-                    /* minor= */ 27,
-                    /* patch= */ 2,
+                    /* minor= */ 29,
+                    /* patch= */ 1,
                     /* suffix= */ "",
                     Description.class.getName());
         }

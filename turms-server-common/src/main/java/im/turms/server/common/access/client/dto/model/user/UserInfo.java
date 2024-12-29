@@ -28,8 +28,8 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserInfo.class.getName());
     }
@@ -51,16 +51,16 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
         return im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.internal_static_im_turms_proto_UserInfo_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 9 -> internalGetUserDefinedAttributes();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 9) {
+            return internalGetUserDefinedAttributes();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -73,7 +73,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -246,7 +246,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
     }
 
     public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
-    private int profileAccessStrategy_;
+    private int profileAccessStrategy_ = 0;
 
     /**
      * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
@@ -284,7 +284,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
     }
 
     public static final int REGISTRATION_DATE_FIELD_NUMBER = 6;
-    private long registrationDate_;
+    private long registrationDate_ = 0L;
 
     /**
      * <code>optional int64 registration_date = 6;</code>
@@ -307,7 +307,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 7;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 7;</code>
@@ -330,7 +330,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
     }
 
     public static final int ACTIVE_FIELD_NUMBER = 8;
-    private boolean active_;
+    private boolean active_ = false;
 
     /**
      * <code>optional bool active = 8;</code>
@@ -839,26 +839,26 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
             return im.turms.server.common.access.client.dto.model.user.UserInfoOuterClass.internal_static_im_turms_proto_UserInfo_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 9 -> internalGetUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 9) {
+                return internalGetUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 9 -> internalGetMutableUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 9) {
+                return internalGetMutableUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -1482,7 +1482,7 @@ public final class UserInfo extends com.google.protobuf.GeneratedMessage impleme
             return this;
         }
 
-        private int profileAccessStrategy_;
+        private int profileAccessStrategy_ = 0;
 
         /**
          * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>

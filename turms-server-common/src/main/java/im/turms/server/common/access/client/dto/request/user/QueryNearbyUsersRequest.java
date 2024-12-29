@@ -28,8 +28,8 @@ public final class QueryNearbyUsersRequest extends com.google.protobuf.Generated
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryNearbyUsersRequest.class.getName());
     }

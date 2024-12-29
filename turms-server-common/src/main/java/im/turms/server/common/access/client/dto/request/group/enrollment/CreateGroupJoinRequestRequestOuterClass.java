@@ -25,8 +25,8 @@ public final class CreateGroupJoinRequestRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupJoinRequestRequestOuterClass.class.getName());
     }
@@ -62,7 +62,7 @@ public final class CreateGroupJoinRequestRequestOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_CreateGroupJoinRequestRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_CreateGroupJoinRequestRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_CreateGroupJoinRequestRequest_descriptor,

@@ -29,8 +29,8 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryGroupJoinQuestionsRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -72,7 +72,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
     }
 
     public static final int WITH_ANSWERS_FIELD_NUMBER = 2;
-    private boolean withAnswers_;
+    private boolean withAnswers_ = false;
 
     /**
      * <code>bool with_answers = 2;</code>
@@ -85,7 +85,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 3;</code>
@@ -175,7 +175,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
             output.writeInt64(1, groupId_);
         }
         if (withAnswers_) {
-            output.writeBool(2, withAnswers_);
+            output.writeBool(2, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt64(3, lastUpdatedDate_);
@@ -198,7 +198,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, groupId_);
         }
         if (withAnswers_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, withAnswers_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(3, lastUpdatedDate_);
@@ -497,7 +497,7 @@ public final class QueryGroupJoinQuestionsRequest extends com.google.protobuf.Ge
                 setGroupId(other.getGroupId());
             }
             if (other.getWithAnswers()) {
-                setWithAnswers(other.getWithAnswers());
+                setWithAnswers(true);
             }
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());

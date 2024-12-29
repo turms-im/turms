@@ -28,8 +28,8 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateGroupRequest.class.getName());
     }
@@ -50,16 +50,16 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
         return im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOuterClass.internal_static_im_turms_proto_UpdateGroupRequest_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 10 -> internalGetUserDefinedAttributes();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 10) {
+            return internalGetUserDefinedAttributes();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -72,7 +72,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <pre>
@@ -89,7 +89,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 2;
-    private boolean quitAfterTransfer_;
+    private boolean quitAfterTransfer_ = false;
 
     /**
      * <pre>
@@ -282,7 +282,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int MIN_SCORE_FIELD_NUMBER = 6;
-    private int minScore_;
+    private int minScore_ = 0;
 
     /**
      * <code>optional int32 min_score = 6;</code>
@@ -305,7 +305,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int TYPE_ID_FIELD_NUMBER = 7;
-    private long typeId_;
+    private long typeId_ = 0L;
 
     /**
      * <code>optional int64 type_id = 7;</code>
@@ -328,7 +328,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 8;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 8;</code>
@@ -351,7 +351,7 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int SUCCESSOR_ID_FIELD_NUMBER = 9;
-    private long successorId_;
+    private long successorId_ = 0L;
 
     /**
      * <code>optional int64 successor_id = 9;</code>
@@ -870,26 +870,26 @@ public final class UpdateGroupRequest extends com.google.protobuf.GeneratedMessa
             return im.turms.server.common.access.client.dto.request.group.UpdateGroupRequestOuterClass.internal_static_im_turms_proto_UpdateGroupRequest_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 10 -> internalGetUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 10) {
+                return internalGetUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 10 -> internalGetMutableUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 10) {
+                return internalGetMutableUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

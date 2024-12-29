@@ -25,8 +25,8 @@ public final class GroupMemberOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupMemberOuterClass.class.getName());
     }
@@ -51,19 +51,20 @@ public final class GroupMemberOuterClass {
                 + "ms.proto\032\032constant/device_type.proto\032 co"
                 + "nstant/group_member_role.proto\032\032constant"
                 + "/user_status.proto\032\030model/common/value.p"
-                + "roto\"\260\003\n\013GroupMember\022\025\n\010group_id\030\001 \001(\003H\000"
+                + "roto\"\314\003\n\013GroupMember\022\025\n\010group_id\030\001 \001(\003H\000"
                 + "\210\001\001\022\024\n\007user_id\030\002 \001(\003H\001\210\001\001\022\021\n\004name\030\003 \001(\tH"
                 + "\002\210\001\001\0222\n\004role\030\004 \001(\0162\037.im.turms.proto.Grou"
                 + "pMemberRoleH\003\210\001\001\022\026\n\tjoin_date\030\005 \001(\003H\004\210\001\001"
                 + "\022\032\n\rmute_end_date\030\006 \001(\003H\005\210\001\001\0224\n\013user_sta"
                 + "tus\030\007 \001(\0162\032.im.turms.proto.UserStatusH\006\210"
                 + "\001\001\0226\n\022using_device_types\030\010 \003(\0162\032.im.turm"
-                + "s.proto.DeviceType\0220\n\021custom_attributes\030"
-                + "\017 \003(\0132\025.im.turms.proto.ValueB\013\n\t_group_i"
-                + "dB\n\n\010_user_idB\007\n\005_nameB\007\n\005_roleB\014\n\n_join"
-                + "_dateB\020\n\016_mute_end_dateB\016\n\014_user_statusB"
-                + ";\n4im.turms.server.common.access.client."
-                + "dto.model.groupP\001\272\002\000b\006proto3"};
+                + "s.proto.DeviceType\022\021\n\004note\030\t \001(\tH\007\210\001\001\0220\n"
+                + "\021custom_attributes\030\017 \003(\0132\025.im.turms.prot"
+                + "o.ValueB\013\n\t_group_idB\n\n\010_user_idB\007\n\005_nam"
+                + "eB\007\n\005_roleB\014\n\n_join_dateB\020\n\016_mute_end_da"
+                + "teB\016\n\014_user_statusB\007\n\005_noteB;\n4im.turms."
+                + "server.common.access.client.dto.model.gr"
+                + "oupP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -88,6 +89,7 @@ public final class GroupMemberOuterClass {
                                 "MuteEndDate",
                                 "UserStatus",
                                 "UsingDeviceTypes",
+                                "Note",
                                 "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.constant.DeviceTypeOuterClass.getDescriptor();
