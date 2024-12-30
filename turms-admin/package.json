@@ -25,7 +25,7 @@
     "reload": "pm2 reload server/ecosystem.config.js",
     "report": "cross-env REPORT=true npm run build",
     "restart": "pm2 restart server/ecosystem.config.js",
-    "serve": "vite serve --port 6510",
+    "serve": "vite --host --port 6510",
     "start": "pm2 start server/ecosystem.config.js --env production",
     "stop": "pm2 stop server/ecosystem.config.js",
     "stylelint": "stylelint --fix ui/**/*.{vue,css,sss,less,scss,sass}",
