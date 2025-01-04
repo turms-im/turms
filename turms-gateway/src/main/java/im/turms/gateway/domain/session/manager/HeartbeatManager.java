@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import jakarta.annotation.Nullable;
 
 import io.lettuce.core.protocol.LongKeyGenerator;
 import lombok.Setter;
@@ -182,9 +181,8 @@ public class HeartbeatManager {
                     for (UserSession session : iterator.next()
                             .getDeviceTypeToSession()
                             .values()) {
-                        Long currentUserId = closeOrUpdateSession(session, now);
-                        if (currentUserId != null && userId == null) {
-                            userId = currentUserId;
+                        if (closeOrUpdateSession(session, now) && userId == null) {
+                            userId = session.getUserId();
                         }
                     }
                     if (userId != null) {
@@ -196,38 +194,28 @@ public class HeartbeatManager {
         };
     }
 
-    @Nullable
-    private Long closeOrUpdateSession(UserSession session, long nowNanos) {
+    /**
+     * @return If true, the data in Redis should be updated.
+     */
+    private boolean closeOrUpdateSession(UserSession session, long nowNanos) {
         if (!session.isOpen()) {
-            return null;
+            return false;
         }
+        // 1. Check whether to switch to UDP
         if (UdpRequestDispatcher.isEnabled()
                 && session.supportsSwitchingToUdp()
                 && session.isConnected()
                 && nowNanos - session.getLastRequestTimestampNanos() > switchProtocolAfterNanos) {
             session.getConnection()
                     .switchToUdp();
-            return null;
+            return false;
         }
-        // Limit the frequency of sending heartbeat requests to Redis
-        long lastHeartbeatUpdateTimestampNanos = session.getLastHeartbeatUpdateTimestampNanos();
-        long localMinHeartbeatIntervalNanos = minHeartbeatIntervalNanos;
-        if (localMinHeartbeatIntervalNanos > 0
-                && nowNanos - lastHeartbeatUpdateTimestampNanos < localMinHeartbeatIntervalNanos) {
-            return null;
-        }
-        // Only sends heartbeat requests to Redis if the client has
-        // sent any request to the local node after the last heartbeat update request
-        long lastHeartbeatRequestTimestampNanos =
-                Math.max(session.getLastHeartbeatRequestTimestampNanos(),
-                        session.getLastRequestTimestampNanos());
-        if (lastHeartbeatRequestTimestampNanos <= lastHeartbeatUpdateTimestampNanos) {
-            return null;
-        }
+        long lastRequestTimestampNanos = Math.max(session.getLastHeartbeatRequestTimestampNanos(),
+                session.getLastRequestTimestampNanos());
         long localCloseIdleSessionAfterNanos = closeIdleSessionAfterNanos;
+        // 2. Check whether to close the session
         if (localCloseIdleSessionAfterNanos > 0
-                && nowNanos
-                        - lastHeartbeatRequestTimestampNanos > localCloseIdleSessionAfterNanos) {
+                && nowNanos - lastRequestTimestampNanos > localCloseIdleSessionAfterNanos) {
             sessionService
                     .closeLocalSession(session.getUserId(),
                             session.getDeviceType(),
@@ -238,9 +226,23 @@ public class HeartbeatManager {
                                     session,
                                     HEARTBEAT_TIMEOUT,
                                     t));
-            return null;
+            return false;
+        }
+
+        // 3. Check whether to update session data in Redis
+        // Limit the frequency of sending heartbeat requests to Redis
+        long lastHeartbeatUpdateTimestampNanos = session.getLastHeartbeatUpdateTimestampNanos();
+        long localMinHeartbeatIntervalNanos = minHeartbeatIntervalNanos;
+        if (localMinHeartbeatIntervalNanos > 0
+                && nowNanos - lastHeartbeatUpdateTimestampNanos < localMinHeartbeatIntervalNanos) {
+            return false;
+        }
+        // Only update session data in Redis if the client has
+        // sent any request to the local node after the last heartbeat update request
+        if (lastRequestTimestampNanos <= lastHeartbeatUpdateTimestampNanos) {
+            return false;
         }
         session.setLastHeartbeatUpdateTimestampNanos(nowNanos);
-        return session.getUserId();
+        return true;
     }
 }
