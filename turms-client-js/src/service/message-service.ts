@@ -27,10 +27,10 @@ export default class MessageService {
             return [];
         }
         const userIds = [];
-        let matches;
+        let matches: RegExpExecArray;
         while ((matches = regex.exec(message.text))) {
             const match = matches[1];
-            if (!isNaN(match)) {
+            if (Number.isInteger(parseInt(match))) {
                 userIds.push(match);
             }
         }
