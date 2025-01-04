@@ -56,7 +56,7 @@ class ResponseStatusCodeFileGenerator {
                 0,
                 (statusCodeName, statusCode, groupName, isFirstGroupCode) -> {
                     String codeName = convertToCamelCase(statusCodeName);
-                    return "const int k"
+                    return "constexpr int k"
                             + codeName.substring(0, 1)
                                     .toUpperCase()
                             + codeName.substring(1)
