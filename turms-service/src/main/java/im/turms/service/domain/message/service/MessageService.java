@@ -606,7 +606,9 @@ public class MessageService extends BaseService {
         if (messageId == null) {
             messageId = node.nextLargeGapId(ServiceType.MESSAGE);
         }
-        if (!persistRecord) {
+        // Always allow persisting records if the message is a system message
+        // as some system messages use records to pass custom data.
+        if (!persistRecord && !isSystemMessage) {
             records = null;
         }
         if (!persistPreMessageId) {
