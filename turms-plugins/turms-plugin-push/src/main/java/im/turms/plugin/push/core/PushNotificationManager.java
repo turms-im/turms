@@ -40,6 +40,7 @@ import im.turms.plugin.push.property.PushNotificationProperties;
 import im.turms.plugin.push.property.TemplateProperties;
 import im.turms.server.common.access.client.dto.constant.DeviceType;
 import im.turms.server.common.access.client.dto.request.TurmsRequest;
+import im.turms.server.common.infra.collection.CollectionUtil;
 import im.turms.server.common.infra.exception.FeatureDisabledException;
 import im.turms.server.common.infra.lang.StringUtil;
 
@@ -54,7 +55,7 @@ public class PushNotificationManager {
     private final ApnsSender apnsSender;
     private final FcmSender fcmSender;
     @Getter
-    private final List<String> deviceTokenFieldNames;
+    private final Map<String, PushNotificationServiceProvider> deviceTokenFieldNameToServiceProvider;
     private final String localeFieldName;
     private final String fallbackLocale;
     private final boolean isApnsEnabled;
@@ -91,14 +92,22 @@ public class PushNotificationManager {
                 ? new FcmSender(templates, fcmProperties)
                 : null;
 
-        List<String> names = new ArrayList<>(2);
+        Map<String, PushNotificationServiceProvider> deviceTokenFieldNameToServiceProvider =
+                CollectionUtil.newMapWithExpectedSize(2);
         if (isApnsEnabled) {
-            names.add(apnsSender.getDeviceTokenFieldName());
+            deviceTokenFieldNameToServiceProvider.put(apnsSender.getDeviceTokenFieldName(),
+                    PushNotificationServiceProvider.APN);
         }
         if (isFcmEnabled) {
-            names.add(fcmSender.getDeviceTokenFieldName());
+            String deviceTokenFieldName = fcmSender.getDeviceTokenFieldName();
+            if (deviceTokenFieldNameToServiceProvider.putIfAbsent(deviceTokenFieldName,
+                    PushNotificationServiceProvider.FCM) != null) {
+                throw new IllegalArgumentException(
+                        "The device token field name of FCM and APNs must be different. Actual: "
+                                + deviceTokenFieldName);
+            }
         }
-        deviceTokenFieldNames = names;
+        this.deviceTokenFieldNameToServiceProvider = deviceTokenFieldNameToServiceProvider;
     }
 
     public Mono<Void> sendNotification(

@@ -41,6 +41,6 @@ public class ApnsProperties extends ServiceProviderProperties {
 
     private boolean sandboxEnabled;
 
-    private String deviceTokenFieldName = "f";
+    private String deviceTokenFieldName = "a";
 
 }
