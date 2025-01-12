@@ -22,6 +22,7 @@ export 't_floating/t_floating.dart';
 export 't_focus_tracker/t_focus_tracker.dart';
 export 't_form/t_form.dart';
 export 't_image/t_image_broken.dart';
+export 't_image_cropper/t_image_cropper.dart';
 export 't_image_viewer/t_image_viewer.dart';
 export 't_layout/t_responsive_layout.dart';
 export 't_lazy_indexed_stack/t_lazy_indexed_stack.dart';

@@ -78,29 +78,25 @@ class TTextButton extends StatelessWidget {
       disabled: disabled,
       onTap: onTap,
       childHovered: IntrinsicWidth(
-        child: Center(
-          child: AnimatedDefaultTextStyle(
-            style: textStyleHovered ??
-                textStyle ??
-                const TextStyle(color: Colors.white),
-            duration: const Duration(milliseconds: 200),
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-            ),
+        child: AnimatedDefaultTextStyle(
+          style: textStyleHovered ??
+              textStyle ??
+              const TextStyle(color: Colors.white),
+          duration: const Duration(milliseconds: 200),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
           ),
         ),
       ),
       prefix: prefix,
       child: IntrinsicWidth(
-        child: Center(
-          child: AnimatedDefaultTextStyle(
-            style: textStyle ?? const TextStyle(color: Colors.white),
-            duration: const Duration(milliseconds: 200),
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-            ),
+        child: AnimatedDefaultTextStyle(
+          style: textStyle ?? const TextStyle(color: Colors.white),
+          duration: const Duration(milliseconds: 200),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
           ),
         ),
       ));

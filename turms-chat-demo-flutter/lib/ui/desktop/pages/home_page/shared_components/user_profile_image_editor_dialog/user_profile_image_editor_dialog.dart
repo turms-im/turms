@@ -28,7 +28,7 @@ class UserProfileImageEditorDialog extends ConsumerStatefulWidget {
 
 class _UserProfileImageEditorDialogState
     extends ConsumerState<UserProfileImageEditorDialog> {
-  ImageProvider? _selectedImage;
+  ImageProvider? _profileImageProvider;
   bool _flipX = false;
   bool _flipY = false;
   double _angle = 0;
@@ -36,12 +36,12 @@ class _UserProfileImageEditorDialogState
   @override
   void initState() {
     super.initState();
-    _selectedImage = widget.user.image;
+    _profileImageProvider = widget.user.image;
   }
 
   @override
   void dispose() {
-    _selectedImage?.evict(cache: PaintingBinding.instance.imageCache);
+    _profileImageProvider?.evict(cache: PaintingBinding.instance.imageCache);
     super.dispose();
   }
 
@@ -49,9 +49,8 @@ class _UserProfileImageEditorDialogState
   Widget build(BuildContext context) {
     final theme = context.theme;
     final appLocalizations = ref.watch(appLocalizationsViewModel);
-    final selectedImage = _selectedImage;
-    final enableOperations = selectedImage != null;
     final user = widget.user;
+    final useImageMode = _profileImageProvider != null;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16, top: 8, bottom: 16),
@@ -67,60 +66,32 @@ class _UserProfileImageEditorDialogState
                 child: SizedBox(
                     width: _imageSize,
                     height: _imageSize,
-                    child: selectedImage == null
-                        ? TAvatar(
-                            id: user.userId,
-                            name: user.name,
-                            textSize: 125,
-                          )
-                        : DecoratedBox(
+                    child: useImageMode
+                        ? DecoratedBox(
                             decoration: const BoxDecoration(
                               color: Colors.black26,
                             ),
-                            child: Stack(
-                              children: [
-                                Transform.flip(
-                                  flipX: _flipX,
-                                  flipY: _flipY,
-                                  child: Transform.rotate(
-                                    angle: _angle,
-                                    child: Image(
-                                      image: selectedImage,
-                                      width: _imageSize,
-                                      height: _imageSize,
-                                      fit: BoxFit.contain,
-                                      // If false, the image widget will blink
-                                      // as the image loads,
-                                      // while the image is loaded from the memory or filesystem,
-                                      // it should be loaded very quickly.
-                                      // so we set it to true to avoiding blinking.
-                                      gaplessPlayback: true,
-                                    ),
-                                  ),
+                            child: Transform.flip(
+                              flipX: _flipX,
+                              flipY: _flipY,
+                              child: Transform.rotate(
+                                angle: _angle,
+                                child: TImageCropper(
+                                  image: _profileImageProvider!,
+                                  aspectRatio: 1,
                                 ),
-                              ],
+                              ),
                             ),
+                          )
+                        : TAvatar(
+                            id: user.userId,
+                            name: user.name,
+                            textSize: 125,
                           )),
               ),
               Expanded(
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(appLocalizations.brightness),
-                        const Text('50%'),
-                      ],
-                    ),
-                    Slider(
-                      value: 0,
-                      max: 100,
-                      divisions: 1,
-                      onChanged: (value) {},
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
                     Text(appLocalizations.rotateAndFlip),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +101,7 @@ class _UserProfileImageEditorDialogState
                           iconData: Symbols.rotate_left_rounded,
                           containerSize: const Size.square(32),
                           tooltip: appLocalizations.rotateLeft,
-                          disabled: !enableOperations,
+                          disabled: !useImageMode,
                           onTap: () {
                             _angle -= 90.degreesToRadians();
                             setState(() {});
@@ -141,7 +112,7 @@ class _UserProfileImageEditorDialogState
                           iconData: Symbols.rotate_right_rounded,
                           containerSize: const Size.square(32),
                           tooltip: appLocalizations.rotateRight,
-                          disabled: !enableOperations,
+                          disabled: !useImageMode,
                           onTap: () {
                             _angle += 90.degreesToRadians();
                             setState(() {});
@@ -152,7 +123,7 @@ class _UserProfileImageEditorDialogState
                           iconData: Symbols.flip_rounded,
                           containerSize: const Size.square(32),
                           tooltip: appLocalizations.flipHorizontally,
-                          disabled: !enableOperations,
+                          disabled: !useImageMode,
                           onTap: () {
                             _flipX = !_flipX;
                             setState(() {});
@@ -164,7 +135,7 @@ class _UserProfileImageEditorDialogState
                           containerSize: const Size.square(32),
                           iconRotate: 90.degreesToRadians(),
                           tooltip: appLocalizations.flipVertically,
-                          disabled: !enableOperations,
+                          disabled: !useImageMode,
                           onTap: () {
                             _flipY = !_flipY;
                             setState(() {});
@@ -199,17 +170,18 @@ class _UserProfileImageEditorDialogState
                 final result = await FileUtils.pickFile(
                     allowedExtensions: _allowedExtensions,
                     withReadStream: true);
-                if (result?.isSinglePick ?? false) {
+                if (!mounted) {
+                  return;
+                }
+                if (result?.isSinglePick == true) {
                   final file = result!.files[0];
                   final bytes = await file.readStream?.toFuture();
-                  if ((bytes?.length ?? 0) > 0 &&
+                  if (mounted &&
+                      (bytes?.length ?? 0) > 0 &&
                       _allowedExtensions.contains(file.extension)) {
-                    unawaited(_selectedImage?.evict(
+                    unawaited(_profileImageProvider?.evict(
                         cache: PaintingBinding.instance.imageCache));
-                    _selectedImage = ResizeImage(MemoryImage(bytes!),
-                        width: _imageSize.toInt(),
-                        height: _imageSize.toInt(),
-                        policy: ResizeImagePolicy.fit);
+                    _profileImageProvider = MemoryImage(bytes!);
                     setState(() {});
                   }
                 }
@@ -223,13 +195,9 @@ class _UserProfileImageEditorDialogState
                 containerPadding: Sizes.paddingV4H8,
                 containerWidth: 72,
                 onTap: () => Navigator.of(context).pop(),
-                // onTap: createGroupPageController.close,
               ),
               Sizes.sizedBoxW16,
               TTextButton(
-                // isLoading: createGroupPageController.isCreating,
-                // disabled:
-                //     createGroupPageController.selectedUserContactIds.length <= 1,
                 text: appLocalizations.confirm,
                 containerPadding: Sizes.paddingV4H8,
                 containerWidth: 72,
