@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +21,6 @@ import '../../../../../../../infra/random/random_utils.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../../l10n/view_models/app_localizations_view_model.dart';
 import '../../../../../../themes/app_theme_extension.dart';
-import '../../../../../../themes/sizes.dart';
 import '../../../../../components/giphy/client/models/gif.dart';
 import '../../../../../components/index.dart';
 import '../../view_models/selected_conversation_view_model.dart';
@@ -42,7 +40,6 @@ class ChatSessionPaneFooter extends ConsumerStatefulWidget {
 
 class _ChatSessionPaneFooterState extends ConsumerState<ChatSessionPaneFooter> {
   final List<DataReaderFile> _localFiles = [];
-  bool _dragging = false;
 
   late EmojiTextEditingController _editorController;
   late FocusNode _editorFocusNode;
@@ -118,10 +115,6 @@ class _ChatSessionPaneFooterState extends ConsumerState<ChatSessionPaneFooter> {
   bool _tryAddNewFile(List<DataReaderFile> newFiles) {
     var hasNewFile = false;
     for (final newFile in newFiles) {
-      // Exclude directory (The size of directory is null).
-      if (newFile.fileSize == null) {
-        continue;
-      }
       if (!_localFiles.any((existingFile) =>
           existingFile.fileName == newFile.fileName &&
           existingFile.fileSize == newFile.fileSize)) {
@@ -132,32 +125,8 @@ class _ChatSessionPaneFooterState extends ConsumerState<ChatSessionPaneFooter> {
     return hasNewFile;
   }
 
-  void _onDropEnter() {
-    _dragging = true;
-    setState(() {});
-  }
-
-  void _onDropLeave() {
-    _dragging = false;
-    setState(() {});
-  }
-
-  DropOperation _onDropOver(DropOverEvent event) {
-    if (event.session.allowedOperations.contains(DropOperation.copy)) {
-      return DropOperation.copy;
-    } else {
-      return DropOperation.none;
-    }
-  }
-
   Future<void> _onPerformDrop(PerformDropEvent event) async {
-    final futures = event.session.items.map((item) {
-      final completer = Completer<DataReaderFile>();
-      item.dataReader!
-          .getFile(null, completer.complete, onError: completer.completeError);
-      return completer.future;
-    });
-    final newFiles = await Future.wait(futures);
+    final newFiles = await event.session.readFiles();
     if (_tryAddNewFile(newFiles)) {
       setState(() {});
     }
@@ -295,24 +264,10 @@ class _ChatSessionPaneFooterState extends ConsumerState<ChatSessionPaneFooter> {
 extension _ChatSessionPaneFooterView on _ChatSessionPaneFooterState {
   Widget _buildView(ThemeData theme, AppThemeExtension appThemeExtension,
           AppLocalizations appLocalizations) =>
-      Stack(
-        children: [
-          DropRegion(
-              formats: Formats.standardFormats,
-              onDropOver: _onDropOver,
-              onDropEnter: (event) {
-                _onDropEnter();
-              },
-              onDropLeave: (event) {
-                _onDropLeave();
-              },
-              onPerformDrop: _onPerformDrop,
-              child: Padding(
-                padding: Sizes.paddingV8H16,
-                child: _buildEditor(theme, appThemeExtension, appLocalizations),
-              )),
-          _buildDropZoneMask(theme, appLocalizations)
-        ],
+      TDropZone(
+        formats: Formats.standardFormats,
+        onPerformDrop: _onPerformDrop,
+        child: _buildEditor(theme, appThemeExtension, appLocalizations),
       );
 
   Widget _buildEditor(ThemeData theme, AppThemeExtension appThemeExtension,
@@ -424,33 +379,4 @@ extension _ChatSessionPaneFooterView on _ChatSessionPaneFooterState {
           ),
         ],
       );
-
-  IgnorePointer _buildDropZoneMask(
-          ThemeData theme, AppLocalizations localizations) =>
-      // Ignore pointer to not obstruct "DropRegion"
-      IgnorePointer(
-          child: AnimatedOpacity(
-              opacity: _dragging ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 100),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 4, bottom: 4),
-                child: DottedBorder(
-                  borderType: BorderType.RRect,
-                  dashPattern: [12, 10],
-                  color: theme.primaryColor,
-                  strokeWidth: 2,
-                  radius: const Radius.circular(8),
-                  child: ClipRRect(
-                    child: ColoredBox(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      child: Center(
-                        child: Text(
-                          localizations.dropFilesHere,
-                          style: TextStyle(color: theme.primaryColor),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )));
 }

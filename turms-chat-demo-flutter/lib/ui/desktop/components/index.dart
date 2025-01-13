@@ -16,6 +16,7 @@ export 't_dialog/t_dialog.dart';
 export 't_divider/t_horizontal_divider.dart';
 export 't_divider/t_vertical_divider.dart';
 export 't_drawer/t_drawer.dart';
+export 't_drop_zone/t_drop_zone.dart';
 export 't_empty/t_empty.dart';
 export 't_empty/t_empty_result.dart';
 export 't_floating/t_floating.dart';

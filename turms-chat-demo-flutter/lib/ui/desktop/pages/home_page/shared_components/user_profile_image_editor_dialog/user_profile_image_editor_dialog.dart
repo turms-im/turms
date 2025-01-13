@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import '../../../../../../domain/user/models/index.dart';
 import '../../../../../../infra/io/file_utils.dart';
@@ -14,6 +16,7 @@ import '../../../../../themes/index.dart';
 import '../../../../components/index.dart';
 
 const _allowedExtensions = ['png', 'jpg', 'jpeg'];
+final _allowedFormats = [Formats.png, Formats.jpeg];
 const _imageSize = 300.0;
 
 class UserProfileImageEditorDialog extends ConsumerStatefulWidget {
@@ -51,109 +54,112 @@ class _UserProfileImageEditorDialogState
     final appLocalizations = ref.watch(appLocalizationsViewModel);
     final user = widget.user;
     final useImageMode = _profileImageProvider != null;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, top: 8, bottom: 16),
-      child: Column(
-        children: [
-          Text(appLocalizations.editProfileImage),
-          Sizes.sizedBoxH8,
-          Row(
-            spacing: 16,
-            children: [
-              ClipRRect(
-                borderRadius: Sizes.borderRadiusCircular4,
-                child: SizedBox(
-                    width: _imageSize,
-                    height: _imageSize,
-                    child: useImageMode
-                        ? DecoratedBox(
-                            decoration: const BoxDecoration(
-                              color: Colors.black26,
-                            ),
-                            child: Transform.flip(
-                              flipX: _flipX,
-                              flipY: _flipY,
-                              child: Transform.rotate(
-                                angle: _angle,
-                                child: TImageCropper(
-                                  image: _profileImageProvider!,
-                                  aspectRatio: 1,
+    return TDropZone(
+      formats: _allowedFormats,
+      onPerformDrop: _onPerformDrop,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 16),
+        child: Column(
+          children: [
+            Text(appLocalizations.editProfileImage),
+            Sizes.sizedBoxH8,
+            Row(
+              spacing: 16,
+              children: [
+                ClipRRect(
+                  borderRadius: Sizes.borderRadiusCircular4,
+                  child: SizedBox(
+                      width: _imageSize,
+                      height: _imageSize,
+                      child: useImageMode
+                          ? DecoratedBox(
+                              decoration: const BoxDecoration(
+                                color: Colors.black26,
+                              ),
+                              child: Transform.flip(
+                                flipX: _flipX,
+                                flipY: _flipY,
+                                child: Transform.rotate(
+                                  angle: _angle,
+                                  child: TImageCropper(
+                                    image: _profileImageProvider!,
+                                    aspectRatio: 1,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        : TAvatar(
-                            id: user.userId,
-                            name: user.name,
-                            textSize: 125,
-                          )),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(appLocalizations.rotateAndFlip),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TIconButton.outlined(
-                          theme: theme,
-                          iconData: Symbols.rotate_left_rounded,
-                          containerSize: const Size.square(32),
-                          tooltip: appLocalizations.rotateLeft,
-                          disabled: !useImageMode,
-                          onTap: () {
-                            _angle -= 90.degreesToRadians();
-                            setState(() {});
-                          },
-                        ),
-                        TIconButton.outlined(
-                          theme: theme,
-                          iconData: Symbols.rotate_right_rounded,
-                          containerSize: const Size.square(32),
-                          tooltip: appLocalizations.rotateRight,
-                          disabled: !useImageMode,
-                          onTap: () {
-                            _angle += 90.degreesToRadians();
-                            setState(() {});
-                          },
-                        ),
-                        TIconButton.outlined(
-                          theme: theme,
-                          iconData: Symbols.flip_rounded,
-                          containerSize: const Size.square(32),
-                          tooltip: appLocalizations.flipHorizontally,
-                          disabled: !useImageMode,
-                          onTap: () {
-                            _flipX = !_flipX;
-                            setState(() {});
-                          },
-                        ),
-                        TIconButton.outlined(
-                          theme: theme,
-                          iconData: Symbols.flip_rounded,
-                          containerSize: const Size.square(32),
-                          iconRotate: 90.degreesToRadians(),
-                          tooltip: appLocalizations.flipVertically,
-                          disabled: !useImageMode,
-                          onTap: () {
-                            _flipY = !_flipY;
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                            )
+                          : TAvatar(
+                              id: user.userId,
+                              name: user.name,
+                              textSize: 125,
+                            )),
                 ),
-              )
-            ],
-          ),
-          Expanded(
-            child: Align(
-                alignment: Alignment.bottomRight,
-                child: _buildActions(context, theme, appLocalizations)),
-          ),
-        ],
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(appLocalizations.rotateAndFlip),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TIconButton.outlined(
+                            theme: theme,
+                            iconData: Symbols.rotate_left_rounded,
+                            containerSize: const Size.square(32),
+                            tooltip: appLocalizations.rotateLeft,
+                            disabled: !useImageMode,
+                            onTap: () {
+                              _angle -= 90.degreesToRadians();
+                              setState(() {});
+                            },
+                          ),
+                          TIconButton.outlined(
+                            theme: theme,
+                            iconData: Symbols.rotate_right_rounded,
+                            containerSize: const Size.square(32),
+                            tooltip: appLocalizations.rotateRight,
+                            disabled: !useImageMode,
+                            onTap: () {
+                              _angle += 90.degreesToRadians();
+                              setState(() {});
+                            },
+                          ),
+                          TIconButton.outlined(
+                            theme: theme,
+                            iconData: Symbols.flip_rounded,
+                            containerSize: const Size.square(32),
+                            tooltip: appLocalizations.flipHorizontally,
+                            disabled: !useImageMode,
+                            onTap: () {
+                              _flipX = !_flipX;
+                              setState(() {});
+                            },
+                          ),
+                          TIconButton.outlined(
+                            theme: theme,
+                            iconData: Symbols.flip_rounded,
+                            containerSize: const Size.square(32),
+                            iconRotate: 90.degreesToRadians(),
+                            tooltip: appLocalizations.flipVertically,
+                            disabled: !useImageMode,
+                            onTap: () {
+                              _flipY = !_flipY;
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: _buildActions(context, theme, appLocalizations)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -173,16 +179,16 @@ class _UserProfileImageEditorDialogState
                 if (!mounted) {
                   return;
                 }
+                assert(result!.isSinglePick);
+                assert(result!.files.length == 1);
                 if (result?.isSinglePick == true) {
                   final file = result!.files[0];
+                  if (!_allowedExtensions.contains(file.extension)) {
+                    return;
+                  }
                   final bytes = await file.readStream?.toFuture();
-                  if (mounted &&
-                      (bytes?.length ?? 0) > 0 &&
-                      _allowedExtensions.contains(file.extension)) {
-                    unawaited(_profileImageProvider?.evict(
-                        cache: PaintingBinding.instance.imageCache));
-                    _profileImageProvider = MemoryImage(bytes!);
-                    setState(() {});
+                  if (mounted && bytes != null) {
+                    _loadImage(bytes);
                   }
                 }
               }),
@@ -210,6 +216,24 @@ class _UserProfileImageEditorDialogState
           ),
         ],
       );
+
+  Future<void> _onPerformDrop(PerformDropEvent event) async {
+    final newFiles = await event.session.readFiles();
+    if (mounted && newFiles.isNotEmpty) {
+      final bytes = await newFiles.first.readAll();
+      _loadImage(bytes);
+    }
+  }
+
+  void _loadImage(Uint8List bytes) {
+    if (bytes.isEmpty) {
+      return;
+    }
+    unawaited(_profileImageProvider?.evict(
+        cache: PaintingBinding.instance.imageCache));
+    _profileImageProvider = MemoryImage(bytes);
+    setState(() {});
+  }
 }
 
 Future<void> showUserProfileImageEditorDialog(
