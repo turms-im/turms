@@ -5,42 +5,8 @@ import 'package:flutter/widgets.dart';
 import '../../../../../infra/media/image_shape.dart';
 import 'rect_calculator.dart';
 
-sealed class ImageCropperStateData {
-  ImageCropperStateData({
-    required this.ready,
-    required this.containerSize,
-    this.minCropAreaDimension = 100,
-    required this.imageShape,
-    required this.aspectRatio,
-  });
-
-  final bool ready;
-  final Size containerSize;
-  final double minCropAreaDimension;
-  final ImageShape imageShape;
-  final double? aspectRatio;
-}
-
-class PreparingImageCropperStateData extends ImageCropperStateData {
-  PreparingImageCropperStateData({
-    super.ready = false,
-    required super.containerSize,
-    required super.imageShape,
-    required super.aspectRatio,
-  });
-
-  ReadyImageCropperStateData prepared(Size imageSize) =>
-      ReadyImageCropperStateData.prepared(
-        imageSize,
-        containerSize: containerSize,
-        imageShape: imageShape,
-        aspectRatio: aspectRatio,
-        scale: 1.0,
-      );
-}
-
-class ReadyImageCropperStateData extends ImageCropperStateData {
-  factory ReadyImageCropperStateData.prepared(
+class ImageCropperStateData {
+  factory ImageCropperStateData.create(
     Size imageSize, {
     required Size containerSize,
     required ImageShape imageShape,
@@ -51,36 +17,42 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
     final calculator = isFitVertically
         ? const VerticalCalculator()
         : const HorizontalCalculator();
-
-    return ReadyImageCropperStateData(
+    final imageRect = calculator.calcImageRectToFitContainer(
+        containerSize, imageSize.aspectRatio);
+    return ImageCropperStateData._(
       containerSize: containerSize,
       imageSize: imageSize,
-      imageRect: calculator.calcImageRectToFitContainer(
-          containerSize, imageSize.aspectRatio),
+      imageRect: imageRect,
       imageShape: imageShape,
-      cropRect: Rect.zero,
+      cropRect: calculator.calcInitialCropAreaRect(containerSize, imageRect,
+          imageShape == ImageShape.circle ? 1.0 : aspectRatio ?? 1.0, 1),
+      minCropAreaDimension: 100,
       scale: scale,
       aspectRatio: aspectRatio,
     );
   }
 
-  ReadyImageCropperStateData({
-    super.ready = true,
-    required super.containerSize,
+  ImageCropperStateData._({
+    required this.containerSize,
     required this.imageSize,
     required this.imageRect,
-    required super.imageShape,
+    required this.imageShape,
     required this.cropRect,
+    required this.minCropAreaDimension,
     required this.scale,
     this.offset = Offset.zero,
-    required super.aspectRatio,
+    this.aspectRatio,
   });
 
+  final Size containerSize;
   final Size imageSize;
-  final Rect cropRect;
   final Rect imageRect;
+  final ImageShape imageShape;
+  final Rect cropRect;
+  final double minCropAreaDimension;
   final double scale;
   final Offset offset;
+  final double? aspectRatio;
 
   late final isFitVertically =
       imageSize.aspectRatio < containerSize.aspectRatio;
@@ -104,20 +76,12 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
   late final imageScaleToCoverContainer =
       calculator.calcImageScaleToCoverContainer(containerSize, imageRect);
 
-  ReadyImageCropperStateData resetCropRect() => copyWith(
+  ImageCropperStateData resetCropRect() => copyWith(
         imageRect: calculator.calcImageRectToFitContainer(
             containerSize, imageSize.aspectRatio),
       );
 
-  ReadyImageCropperStateData updateCropAreaRect({
-    double? aspectRatio,
-  }) =>
-      copyWith(
-        cropRect: calculator.calcInitialCropAreaRect(containerSize, imageRect,
-            imageShape == ImageShape.circle ? 1.0 : aspectRatio ?? 1.0, 1),
-      );
-
-  ReadyImageCropperStateData moveRect(Offset delta) => copyWith(
+  ImageCropperStateData moveRect(Offset delta) => copyWith(
           cropRect: calculator.moveRect(
         cropRect,
         delta.dx,
@@ -125,7 +89,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
         imageRect,
       ));
 
-  ReadyImageCropperStateData moveTopLeft(Offset delta) => copyWith(
+  ImageCropperStateData moveTopLeft(Offset delta) => copyWith(
           cropRect: calculator.moveTopLeft(
         cropRect,
         minCropAreaDimension,
@@ -135,7 +99,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
         aspectRatio,
       ));
 
-  ReadyImageCropperStateData moveTopRight(Offset delta) => copyWith(
+  ImageCropperStateData moveTopRight(Offset delta) => copyWith(
           cropRect: calculator.moveTopRight(
         cropRect,
         minCropAreaDimension,
@@ -145,7 +109,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
         aspectRatio,
       ));
 
-  ReadyImageCropperStateData moveBottomLeft(Offset delta) => copyWith(
+  ImageCropperStateData moveBottomLeft(Offset delta) => copyWith(
           cropRect: calculator.moveBottomLeft(
         cropRect,
         minCropAreaDimension,
@@ -155,7 +119,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
         aspectRatio,
       ));
 
-  ReadyImageCropperStateData moveBottomRight(Offset delta) => copyWith(
+  ImageCropperStateData moveBottomRight(Offset delta) => copyWith(
           cropRect: calculator.moveBottomRight(
         cropRect,
         minCropAreaDimension,
@@ -165,7 +129,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
         aspectRatio,
       ));
 
-  ReadyImageCropperStateData updateImageRect(Offset offset) {
+  ImageCropperStateData updateImageRect(Offset offset) {
     var newLeft = imageRect.left + offset.dx;
     if (newLeft + imageRect.width < cropRect.right) {
       newLeft = cropRect.right - imageRect.width;
@@ -186,7 +150,7 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
     );
   }
 
-  ReadyImageCropperStateData updateImageRectAndScale(
+  ImageCropperStateData updateImageRectAndScale(
     double newScale, {
     Offset? focalPoint,
   }) {
@@ -243,22 +207,24 @@ class ReadyImageCropperStateData extends ImageCropperStateData {
     );
   }
 
-  ReadyImageCropperStateData copyWith({
+  ImageCropperStateData copyWith({
     Size? containerSize,
     Size? imageSize,
     Rect? imageRect,
     ImageShape? imageShape,
     Rect? cropRect,
+    double? minCropAreaDimension,
     double? scale,
     Offset? offset,
     double? aspectRatio,
   }) =>
-      ReadyImageCropperStateData(
+      ImageCropperStateData._(
         containerSize: containerSize ?? this.containerSize,
         imageSize: imageSize ?? this.imageSize,
         imageRect: imageRect ?? this.imageRect,
         imageShape: imageShape ?? this.imageShape,
         cropRect: cropRect ?? this.cropRect,
+        minCropAreaDimension: minCropAreaDimension ?? this.minCropAreaDimension,
         scale: scale ?? this.scale,
         offset: offset ?? this.offset,
         aspectRatio: aspectRatio ?? this.aspectRatio,

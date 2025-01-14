@@ -21,15 +21,13 @@ sealed class RectCalculator {
     Rect imageRect,
   ) {
     if (cropRect.left + deltaX < imageRect.left) {
-      deltaX = (cropRect.left - imageRect.left) * -1;
-    }
-    if (cropRect.right + deltaX > imageRect.right) {
+      deltaX = imageRect.left - cropRect.left;
+    } else if (cropRect.right + deltaX > imageRect.right) {
       deltaX = imageRect.right - cropRect.right;
     }
     if (cropRect.top + deltaY < imageRect.top) {
-      deltaY = (cropRect.top - imageRect.top) * -1;
-    }
-    if (cropRect.bottom + deltaY > imageRect.bottom) {
+      deltaY = imageRect.top - cropRect.top;
+    } else if (cropRect.bottom + deltaY > imageRect.bottom) {
       deltaY = imageRect.bottom - cropRect.bottom;
     }
     return Rect.fromLTWH(
@@ -67,7 +65,6 @@ sealed class RectCalculator {
           newHeight = cropRect.bottom - imageRect.top;
           newWidth = newHeight * aspectRatio;
         }
-
         return Rect.fromLTRB(
           cropRect.right - newWidth,
           cropRect.bottom - newHeight,
@@ -118,7 +115,6 @@ sealed class RectCalculator {
           newHeight = cropRect.bottom - imageRect.top;
           newWidth = newHeight * aspectRatio;
         }
-
         return Rect.fromLTWH(
           cropRect.left,
           cropRect.bottom - newHeight,
@@ -154,7 +150,6 @@ sealed class RectCalculator {
         min(cropRect.left + deltaX, cropRect.right - minCropAreaDimension));
     final newBottom = max(min(cropRect.bottom + deltaY, imageRect.bottom),
         cropRect.top + minCropAreaDimension);
-
     if (aspectRatio == null) {
       return Rect.fromLTRB(
         newLeft,
@@ -170,7 +165,6 @@ sealed class RectCalculator {
           newHeight = imageRect.bottom - cropRect.top;
           newWidth = newHeight * aspectRatio;
         }
-
         return Rect.fromLTRB(
           cropRect.right - newWidth,
           cropRect.top,
@@ -221,7 +215,6 @@ sealed class RectCalculator {
           newHeight = imageRect.bottom - cropRect.top;
           newWidth = newHeight * aspectRatio;
         }
-
         return Rect.fromLTWH(
           cropRect.left,
           cropRect.top,
@@ -266,14 +259,11 @@ class HorizontalCalculator extends RectCalculator {
     double sizeRatio,
   ) {
     final imageRatio = imageRect.width / imageRect.height;
-
-    // consider crop area will fit vertically or horizontally to image
     final initialSize = imageRatio > aspectRatio
-        ? Size((imageRect.height * aspectRatio) * sizeRatio,
+        ? Size(imageRect.height * aspectRatio * sizeRatio,
             imageRect.height * sizeRatio)
         : Size(containerSize.width * sizeRatio,
-            (containerSize.width / aspectRatio) * sizeRatio);
-
+            containerSize.width / aspectRatio * sizeRatio);
     return Rect.fromLTWH(
       (containerSize.width - initialSize.width) / 2,
       (containerSize.height - initialSize.height) / 2,
@@ -311,13 +301,11 @@ class VerticalCalculator extends RectCalculator {
     double sizeRatio,
   ) {
     final imageRatio = imageRect.width / imageRect.height;
-
     final initialSize = imageRatio < aspectRatio
         ? Size(imageRect.width * sizeRatio,
             imageRect.width / aspectRatio * sizeRatio)
         : Size((containerSize.height * aspectRatio) * sizeRatio,
             containerSize.height * sizeRatio);
-
     return Rect.fromLTWH(
       (containerSize.width - initialSize.width) / 2,
       (containerSize.height - initialSize.height) / 2,

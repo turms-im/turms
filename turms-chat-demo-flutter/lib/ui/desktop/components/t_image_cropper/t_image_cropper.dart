@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 
+import '../../../../infra/media/image_extensions.dart';
 import '../../../../infra/media/image_shape.dart';
 import '../../../../infra/media/image_utils.dart';
 import 'core/circle_crop_area_clipper.dart';
@@ -62,32 +63,25 @@ class TImageCropper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (c, constraints) {
-          final newData = MediaQuery.of(c).copyWith(
-            size: constraints.biggest,
-          );
-          return MediaQuery(
-            data: newData,
-            child: _ImageCropper(
-              key: key,
-              image: image,
-              imageShape: imageShape,
-              controller: controller,
-              aspectRatio: aspectRatio,
-              fixCropRect: fixCropRect,
-              containerBackgroundColor: containerBackgroundColor,
-              maskColor: maskColor,
-              radius: radius,
-              clipBehavior: clipBehavior,
-              dotHandleDimension: dotHandleDimension,
-              isImageInteractive: isImageInteractive,
-              filterQuality: filterQuality,
-              willUpdateScale: willUpdateScale,
-              onCropAreaMoved: onCropAreaMoved,
-              onImageMoved: onImageMoved,
-            ),
-          );
-        },
+        builder: (c, constraints) => _ImageCropper(
+          key: key,
+          image: image,
+          imageShape: imageShape,
+          controller: controller,
+          aspectRatio: aspectRatio,
+          fixCropRect: fixCropRect,
+          containerSize: constraints.biggest,
+          containerBackgroundColor: containerBackgroundColor,
+          maskColor: maskColor,
+          radius: radius,
+          clipBehavior: clipBehavior,
+          dotHandleDimension: dotHandleDimension,
+          isImageInteractive: isImageInteractive,
+          filterQuality: filterQuality,
+          willUpdateScale: willUpdateScale,
+          onCropAreaMoved: onCropAreaMoved,
+          onImageMoved: onImageMoved,
+        ),
       );
 }
 
@@ -99,6 +93,7 @@ class _ImageCropper extends StatefulWidget {
     required this.controller,
     required this.aspectRatio,
     required this.fixCropRect,
+    required this.containerSize,
     required this.containerBackgroundColor,
     required this.maskColor,
     required this.radius,
@@ -119,6 +114,7 @@ class _ImageCropper extends StatefulWidget {
   final double? aspectRatio;
   final bool fixCropRect;
 
+  final Size containerSize;
   final Color containerBackgroundColor;
   final Color maskColor;
 
@@ -141,6 +137,7 @@ class _ImageCropper extends StatefulWidget {
 class _ImageCropperState extends State<_ImageCropper> {
   TImageCropperController? _cropController;
 
+  var _loading = true;
   late ImageCropperStateData _data;
 
   ImageInfo? _imageInfo;
@@ -148,41 +145,50 @@ class _ImageCropperState extends State<_ImageCropper> {
   double _scaleOnStart = 1.0;
   DateTime? _pointerSignalLastUpdated;
 
-  ReadyImageCropperStateData get _readyData =>
-      _data as ReadyImageCropperStateData;
-
   @override
   void initState() {
     super.initState();
-    _cropController?.crop = _crop;
+    _init();
   }
 
   @override
-  void didChangeDependencies() {
-    _data = PreparingImageCropperStateData(
-      containerSize: MediaQuery.of(context).size,
-      imageShape: widget.imageShape,
-      aspectRatio: widget.aspectRatio,
-    );
-    widget.image
-        .resolve(ImageConfiguration.empty)
-        .addListener(ImageStreamListener(
-      (imageInfo, _) async {
-        if (!mounted) {
-          return;
-        }
-        _imageInfo = imageInfo;
-        final parsedImage = imageInfo.image;
-        if (_data case final PreparingImageCropperStateData data) {
-          _data = data.prepared(
-            Size(parsedImage.width.toDouble(), parsedImage.height.toDouble()),
-          );
-          setState(() {});
-        }
-        _resetCropRect();
-      },
-    ));
-    super.didChangeDependencies();
+  void didUpdateWidget(covariant _ImageCropper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _init(oldWidget);
+  }
+
+  Future<void> _init([_ImageCropper? oldWidget]) async {
+    if (widget.controller != oldWidget?.controller) {
+      _cropController?.crop = _crop;
+    }
+    final image = widget.image;
+    if (image != oldWidget?.image) {
+      _loading = true;
+      setState(() {});
+      final imageInfo = await image.resolveImageInfo();
+      if (!mounted) {
+        return;
+      }
+      _imageInfo = imageInfo;
+      final parsedImage = imageInfo.image;
+      _data = ImageCropperStateData.create(
+        Size(parsedImage.width.toDouble(), parsedImage.height.toDouble()),
+        containerSize: widget.containerSize,
+        imageShape: widget.imageShape,
+        aspectRatio: widget.aspectRatio,
+        scale: 1.0,
+      );
+      var appliedScale = false;
+      if (widget.isImageInteractive) {
+        appliedScale = _applyScale(_data.imageScaleToCoverContainer);
+      }
+      if (!appliedScale) {
+        widget.onImageMoved?.call(_data.imageRect);
+      }
+      widget.onCropAreaMoved?.call(_data.cropRect, _data.imageRectToCrop);
+      _loading = false;
+      setState(() {});
+    }
   }
 
   @override
@@ -190,24 +196,7 @@ class _ImageCropperState extends State<_ImageCropper> {
 
   void _updateCropRect(ImageCropperStateData data) {
     _data = data;
-    widget.onCropAreaMoved
-        ?.call(_readyData.cropRect, _readyData.imageRectToCrop);
-    setState(() {});
-  }
-
-  void _resetCropRect() {
-    _data = _readyData.resetCropRect();
-    widget.onImageMoved?.call(_readyData.imageRect);
-
-    _updateCropRect(
-      _readyData.updateCropAreaRect(
-        aspectRatio: widget.aspectRatio,
-      ),
-    );
-
-    if (widget.isImageInteractive) {
-      _applyScale(_readyData.imageScaleToCoverContainer);
-    }
+    widget.onCropAreaMoved?.call(_data.cropRect, _data.imageRectToCrop);
     setState(() {});
   }
 
@@ -215,18 +204,18 @@ class _ImageCropperState extends State<_ImageCropper> {
         _cropImage,
         [
           _imageInfo!.image,
-          _readyData.imageRectToCrop,
+          _data.imageRectToCrop,
           widget.imageShape,
         ],
       );
 
   void _onScaleStart(ScaleStartDetails detail) {
-    _scaleOnStart = _readyData.scale;
+    _scaleOnStart = _data.scale;
   }
 
   void _onScaleUpdate(ScaleUpdateDetails detail) {
-    _data = _readyData.updateImageRect(detail.focalPointDelta);
-    widget.onImageMoved?.call(_readyData.imageRect);
+    _data = _data.updateImageRect(detail.focalPointDelta);
+    widget.onImageMoved?.call(_data.imageRect);
 
     _applyScale(
       _scaleOnStart * detail.scale,
@@ -248,42 +237,43 @@ class _ImageCropperState extends State<_ImageCropper> {
     final dy = signal.scrollDelta.dy;
     if (dy > 0) {
       _applyScale(
-        _readyData.scale,
+        _data.scale,
         focalPoint: signal.localPosition,
       );
     } else if (dy < 0) {
       _applyScale(
-        _readyData.scale,
+        _data.scale,
         focalPoint: signal.localPosition,
       );
     }
   }
 
-  void _applyScale(
+  bool _applyScale(
     double nextScale, {
     Offset? focalPoint,
   }) {
     final allowScale = widget.willUpdateScale?.call(nextScale) ?? true;
     if (!allowScale) {
-      return;
+      return false;
     }
-    _data = _readyData.updateImageRectAndScale(
+    _data = _data.updateImageRectAndScale(
       nextScale,
       focalPoint: focalPoint,
     );
-    widget.onImageMoved?.call(_readyData.imageRect);
+    widget.onImageMoved?.call(_data.imageRect);
     setState(() {});
+    return true;
   }
 }
 
 extension _ImageCropperStateView on _ImageCropperState {
   Widget _buildView(BuildContext context) {
-    if (!_data.ready) {
+    if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
     final dotHandleDimension = widget.dotHandleDimension;
-    final cropRect = _readyData.cropRect;
-    final imageRect = _readyData.imageRect;
+    final cropRect = _data.cropRect;
+    final imageRect = _data.imageRect;
     return Stack(
       clipBehavior: widget.clipBehavior,
       children: [
@@ -310,7 +300,7 @@ extension _ImageCropperStateView on _ImageCropperState {
               cursor: SystemMouseCursors.move,
               child: GestureDetector(
                 onPanUpdate: (details) => _updateCropRect(
-                  _readyData.moveRect(details.delta),
+                  _data.moveRect(details.delta),
                 ),
                 child: Container(
                   width: cropRect.width,
@@ -327,7 +317,7 @@ extension _ImageCropperStateView on _ImageCropperState {
             onPanUpdate: widget.fixCropRect
                 ? null
                 : (details) => _updateCropRect(
-                      _readyData.moveTopLeft(details.delta),
+                      _data.moveTopLeft(details.delta),
                     ),
             child: DotHandle(
               position: DotHandlePosition.topLeft,
@@ -342,9 +332,10 @@ extension _ImageCropperStateView on _ImageCropperState {
             onPanUpdate: widget.fixCropRect
                 ? null
                 : (details) => _updateCropRect(
-                      _readyData.moveTopRight(details.delta),
+                      _data.moveTopRight(details.delta),
                     ),
             child: DotHandle(
+              // todo: RESpect transform (rotate, flip)
               position: DotHandlePosition.topRight,
               dimension: dotHandleDimension,
             ),
@@ -357,7 +348,7 @@ extension _ImageCropperStateView on _ImageCropperState {
             onPanUpdate: widget.fixCropRect
                 ? null
                 : (details) => _updateCropRect(
-                      _readyData.moveBottomLeft(details.delta),
+                      _data.moveBottomLeft(details.delta),
                     ),
             child: DotHandle(
               position: DotHandlePosition.bottomLeft,
@@ -372,7 +363,7 @@ extension _ImageCropperStateView on _ImageCropperState {
             onPanUpdate: widget.fixCropRect
                 ? null
                 : (details) => _updateCropRect(
-                      _readyData.moveBottomRight(details.delta),
+                      _data.moveBottomRight(details.delta),
                     ),
             child: DotHandle(
               position: DotHandlePosition.bottomRight,
@@ -385,7 +376,7 @@ extension _ImageCropperStateView on _ImageCropperState {
   }
 
   Listener _buildImage(BuildContext context, Rect imageRect) {
-    final size = MediaQuery.of(context).size;
+    final containerSize = widget.containerSize;
     return Listener(
       onPointerSignal: _onPointerSignal,
       child: GestureDetector(
@@ -393,8 +384,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         onScaleUpdate: widget.isImageInteractive ? _onScaleUpdate : null,
         child: Container(
           color: widget.containerBackgroundColor,
-          width: size.width,
-          height: size.height,
+          width: containerSize.width,
+          height: containerSize.height,
           child: Stack(
             children: [
               const SizedBox.expand(),
