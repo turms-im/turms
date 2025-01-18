@@ -49,6 +49,8 @@ class TAvatar extends ConsumerWidget {
     this.presencePopupOffset,
   }) : firstChar = name.isEmpty ? '' : name.substring(0, 1);
 
+  static const borderRadius = Sizes.borderRadiusCircular4;
+
   /// This can be any ID (e.g. user ID, group ID).
   final Int64 id;
   final String name;
@@ -67,7 +69,7 @@ class TAvatar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsViewModel);
     final avatar = ClipRRect(
-      borderRadius: Sizes.borderRadiusCircular4,
+      borderRadius: borderRadius,
       child: _buildAvatar(context.theme),
     );
     if (presence == UserPresence.none) {

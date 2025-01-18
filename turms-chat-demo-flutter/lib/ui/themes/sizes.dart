@@ -60,6 +60,7 @@ class Sizes {
   static const dateRangePickerHeight = 312.0;
 
   // Application
+
   static const mainNavigationRailWidth = 56.0;
   static const subNavigationRailWidth = 248.0;
   static const subNavigationRailMinWidth = 240.0;
@@ -90,7 +91,7 @@ class Sizes {
   static const chatHistoryDialogHeight = 640.0;
 
   static const userProfileImageDialogWidth = 520.0;
-  static const userProfileImageDialogHeight = 440.0;
+  static const userProfileImageDialogHeight = 388.0;
 
   static const friendRequestDialogWidth = 400.0;
   static const friendRequestDialogHeight = 300.0;

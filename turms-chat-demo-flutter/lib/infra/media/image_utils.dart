@@ -12,12 +12,14 @@ final class ImageUtils {
 
   static ImageFormat findFormat(Uint8List data) => findFormatForData(data);
 
-  static Uint8List crop({
+  static Image crop({
     required Image image,
     required ImageShape shape,
     required Offset topLeft,
     required Offset bottomRight,
-    ImageFormat outputFormat = ImageFormat.jpg,
+    bool flipX = false,
+    bool flipY = false,
+    double rotationAngle = 0,
   }) {
     if (topLeft.dx.isNegative ||
         topLeft.dy.isNegative ||
@@ -38,16 +40,15 @@ final class ImageUtils {
       bottomRight.dx - topLeft.dx,
       bottomRight.dy - topLeft.dy,
     );
+    Image outputImage;
     switch (shape) {
       case ImageShape.rectangle:
-        return _findEncodeFuncForRect(outputFormat)(
-          copyCrop(
-            image,
-            x: topLeft.dx.toInt(),
-            y: topLeft.dy.toInt(),
-            width: size.width.toInt(),
-            height: size.height.toInt(),
-          ),
+        outputImage = copyCrop(
+          image,
+          x: topLeft.dx.toInt(),
+          y: topLeft.dy.toInt(),
+          width: size.width.toInt(),
+          height: size.height.toInt(),
         );
       case ImageShape.circle:
         final center = Offset(
@@ -55,13 +56,58 @@ final class ImageUtils {
           topLeft.dy + size.height / 2,
         );
         final radius = min(size.width, size.height) / 2;
+        outputImage = copyCropCircle(
+          image.numChannels == 4 ? image : image.convert(numChannels: 4),
+          centerX: center.dx.toInt(),
+          centerY: center.dy.toInt(),
+          radius: radius.toInt(),
+        );
+    }
+    if (rotationAngle != 0) {
+      outputImage = copyRotate(
+        outputImage,
+        angle: rotationAngle,
+      );
+    }
+    if (flipX) {
+      if (flipY) {
+        outputImage = copyFlip(outputImage, direction: FlipDirection.both);
+      } else {
+        outputImage =
+            copyFlip(outputImage, direction: FlipDirection.horizontal);
+      }
+    } else if (flipY) {
+      outputImage = copyFlip(outputImage, direction: FlipDirection.vertical);
+    }
+    return outputImage;
+  }
+
+  static Uint8List cropAsBytes({
+    required Image image,
+    required ImageShape shape,
+    required Offset topLeft,
+    required Offset bottomRight,
+    bool flipX = false,
+    bool flipY = false,
+    double rotationAngle = 0,
+    ImageFormat outputFormat = ImageFormat.jpg,
+  }) {
+    final outputImage = crop(
+        image: image,
+        shape: shape,
+        topLeft: topLeft,
+        bottomRight: bottomRight,
+        flipX: flipX,
+        flipY: flipY,
+        rotationAngle: rotationAngle);
+    switch (shape) {
+      case ImageShape.rectangle:
+        return _findEncodeFuncForRect(outputFormat)(
+          outputImage,
+        );
+      case ImageShape.circle:
         return _findEncodeFuncForCircle(outputFormat)(
-          copyCropCircle(
-            image.numChannels == 4 ? image : image.convert(numChannels: 4),
-            centerX: center.dx.toInt(),
-            centerY: center.dy.toInt(),
-            radius: radius.toInt(),
-          ),
+          outputImage,
         );
     }
   }

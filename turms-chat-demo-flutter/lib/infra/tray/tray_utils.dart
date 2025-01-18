@@ -24,10 +24,9 @@ final class TrayUtils {
                 ))
             .toList()));
     await trayManager.setToolTip(tooltip);
-    final keyToOnTap = <String, void Function()>{};
-    for (final item in menuItems) {
-      keyToOnTap[item.key] = item.onTap;
-    }
+    final keyToOnTap = <String, void Function()>{
+      for (final item in menuItems) item.key: item.onTap
+    };
     trayManager.addListener(_TrayListener(onTrayMenuItemTap: (item) {
       keyToOnTap[item.key]!.call();
     }));

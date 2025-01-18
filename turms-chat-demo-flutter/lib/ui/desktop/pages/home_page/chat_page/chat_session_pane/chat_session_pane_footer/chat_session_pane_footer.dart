@@ -21,6 +21,7 @@ import '../../../../../../../infra/random/random_utils.dart';
 import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../../l10n/view_models/app_localizations_view_model.dart';
 import '../../../../../../themes/app_theme_extension.dart';
+import '../../../../../../themes/sizes.dart';
 import '../../../../../components/giphy/client/models/gif.dart';
 import '../../../../../components/index.dart';
 import '../../view_models/selected_conversation_view_model.dart';
@@ -267,116 +268,121 @@ extension _ChatSessionPaneFooterView on _ChatSessionPaneFooterState {
       TDropZone(
         formats: Formats.standardFormats,
         onPerformDrop: _onPerformDrop,
-        child: _buildEditor(theme, appThemeExtension, appLocalizations),
+        child: Padding(
+          padding: Sizes.paddingV8H16,
+          child: Column(
+            children: [
+              Expanded(
+                child: _buildMessageEditor(appThemeExtension),
+              ),
+              if (_localFiles.isNotEmpty) _buildAttachments(),
+              const SizedBox(
+                height: 12,
+              ),
+              _buildActions(theme, appLocalizations),
+            ],
+          ),
+        ),
       );
 
-  Widget _buildEditor(ThemeData theme, AppThemeExtension appThemeExtension,
-          AppLocalizations appLocalizations) =>
-      Column(
+  Widget _buildMessageEditor(AppThemeExtension appThemeExtension) => ColoredBox(
+        color: appThemeExtension.homePageBackgroundColor,
+        child: CallbackShortcuts(
+          bindings: {
+            const SingleActivator(LogicalKeyboardKey.enter): _sendMessage
+          },
+          child: MessageEditor(
+            controller: _editorController,
+            conversation: _conversation!,
+            autofocus: true,
+            focusNode: _editorFocusNode,
+            contentPadding: const EdgeInsets.only(top: 8),
+          ),
+        ),
+      );
+
+  Widget _buildAttachments() => Align(
+        alignment: Alignment.topLeft,
+        child: Wrap(
+          runSpacing: 4,
+          spacing: 4,
+          children: _localFiles
+              .map((file) => Attachment(
+                    fileName: file.fileName ?? '',
+                    onRemoveAttachmentTapped: () {
+                      _removeFiles(file);
+                    },
+                  ))
+              .toList(growable: false),
+        ),
+      );
+
+  Widget _buildActions(ThemeData theme, AppLocalizations appLocalizations) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: ColoredBox(
-              color: appThemeExtension.homePageBackgroundColor,
-              child: CallbackShortcuts(
-                bindings: {
-                  const SingleActivator(LogicalKeyboardKey.enter): _sendMessage
-                },
-                child: MessageEditor(
-                  controller: _editorController,
-                  conversation: _conversation!,
-                  autofocus: true,
-                  focusNode: _editorFocusNode,
-                  contentPadding: const EdgeInsets.only(top: 8),
-                ),
-              ),
-            ),
-          ),
-          if (_localFiles.isNotEmpty)
-            Align(
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                runSpacing: 4,
-                spacing: 4,
-                children: _localFiles
-                    .map((file) => Attachment(
-                          fileName: file.fileName ?? '',
-                          onRemoveAttachmentTapped: () {
-                            _removeFiles(file);
-                          },
-                        ))
-                    .toList(growable: false),
-              ),
-            ),
-          const SizedBox(
-            height: 12,
-          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  TPopup(
-                      controller: _stickerPickerPopupController,
-                      targetAnchor: Alignment.topCenter,
-                      followerAnchor: Alignment.bottomCenter,
-                      offset: const Offset(-5, -5),
-                      target: TIconButton(
-                        iconData: Symbols.emoji_emotions_rounded,
-                        iconColor: Colors.black54,
-                        iconColorHovered: Colors.black87,
-                        iconColorPressed: theme.primaryColor,
-                        tooltip: appLocalizations.sticker,
-                      ),
-                      follower: StickerPicker(
-                        onGiphyGifSelected: (GiphyGif value) {
-                          final images = value.images;
-                          final original = images?.original;
-                          final previewWebp = images?.previewWebp;
-                          if (original == null || previewWebp == null) {
-                            return;
-                          }
-                          _sendImage(
-                              appLocalizations,
-                              original.webp ?? original.url,
-                              previewWebp.url,
-                              int.parse(original.width),
-                              int.parse(original.height));
-                        },
-                        onEmojiSelected: _insertEmoji,
-                      )),
-                  TIconButton(
-                    iconData: Symbols.folder_rounded,
+              TPopup(
+                  controller: _stickerPickerPopupController,
+                  targetAnchor: Alignment.topCenter,
+                  followerAnchor: Alignment.bottomCenter,
+                  offset: const Offset(-5, -5),
+                  target: TIconButton(
+                    iconData: Symbols.emoji_emotions_rounded,
                     iconColor: Colors.black54,
                     iconColorHovered: Colors.black87,
                     iconColorPressed: theme.primaryColor,
                     tooltip: appLocalizations.sticker,
-                    onTap: () async {
-                      // TODO
-                      final file = await _pickFile();
-                    },
                   ),
-                  TIconButton(
-                    iconData: Symbols.history_rounded,
-                    iconColor: Colors.black54,
-                    iconColorHovered: Colors.black87,
-                    iconColorPressed: theme.primaryColor,
-                    tooltip: appLocalizations.chatHistory,
-                    onTap: () async {
-                      await showSingleChatHistoryDialog(
-                          context: context, conversation: _conversation!);
+                  follower: StickerPicker(
+                    onGiphyGifSelected: (GiphyGif value) {
+                      final images = value.images;
+                      final original = images?.original;
+                      final previewWebp = images?.previewWebp;
+                      if (original == null || previewWebp == null) {
+                        return;
+                      }
+                      _sendImage(
+                          appLocalizations,
+                          original.webp ?? original.url,
+                          previewWebp.url,
+                          int.parse(original.width),
+                          int.parse(original.height));
                     },
-                  )
-                ],
+                    onEmojiSelected: _insertEmoji,
+                  )),
+              TIconButton(
+                iconData: Symbols.folder_rounded,
+                iconColor: Colors.black54,
+                iconColorHovered: Colors.black87,
+                iconColorPressed: theme.primaryColor,
+                tooltip: appLocalizations.sticker,
+                onTap: () async {
+                  // TODO
+                  final file = await _pickFile();
+                },
               ),
               TIconButton(
-                  iconData: Symbols.send_rounded,
-                  iconColor: Colors.black54,
-                  iconColorHovered: theme.primaryColor,
-                  tooltip: appLocalizations.send,
-                  disabled: _editorController.text.isEmpty,
-                  onTap: _sendMessage)
+                iconData: Symbols.history_rounded,
+                iconColor: Colors.black54,
+                iconColorHovered: Colors.black87,
+                iconColorPressed: theme.primaryColor,
+                tooltip: appLocalizations.chatHistory,
+                onTap: () async {
+                  await showSingleChatHistoryDialog(
+                      context: context, conversation: _conversation!);
+                },
+              )
             ],
           ),
+          TIconButton(
+              iconData: Symbols.send_rounded,
+              iconColor: Colors.black54,
+              iconColorHovered: theme.primaryColor,
+              tooltip: appLocalizations.send,
+              disabled: _editorController.text.isEmpty,
+              onTap: _sendMessage)
         ],
       );
 }

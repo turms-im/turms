@@ -7,7 +7,7 @@ extension ImageProviderExtensions on ImageProvider {
       [ImageConfiguration configuration = ImageConfiguration.empty]) {
     final completer = Completer<ImageInfo>();
     resolve(configuration).addListener(ImageStreamListener(
-      (imageInfo, _) async {
+      (imageInfo, _) {
         completer.complete(imageInfo);
       },
       onError: completer.completeError,

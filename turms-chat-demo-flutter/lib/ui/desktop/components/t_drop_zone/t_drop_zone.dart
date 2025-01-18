@@ -49,10 +49,7 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
             onDropEnter: _onDropEnter,
             onDropLeave: _onDropLeave,
             onPerformDrop: widget.onPerformDrop,
-            child: Padding(
-              padding: Sizes.paddingV8H16,
-              child: widget.child,
-            )),
+            child: widget.child),
         _buildMask(theme, appLocalizations)
       ],
     );
@@ -65,7 +62,7 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
               opacity: _dragging ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 100),
               child: Padding(
-                padding: const EdgeInsets.only(right: 4, bottom: 4),
+                padding: Sizes.paddingV4H4,
                 child: DottedBorder(
                   borderType: BorderType.RRect,
                   dashPattern: [12, 10],
@@ -105,8 +102,9 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
 }
 
 extension DropSessionExtensions on DropSession {
-  Future<List<DataReaderFile>> readFiles(
-      {bool includeDirectories = false}) async {
+  Future<List<DataReaderFile>> readFiles({
+    bool includeDirectories = false,
+  }) async {
     final futures = items.map((item) {
       final completer = Completer<DataReaderFile>();
       try {

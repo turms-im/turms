@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -14,6 +15,7 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../../l10n/view_models/app_localizations_view_model.dart';
 import '../../../../../themes/index.dart';
 import '../../../../components/index.dart';
+import '../../../../components/t_image_cropper/core/t_image_cropper_controller.dart';
 
 const _allowedExtensions = ['png', 'jpg', 'jpeg'];
 final _allowedFormats = [Formats.png, Formats.jpeg];
@@ -32,6 +34,8 @@ class UserProfileImageEditorDialog extends ConsumerStatefulWidget {
 class _UserProfileImageEditorDialogState
     extends ConsumerState<UserProfileImageEditorDialog> {
   ImageProvider? _profileImageProvider;
+  CaptureResult? _profileImageCaptureResult;
+  late TImageCropperController _imageCropperController;
   bool _flipX = false;
   bool _flipY = false;
   double _angle = 0;
@@ -40,6 +44,7 @@ class _UserProfileImageEditorDialogState
   void initState() {
     super.initState();
     _profileImageProvider = widget.user.image;
+    _imageCropperController = TImageCropperController();
   }
 
   @override
@@ -58,7 +63,7 @@ class _UserProfileImageEditorDialogState
       formats: _allowedFormats,
       onPerformDrop: _onPerformDrop,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 16),
+        padding: Sizes.paddingV8H16,
         child: Column(
           children: [
             Text(appLocalizations.editProfileImage),
@@ -66,38 +71,29 @@ class _UserProfileImageEditorDialogState
             Row(
               spacing: 16,
               children: [
-                ClipRRect(
-                  borderRadius: Sizes.borderRadiusCircular4,
-                  child: SizedBox(
-                      width: _imageSize,
-                      height: _imageSize,
-                      child: useImageMode
-                          ? DecoratedBox(
-                              decoration: const BoxDecoration(
-                                color: Colors.black26,
-                              ),
-                              child: Transform.flip(
-                                flipX: _flipX,
-                                flipY: _flipY,
-                                child: Transform.rotate(
-                                  angle: _angle,
-                                  child: TImageCropper(
-                                    image: _profileImageProvider!,
-                                    aspectRatio: 1,
-                                  ),
+                _buildProfile(useImageMode, user),
+                Expanded(
+                  child: Column(
+                    children: [
+                      useImageMode && _profileImageCaptureResult != null
+                          ? ClipRRect(
+                              borderRadius: TAvatar.borderRadius,
+                              child: SizedBox.square(
+                                dimension: TAvatarSize.medium.containerSize,
+                                child: TRawImage(
+                                  image: _profileImageCaptureResult!.img,
+                                  cropRect:
+                                      _profileImageCaptureResult!.cropRect,
                                 ),
                               ),
                             )
                           : TAvatar(
                               id: user.userId,
                               name: user.name,
-                              textSize: 125,
-                            )),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
+                            ),
+                      const SizedBox(height: 16),
                       Text(appLocalizations.rotateAndFlip),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -108,7 +104,7 @@ class _UserProfileImageEditorDialogState
                             tooltip: appLocalizations.rotateLeft,
                             disabled: !useImageMode,
                             onTap: () {
-                              _angle -= 90.degreesToRadians();
+                              _angle -= 90;
                               setState(() {});
                             },
                           ),
@@ -119,7 +115,7 @@ class _UserProfileImageEditorDialogState
                             tooltip: appLocalizations.rotateRight,
                             disabled: !useImageMode,
                             onTap: () {
-                              _angle += 90.degreesToRadians();
+                              _angle += 90;
                               setState(() {});
                             },
                           ),
@@ -164,6 +160,41 @@ class _UserProfileImageEditorDialogState
     );
   }
 
+  ClipRRect _buildProfile(bool useImageMode, User user) => ClipRRect(
+        borderRadius: Sizes.borderRadiusCircular4,
+        child: SizedBox(
+            width: _imageSize,
+            height: _imageSize,
+            child: useImageMode
+                ? DecoratedBox(
+                    decoration: const BoxDecoration(
+                      color: Colors.black26,
+                    ),
+                    child: TImageCropper(
+                      image: _profileImageProvider!,
+                      controller: _imageCropperController,
+                      flipX: _flipX,
+                      flipY: _flipY,
+                      rotationAngle: _angle,
+                      aspectRatio: 1,
+                      onCropAreaMoved: (containerRect, imageRect) async {
+                        SchedulerBinding.instance
+                            .addPostFrameCallback((_) async {
+                          final result =
+                              await _imageCropperController.capture?.call();
+                          _profileImageCaptureResult = result!;
+                          setState(() {});
+                        });
+                      },
+                    ),
+                  )
+                : TAvatar(
+                    id: user.userId,
+                    name: user.name,
+                    textSize: 125,
+                  )),
+      );
+
   Widget _buildActions(BuildContext context, ThemeData theme,
           AppLocalizations appLocalizations) =>
       Row(
@@ -194,6 +225,7 @@ class _UserProfileImageEditorDialogState
               }),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 16,
             children: [
               TTextButton.outlined(
                 theme: theme,
@@ -202,7 +234,6 @@ class _UserProfileImageEditorDialogState
                 containerWidth: 72,
                 onTap: () => Navigator.of(context).pop(),
               ),
-              Sizes.sizedBoxW16,
               TTextButton(
                 text: appLocalizations.confirm,
                 containerPadding: Sizes.paddingV4H8,
@@ -211,7 +242,6 @@ class _UserProfileImageEditorDialogState
                   // TODO: appLocalizations.confirm
                 },
               ),
-              Sizes.sizedBoxW16
             ],
           ),
         ],
