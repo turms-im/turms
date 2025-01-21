@@ -42,6 +42,7 @@ class TSelectionArea extends StatefulWidget {
   /// If [selectionControls] is null, a platform specific one is used.
   const TSelectionArea({
     super.key,
+    this.controller,
     this.focusNode,
     this.selectionControls,
     this.contextMenuBuilder = _defaultContextMenuBuilder,
@@ -49,6 +50,8 @@ class TSelectionArea extends StatefulWidget {
     this.onSelectionChanged,
     required this.child,
   });
+
+  final TSelectableRegionController? controller;
 
   /// The configuration for the magnifier in the selection region.
   ///
@@ -136,6 +139,7 @@ class TSelectionAreaState extends State<TSelectionArea> {
         };
     return TSelectableRegion(
       key: _selectableRegionKey,
+      controller: widget.controller,
       selectionControls: controls,
       focusNode: _effectiveFocusNode,
       contextMenuBuilder: widget.contextMenuBuilder,

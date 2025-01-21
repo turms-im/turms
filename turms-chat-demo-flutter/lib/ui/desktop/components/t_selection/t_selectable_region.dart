@@ -193,6 +193,7 @@ class TSelectableRegion extends StatefulWidget {
   /// toolbar for mobile devices.
   const TSelectableRegion({
     super.key,
+    this.controller,
     this.contextMenuBuilder,
     required this.focusNode,
     required this.selectionControls,
@@ -200,6 +201,8 @@ class TSelectableRegion extends StatefulWidget {
     this.magnifierConfiguration = TextMagnifierConfiguration.disabled,
     this.onSelectionChanged,
   });
+
+  final TSelectableRegionController? controller;
 
   /// The configuration for the magnifier used with selections in this region.
   ///
@@ -380,6 +383,7 @@ class TSelectableRegionState extends State<TSelectableRegion>
   @override
   void initState() {
     super.initState();
+    widget.controller?.hideContextMenu = _hideContextMenu;
     widget.focusNode.addListener(_handleFocusChanged);
     _initMouseGestureRecognizer();
     _initTouchGestureRecognizer();
@@ -430,6 +434,7 @@ class TSelectableRegionState extends State<TSelectableRegion>
   @override
   void didUpdateWidget(TSelectableRegion oldWidget) {
     super.didUpdateWidget(oldWidget);
+    widget.controller?.hideContextMenu = _hideContextMenu;
     if (widget.focusNode != oldWidget.focusNode) {
       oldWidget.focusNode.removeListener(_handleFocusChanged);
       widget.focusNode.addListener(_handleFocusChanged);
@@ -437,6 +442,10 @@ class TSelectableRegionState extends State<TSelectableRegion>
         _handleFocusChanged();
       }
     }
+  }
+
+  void _hideContextMenu() {
+    _selectionOverlay?.hide();
   }
 
   Action<T> _makeOverridable<T extends Intent>(Action<T> defaultAction) =>
@@ -2124,3 +2133,7 @@ typedef TSelectableRegionContextMenuBuilder = Widget Function(
   BuildContext context,
   TSelectableRegionState selectableRegionState,
 );
+
+class TSelectableRegionController {
+  VoidCallback? hideContextMenu;
+}

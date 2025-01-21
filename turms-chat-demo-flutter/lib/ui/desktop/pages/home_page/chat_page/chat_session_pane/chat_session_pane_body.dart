@@ -41,7 +41,8 @@ const _chatSessionItemLoadingIndicatorKey =
     ValueKey(_chatSessionItemLoadingIndicatorId);
 
 class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
-  final ScrollController _scrollController = ScrollController();
+  final _selectableRegionController = TSelectableRegionController();
+  final _scrollController = ScrollController();
 
   bool _isLoading = false;
   bool _isAllMessagesLoaded = false;
@@ -49,7 +50,7 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_loadMoreIfScrollToTop);
+    _scrollController.addListener(_onScrolled);
   }
 
   @override
@@ -68,6 +69,18 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
         child: messages.isEmpty
             ? null
             : _buildMessageBubbles(selectedConversation));
+  }
+
+  void _onScrolled() {
+    // Hide the context menu when scrolling because:
+    // 1. If we let the context menu follow the movable message item,
+    // the menu can be scrolled out of the viewport, it is weird.
+    // 2. If we make the context menu fixed,
+    // it will be confusing to identity which message the context menu is for
+    // when the target message is scrolled out of the viewport.
+    // As a result, we hide the context menu when scrolling.
+    _selectableRegionController.hideContextMenu?.call();
+    _loadMoreIfScrollToTop();
   }
 
   void _loadMoreIfScrollToTop() {
@@ -172,6 +185,7 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
     final itemIdToIndex = {for (var i = 0; i < itemCount; i++) items[i].id: i};
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     return TSelectionArea(
+      controller: _selectableRegionController,
       contextMenuBuilder: buildContextMenuForTSelectableRegion,
       child: TSelectionContainer(
         visible: false,
