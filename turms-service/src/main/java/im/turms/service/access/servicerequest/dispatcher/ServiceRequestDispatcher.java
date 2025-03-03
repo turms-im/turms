@@ -491,7 +491,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     recipients);
         }
         return mono
-                .map(offlineRecipientIds -> pluginManager.invokeExtensionPointsSequentially(
+                .flatMap(offlineRecipientIds -> pluginManager.invokeExtensionPointsSequentially(
                         RequestHandlerResultHandler.class,
                         RESULT_AFTER_NOTIFY_METHOD,
                         result,
