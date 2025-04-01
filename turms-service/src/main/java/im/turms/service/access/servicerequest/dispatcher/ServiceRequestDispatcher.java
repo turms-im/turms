@@ -348,19 +348,20 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         if (!signal.isOnNext()) {
                             return;
                         }
-                        RequestHandlerResult requestResult = signal.get();
-                        if (requestResult == null
-                                || requestResult.code() != ResponseStatusCode.OK) {
+                        RequestHandlerResult requestHandlerResult = signal.get();
+                        if (requestHandlerResult == null
+                                || requestHandlerResult.code() != ResponseStatusCode.OK) {
                             return;
                         }
-                        notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+                        turmsRequestBuffer.retain();
+                        notifyRelatedUsersOfAction(requestHandlerResult, userId, deviceType)
                                 .contextWrite(signal.getContextView())
                                 .subscribe(null, t -> {
                                     try (TracingCloseableContext ignored = context.asCloseable()) {
                                         LOGGER.error("Failed to notify related users of the action",
                                                 t);
                                     }
-                                });
+                                }, turmsRequestBuffer::release);
                     })
                     .onErrorResume(t -> {
                         ThrowableInfo info = ThrowableInfo.get(t);
