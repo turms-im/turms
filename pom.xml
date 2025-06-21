@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.5.3</version>
         <!-- To skip the local file search and directly search the parent POM in Maven repositories -->
         <relativePath/>
     </parent>
@@ -33,27 +33,27 @@
         <revision>0.10.0-SNAPSHOT</revision>
 
         <!-- Runtime Deps -->
-        <awssdk.version>2.31.11</awssdk.version>
-        <blockhound.version>1.0.11.RELEASE</blockhound.version>
+        <awssdk.version>2.31.68</awssdk.version>
+        <blockhound.version>1.0.13.RELEASE</blockhound.version>
         <disruptor.version>4.0.0</disruptor.version>
-        <eclipse-collections.version>11.1.0</eclipse-collections.version>
-        <graalvm.version>23.0.6</graalvm.version>
+        <eclipse-collections.version>12.0.0</eclipse-collections.version>
+        <graalvm.version>23.0.8</graalvm.version>
         <icu4j.version>77.1</icu4j.version>
         <jctools-core.version>4.0.5</jctools-core.version>
-        <log4j.version>2.24.3</log4j.version>
-        <protobuf.version>4.30.2</protobuf.version>
-        <swagger.version>2.2.29</swagger.version>
-        <swagger-ui.version>5.20.1</swagger-ui.version>
+        <log4j.version>2.25.0</log4j.version>
+        <protobuf.version>4.31.1</protobuf.version>
+        <swagger.version>2.2.31</swagger.version>
+        <swagger-ui.version>5.25.2</swagger-ui.version>
 
         <!-- Runtime Deps for Testing -->
         <jmh.version>1.37</jmh.version>
-        <playwright.version>1.51.0</playwright.version>
-        <testcontainers.version>1.20.6</testcontainers.version>
+        <playwright.version>1.52.0</playwright.version>
+        <testcontainers.version>1.21.2</testcontainers.version>
 
         <!-- Maven plugins -->
-        <checkstyle.version>10.22.0</checkstyle.version>
+        <checkstyle.version>10.25.0</checkstyle.version>
         <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
-        <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -66,8 +66,8 @@
         <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
-        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
-        <spotless-maven-plugin.eclipse.version>4.34</spotless-maven-plugin.eclipse.version>
+        <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.35</spotless-maven-plugin.eclipse.version>
         <spring-boot-thin-layout.version>1.0.31.RELEASE</spring-boot-thin-layout.version>
 
         <!-- Configs -->

@@ -45,7 +45,7 @@ import static com.mongodb.internal.operation.ExplainHelper.asExplainCommand;
 import static com.mongodb.internal.operation.OperationHelper.LOGGER;
 import static com.mongodb.internal.operation.OperationHelper.canRetryRead;
 import static com.mongodb.internal.operation.OperationReadConcernHelper.appendReadConcernToCommand;
-import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSION;
+import static com.mongodb.internal.operation.ServerVersionHelper.UNKNOWN_WIRE_VERSION;
 
 /**
  * @author James Chen
@@ -141,7 +141,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     public <R> ReadOperation<R> asExplainableOperation(
             @Nullable final ExplainVerbosity verbosity,
             final Decoder<R> resultDecoder) {
-        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
+        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, UNKNOWN_WIRE_VERSION, command);
         return new CommandReadOperation<>(
                 getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
@@ -152,7 +152,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     public <R> AsyncReadOperation<R> asAsyncExplainableOperation(
             @Nullable final ExplainVerbosity verbosity,
             final Decoder<R> resultDecoder) {
-        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
+        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, UNKNOWN_WIRE_VERSION, command);
         return new CommandReadOperation<>(
                 getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
