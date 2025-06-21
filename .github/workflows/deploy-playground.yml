@@ -22,21 +22,21 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Set up WARP
-        uses: fscarmen/warp-on-actions@v1.1
+        uses: fscarmen/warp-on-actions@v1.3
         with:
           stack: dual
 
       - name: SSH
         # FIXME: Use the "master" branch as a workaround because
         # ssh-action hasn't released a new version that supports IPv6.
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.PLAYGROUND_SSH_HOST }}
           username: ${{ secrets.PLAYGROUND_SSH_USERNAME }}
           key: ${{ secrets.PLAYGROUND_SSH_KEY }}
           protocol: tcp6
-          script_stop: true
           script: |
+            set -e
             cd /opt/turms
             sudo docker compose -f docker-compose.standalone.yml down --remove-orphans
             sudo docker system prune -a -f
