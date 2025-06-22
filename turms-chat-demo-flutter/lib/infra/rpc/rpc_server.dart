@@ -92,7 +92,7 @@ class RpcServer {
       await appProcessFile.parent.create(recursive: true);
     }
 
-    final handler = webSocketHandler((WebSocketChannel channel) {
+    final handler = webSocketHandler((WebSocketChannel channel, _) {
       final server = Server(channel.cast<String>())
         ..registerMethod(methodHealthcheck, () => {'status': 'ok'})
         ..registerMethod(methodClose, AppUtils.close);

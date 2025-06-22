@@ -23,7 +23,6 @@ import 'dart:ui'
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
@@ -372,7 +371,6 @@ class TRenderParagraph extends RenderBox
   // TODO(abarth): Make computing the min/max intrinsic width/height a
   //  non-destructive operation.
   TextPainter? _textIntrinsicsCache;
-
   TextPainter get _textIntrinsics => (_textIntrinsicsCache ??= TextPainter())
     ..text = _textPainter.text
     ..textAlign = _textPainter.textAlign
@@ -391,7 +389,6 @@ class TRenderParagraph extends RenderBox
 
   /// The text to display.
   InlineSpan get text => _textPainter.text!;
-
   set text(InlineSpan value) {
     switch (_textPainter.text!.compareTo(value)) {
       case RenderComparison.identical:
@@ -450,7 +447,6 @@ class TRenderParagraph extends RenderBox
   /// The [SelectionRegistrar] this paragraph will be, or is, registered to.
   SelectionRegistrar? get registrar => _registrar;
   SelectionRegistrar? _registrar;
-
   set registrar(SelectionRegistrar? value) {
     if (value == _registrar) {
       return;
@@ -505,6 +501,9 @@ class TRenderParagraph extends RenderBox
 
   /// Determines whether the given [Selectable] was created by this
   /// [TRenderParagraph].
+  ///
+  /// The [TRenderParagraph] splits its text into multiple [Selectable]s,
+  /// delimited by [PlaceholderSpan]s or [WidgetSpan]s.
   bool selectableBelongsToParagraph(Selectable selectable) {
     if (_lastSelectableFragments == null) {
       return false;
@@ -545,7 +544,6 @@ class TRenderParagraph extends RenderBox
 
   /// How the text should be aligned horizontally.
   TextAlign get textAlign => _textPainter.textAlign;
-
   set textAlign(TextAlign value) {
     if (_textPainter.textAlign == value) {
       return;
@@ -566,7 +564,6 @@ class TRenderParagraph extends RenderBox
   /// context, the English phrase will be on the right and the Hebrew phrase on
   /// its left.
   TextDirection get textDirection => _textPainter.textDirection!;
-
   set textDirection(TextDirection value) {
     if (_textPainter.textDirection == value) {
       return;
@@ -584,7 +581,6 @@ class TRenderParagraph extends RenderBox
   /// effects.
   bool get softWrap => _softWrap;
   bool _softWrap;
-
   set softWrap(bool value) {
     if (_softWrap == value) {
       return;
@@ -596,7 +592,6 @@ class TRenderParagraph extends RenderBox
   /// How visual overflow should be handled.
   TextOverflow get overflow => _overflow;
   TextOverflow _overflow;
-
   set overflow(TextOverflow value) {
     if (_overflow == value) {
       return;
@@ -619,7 +614,6 @@ class TRenderParagraph extends RenderBox
     'This feature was deprecated after v3.12.0-2.0.pre.',
   )
   double get textScaleFactor => _textPainter.textScaleFactor;
-
   @Deprecated(
     'Use textScaler instead. '
     'Use of textScaleFactor was deprecated in preparation for the upcoming nonlinear text scaling support. '
@@ -631,7 +625,6 @@ class TRenderParagraph extends RenderBox
 
   /// {@macro flutter.painting.textPainter.textScaler}
   TextScaler get textScaler => _textPainter.textScaler;
-
   set textScaler(TextScaler value) {
     if (_textPainter.textScaler == value) {
       return;
@@ -692,7 +685,6 @@ class TRenderParagraph extends RenderBox
 
   /// {@macro flutter.painting.textPainter.textWidthBasis}
   TextWidthBasis get textWidthBasis => _textPainter.textWidthBasis;
-
   set textWidthBasis(TextWidthBasis value) {
     if (_textPainter.textWidthBasis == value) {
       return;
@@ -705,7 +697,6 @@ class TRenderParagraph extends RenderBox
   /// {@macro dart.ui.textHeightBehavior}
   ui.TextHeightBehavior? get textHeightBehavior =>
       _textPainter.textHeightBehavior;
-
   set textHeightBehavior(ui.TextHeightBehavior? value) {
     if (_textPainter.textHeightBehavior == value) {
       return;
@@ -720,7 +711,6 @@ class TRenderParagraph extends RenderBox
   /// Ignored if the text is not selectable (e.g. if [registrar] is null).
   Color? get selectionColor => _selectionColor;
   Color? _selectionColor;
-
   set selectionColor(Color? value) {
     if (_selectionColor == value) {
       return;
@@ -1176,7 +1166,7 @@ class TRenderParagraph extends RenderBox
     var needsAssembleSemanticsNode = false;
     var needsChildConfigurationsDelegate = false;
     for (final info in _semanticsInfo!) {
-      if (info.recognizer != null) {
+      if (info.recognizer != null || info.semanticsIdentifier != null) {
         needsAssembleSemanticsNode = true;
         break;
       }
@@ -1369,6 +1359,7 @@ class TRenderParagraph extends RenderBox
         final configuration = SemanticsConfiguration()
           ..sortKey = OrdinalSortKey(ordinal++)
           ..textDirection = initialDirection
+          ..identifier = info.semanticsIdentifier ?? ''
           ..attributedLabel = AttributedString(
             info.semanticsLabel ?? info.text,
             attributes: info.stringAttributes,
@@ -1506,7 +1497,6 @@ class _SelectableFragment
   @override
   SelectionGeometry get value => _selectionGeometry;
   late SelectionGeometry _selectionGeometry;
-
   void _updateSelectionGeometry() {
     final newValue = _getSelectionGeometry();
 
@@ -1544,23 +1534,38 @@ class _SelectableFragment
     for (final textBox in paragraph.getBoxesForSelection(selection)) {
       selectionRects.add(textBox.toRect());
     }
+    final selectionCollapsed = selectionStart == selectionEnd;
+    final (
+      TextSelectionHandleType startSelectionHandleType,
+      TextSelectionHandleType endSelectionHandleType,
+    ) = switch ((selectionCollapsed, flipHandles)) {
+      // Always prefer collapsed handle when selection is collapsed.
+      (true, _) => (
+        TextSelectionHandleType.collapsed,
+        TextSelectionHandleType.collapsed,
+      ),
+      (false, true) => (
+        TextSelectionHandleType.right,
+        TextSelectionHandleType.left,
+      ),
+      (false, false) => (
+        TextSelectionHandleType.left,
+        TextSelectionHandleType.right,
+      ),
+    };
     return SelectionGeometry(
       startSelectionPoint: SelectionPoint(
         localPosition: startOffsetInParagraphCoordinates,
         lineHeight: paragraph._textPainter.preferredLineHeight,
-        handleType: flipHandles
-            ? TextSelectionHandleType.right
-            : TextSelectionHandleType.left,
+        handleType: startSelectionHandleType,
       ),
       endSelectionPoint: SelectionPoint(
         localPosition: endOffsetInParagraphCoordinates,
         lineHeight: paragraph._textPainter.preferredLineHeight,
-        handleType: flipHandles
-            ? TextSelectionHandleType.left
-            : TextSelectionHandleType.right,
+        handleType: endSelectionHandleType,
       ),
       selectionRects: selectionRects,
-      status: _textSelectionStart!.offset == _textSelectionEnd!.offset
+      status: selectionCollapsed
           ? SelectionStatus.collapsed
           : SelectionStatus.uncollapsed,
       hasContent: true,
@@ -1659,6 +1664,17 @@ class _SelectableFragment
       _textSelectionEnd!.offset,
     );
     return SelectedContent(plainText: fullText.substring(start, end));
+  }
+
+  @override
+  SelectedContentRange? getSelection() {
+    if (_textSelectionStart == null || _textSelectionEnd == null) {
+      return null;
+    }
+    return SelectedContentRange(
+      startOffset: _textSelectionStart!.offset,
+      endOffset: _textSelectionEnd!.offset,
+    );
   }
 
   void _didChangeSelection() {
@@ -2404,7 +2420,6 @@ class _SelectableFragment
     PlaceholderSpan.placeholderCodeUnit,
   );
   static final int _placeholderLength = _placeholderCharacter.length;
-
   // This method handles updating the start edge by a text boundary that may
   // not be contained within this selectable fragment. It is possible
   // that a boundary spans multiple selectable fragments when the text contains
@@ -3728,7 +3743,6 @@ class _SelectableFragment
   }
 
   List<Rect>? _cachedBoundingBoxes;
-
   @override
   List<Rect> get boundingBoxes {
     if (_cachedBoundingBoxes == null) {
@@ -3755,7 +3769,6 @@ class _SelectableFragment
   }
 
   Rect? _cachedRect;
-
   Rect get _rect {
     if (_cachedRect == null) {
       final boxes = paragraph.getBoxesForSelection(
@@ -3784,6 +3797,9 @@ class _SelectableFragment
     _cachedRect = null;
     _cachedBoundingBoxes = null;
   }
+
+  @override
+  int get contentLength => range.end - range.start;
 
   @override
   Size get size => _rect.size;

@@ -21,15 +21,13 @@ class AutostartManagerWindows extends AutostartManager {
 
   @override
   Future<bool> isEnabled() async {
-    final value = _regKey.getValueAsString(appName);
+    final value = _regKey.getStringValue(appName);
     return value == _registryValue;
   }
 
   @override
   Future<void> enable() async {
-    _regKey.createValue(
-      RegistryValue(appName, RegistryValueType.string, _registryValue),
-    );
+    _regKey.createValue(RegistryValue.string(appName, _registryValue));
   }
 
   @override

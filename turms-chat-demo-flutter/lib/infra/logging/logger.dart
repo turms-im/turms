@@ -33,6 +33,10 @@ class Logger {
     log(LogEntry(LogLevel.info, message));
   }
 
+  void debug(String message) {
+    log(LogEntry(LogLevel.debug, message));
+  }
+
   void log(LogEntry entry) {
     if (level.value < entry.level.value) {
       return;

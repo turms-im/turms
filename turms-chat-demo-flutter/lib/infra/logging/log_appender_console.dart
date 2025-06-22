@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'ansi_escape_codes.dart';
+import 'ansi_color.dart';
 import 'log_appender.dart';
 import 'log_entry.dart';
 import 'log_level.dart';
