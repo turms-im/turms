@@ -37,8 +37,9 @@ class ChatSessionPaneBody extends ConsumerStatefulWidget {
 }
 
 const _chatSessionItemLoadingIndicatorId = Int64.MIN_VALUE;
-const _chatSessionItemLoadingIndicatorKey =
-    ValueKey(_chatSessionItemLoadingIndicatorId);
+const _chatSessionItemLoadingIndicatorKey = ValueKey(
+  _chatSessionItemLoadingIndicatorId,
+);
 
 class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
   final _selectableRegionController = TSelectableRegionController();
@@ -65,10 +66,11 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
     final selectedConversation = widget.selectedConversation;
     final messages = selectedConversation.messages;
     return ColoredBox(
-        color: appThemeExtension.homePageBackgroundColor,
-        child: messages.isEmpty
-            ? null
-            : _buildMessageBubbles(selectedConversation));
+      color: appThemeExtension.homePageBackgroundColor,
+      child: messages.isEmpty
+          ? null
+          : _buildMessageBubbles(selectedConversation),
+    );
   }
 
   void _onScrolled() {
@@ -102,21 +104,24 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
     }
     ChatMessage? lastMessage;
     MessageGroup? lastMessageGroup;
-    assert(() {
-      final sortedMessages = List<ChatMessage>.from(messages)
-        ..sort(
-          (a, b) {
+    assert(
+      () {
+        final sortedMessages = List<ChatMessage>.from(messages)
+          ..sort((a, b) {
             final result = a.timestamp.compareTo(b.timestamp);
             if (result == 0) {
               // Used to ensure a stable sort.
               return a.messageId.compareTo(b.messageId);
             }
             return result;
-          },
+          });
+        return const ListEquality<ChatMessage>().equals(
+          sortedMessages,
+          messages,
         );
-      return const ListEquality<ChatMessage>().equals(sortedMessages, messages);
-    }(),
-        "The messages should have been sorted by date so that we don't need to sort them again and again when building the list");
+      }(),
+      "The messages should have been sorted by date so that we don't need to sort them again and again when building the list",
+    );
     final lastMessageIndex = messageCount - 1;
     for (var i = 0; i < messageCount; i++) {
       final message = messages[i];
@@ -129,8 +134,10 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
         }
       } else {
         final lastMessageTimestamp = lastMessage.timestamp;
-        assert(lastMessageTimestamp.timeZoneName == timestamp.timeZoneName,
-            'The timestamp of messages should have the same time zone name');
+        assert(
+          lastMessageTimestamp.timeZoneName == timestamp.timeZoneName,
+          'The timestamp of messages should have the same time zone name',
+        );
         if (DateUtils.isSameDay(lastMessageTimestamp, timestamp)) {
           if (lastMessage.type == MessageType.text &&
               message.type == MessageType.text &&
@@ -210,16 +217,27 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
                 _ChatSessionItemLoadingIndicator() => _buildLoadingIndicator(),
                 _ChatSessionItemDaySeparator(:final datetime) =>
                   _buildDaySeparator(
-                      item, yesterday, datetime, appLocalizations, dateFormat),
+                    item,
+                    yesterday,
+                    datetime,
+                    appLocalizations,
+                    dateFormat,
+                  ),
                 _ChatSessionItemMessage(:final message) => _buildMessages(
+                  conversation,
+                  [message],
+                  loggedInUser,
+                  item,
+                  constraints.maxWidth,
+                ),
+                _ChatSessionItemMessageGroup(:final messageGroup) =>
+                  _buildMessages(
                     conversation,
-                    [message],
+                    messageGroup.messages,
                     loggedInUser,
                     item,
-                    constraints.maxWidth),
-                _ChatSessionItemMessageGroup(:final messageGroup) =>
-                  _buildMessages(conversation, messageGroup.messages,
-                      loggedInUser, item, constraints.maxWidth)
+                    constraints.maxWidth,
+                  ),
               };
             },
           ),
@@ -252,38 +270,40 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
   }
 
   Padding _buildDaySeparator(
-          _ChatSessionItemDaySeparator item,
-          DateTime yesterday,
-          DateTime datetime,
-          AppLocalizations appLocalizations,
-          DateFormat dateFormat) =>
-      Padding(
-        key: ValueKey(item.id),
-        padding: Sizes.paddingV16,
-        child: Center(
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 218, 218, 218),
-                borderRadius: Sizes.borderRadiusCircular4),
-            child: Padding(
-              padding: Sizes.paddingV2H4,
-              child: Text(
-                DateUtils.isSameDay(yesterday, datetime)
-                    ? appLocalizations.yesterday
-                    : dateFormat.format(datetime),
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
+    _ChatSessionItemDaySeparator item,
+    DateTime yesterday,
+    DateTime datetime,
+    AppLocalizations appLocalizations,
+    DateFormat dateFormat,
+  ) => Padding(
+    key: ValueKey(item.id),
+    padding: Sizes.paddingV16,
+    child: Center(
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 218, 218, 218),
+          borderRadius: Sizes.borderRadiusCircular4,
+        ),
+        child: Padding(
+          padding: Sizes.paddingV2H4,
+          child: Text(
+            DateUtils.isSameDay(yesterday, datetime)
+                ? appLocalizations.yesterday
+                : dateFormat.format(datetime),
+            style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   MessageBubble _buildMessages(
-      Conversation conversation,
-      List<ChatMessage> messages,
-      User loggedInUser,
-      _ChatSessionItem item,
-      double availableWidth) {
+    Conversation conversation,
+    List<ChatMessage> messages,
+    User loggedInUser,
+    _ChatSessionItem item,
+    double availableWidth,
+  ) {
     final message = messages.first;
     final user = _getMessageSender(conversation, message, loggedInUser);
     return MessageBubble(
@@ -301,7 +321,9 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
   }
 
   Future<void> _sendMessage(
-      Conversation conversation, ChatMessage message) async {
+    Conversation conversation,
+    ChatMessage message,
+  ) async {
     final now = DateTime.now();
     final previousMessageId = message.messageId;
     final fakeMessageId = -RandomUtils.nextUniquePositiveInt64();
@@ -317,9 +339,10 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
       tempTimestamp = lastMessageTimestamp.add(const Duration(milliseconds: 1));
     }
     message = message.copyWith(
-        messageId: fakeMessageId,
-        timestamp: tempTimestamp,
-        status: MessageDeliveryStatus.delivering);
+      messageId: fakeMessageId,
+      timestamp: tempTimestamp,
+      status: MessageDeliveryStatus.delivering,
+    );
     final selectedConversationController =
         ref.read(selectedConversationViewModel.notifier)
           ..removeMessage(previousMessageId)
@@ -332,18 +355,23 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
 
     // TODO: handle the case when the controller has already been changed.
     selectedConversationController.replaceMessage(
-        fakeMessageId,
-        message.copyWith(
-            messageId: sentMessage.messageId,
-            status: sentMessage.status,
-            // Note that this will update the timestamp UI of the message
-            // if the received timestamp is different from the fake one,
-            // which is expected to ensure the timestamp is consistent with the server and recipients.
-            timestamp: sentMessage.timestamp));
+      fakeMessageId,
+      message.copyWith(
+        messageId: sentMessage.messageId,
+        status: sentMessage.status,
+        // Note that this will update the timestamp UI of the message
+        // if the received timestamp is different from the fake one,
+        // which is expected to ensure the timestamp is consistent with the server and recipients.
+        timestamp: sentMessage.timestamp,
+      ),
+    );
   }
 
   User _getMessageSender(
-      Conversation conversation, ChatMessage message, User loggedInUser) {
+    Conversation conversation,
+    ChatMessage message,
+    User loggedInUser,
+  ) {
     if (message.sentByMe) {
       return loggedInUser;
     } else if (conversation is UserConversation) {
@@ -359,8 +387,9 @@ class _ChatSessionPaneBodyState extends ConsumerState<ChatSessionPaneBody> {
     }
     _isLoading = true;
     setState(() {});
-    final messages =
-        await ref.read(messageServiceProvider)!.queryMoreMessages();
+    final messages = await ref
+        .read(messageServiceProvider)!
+        .queryMoreMessages();
     // TODO: add messages to the conversation.
     _isLoading = false;
     if (messages.isEmpty) {
@@ -389,12 +418,12 @@ sealed class _ChatSessionItem {
 
 class _ChatSessionItemLoadingIndicator extends _ChatSessionItem {
   const _ChatSessionItemLoadingIndicator()
-      : super(_chatSessionItemLoadingIndicatorId);
+    : super(_chatSessionItemLoadingIndicatorId);
 }
 
 class _ChatSessionItemDaySeparator extends _ChatSessionItem {
   _ChatSessionItemDaySeparator(this.datetime)
-      : super(Int64(-datetime.millisecondsSinceEpoch));
+    : super(Int64(-datetime.millisecondsSinceEpoch));
 
   final DateTime datetime;
 }
@@ -407,7 +436,7 @@ class _ChatSessionItemMessage extends _ChatSessionItem {
 
 class _ChatSessionItemMessageGroup extends _ChatSessionItem {
   _ChatSessionItemMessageGroup(this.messageGroup)
-      : super((-messageGroup.messages.first.messageId) | (Int64(1) << 62));
+    : super((-messageGroup.messages.first.messageId) | (Int64(1) << 62));
 
   final MessageGroup messageGroup;
 }

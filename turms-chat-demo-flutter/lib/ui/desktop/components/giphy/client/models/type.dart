@@ -1,5 +1,1 @@
-enum GiphyType {
-  gifs,
-  stickers,
-  emoji;
-}
+enum GiphyType { gifs, stickers, emoji }

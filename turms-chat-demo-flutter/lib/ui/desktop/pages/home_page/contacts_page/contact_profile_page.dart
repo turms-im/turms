@@ -25,7 +25,9 @@ class _ContactProfilePageState extends ConsumerState<ContactProfilePage> {
     final selectedContact = ref.watch(selectedContactViewModel);
     if (selectedContact == null) {
       return const TWindowControlZone(
-          toggleMaximizeOnDoubleTap: true, child: TEmpty());
+        toggleMaximizeOnDoubleTap: true,
+        child: TEmpty(),
+      );
     }
     if (selectedContact is SystemContact &&
         selectedContact.type == SystemContactType.requestNotification) {
@@ -46,75 +48,75 @@ class _ContactProfilePageState extends ConsumerState<ContactProfilePage> {
     );
   }
 
-  Padding _buildProfile(AppLocalizations appLocalizations,
-          Contact selectedContact, String intro) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 120),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: 300,
-            child: Column(
-              children: [
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 16,
-                    children: [
-                      TAvatar(
-                        id: selectedContact.id,
-                        name: selectedContact.name,
-                        image: selectedContact.image,
-                        icon: selectedContact.icon,
-                        size: TAvatarSize.large,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: Sizes.paddingV2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                selectedContact.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                softWrap: false,
-                              ),
-                              // TODO: Add more details
-                              if (selectedContact is UserContact)
-                                Text(
-                                    '${appLocalizations.userId}: ${selectedContact.userId}')
-                              else if (selectedContact is GroupContact)
-                                Text(
-                                    '${appLocalizations.groupId}: ${selectedContact.groupId}')
-                            ],
+  Padding _buildProfile(
+    AppLocalizations appLocalizations,
+    Contact selectedContact,
+    String intro,
+  ) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 120),
+    child: Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        width: 300,
+        child: Column(
+          children: [
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 16,
+                children: [
+                  TAvatar(
+                    id: selectedContact.id,
+                    name: selectedContact.name,
+                    image: selectedContact.image,
+                    icon: selectedContact.icon,
+                    size: TAvatarSize.large,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: Sizes.paddingV2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            selectedContact.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
                           ),
-                        ),
-                      )
-                    ],
+                          // TODO: Add more details
+                          if (selectedContact is UserContact)
+                            Text(
+                              '${appLocalizations.userId}: ${selectedContact.userId}',
+                            )
+                          else if (selectedContact is GroupContact)
+                            Text(
+                              '${appLocalizations.groupId}: ${selectedContact.groupId}',
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                if (intro.isNotBlank) ...[
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(selectedContact.intro)
                 ],
-                const SizedBox(
-                  height: 32,
-                ),
-                TTextButton(
-                  text: appLocalizations.messages,
-                  onTap: () {
-                    ref
-                        .read(selectedConversationViewModel.notifier)
-                        .selectByContact(selectedContact);
-                  },
-                )
-              ],
+              ),
             ),
-          ),
+            if (intro.isNotBlank) ...[
+              const SizedBox(height: 16),
+              Text(selectedContact.intro),
+            ],
+            const SizedBox(height: 32),
+            TTextButton(
+              text: appLocalizations.messages,
+              onTap: () {
+                ref
+                    .read(selectedConversationViewModel.notifier)
+                    .selectByContact(selectedContact);
+              },
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }

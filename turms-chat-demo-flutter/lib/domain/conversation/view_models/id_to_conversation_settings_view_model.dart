@@ -34,7 +34,8 @@ class IdToConversationSettingsViewModelNotifier
   Map<IntListHolder, ConversationSettings> build() => {};
 }
 
-final idToConversationSettingsViewModel = NotifierProvider<
-        IdToConversationSettingsViewModelNotifier,
-        Map<IntListHolder, ConversationSettings>>(
-    IdToConversationSettingsViewModelNotifier.new);
+final idToConversationSettingsViewModel =
+    NotifierProvider<
+      IdToConversationSettingsViewModelNotifier,
+      Map<IntListHolder, ConversationSettings>
+    >(IdToConversationSettingsViewModelNotifier.new);

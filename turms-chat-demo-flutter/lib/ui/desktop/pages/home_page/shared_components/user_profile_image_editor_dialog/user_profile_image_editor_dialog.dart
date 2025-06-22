@@ -87,10 +87,7 @@ class _UserProfileImageEditorDialogState
                                 ),
                               ),
                             )
-                          : TAvatar(
-                              id: user.userId,
-                              name: user.name,
-                            ),
+                          : TAvatar(id: user.userId, name: user.name),
                       const SizedBox(height: 16),
                       Text(appLocalizations.rotateAndFlip),
                       const SizedBox(height: 8),
@@ -146,13 +143,14 @@ class _UserProfileImageEditorDialogState
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             Expanded(
               child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: _buildActions(context, theme, appLocalizations)),
+                alignment: Alignment.bottomRight,
+                child: _buildActions(context, theme, appLocalizations),
+              ),
             ),
           ],
         ),
@@ -161,91 +159,89 @@ class _UserProfileImageEditorDialogState
   }
 
   ClipRRect _buildProfile(bool useImageMode, User user) => ClipRRect(
-        borderRadius: Sizes.borderRadiusCircular4,
-        child: SizedBox(
-            width: _imageSize,
-            height: _imageSize,
-            child: useImageMode
-                ? DecoratedBox(
-                    decoration: const BoxDecoration(
-                      color: Colors.black26,
-                    ),
-                    child: TImageCropper(
-                      image: _profileImageProvider!,
-                      controller: _imageCropperController,
-                      flipX: _flipX,
-                      flipY: _flipY,
-                      rotationAngle: _angle,
-                      aspectRatio: 1,
-                      onCropAreaMoved: (containerRect, imageRect) async {
-                        SchedulerBinding.instance
-                            .addPostFrameCallback((_) async {
-                          final result =
-                              await _imageCropperController.capture?.call();
-                          _profileImageCaptureResult = result!;
-                          setState(() {});
-                        });
-                      },
-                    ),
-                  )
-                : TAvatar(
-                    id: user.userId,
-                    name: user.name,
-                    textSize: 125,
-                  )),
-      );
-
-  Widget _buildActions(BuildContext context, ThemeData theme,
-          AppLocalizations appLocalizations) =>
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TTextButton(
-              containerPadding: Sizes.paddingV4H8,
-              text: appLocalizations.selectProfileImage,
-              onTap: () async {
-                final result = await FileUtils.pickFile(
-                    allowedExtensions: _allowedExtensions,
-                    withReadStream: true);
-                if (!mounted) {
-                  return;
-                }
-                assert(result!.isSinglePick);
-                assert(result!.files.length == 1);
-                if (result?.isSinglePick == true) {
-                  final file = result!.files[0];
-                  if (!_allowedExtensions.contains(file.extension)) {
-                    return;
-                  }
-                  final bytes = await file.readStream?.toFuture();
-                  if (mounted && bytes != null) {
-                    _loadImage(bytes);
-                  }
-                }
-              }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 16,
-            children: [
-              TTextButton.outlined(
-                theme: theme,
-                text: appLocalizations.cancel,
-                containerPadding: Sizes.paddingV4H8,
-                containerWidth: 72,
-                onTap: () => Navigator.of(context).pop(),
-              ),
-              TTextButton(
-                text: appLocalizations.confirm,
-                containerPadding: Sizes.paddingV4H8,
-                containerWidth: 72,
-                onTap: () {
-                  // TODO: appLocalizations.confirm
+    borderRadius: Sizes.borderRadiusCircular4,
+    child: SizedBox(
+      width: _imageSize,
+      height: _imageSize,
+      child: useImageMode
+          ? DecoratedBox(
+              decoration: const BoxDecoration(color: Colors.black26),
+              child: TImageCropper(
+                image: _profileImageProvider!,
+                controller: _imageCropperController,
+                flipX: _flipX,
+                flipY: _flipY,
+                rotationAngle: _angle,
+                aspectRatio: 1,
+                onCropAreaMoved: (containerRect, imageRect) async {
+                  SchedulerBinding.instance.addPostFrameCallback((_) async {
+                    final result = await _imageCropperController.capture
+                        ?.call();
+                    _profileImageCaptureResult = result!;
+                    setState(() {});
+                  });
                 },
               ),
-            ],
+            )
+          : TAvatar(id: user.userId, name: user.name, textSize: 125),
+    ),
+  );
+
+  Widget _buildActions(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations appLocalizations,
+  ) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      TTextButton(
+        containerPadding: Sizes.paddingV4H8,
+        text: appLocalizations.selectProfileImage,
+        onTap: () async {
+          final result = await FileUtils.pickFile(
+            allowedExtensions: _allowedExtensions,
+            withReadStream: true,
+          );
+          if (!mounted) {
+            return;
+          }
+          assert(result!.isSinglePick);
+          assert(result!.files.length == 1);
+          if (result?.isSinglePick == true) {
+            final file = result!.files[0];
+            if (!_allowedExtensions.contains(file.extension)) {
+              return;
+            }
+            final bytes = await file.readStream?.toFuture();
+            if (mounted && bytes != null) {
+              _loadImage(bytes);
+            }
+          }
+        },
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        spacing: 16,
+        children: [
+          TTextButton.outlined(
+            theme: theme,
+            text: appLocalizations.cancel,
+            containerPadding: Sizes.paddingV4H8,
+            containerWidth: 72,
+            onTap: () => Navigator.of(context).pop(),
+          ),
+          TTextButton(
+            text: appLocalizations.confirm,
+            containerPadding: Sizes.paddingV4H8,
+            containerWidth: 72,
+            onTap: () {
+              // TODO: appLocalizations.confirm
+            },
           ),
         ],
-      );
+      ),
+    ],
+  );
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
     final newFiles = await event.session.readFiles();
@@ -259,21 +255,21 @@ class _UserProfileImageEditorDialogState
     if (bytes.isEmpty) {
       return;
     }
-    unawaited(_profileImageProvider?.evict(
-        cache: PaintingBinding.instance.imageCache));
+    unawaited(
+      _profileImageProvider?.evict(cache: PaintingBinding.instance.imageCache),
+    );
     _profileImageProvider = MemoryImage(bytes);
     setState(() {});
   }
 }
 
 Future<void> showUserProfileImageEditorDialog(
-        BuildContext context, User user) =>
-    showSimpleTDialog(
-      routeName: '/user-profile-image-dialog',
-      context: context,
-      width: Sizes.userProfileImageDialogWidth,
-      height: Sizes.userProfileImageDialogHeight,
-      child: UserProfileImageEditorDialog(
-        user: user,
-      ),
-    );
+  BuildContext context,
+  User user,
+) => showSimpleTDialog(
+  routeName: '/user-profile-image-dialog',
+  context: context,
+  width: Sizes.userProfileImageDialogWidth,
+  height: Sizes.userProfileImageDialogHeight,
+  child: UserProfileImageEditorDialog(user: user),
+);

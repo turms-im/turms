@@ -20,20 +20,25 @@ class UserMessageDatabase extends _$UserMessageDatabase {
   int get schemaVersion => 1;
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(beforeOpen: (details) async {
-        if (kDebugMode) {
-          await validateDatabaseSchema();
-        }
-      });
+  MigrationStrategy get migration => MigrationStrategy(
+    beforeOpen: (details) async {
+      if (kDebugMode) {
+        await validateDatabaseSchema();
+      }
+    },
+  );
 }
 
 final _userIdToDatabase = <Int64, UserMessageDatabase>{};
 
 UserMessageDatabase createUserMessageDatabaseIfNotExists(Int64 userId) =>
     _userIdToDatabase.putIfAbsent(
-        userId,
-        () => UserMessageDatabase(DatabaseUtils.createDatabase(
-            dbName: 'user_message_${userId.toString()}',
-            isAppDatabase: false,
-            logStatements: EnvVars.databaseLogStatements)));
+      userId,
+      () => UserMessageDatabase(
+        DatabaseUtils.createDatabase(
+          dbName: 'user_message_${userId.toString()}',
+          isAppDatabase: false,
+          logStatements: EnvVars.databaseLogStatements,
+        ),
+      ),
+    );

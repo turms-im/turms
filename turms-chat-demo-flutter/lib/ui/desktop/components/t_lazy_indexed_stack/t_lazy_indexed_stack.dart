@@ -41,8 +41,10 @@ class TLazyIndexedStackState extends State<TLazyIndexedStack> {
     final indexToActiveState = _indexToActiveState;
     final index = widget.index;
     indexToActiveState[index] = true;
-    final children = List.generate(indexToActiveState.length,
-        (i) => indexToActiveState[i] ? widget.children[i] : Sizes.sizedBox0);
+    final children = List.generate(
+      indexToActiveState.length,
+      (i) => indexToActiveState[i] ? widget.children[i] : Sizes.sizedBox0,
+    );
     return IndexedStack(
       alignment: widget.alignment,
       sizing: widget.sizing,

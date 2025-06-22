@@ -18,8 +18,10 @@ final themeViewModel = StateProvider<ThemeData>((ref) {
   return switch (userSettings?.theme) {
     ThemeMode.light => getLightTheme(fontFamily: fontFamily),
     ThemeMode.dark => getDarkTheme(fontFamily: fontFamily),
-    _ =>
-      _getThemeData(binding.platformDispatcher.platformBrightness, fontFamily),
+    _ => _getThemeData(
+      binding.platformDispatcher.platformBrightness,
+      fontFamily,
+    ),
   };
 });
 
@@ -41,7 +43,7 @@ String? _getFontFamily(Locale? locale) {
     'ko' => 'Malgun Gothic',
     'zh' || 'zh_CN' => 'Microsoft YaHei UI',
     'zh_HK' || 'zh_TW' => 'Microsoft JhengHei UI',
-    _ => null
+    _ => null,
   };
 }
 
@@ -59,8 +61,10 @@ class _PlatformBrightnessObserver extends WidgetsBindingObserver {
 
     final themeMode = userSettings?.theme;
     if (themeMode == null || themeMode == ThemeMode.system) {
-      ref.controller.state =
-          _getThemeData(brightness, _getFontFamily(localeInfo.locale));
+      ref.controller.state = _getThemeData(
+        brightness,
+        _getFontFamily(localeInfo.locale),
+      );
     }
   }
 }

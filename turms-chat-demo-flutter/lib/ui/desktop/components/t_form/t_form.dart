@@ -11,52 +11,61 @@ class TForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: formData.groups.indexed.expand((item) {
-          final (index, group) = item;
-          final children = <Widget>[];
-          if (index > 0) {
-            children.add(const Padding(
-              padding: Sizes.paddingV16,
-              // child: SizedBox.shrink(),
-              child: THorizontalDivider(),
-            ));
-          }
-          final text = Text(group.title,
-              key: group.titleKey, style: const TextStyle(fontSize: 16));
-          final titleSuffix = group.titleSuffix;
-          if (titleSuffix == null) {
-            children.add(text);
-          } else {
-            children.add(Row(spacing: 16, children: [text, titleSuffix]));
-          }
-          for (final element in group.fields.indexed) {
-            final (index, field) = element;
-            for (final widget in _buildFormField(index, field)) {
-              children.add(widget);
-            }
-          }
-          return children;
-        }).toList(),
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: formData.groups.indexed.expand((item) {
+      final (index, group) = item;
+      final children = <Widget>[];
+      if (index > 0) {
+        children.add(
+          const Padding(
+            padding: Sizes.paddingV16,
+            // child: SizedBox.shrink(),
+            child: THorizontalDivider(),
+          ),
+        );
+      }
+      final text = Text(
+        group.title,
+        key: group.titleKey,
+        style: const TextStyle(fontSize: 16),
       );
+      final titleSuffix = group.titleSuffix;
+      if (titleSuffix == null) {
+        children.add(text);
+      } else {
+        children.add(Row(spacing: 16, children: [text, titleSuffix]));
+      }
+      for (final element in group.fields.indexed) {
+        final (index, field) = element;
+        for (final widget in _buildFormField(index, field)) {
+          children.add(widget);
+        }
+      }
+      return children;
+    }).toList(),
+  );
 
   List<Widget> _buildFormField(int index, TFormField field) =>
       <Widget>[Sizes.sizedBoxH8] +
       switch (field) {
         TFormFieldCheckbox() => <Widget>[
-            TSimpleCheckbox(
-                onChanged: field.onChanged,
-                value: field.value,
-                label: field.label)
-          ],
+          TSimpleCheckbox(
+            onChanged: field.onChanged,
+            value: field.value,
+            label: field.label,
+          ),
+        ],
         TFormFieldRadioGroup() => <Widget>[
-            Wrap(
-              direction: Axis.vertical,
-              spacing: 8,
-              children: [
-                Text(field.label),
-                Wrap(direction: Axis.vertical, spacing: 8, children: <Widget>[
+          Wrap(
+            direction: Axis.vertical,
+            spacing: 8,
+            children: [
+              Text(field.label),
+              Wrap(
+                direction: Axis.vertical,
+                spacing: 8,
+                children: <Widget>[
                   for (final radio in field.radios)
                     TRadio(
                       value: radio.value,
@@ -68,13 +77,17 @@ class TForm extends StatelessWidget {
                         (radio as dynamic)?.onChanged?.call(value);
                         (field as dynamic)?.onChanged?.call(value);
                       },
-                    )
-                ])
-              ],
-            ),
-          ],
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ],
         TFormFieldShortcutTextField() => <Widget>[
-            Row(spacing: 16, mainAxisSize: MainAxisSize.min, children: [
+          Row(
+            spacing: 16,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Text(field.label),
               SizedBox(
                 width: 180,
@@ -82,15 +95,16 @@ class TForm extends StatelessWidget {
                   initialKeys: field.initialKeys,
                   onShortcutChanged: field.onShortcutChanged,
                 ),
-              )
-            ])
-          ],
-        TFormFieldSelect() => <Widget>[
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              Text(field.label),
-              const SizedBox(
-                width: 16,
               ),
+            ],
+          ),
+        ],
+        TFormFieldSelect() => <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(field.label),
+              const SizedBox(width: 16),
               SizedBox(
                 width: 180,
                 child: TTextFieldMenuPopup(
@@ -102,10 +116,11 @@ class TForm extends StatelessWidget {
                     (field as dynamic).onSelected.call(item.value);
                   },
                 ),
-              )
-            ])
-          ],
-        _ => <Widget>[]
+              ),
+            ],
+          ),
+        ],
+        _ => <Widget>[],
       };
 }
 
@@ -116,11 +131,12 @@ class TFormData {
 }
 
 class TFormFieldGroup {
-  TFormFieldGroup(
-      {required this.title,
-      this.titleSuffix,
-      this.titleKey,
-      required this.fields});
+  TFormFieldGroup({
+    required this.title,
+    this.titleSuffix,
+    this.titleKey,
+    required this.fields,
+  });
 
   final String title;
   final Widget? titleSuffix;
@@ -135,8 +151,11 @@ class TFormField {
 }
 
 class TFormFieldCheckbox extends TFormField {
-  TFormFieldCheckbox(
-      {required super.label, required this.value, required this.onChanged});
+  TFormFieldCheckbox({
+    required super.label,
+    required this.value,
+    required this.onChanged,
+  });
 
   final bool value;
 
@@ -144,11 +163,12 @@ class TFormFieldCheckbox extends TFormField {
 }
 
 class TFormFieldRadioGroup<T> extends TFormField {
-  TFormFieldRadioGroup(
-      {required super.label,
-      required this.groupValue,
-      required this.radios,
-      this.onChanged});
+  TFormFieldRadioGroup({
+    required super.label,
+    required this.groupValue,
+    required this.radios,
+    this.onChanged,
+  });
 
   final T groupValue;
 
@@ -168,21 +188,23 @@ class TFormFieldRadio<T> {
 }
 
 class TFormFieldShortcutTextField extends TFormField {
-  TFormFieldShortcutTextField(
-      {required super.label,
-      this.initialKeys,
-      required this.onShortcutChanged});
+  TFormFieldShortcutTextField({
+    required super.label,
+    this.initialKeys,
+    required this.onShortcutChanged,
+  });
 
   final List<LogicalKeyboardKey>? initialKeys;
   final void Function(List<LogicalKeyboardKey> keys) onShortcutChanged;
 }
 
 class TFormFieldSelect<T> extends TFormField {
-  TFormFieldSelect(
-      {required super.label,
-      this.value,
-      required this.entries,
-      required this.onSelected});
+  TFormFieldSelect({
+    required super.label,
+    this.value,
+    required this.entries,
+    required this.onSelected,
+  });
 
   final T? value;
   final List<TMenuEntry<T>> entries;

@@ -46,10 +46,8 @@ class _TDrawerState extends State<TDrawer> with SingleTickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) => _TDrawerView(
-        animation: _animationController,
-        child: _currentChild,
-      );
+  Widget build(BuildContext context) =>
+      _TDrawerView(animation: _animationController, child: _currentChild);
 
   @override
   void didUpdateWidget(TDrawer oldWidget) {
@@ -99,14 +97,18 @@ class _TDrawerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Align(
-        alignment: Alignment.centerRight,
-        child: SizeTransition(
-          axis: Axis.horizontal,
-          sizeFactor: animation.drive(Tween<double>(begin: 0, end: 1)
-              .chain(CurveTween(curve: Curves.fastOutSlowIn))),
-          child: child,
-        ),
-      );
+    alignment: Alignment.centerRight,
+    child: SizeTransition(
+      axis: Axis.horizontal,
+      sizeFactor: animation.drive(
+        Tween<double>(
+          begin: 0,
+          end: 1,
+        ).chain(CurveTween(curve: Curves.fastOutSlowIn)),
+      ),
+      child: child,
+    ),
+  );
 }
 
 class _TDrawerRoute<T> extends PopupRoute<T> {
@@ -127,17 +129,16 @@ class _TDrawerRoute<T> extends PopupRoute<T> {
   Duration get transitionDuration => const Duration(milliseconds: 200);
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) =>
-      RepaintBoundary(
-        child: Material(
-          color: Colors.transparent,
-          child: _TDrawerView(
-            animation: animation,
-            child: child,
-          ),
-        ),
-      );
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) => RepaintBoundary(
+    child: Material(
+      color: Colors.transparent,
+      child: _TDrawerView(animation: animation, child: child),
+    ),
+  );
 }
 
 class TDrawerController {

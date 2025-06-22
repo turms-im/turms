@@ -6,6 +6,7 @@
 /// @docImport 'floating_action_button.dart';
 /// @docImport 'icon_button.dart';
 /// @docImport 'popup_menu.dart';
+library;
 
 import 'dart:async';
 
@@ -20,25 +21,15 @@ import '../../../themes/index.dart';
 // * Disappear instead of keeping displaying when hovering.
 
 class _ExclusiveMouseRegion extends MouseRegion {
-  const _ExclusiveMouseRegion({
-    super.onEnter,
-    super.onExit,
-    super.child,
-  });
+  const _ExclusiveMouseRegion({super.onEnter, super.onExit, super.child});
 
   @override
   _RenderExclusiveMouseRegion createRenderObject(BuildContext context) =>
-      _RenderExclusiveMouseRegion(
-        onEnter: onEnter,
-        onExit: onExit,
-      );
+      _RenderExclusiveMouseRegion(onEnter: onEnter, onExit: onExit);
 }
 
 class _RenderExclusiveMouseRegion extends RenderMouseRegion {
-  _RenderExclusiveMouseRegion({
-    super.onEnter,
-    super.onExit,
-  });
+  _RenderExclusiveMouseRegion({super.onEnter, super.onExit});
 
   static bool isOutermostMouseRegion = true;
   static bool foundInnermostMouseRegion = false;
@@ -84,14 +75,16 @@ class TTooltip extends StatefulWidget {
     this.waitDuration,
     this.showDuration,
     this.child,
-  })  : assert((message == null) != (richMessage == null),
-            'Either `message` or `richMessage` must be specified'),
-        assert(
-          richMessage == null || textStyle == null,
-          'If `richMessage` is specified, `textStyle` will have no effect. '
-          'If you wish to provide a `textStyle` for a rich tooltip, add the '
-          '`textStyle` directly to the `richMessage` InlineSpan.',
-        );
+  }) : assert(
+         (message == null) != (richMessage == null),
+         'Either `message` or `richMessage` must be specified',
+       ),
+       assert(
+         richMessage == null || textStyle == null,
+         'If `richMessage` is specified, `textStyle` will have no effect. '
+         'If you wish to provide a `textStyle` for a rich tooltip, add the '
+         '`textStyle` directly to the `richMessage` InlineSpan.',
+       );
 
   /// The text to display in the tooltip.
   ///
@@ -248,8 +241,10 @@ class TTooltipState extends State<TTooltip>
 
   void _handleStatusChanged(AnimationStatus status) {
     assert(mounted);
-    switch (
-        AnimationUtils.detectDismissedStatusChange(_animationStatus, status)) {
+    switch (AnimationUtils.detectDismissedStatusChange(
+      _animationStatus,
+      status,
+    )) {
       case DismissedStatusChangeType.becomeDismissed:
         _overlayController.hide();
       case DismissedStatusChangeType.becomeNotDismissed:
@@ -335,37 +330,29 @@ class TTooltipState extends State<TTooltip>
 
   // https://material.io/components/tooltips#specs
   double _getDefaultTooltipHeight() => switch (Theme.of(context).platform) {
-        TargetPlatform.macOS ||
-        TargetPlatform.linux ||
-        TargetPlatform.windows =>
-          24.0,
-        TargetPlatform.android ||
-        TargetPlatform.fuchsia ||
-        TargetPlatform.iOS =>
-          32.0,
-      };
+    TargetPlatform.macOS ||
+    TargetPlatform.linux ||
+    TargetPlatform.windows => 24.0,
+    TargetPlatform.android ||
+    TargetPlatform.fuchsia ||
+    TargetPlatform.iOS => 32.0,
+  };
 
   EdgeInsets _getDefaultPadding() => switch (Theme.of(context).platform) {
-        TargetPlatform.macOS ||
-        TargetPlatform.linux ||
-        TargetPlatform.windows =>
-          const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        TargetPlatform.android ||
-        TargetPlatform.fuchsia ||
-        TargetPlatform.iOS =>
-          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      };
+    TargetPlatform.macOS || TargetPlatform.linux || TargetPlatform.windows =>
+      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+    TargetPlatform.android || TargetPlatform.fuchsia || TargetPlatform.iOS =>
+      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+  };
 
   static double _getDefaultFontSize(TargetPlatform platform) =>
       switch (platform) {
         TargetPlatform.macOS ||
         TargetPlatform.linux ||
-        TargetPlatform.windows =>
-          12.0,
+        TargetPlatform.windows => 12.0,
         TargetPlatform.android ||
         TargetPlatform.fuchsia ||
-        TargetPlatform.iOS =>
-          14.0,
+        TargetPlatform.iOS => 14.0,
       };
 
   Widget _buildTooltipOverlay(BuildContext context) {
@@ -376,31 +363,39 @@ class TTooltipState extends State<TTooltip>
       ancestor: overlayState.context.findRenderObject(),
     );
 
-    final (TextStyle defaultTextStyle, BoxDecoration defaultDecoration) =
-        switch (Theme.of(context)) {
+    final (
+      TextStyle defaultTextStyle,
+      BoxDecoration defaultDecoration,
+    ) = switch (Theme.of(context)) {
       ThemeData(
         brightness: Brightness.dark,
         :final TextTheme textTheme,
-        :final TargetPlatform platform
+        :final TargetPlatform platform,
       ) =>
         (
           textTheme.bodyMedium!.copyWith(
-              color: Colors.black, fontSize: _getDefaultFontSize(platform)),
+            color: Colors.black,
+            fontSize: _getDefaultFontSize(platform),
+          ),
           BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
-              borderRadius: Sizes.borderRadiusCircular4),
+            color: Colors.white.withValues(alpha: 0.9),
+            borderRadius: Sizes.borderRadiusCircular4,
+          ),
         ),
       ThemeData(
         brightness: Brightness.light,
         :final TextTheme textTheme,
-        :final TargetPlatform platform
+        :final TargetPlatform platform,
       ) =>
         (
           textTheme.bodyMedium!.copyWith(
-              color: Colors.white, fontSize: _getDefaultFontSize(platform)),
+            color: Colors.white,
+            fontSize: _getDefaultFontSize(platform),
+          ),
           BoxDecoration(
-              color: Colors.grey.shade700.withValues(alpha: 0.9),
-              borderRadius: Sizes.borderRadiusCircular4),
+            color: Colors.grey.shade700.withValues(alpha: 0.9),
+            borderRadius: Sizes.borderRadiusCircular4,
+          ),
         ),
     };
 
@@ -408,7 +403,9 @@ class TTooltipState extends State<TTooltip>
     final overlayChild = _TooltipOverlay(
       richMessage: widget.richMessage ?? TextSpan(text: widget.message),
       height:
-          widget.height ?? tooltipTheme.height ?? _getDefaultTooltipHeight(),
+          widget.height ??
+          tooltipTheme.constraints?.minHeight ??
+          _getDefaultTooltipHeight(),
       padding: widget.padding ?? tooltipTheme.padding ?? _getDefaultPadding(),
       margin: widget.margin ?? tooltipTheme.margin ?? _defaultMargin,
       decoration:
@@ -416,10 +413,13 @@ class TTooltipState extends State<TTooltip>
       textStyle: widget.textStyle ?? tooltipTheme.textStyle ?? defaultTextStyle,
       textAlign:
           widget.textAlign ?? tooltipTheme.textAlign ?? _defaultTextAlign,
-      animation:
-          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+      animation: CurvedAnimation(
+        parent: _controller,
+        curve: Curves.fastOutSlowIn,
+      ),
       target: target,
-      verticalOffset: widget.verticalOffset ??
+      verticalOffset:
+          widget.verticalOffset ??
           tooltipTheme.verticalOffset ??
           _defaultVerticalOffset,
       preferBelow:
@@ -445,7 +445,8 @@ class TTooltipState extends State<TTooltip>
       return widget.child ?? const SizedBox.shrink();
     }
     assert(debugCheckHasOverlay(context));
-    final excludeFromSemantics = widget.excludeFromSemantics ??
+    final excludeFromSemantics =
+        widget.excludeFromSemantics ??
         _tooltipTheme.excludeFromSemantics ??
         _defaultExcludeFromSemantics;
     Widget result = Semantics(
@@ -510,12 +511,12 @@ class TTooltipPositionDelegate extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) => positionDependentBox(
-        size: size,
-        childSize: childSize,
-        target: target,
-        verticalOffset: verticalOffset,
-        preferBelow: preferBelow,
-      );
+    size: size,
+    childSize: childSize,
+    target: target,
+    verticalOffset: verticalOffset,
+    preferBelow: preferBelow,
+  );
 
   @override
   bool shouldRelayout(TTooltipPositionDelegate oldDelegate) =>
@@ -553,36 +554,36 @@ class _TooltipOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned.fill(
-        bottom: MediaQuery.maybeViewInsetsOf(context)?.bottom ?? 0.0,
-        child: CustomSingleChildLayout(
-          delegate: TTooltipPositionDelegate(
-            target: target,
-            verticalOffset: verticalOffset,
-            preferBelow: preferBelow,
-          ),
-          child: FadeTransition(
-            opacity: animation,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: height),
-              child: DefaultTextStyle(
-                style: Theme.of(context).textTheme.bodyMedium!,
-                child: Container(
-                  decoration: decoration,
-                  padding: padding,
-                  margin: margin,
-                  child: Center(
-                    widthFactor: 1.0,
-                    heightFactor: 1.0,
-                    child: Text.rich(
-                      richMessage,
-                      style: textStyle,
-                      textAlign: textAlign,
-                    ),
-                  ),
+    bottom: MediaQuery.maybeViewInsetsOf(context)?.bottom ?? 0.0,
+    child: CustomSingleChildLayout(
+      delegate: TTooltipPositionDelegate(
+        target: target,
+        verticalOffset: verticalOffset,
+        preferBelow: preferBelow,
+      ),
+      child: FadeTransition(
+        opacity: animation,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height),
+          child: DefaultTextStyle(
+            style: Theme.of(context).textTheme.bodyMedium!,
+            child: Container(
+              decoration: decoration,
+              padding: padding,
+              margin: margin,
+              child: Center(
+                widthFactor: 1.0,
+                heightFactor: 1.0,
+                child: Text.rich(
+                  richMessage,
+                  style: textStyle,
+                  textAlign: textAlign,
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 }

@@ -43,9 +43,13 @@ class _FriendRequestsPageState extends ConsumerState<FriendRequestsPage> {
   }
 
   void _startConversation(FriendRequest friendRequest) {
-    ref.read(selectedConversationViewModel.notifier).selectByContact(
-        UserContact(
+    ref
+        .read(selectedConversationViewModel.notifier)
+        .selectByContact(
+          UserContact(
             userId: friendRequest.sender.userId,
-            name: friendRequest.sender.name));
+            name: friendRequest.sender.name,
+          ),
+        );
   }
 }

@@ -24,7 +24,7 @@ typedef OnCropAreaMoved = void Function(Rect containerRect, Rect imageRect);
 typedef OnImageMoved = void Function(Rect imageRect);
 
 class TImageCropper extends StatelessWidget {
-  TImageCropper({
+  const TImageCropper({
     super.key,
     required this.image,
     this.imageShape = ImageShape.rectangle,
@@ -75,28 +75,28 @@ class TImageCropper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (c, constraints) => _ImageCropper(
-          key: key,
-          image: image,
-          imageShape: imageShape,
-          controller: controller,
-          flipX: flipX,
-          flipY: flipY,
-          rotationAngle: rotationAngle,
-          aspectRatio: aspectRatio,
-          fixCropRect: fixCropRect,
-          containerSize: constraints.biggest,
-          containerBackgroundColor: containerBackgroundColor,
-          maskColor: maskColor,
-          radius: radius,
-          dotHandleDimension: dotHandleDimension,
-          isImageInteractive: isImageInteractive,
-          filterQuality: filterQuality,
-          willUpdateScale: willUpdateScale,
-          onCropAreaMoved: onCropAreaMoved,
-          onImageMoved: onImageMoved,
-        ),
-      );
+    builder: (c, constraints) => _ImageCropper(
+      key: key,
+      image: image,
+      imageShape: imageShape,
+      controller: controller,
+      flipX: flipX,
+      flipY: flipY,
+      rotationAngle: rotationAngle,
+      aspectRatio: aspectRatio,
+      fixCropRect: fixCropRect,
+      containerSize: constraints.biggest,
+      containerBackgroundColor: containerBackgroundColor,
+      maskColor: maskColor,
+      radius: radius,
+      dotHandleDimension: dotHandleDimension,
+      isImageInteractive: isImageInteractive,
+      filterQuality: filterQuality,
+      willUpdateScale: willUpdateScale,
+      onCropAreaMoved: onCropAreaMoved,
+      onImageMoved: onImageMoved,
+    ),
+  );
 }
 
 class _ImageCropper extends StatefulWidget {
@@ -242,19 +242,16 @@ class _ImageCropperState extends State<_ImageCropper> {
       return null;
     }
     final image = _imageInfo!.image;
-    return compute(
-      _cropImage,
-      [
-        imageBytes,
-        image.width,
-        image.height,
-        _data!.imageRectToCrop,
-        widget.imageShape,
-        widget.flipX,
-        widget.flipY,
-        widget.rotationAngle,
-      ],
-    );
+    return compute(_cropImage, [
+      imageBytes,
+      image.width,
+      image.height,
+      _data!.imageRectToCrop,
+      widget.imageShape,
+      widget.flipX,
+      widget.flipY,
+      widget.rotationAngle,
+    ]);
   }
 
   Future<CaptureResult?> _capture() async {
@@ -304,30 +301,18 @@ class _ImageCropperState extends State<_ImageCropper> {
     }
     final dy = signal.scrollDelta.dy;
     if (dy > 0) {
-      _applyScale(
-        _data!.scale,
-        focalPoint: signal.localPosition,
-      );
+      _applyScale(_data!.scale, focalPoint: signal.localPosition);
     } else if (dy < 0) {
-      _applyScale(
-        _data!.scale,
-        focalPoint: signal.localPosition,
-      );
+      _applyScale(_data!.scale, focalPoint: signal.localPosition);
     }
   }
 
-  bool _applyScale(
-    double nextScale, {
-    Offset? focalPoint,
-  }) {
+  bool _applyScale(double nextScale, {Offset? focalPoint}) {
     final allowScale = widget.willUpdateScale?.call(nextScale) ?? true;
     if (!allowScale) {
       return false;
     }
-    _data = _data!.updateImageRectAndScale(
-      nextScale,
-      focalPoint: focalPoint,
-    );
+    _data = _data!.updateImageRectAndScale(nextScale, focalPoint: focalPoint);
     widget.onImageMoved?.call(_data!.imageRect);
     setState(() {});
     return true;
@@ -350,16 +335,18 @@ extension _ImageCropperStateView on _ImageCropperState {
       TScreenshot(
         controller: _screenshotController,
         child: TTransform(
-            flipX: flipX,
-            flipY: flipY,
-            rotationAngle: rotationAngle,
-            child: _buildImage(context, imageRect)),
-      ),
-      TTransform(
           flipX: flipX,
           flipY: flipY,
           rotationAngle: rotationAngle,
-          child: _buildMask(cropRect)),
+          child: _buildImage(context, imageRect),
+        ),
+      ),
+      TTransform(
+        flipX: flipX,
+        flipY: flipY,
+        rotationAngle: rotationAngle,
+        child: _buildMask(cropRect),
+      ),
     ];
     if (!widget.fixCropRect) {
       var topLeftHandlePosition = DotHandlePosition.topLeft;
@@ -372,17 +359,18 @@ extension _ImageCropperStateView on _ImageCropperState {
       if (flipY) {
         topLeftHandlePosition = topLeftHandlePosition.flipY();
       }
-      children.add(TTransform(
+      children.add(
+        TTransform(
           flipX: flipX,
           flipY: flipY,
           rotationAngle: rotationAngle,
           child: Stack(
             children: _buildHandles(cropRect, topLeftHandlePosition),
-          )));
+          ),
+        ),
+      );
     }
-    return Stack(
-      children: children,
-    );
+    return Stack(children: children);
   }
 
   Widget _buildImage(BuildContext context, Rect imageRect) {
@@ -425,21 +413,23 @@ extension _ImageCropperStateView on _ImageCropperState {
   }
 
   Widget _buildMask(Rect cropRect) => IgnorePointer(
-        child: ClipPath(
-          clipper: switch (widget.imageShape) {
-            ImageShape.circle => CircleCropAreaClipper(cropRect),
-            ImageShape.rectangle => RectCropAreaClipper(cropRect, widget.radius)
-          },
-          child: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: ColoredBox(color: widget.maskColor),
-          ),
-        ),
-      );
+    child: ClipPath(
+      clipper: switch (widget.imageShape) {
+        ImageShape.circle => CircleCropAreaClipper(cropRect),
+        ImageShape.rectangle => RectCropAreaClipper(cropRect, widget.radius),
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: ColoredBox(color: widget.maskColor),
+      ),
+    ),
+  );
 
   List<Widget> _buildHandles(
-      Rect cropRect, DotHandlePosition topLeftHandlePosition) {
+    Rect cropRect,
+    DotHandlePosition topLeftHandlePosition,
+  ) {
     final dotHandleDimension = widget.dotHandleDimension;
     var handlePosition = topLeftHandlePosition;
     return [
@@ -449,9 +439,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         child: MouseRegion(
           cursor: SystemMouseCursors.move,
           child: GestureDetector(
-            onPanUpdate: (details) => _updateCropRect(
-              _data!.moveRect(details.delta),
-            ),
+            onPanUpdate: (details) =>
+                _updateCropRect(_data!.moveRect(details.delta)),
             child: Container(
               width: cropRect.width,
               height: cropRect.height,
@@ -464,9 +453,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         left: cropRect.left - (dotHandleDimension / 2),
         top: cropRect.top - (dotHandleDimension / 2),
         child: GestureDetector(
-          onPanUpdate: (details) => _updateCropRect(
-            _data!.moveTopLeft(details.delta),
-          ),
+          onPanUpdate: (details) =>
+              _updateCropRect(_data!.moveTopLeft(details.delta)),
           child: DotHandle(
             position: handlePosition,
             dimension: dotHandleDimension,
@@ -477,9 +465,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         left: cropRect.right - (dotHandleDimension / 2),
         top: cropRect.top - (dotHandleDimension / 2),
         child: GestureDetector(
-          onPanUpdate: (details) => _updateCropRect(
-            _data!.moveTopRight(details.delta),
-          ),
+          onPanUpdate: (details) =>
+              _updateCropRect(_data!.moveTopRight(details.delta)),
           child: DotHandle(
             position: handlePosition = handlePosition.next(),
             dimension: dotHandleDimension,
@@ -490,9 +477,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         left: cropRect.right - (dotHandleDimension / 2),
         top: cropRect.bottom - (dotHandleDimension / 2),
         child: GestureDetector(
-          onPanUpdate: (details) => _updateCropRect(
-            _data!.moveBottomRight(details.delta),
-          ),
+          onPanUpdate: (details) =>
+              _updateCropRect(_data!.moveBottomRight(details.delta)),
           child: DotHandle(
             position: handlePosition = handlePosition.next(),
             dimension: dotHandleDimension,
@@ -503,9 +489,8 @@ extension _ImageCropperStateView on _ImageCropperState {
         left: cropRect.left - (dotHandleDimension / 2),
         top: cropRect.bottom - (dotHandleDimension / 2),
         child: GestureDetector(
-          onPanUpdate: (details) => _updateCropRect(
-            _data!.moveBottomLeft(details.delta),
-          ),
+          onPanUpdate: (details) =>
+              _updateCropRect(_data!.moveBottomLeft(details.delta)),
           child: DotHandle(
             position: handlePosition.next(),
             dimension: dotHandleDimension,
@@ -527,9 +512,10 @@ FutureOr<Uint8List> _cropImage(List<dynamic> args) {
   final rotationAngle = args[7] as double;
   return ImageUtils.cropAsBytes(
     image: img.Image.fromBytes(
-        bytes: originalImage,
-        width: originalImageWidth,
-        height: originalImageHeight),
+      bytes: originalImage,
+      width: originalImageWidth,
+      height: originalImageHeight,
+    ),
     shape: shape,
     topLeft: Offset(rect.left, rect.top),
     bottomRight: Offset(rect.right, rect.bottom),

@@ -20,35 +20,35 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: Sizes.dialogWidthMedium,
-        height: Sizes.dialogHeightMedium,
-        child: Row(
-          children: [
-            SubNavigationRail(
-              onTabSelected: (index, tab) => _selectTab(tab),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.topRight,
-                    child: TTitleBar(
-                      displayCloseOnly: true,
-                      popOnCloseTapped: true,
-                      usePositioned: false,
-                    ),
-                  ),
-                  Expanded(child: SettingsPane(
-                    onSettingFormFieldGroupScrolled: (index) {
-                      _selectTabWithoutScroll();
-                    },
-                  )),
-                ],
+    width: Sizes.dialogWidthMedium,
+    height: Sizes.dialogHeightMedium,
+    child: Row(
+      children: [
+        SubNavigationRail(onTabSelected: (index, tab) => _selectTab(tab)),
+        Expanded(
+          child: Column(
+            children: [
+              const Align(
+                alignment: Alignment.topRight,
+                child: TTitleBar(
+                  displayCloseOnly: true,
+                  popOnCloseTapped: true,
+                  usePositioned: false,
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: SettingsPane(
+                  onSettingFormFieldGroupScrolled: (index) {
+                    _selectTabWithoutScroll();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   void _selectTab(TTab tab) {
     final fieldGroupContext =
@@ -56,9 +56,11 @@ class _SettingsPageState extends State<SettingsPage> {
             ?.key
             .currentContext;
     if (fieldGroupContext != null) {
-      Scrollable.ensureVisible(fieldGroupContext,
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.fastOutSlowIn);
+      Scrollable.ensureVisible(
+        fieldGroupContext,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.fastOutSlowIn,
+      );
     }
     setState(() {});
   }
@@ -69,6 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 Future<void> showSettingsDialog(BuildContext context) => showCustomTDialog(
-    routeName: '/settings-dialog',
-    context: context,
-    child: const SettingsPage());
+  routeName: '/settings-dialog',
+  context: context,
+  child: const SettingsPage(),
+);

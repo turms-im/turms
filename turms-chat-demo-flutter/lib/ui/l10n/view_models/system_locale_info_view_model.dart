@@ -46,7 +46,8 @@ class LocaleInfoViewModelNotifier extends Notifier<LocaleInfo> {
 
 final localeInfoViewModel =
     NotifierProvider<LocaleInfoViewModelNotifier, LocaleInfo>(
-        LocaleInfoViewModelNotifier.new);
+      LocaleInfoViewModelNotifier.new,
+    );
 
 const _localeEn = Locale('en');
 
@@ -67,8 +68,9 @@ class _LocaleObserver extends WidgetsBindingObserver {
 LocaleInfo _getDefaultLocaleInfo() {
   final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
   return LocaleInfo(
-      isSystemLocale: true,
-      locale: AppLocalizations.delegate.isSupported(systemLocale)
-          ? systemLocale
-          : _localeEn);
+    isSystemLocale: true,
+    locale: AppLocalizations.delegate.isSupported(systemLocale)
+        ? systemLocale
+        : _localeEn,
+  );
 }

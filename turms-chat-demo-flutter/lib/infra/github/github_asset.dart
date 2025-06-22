@@ -15,18 +15,18 @@ class GithubAsset {
   });
 
   GithubAsset.fromJson(Map<String, dynamic> json)
-      : url = json['url'] as String?,
-        id = json['id'] as int?,
-        nodeId = json['node_id'] as String?,
-        name = json['name'] as String?,
-        label = json['label'] as String?,
-        contentType = json['content_type'] as String?,
-        state = json['state'] as String?,
-        size = json['size'] as int?,
-        downloadCount = json['download_count'] as int?,
-        createdAt = json['created_at'] as String?,
-        updatedAt = json['updated_at'] as String?,
-        browserDownloadUrl = json['browser_download_url'] as String?;
+    : url = json['url'] as String?,
+      id = json['id'] as int?,
+      nodeId = json['node_id'] as String?,
+      name = json['name'] as String?,
+      label = json['label'] as String?,
+      contentType = json['content_type'] as String?,
+      state = json['state'] as String?,
+      size = json['size'] as int?,
+      downloadCount = json['download_count'] as int?,
+      createdAt = json['created_at'] as String?,
+      updatedAt = json['updated_at'] as String?,
+      browserDownloadUrl = json['browser_download_url'] as String?;
 
   final String? url;
   final int? id;

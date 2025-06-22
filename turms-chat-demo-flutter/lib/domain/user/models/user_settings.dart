@@ -10,7 +10,8 @@ class UserSettings {
   const UserSettings(this._settingToValue);
 
   static (UserSettings, StackfulException?) fromTableData(
-      List<UserSettingTableData> records) {
+    List<UserSettingTableData> records,
+  ) {
     // don't use const as the map should be mutable.
     // ignore: prefer_const_constructors
     final settings = UserSettings({});
@@ -25,21 +26,29 @@ class UserSettings {
         _setSetting(settings, setting, recordValue.rawSqlValue);
       } on Exception catch (e, s) {
         exception ??= StackfulException(
-            cause: Exception('Failed to set the user settings'),
-            stackTrace: s,
-            suppressed: []);
-        exception.addSuppressed(StackfulException(
+          cause: Exception('Failed to set the user settings'),
+          stackTrace: s,
+          suppressed: [],
+        );
+        exception.addSuppressed(
+          StackfulException(
             cause: Exception(
-                'Failed to set the user setting "${setting.name}" with the value "$recordValue"'),
+              'Failed to set the user setting "${setting.name}" with the value "$recordValue"',
+            ),
             stackTrace: s,
-            suppressed: [e]));
+            suppressed: [e],
+          ),
+        );
       }
     }
     return (settings, exception);
   }
 
-  static void _setSetting(UserSettings settings,
-      UserSetting<dynamic, dynamic> setting, Object sqlValue) {
+  static void _setSetting(
+    UserSettings settings,
+    UserSetting<dynamic, dynamic> setting,
+    Object sqlValue,
+  ) {
     if (setting == UserSetting.launchOnStartup) {
       return;
     }
@@ -63,24 +72,29 @@ class UserSettings {
         settings.newMessageNotification = value as bool;
         break;
       case UserSetting.shortcutShowChatPage:
-        settings.shortcutShowChatPage =
-            value == null ? null : Shortcut(value as ShortcutActivator, true);
+        settings.shortcutShowChatPage = value == null
+            ? null
+            : Shortcut(value as ShortcutActivator, true);
         break;
       case UserSetting.shortcutShowContactsPage:
-        settings.shortcutShowContactsPage =
-            value == null ? null : Shortcut(value as ShortcutActivator, true);
+        settings.shortcutShowContactsPage = value == null
+            ? null
+            : Shortcut(value as ShortcutActivator, true);
         break;
       case UserSetting.shortcutShowFilesPage:
-        settings.shortcutShowFilesPage =
-            value == null ? null : Shortcut(value as ShortcutActivator, true);
+        settings.shortcutShowFilesPage = value == null
+            ? null
+            : Shortcut(value as ShortcutActivator, true);
         break;
       case UserSetting.shortcutShowSettingsDialog:
-        settings.shortcutShowSettingsDialog =
-            value == null ? null : Shortcut(value as ShortcutActivator, true);
+        settings.shortcutShowSettingsDialog = value == null
+            ? null
+            : Shortcut(value as ShortcutActivator, true);
         break;
       case UserSetting.shortcutShowAboutDialog:
-        settings.shortcutShowAboutDialog =
-            value == null ? null : Shortcut(value as ShortcutActivator, true);
+        settings.shortcutShowAboutDialog = value == null
+            ? null
+            : Shortcut(value as ShortcutActivator, true);
         break;
       case UserSetting.theme:
         settings.theme = value as ThemeMode;

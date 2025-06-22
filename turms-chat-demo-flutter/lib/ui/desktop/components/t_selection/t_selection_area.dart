@@ -96,10 +96,12 @@ class TSelectionArea extends StatefulWidget {
   final Widget child;
 
   static Widget _defaultContextMenuBuilder(
-          BuildContext context, TSelectableRegionState selectableRegionState) =>
-      AdaptiveTextSelectionToolbar.buttonItems(
-          buttonItems: selectableRegionState.contextMenuButtonItems,
-          anchors: selectableRegionState.contextMenuAnchors);
+    BuildContext context,
+    TSelectableRegionState selectableRegionState,
+  ) => AdaptiveTextSelectionToolbar.buttonItems(
+    buttonItems: selectableRegionState.contextMenuButtonItems,
+    anchors: selectableRegionState.contextMenuAnchors,
+  );
 
   @override
   State<StatefulWidget> createState() => TSelectionAreaState();
@@ -126,14 +128,13 @@ class TSelectionAreaState extends State<TSelectionArea> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
-    final controls = widget.selectionControls ??
+    final controls =
+        widget.selectionControls ??
         switch (Theme.of(context).platform) {
           TargetPlatform.android ||
-          TargetPlatform.fuchsia =>
-            materialTextSelectionHandleControls,
+          TargetPlatform.fuchsia => materialTextSelectionHandleControls,
           TargetPlatform.linux ||
-          TargetPlatform.windows =>
-            desktopTextSelectionHandleControls,
+          TargetPlatform.windows => desktopTextSelectionHandleControls,
           TargetPlatform.iOS => cupertinoTextSelectionHandleControls,
           TargetPlatform.macOS => cupertinoDesktopTextSelectionHandleControls,
         };
@@ -143,7 +144,8 @@ class TSelectionAreaState extends State<TSelectionArea> {
       selectionControls: controls,
       focusNode: _effectiveFocusNode,
       contextMenuBuilder: widget.contextMenuBuilder,
-      magnifierConfiguration: widget.magnifierConfiguration ??
+      magnifierConfiguration:
+          widget.magnifierConfiguration ??
           TextMagnifier.adaptiveMagnifierConfiguration,
       onSelectionChanged: widget.onSelectionChanged,
       child: widget.child,

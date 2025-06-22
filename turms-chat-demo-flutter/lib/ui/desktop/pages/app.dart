@@ -80,8 +80,10 @@ class _AppState extends ConsumerState<App> with WindowListener {
     final appLocalizations = ref.watch(appLocalizationsViewModel);
     _isWindowMaximized = ref.watch(isWindowMaximizedViewModel);
 
-    ref.listen(loggedInUserViewModel,
-        (previousLoggedInUser, currentLoggedInUser) {
+    ref.listen(loggedInUserViewModel, (
+      previousLoggedInUser,
+      currentLoggedInUser,
+    ) {
       final displayLoginPage = currentLoggedInUser == null;
       if (_shouldDisplayLoginPage != displayLoginPage && !_isWindowSettingUp) {
         _hideAndResize(displayLoginPage).then((value) {
@@ -121,17 +123,21 @@ class _AppState extends ConsumerState<App> with WindowListener {
       // the previous min size will restrict the current resize
       // on window_manager (0.3.7).
       await WindowUtils.setupWindow(
-          minimumSize: AppConfig.defaultWindowSizeForLoginScreen);
+        minimumSize: AppConfig.defaultWindowSizeForLoginScreen,
+      );
       await WindowUtils.setupWindow(
-          size: AppConfig.defaultWindowSizeForLoginScreen,
-          backgroundColor: Colors.transparent);
+        size: AppConfig.defaultWindowSizeForLoginScreen,
+        backgroundColor: Colors.transparent,
+      );
     } else {
       await WindowUtils.setupWindow(
-          minimumSize: AppConfig.minWindowSizeForHomeScreen);
+        minimumSize: AppConfig.minWindowSizeForHomeScreen,
+      );
       await WindowUtils.setupWindow(
-          size: AppConfig.defaultWindowSizeForHomeScreen,
-          resizable: true,
-          backgroundColor: Colors.white);
+        size: AppConfig.defaultWindowSizeForHomeScreen,
+        resizable: true,
+        backgroundColor: Colors.white,
+      );
     }
     _isWindowSettingUp = false;
   }
@@ -156,45 +162,50 @@ class _AppState extends ConsumerState<App> with WindowListener {
   }
 
   Locale? _resolveLocale(
-          List<Locale>? locales, Iterable<Locale> supportedLocales) =>
-      ref.read(localeInfoViewModel).locale;
+    List<Locale>? locales,
+    Iterable<Locale> supportedLocales,
+  ) => ref.read(localeInfoViewModel).locale;
 }
 
 extension _AppView on _AppState {
   Widget _buildView(
-      ThemeData themeData, Locale locale, AppLocalizations appLocalizations) {
+    ThemeData themeData,
+    Locale locale,
+    AppLocalizations appLocalizations,
+  ) {
     final appThemeExtension = themeData.appThemeExtension;
     final themeMode = appThemeExtension.themeMode;
     return MaterialApp(
-        locale: locale,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: _navigatorKey,
-        themeMode: themeMode,
-        theme: themeMode == ThemeMode.light ? themeData : null,
-        darkTheme: themeMode == ThemeMode.dark ? themeData : null,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        localeListResolutionCallback: _resolveLocale,
-        home: Material(
-          child: GlobalKeyboardListener(
-            onKeyEvent: _onKeyEvent,
-            child: _shouldDisplayLoginPage
-                ? const ClipRRect(
-                    borderRadius: Sizes.borderRadiusCircular8,
-                    child: LoginPage(),
-                  )
-                : ClipRRect(
-                    borderRadius: _isWindowMaximized
-                        ? Sizes.borderRadius0
-                        : Sizes.borderRadiusCircular8,
-                    child: const HomePage(),
-                  ),
-          ),
-        ));
+      locale: locale,
+      debugShowCheckedModeBanner: false,
+      navigatorKey: _navigatorKey,
+      themeMode: themeMode,
+      theme: themeMode == ThemeMode.light ? themeData : null,
+      darkTheme: themeMode == ThemeMode.dark ? themeData : null,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeListResolutionCallback: _resolveLocale,
+      home: Material(
+        child: GlobalKeyboardListener(
+          onKeyEvent: _onKeyEvent,
+          child: _shouldDisplayLoginPage
+              ? const ClipRRect(
+                  borderRadius: Sizes.borderRadiusCircular8,
+                  child: LoginPage(),
+                )
+              : ClipRRect(
+                  borderRadius: _isWindowMaximized
+                      ? Sizes.borderRadius0
+                      : Sizes.borderRadiusCircular8,
+                  child: const HomePage(),
+                ),
+        ),
+      ),
+    );
   }
 }

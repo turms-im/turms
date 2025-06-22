@@ -9,8 +9,11 @@ import '../view_models/selected_conversation_view_model.dart';
 import 'chat_session_pane.dart';
 
 class ChatSessionPaneHeader extends ConsumerStatefulWidget {
-  const ChatSessionPaneHeader(
-      {super.key, required this.drawerController, required this.supportDrawer});
+  const ChatSessionPaneHeader({
+    super.key,
+    required this.drawerController,
+    required this.supportDrawer,
+  });
 
   final TDrawerController drawerController;
   final bool supportDrawer;
@@ -23,56 +26,49 @@ class ChatSessionPaneHeader extends ConsumerStatefulWidget {
 class _ChatSessionPaneHeaderState extends ConsumerState<ChatSessionPaneHeader> {
   @override
   Widget build(BuildContext context) => Stack(
-        children: [
-          const TWindowControlZone(
-            toggleMaximizeOnDoubleTap: true,
-          ),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Use Flexible to prevent overflow
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 28,
-                      right: 128,
+    children: [
+      const TWindowControlZone(toggleMaximizeOnDoubleTap: true),
+      Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Use Flexible to prevent overflow
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 28, right: 128),
+                child: SelectionArea(
+                  contextMenuBuilder: buildContextMenuForSelectableRegion,
+                  child: Text(
+                    ref.watch(selectedConversationViewModel)?.contact.name ??
+                        '',
+                    maxLines: 1,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
-                    child: SelectionArea(
-                      contextMenuBuilder: buildContextMenuForSelectableRegion,
-                      child: Text(
-                        ref
-                                .watch(selectedConversationViewModel)
-                                ?.contact
-                                .name ??
-                            '',
-                        maxLines: 1,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (widget.supportDrawer)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TapRegion(
-                        groupId: chatSessionDetailsDrawerGroupId,
-                        child: TIconButton(
-                          onTap: () => widget.drawerController.toggle!.call(),
-                          tooltip:
-                              ref.watch(appLocalizationsViewModel).chatInfo,
-                          iconData: Symbols.more_horiz_rounded,
-                        ),
-                      )
-                    ],
-                  )
-              ],
+              ),
             ),
-          )
-        ],
-      );
+            if (widget.supportDrawer)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TapRegion(
+                    groupId: chatSessionDetailsDrawerGroupId,
+                    child: TIconButton(
+                      onTap: () => widget.drawerController.toggle!.call(),
+                      tooltip: ref.watch(appLocalizationsViewModel).chatInfo,
+                      iconData: Symbols.more_horiz_rounded,
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

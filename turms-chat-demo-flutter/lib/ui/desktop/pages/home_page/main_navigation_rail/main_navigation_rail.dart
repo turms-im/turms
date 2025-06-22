@@ -27,16 +27,17 @@ class MainNavigationRail extends ConsumerWidget {
               imageEditable: true,
               presence: loggedInUser.presence,
               presencePopupOffset: Offset(
-                  (Sizes.mainNavigationRailWidth -
-                              TAvatarSize.medium.containerSize) /
-                          2 +
-                      Sizes.mainNavigationRailElementPopupOffsetX,
-                  0),
+                (Sizes.mainNavigationRailWidth -
+                            TAvatarSize.medium.containerSize) /
+                        2 +
+                    Sizes.mainNavigationRailElementPopupOffsetX,
+                0,
+              ),
               onPresenceSelected: (value) {
                 ref.read(userServiceProvider)!.updatePresence(value);
               },
             ),
-            const Expanded(child: Tabs())
+            const Expanded(child: Tabs()),
           ],
         ),
       ),

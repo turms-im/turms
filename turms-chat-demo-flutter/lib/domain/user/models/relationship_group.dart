@@ -10,25 +10,23 @@ class RelationshipGroup {
     required String name,
     required bool isBlocked,
     required List<Contact> contacts,
-  }) =>
-      RelationshipGroup(
-        id: id,
-        name: name,
-        isBlocked: isBlocked,
-        contacts: contacts,
-      );
+  }) => RelationshipGroup(
+    id: id,
+    name: name,
+    isBlocked: isBlocked,
+    contacts: contacts,
+  );
 
   factory RelationshipGroup.forGroup({
     required String name,
     required bool isBlocked,
     required List<Contact> contacts,
-  }) =>
-      RelationshipGroup(
-        id: groupRelationshipGroupId,
-        name: name,
-        isBlocked: isBlocked,
-        contacts: contacts,
-      );
+  }) => RelationshipGroup(
+    id: groupRelationshipGroupId,
+    name: name,
+    isBlocked: isBlocked,
+    contacts: contacts,
+  );
 
   const RelationshipGroup({
     required this.id,

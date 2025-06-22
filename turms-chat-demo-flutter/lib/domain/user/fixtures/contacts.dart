@@ -73,7 +73,7 @@ List<_RawContactConversation> _contactConversations = [
     'ನಮಸ್ತೆ, ಕನ್ನಡಿಗರ ಪರವಾಗಿ ಶುಭಾಷಯಗಳು.',
     '-',
     'Hello from the children of planet Earth',
-    '![Solar System Portrait|4000x1200](https://voyager.jpl.nasa.gov/assets/images/galleries/images-voyager-took/solar-system-portrait/PIA00451.jpg)'
+    '![Solar System Portrait|4000x1200](https://voyager.jpl.nasa.gov/assets/images/galleries/images-voyager-took/solar-system-portrait/PIA00451.jpg)',
   ]),
   // China
   const _RawContactConversation('窦唯', [
@@ -99,17 +99,17 @@ List<_RawContactConversation> _contactConversations = [
     '光阴归来',
     '变空白',
     '染尘埃',
-    '一并敛埋'
+    '一并敛埋',
   ]),
   // America
   const _RawContactConversation('Nina Simone', [
     '![Nina Simone - Stars / Feelings (Medley / Live at Montreux, 1976)](https://www.youtube.com/watch?v=Mf_5l1yTKNY)',
-    '![butterfly|1280x720](https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4)'
+    '![butterfly|1280x720](https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4)',
   ]),
   // Brazil
   const _RawContactConversation('Elis Regina', [
     'Como Nossos Pais',
-    '![](https://flutter.github.io/assets-for-api-docs/assets/audio/rooster.mp3)'
+    '![](https://flutter.github.io/assets-for-api-docs/assets/audio/rooster.mp3)',
   ]),
   // Cambodia
   const _RawContactConversation('រស់ សេរីសុទ្ធា', [
@@ -162,14 +162,14 @@ List<_RawContactConversation> _contactConversations = [
     'បើ បងប្រាថ្នាចង់ស្រលាញ់ខ្ញុំ',
     'បើ បងប្រាថ្នាចង់ស្រលាញ់ខ្ញុំ',
     'បើ បងប្រាថ្នាចង់ស្រលាញ់ខ្ញុំ។',
-    'ដោយក្តីស្រឡាញ់ពីខ្ញុំ ស៊ិន ស៊ីតារា'
+    'ដោយក្តីស្រឡាញ់ពីខ្ញុំ ស៊ិន ស៊ីតារា',
   ]),
   // Italy
   const _RawContactConversation('Piero Piccioni', ['Amore Mio Aiutami']),
   // South Korea
   const _RawContactConversation('MC몽', [
     '![MC MONG MC몽 ‘죽을 만큼 아파서 (Feat. JAMIE (제이미))’ Live Performance](https://www.youtube.com/watch?v=FdAIE6Z4S9k)',
-    '![404](https://a-wrong-url.com/404.png)'
+    '![404](https://a-wrong-url.com/404.png)',
   ]),
   // Japan
   const _RawContactConversation('Nujabes', ['Aruarian Dance']),
@@ -178,18 +178,19 @@ List<_RawContactConversation> _contactConversations = [
 final _userContacts = _contactConversations.indexed.map((item) {
   final (index, contactConversation) = item;
   return UserContact(
-      userId: Int64(index + 1),
-      name: contactConversation.userName,
-      relationshipGroupId: Int64(1),
-      presence:
-          UserPresence.values[1 + (index % (UserPresence.values.length - 1))]);
+    userId: Int64(index + 1),
+    name: contactConversation.userName,
+    relationshipGroupId: Int64(1),
+    presence:
+        UserPresence.values[1 + (index % (UserPresence.values.length - 1))],
+  );
 }).toList();
 
 final userContactIdToMessages = <Int64, List<String>>{
   for (final userContact in _userContacts)
     userContact.userId: _contactConversations
         .firstWhere((item) => item.userName == userContact.name)
-        .messages
+        .messages,
 };
 
 extension FixturesExtensions on Fixtures {
@@ -203,14 +204,18 @@ extension FixturesExtensions on Fixtures {
         for (var i = 0; i < memberCount; i++) {
           members.add(GroupMember.fromUser(userContacts[i], isAdmin: i == 0));
         }
-        members.add(GroupMember.fromUser(loggedInUser,
-            isAdmin: RandomUtils.nextBool()));
+        members.add(
+          GroupMember.fromUser(loggedInUser, isAdmin: RandomUtils.nextBool()),
+        );
         return GroupContact(
-            groupId: Int64(index + 1),
-            members: members,
-            name: 'fake group name.' * 10);
+          groupId: Int64(index + 1),
+          members: members,
+          name: 'fake group name.' * 10,
+        );
       }).toList();
 
-  List<Contact> getContacts(User loggedInUser) =>
-      [..._userContacts, ...getFixtureGroupContacts(loggedInUser)];
+  List<Contact> getContacts(User loggedInUser) => [
+    ..._userContacts,
+    ...getFixtureGroupContacts(loggedInUser),
+  ];
 }

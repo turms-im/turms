@@ -38,11 +38,11 @@ class User {
   }
 
   User? copyWith({UserPresence? presence}) => User(
-        userId: userId,
-        name: name,
-        intro: intro,
-        imageUrl: imageUrl,
-        imageBytes: imageBytes,
-        presence: presence ?? this.presence,
-      );
+    userId: userId,
+    name: name,
+    intro: intro,
+    imageUrl: imageUrl,
+    imageBytes: imageBytes,
+    presence: presence ?? this.presence,
+  );
 }

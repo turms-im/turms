@@ -18,14 +18,20 @@ class ImageCropperStateData {
         ? const VerticalCalculator()
         : const HorizontalCalculator();
     final imageRect = calculator.calcImageRectToFitContainer(
-        containerSize, imageSize.aspectRatio);
+      containerSize,
+      imageSize.aspectRatio,
+    );
     return ImageCropperStateData._(
       containerSize: containerSize,
       imageSize: imageSize,
       imageRect: imageRect,
       imageShape: imageShape,
-      cropRect: calculator.calcInitialCropAreaRect(containerSize, imageRect,
-          imageShape == ImageShape.circle ? 1.0 : aspectRatio ?? 1.0, 1),
+      cropRect: calculator.calcInitialCropAreaRect(
+        containerSize,
+        imageRect,
+        imageShape == ImageShape.circle ? 1.0 : aspectRatio ?? 1.0,
+        1,
+      ),
       minCropAreaDimension: 100,
       scale: scale,
       aspectRatio: aspectRatio,
@@ -73,61 +79,63 @@ class ImageCropperStateData {
     cropRect.height * containerSizeRatio / scale,
   );
 
-  late final imageScaleToCoverContainer =
-      calculator.calcImageScaleToCoverContainer(containerSize, imageRect);
+  late final imageScaleToCoverContainer = calculator
+      .calcImageScaleToCoverContainer(containerSize, imageRect);
 
   ImageCropperStateData resetCropRect() => copyWith(
-        imageRect: calculator.calcImageRectToFitContainer(
-            containerSize, imageSize.aspectRatio),
-      );
+    imageRect: calculator.calcImageRectToFitContainer(
+      containerSize,
+      imageSize.aspectRatio,
+    ),
+  );
 
   ImageCropperStateData moveRect(Offset delta) => copyWith(
-          cropRect: calculator.moveRect(
-        cropRect,
-        delta.dx,
-        delta.dy,
-        imageRect,
-      ));
+    cropRect: calculator.moveRect(cropRect, delta.dx, delta.dy, imageRect),
+  );
 
   ImageCropperStateData moveTopLeft(Offset delta) => copyWith(
-          cropRect: calculator.moveTopLeft(
-        cropRect,
-        minCropAreaDimension,
-        delta.dx,
-        delta.dy,
-        imageRect,
-        aspectRatio,
-      ));
+    cropRect: calculator.moveTopLeft(
+      cropRect,
+      minCropAreaDimension,
+      delta.dx,
+      delta.dy,
+      imageRect,
+      aspectRatio,
+    ),
+  );
 
   ImageCropperStateData moveTopRight(Offset delta) => copyWith(
-          cropRect: calculator.moveTopRight(
-        cropRect,
-        minCropAreaDimension,
-        delta.dx,
-        delta.dy,
-        imageRect,
-        aspectRatio,
-      ));
+    cropRect: calculator.moveTopRight(
+      cropRect,
+      minCropAreaDimension,
+      delta.dx,
+      delta.dy,
+      imageRect,
+      aspectRatio,
+    ),
+  );
 
   ImageCropperStateData moveBottomLeft(Offset delta) => copyWith(
-          cropRect: calculator.moveBottomLeft(
-        cropRect,
-        minCropAreaDimension,
-        delta.dx,
-        delta.dy,
-        imageRect,
-        aspectRatio,
-      ));
+    cropRect: calculator.moveBottomLeft(
+      cropRect,
+      minCropAreaDimension,
+      delta.dx,
+      delta.dy,
+      imageRect,
+      aspectRatio,
+    ),
+  );
 
   ImageCropperStateData moveBottomRight(Offset delta) => copyWith(
-          cropRect: calculator.moveBottomRight(
-        cropRect,
-        minCropAreaDimension,
-        delta.dx,
-        delta.dy,
-        imageRect,
-        aspectRatio,
-      ));
+    cropRect: calculator.moveBottomRight(
+      cropRect,
+      minCropAreaDimension,
+      delta.dx,
+      delta.dy,
+      imageRect,
+      aspectRatio,
+    ),
+  );
 
   ImageCropperStateData updateImageRect(Offset offset) {
     var newLeft = imageRect.left + offset.dx;
@@ -191,19 +199,18 @@ class ImageCropperStateData {
         (newHeight - imageRect.height) * verticalFocalPointBias;
 
     // Get new position
-    final newLeft = max(min(cropRect.left, imageRect.left - leftPositionDelta),
-        cropRect.right - newWidth);
-    final newTop = max(min(cropRect.top, imageRect.top - topPositionDelta),
-        cropRect.bottom - newHeight);
+    final newLeft = max(
+      min(cropRect.left, imageRect.left - leftPositionDelta),
+      cropRect.right - newWidth,
+    );
+    final newTop = max(
+      min(cropRect.top, imageRect.top - topPositionDelta),
+      cropRect.bottom - newHeight,
+    );
 
     return copyWith(
       scale: newScale,
-      imageRect: Rect.fromLTWH(
-        newLeft,
-        newTop,
-        newWidth,
-        newHeight,
-      ),
+      imageRect: Rect.fromLTWH(newLeft, newTop, newWidth, newHeight),
     );
   }
 
@@ -217,16 +224,15 @@ class ImageCropperStateData {
     double? scale,
     Offset? offset,
     double? aspectRatio,
-  }) =>
-      ImageCropperStateData._(
-        containerSize: containerSize ?? this.containerSize,
-        imageSize: imageSize ?? this.imageSize,
-        imageRect: imageRect ?? this.imageRect,
-        imageShape: imageShape ?? this.imageShape,
-        cropRect: cropRect ?? this.cropRect,
-        minCropAreaDimension: minCropAreaDimension ?? this.minCropAreaDimension,
-        scale: scale ?? this.scale,
-        offset: offset ?? this.offset,
-        aspectRatio: aspectRatio ?? this.aspectRatio,
-      );
+  }) => ImageCropperStateData._(
+    containerSize: containerSize ?? this.containerSize,
+    imageSize: imageSize ?? this.imageSize,
+    imageRect: imageRect ?? this.imageRect,
+    imageShape: imageShape ?? this.imageShape,
+    cropRect: cropRect ?? this.cropRect,
+    minCropAreaDimension: minCropAreaDimension ?? this.minCropAreaDimension,
+    scale: scale ?? this.scale,
+    offset: offset ?? this.offset,
+    aspectRatio: aspectRatio ?? this.aspectRatio,
+  );
 }

@@ -5,19 +5,20 @@ import '../../../themes/app_theme_extension.dart';
 import '../t_text_field/t_text_field.dart';
 
 class TSearchBar extends StatelessWidget {
-  const TSearchBar(
-      {super.key,
-      this.style,
-      required this.hintText,
-      this.textEditingController,
-      this.autofocus = false,
-      this.keepFocusOnSubmit = false,
-      this.focusNode,
-      this.prefixIcon,
-      this.debounceTimeout,
-      this.transformValue,
-      this.onChanged,
-      this.onSubmitted});
+  const TSearchBar({
+    super.key,
+    this.style,
+    required this.hintText,
+    this.textEditingController,
+    this.autofocus = false,
+    this.keepFocusOnSubmit = false,
+    this.focusNode,
+    this.prefixIcon,
+    this.debounceTimeout,
+    this.transformValue,
+    this.onChanged,
+    this.onSubmitted,
+  });
 
   final TextEditingController? textEditingController;
   final TextStyle? style;
@@ -33,23 +34,24 @@ class TSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => TTextField(
-        textEditingController: textEditingController,
-        autofocus: autofocus,
-        keepFocusOnSubmit: keepFocusOnSubmit,
-        focusNode: focusNode,
-        style: style,
-        hintText: hintText,
-        prefixIcon: prefixIcon ??
-            Icon(
-              Symbols.search_rounded,
-              size: 16,
-              color: context.appThemeExtension.textFieldHintTextStyle.color,
-            ),
-        prefixIconConstraints: const BoxConstraints.tightFor(width: 24),
-        showDeleteButtonIfHasText: true,
-        debounceTimeout: debounceTimeout,
-        transformValue: transformValue,
-        onChanged: onChanged,
-        onSubmitted: onSubmitted,
-      );
+    textEditingController: textEditingController,
+    autofocus: autofocus,
+    keepFocusOnSubmit: keepFocusOnSubmit,
+    focusNode: focusNode,
+    style: style,
+    hintText: hintText,
+    prefixIcon:
+        prefixIcon ??
+        Icon(
+          Symbols.search_rounded,
+          size: 16,
+          color: context.appThemeExtension.textFieldHintTextStyle.color,
+        ),
+    prefixIconConstraints: const BoxConstraints.tightFor(width: 24),
+    showDeleteButtonIfHasText: true,
+    debounceTimeout: debounceTimeout,
+    transformValue: transformValue,
+    onChanged: onChanged,
+    onSubmitted: onSubmitted,
+  );
 }

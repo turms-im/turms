@@ -20,20 +20,14 @@ File getAppProcessFile() {
 
 class _AppProcessInfo {
   factory _AppProcessInfo.fromJson(Map<String, dynamic> json) =>
-      _AppProcessInfo(
-        pid: json['pid'] as int,
-        port: json['port'] as int,
-      );
+      _AppProcessInfo(pid: json['pid'] as int, port: json['port'] as int);
 
   const _AppProcessInfo({required this.pid, required this.port});
 
   final int pid;
   final int port;
 
-  Map<String, dynamic> toJson() => {
-        'pid': pid,
-        'port': port,
-      };
+  Map<String, dynamic> toJson() => {'pid': pid, 'port': port};
 }
 
 /// We use WebSocket because:
@@ -46,7 +40,10 @@ class _AppProcessInfo {
 /// WebSockets and JSON-RPC 2.0 to communicate).
 class RpcServer {
   RpcServer._(
-      this._httpServer, this._appProcessFile, this._appProcessRandomAccessFile);
+    this._httpServer,
+    this._appProcessFile,
+    this._appProcessRandomAccessFile,
+  );
 
   static const methodHealthcheck = 'healthcheck';
   static const methodClose = 'close';
@@ -74,10 +71,9 @@ class RpcServer {
       final actualException = e is WebSocketChannelException ? e.inner : e;
       if (actualException is SocketException ||
           (actualException is HttpException &&
-              actualException.message
-                  .toLowerCase()
-                  // e.g.: "Connection closed before full header was received"
-                  .contains('connection closed'))) {
+              actualException.message.toLowerCase()
+              // e.g.: "Connection closed before full header was received"
+              .contains('connection closed'))) {
         return false;
       }
     }
@@ -118,8 +114,12 @@ class RpcServer {
     try {
       while (true) {
         try {
-          server = await shelf_io.serve(handler, 'localhost', port,
-              poweredByHeader: null);
+          server = await shelf_io.serve(
+            handler,
+            'localhost',
+            port,
+            poweredByHeader: null,
+          );
         } on SocketException catch (e) {
           if (e.osError?.message == 'EADDRINUSE') {
             if (retry++ >= 1000) {
@@ -134,7 +134,8 @@ class RpcServer {
         break;
       }
       await file.writeString(
-          jsonEncode(_AppProcessInfo(pid: pid, port: port).toJson()));
+        jsonEncode(_AppProcessInfo(pid: pid, port: port).toJson()),
+      );
     } catch (e) {
       await file.unlock();
       await file.close();

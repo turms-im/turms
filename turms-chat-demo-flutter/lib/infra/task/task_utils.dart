@@ -10,8 +10,10 @@ class TaskUtils {
 
   /// Use [Future] to eliminate unnecessary closure context:
   /// https://github.com/dart-lang/sdk/issues/36983
-  static Future<T> cacheFuture<T>(
-      {required Object id, required Future<T> future}) {
+  static Future<T> cacheFuture<T>({
+    required Object id,
+    required Future<T> future,
+  }) {
     final result = _idToCallback[id];
     if (result != null) {
       return result as Future<T>;
@@ -20,8 +22,10 @@ class TaskUtils {
     return future.whenComplete(() => _idToCallback.remove(id));
   }
 
-  static Future<T> cacheFutureProvider<T>(
-      {required Object id, required Future<T> Function() futureProvider}) {
+  static Future<T> cacheFutureProvider<T>({
+    required Object id,
+    required Future<T> Function() futureProvider,
+  }) {
     final result = _idToCallback[id];
     if (result != null) {
       return result as Future<T>;
@@ -31,8 +35,10 @@ class TaskUtils {
     return future.whenComplete(() => _idToCallback.remove(id));
   }
 
-  static Future<T> addTask<T>(
-      {required Object id, required Future<T> Function() callback}) {
+  static Future<T> addTask<T>({
+    required Object id,
+    required Future<T> Function() callback,
+  }) {
     final result = _idToCallback[id];
     if (result != null) {
       return result as Future<T>;
@@ -42,11 +48,12 @@ class TaskUtils {
     return value.whenComplete(() => _idToCallback.remove(id));
   }
 
-  static Future<bool> addPeriodicTask(
-      {required String id,
-      required Duration duration,
-      required Callback callback,
-      bool runImmediately = false}) async {
+  static Future<bool> addPeriodicTask({
+    required String id,
+    required Duration duration,
+    required Callback callback,
+    bool runImmediately = false,
+  }) async {
     final timer = _idToTimer[id];
     if (timer != null) {
       return false;

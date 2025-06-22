@@ -8,7 +8,7 @@ class ConversationSettings {
   const ConversationSettings(this._settingToValue);
 
   static (Map<IntListHolder, ConversationSettings>, StackfulException?)
-      fromTableData(List<ConversationSettingTableData> records) {
+  fromTableData(List<ConversationSettingTableData> records) {
     final idToSettings = <IntListHolder, ConversationSettings>{};
     StackfulException? exception;
     for (final record in records) {
@@ -18,30 +18,39 @@ class ConversationSettings {
         continue;
       }
       final settings = idToSettings.putIfAbsent(
-          record.conversationId,
-          () =>
-              // don't use const as the map should be mutable.
-              // ignore: prefer_const_constructors
-              ConversationSettings({}));
+        record.conversationId,
+        () =>
+            // don't use const as the map should be mutable.
+            // ignore: prefer_const_constructors
+            ConversationSettings({}),
+      );
       try {
         _setSetting(settings, setting, recordValue.rawSqlValue);
       } on Exception catch (e, s) {
         exception ??= StackfulException(
-            cause: Exception('Failed to set the conversation settings'),
-            stackTrace: s,
-            suppressed: []);
-        exception.addSuppressed(StackfulException(
+          cause: Exception('Failed to set the conversation settings'),
+          stackTrace: s,
+          suppressed: [],
+        );
+        exception.addSuppressed(
+          StackfulException(
             cause: Exception(
-                'Failed to set the conversation setting "${setting.name}" with the value "$recordValue"'),
+              'Failed to set the conversation setting "${setting.name}" with the value "$recordValue"',
+            ),
             stackTrace: s,
-            suppressed: [e]));
+            suppressed: [e],
+          ),
+        );
       }
     }
     return (idToSettings, exception);
   }
 
-  static void _setSetting(ConversationSettings settings,
-      ConversationSetting<dynamic, dynamic> setting, Object sqlValue) {
+  static void _setSetting(
+    ConversationSettings settings,
+    ConversationSetting<dynamic, dynamic> setting,
+    Object sqlValue,
+  ) {
     final value = setting.convertSqlToValue(sqlValue);
     switch (setting) {
       case ConversationSetting.pinned:

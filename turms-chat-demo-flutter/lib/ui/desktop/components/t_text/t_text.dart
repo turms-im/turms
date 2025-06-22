@@ -10,6 +10,7 @@
 /// @docImport 'implicit_animations.dart';
 /// @docImport 'transitions.dart';
 /// @docImport 'widget_span.dart';
+library;
 
 import 'dart:math';
 import 'dart:ui' as ui show TextHeightBehavior;
@@ -188,11 +189,11 @@ class TText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.selectionColor,
-  })  : textSpan = null,
-        assert(
-          textScaler == null || textScaleFactor == null,
-          'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
-        );
+  }) : textSpan = null,
+       assert(
+         textScaler == null || textScaleFactor == null,
+         'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
+       );
 
   /// Creates a text widget with a [InlineSpan].
   ///
@@ -224,11 +225,11 @@ class TText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.selectionColor,
-  })  : data = null,
-        assert(
-          textScaler == null || textScaleFactor == null,
-          'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
-        );
+  }) : data = null,
+       assert(
+         textScaler == null || textScaleFactor == null,
+         'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
+       );
 
   /// The text to display.
   ///
@@ -362,21 +363,24 @@ class TText extends StatelessWidget {
       effectiveTextStyle = defaultTextStyle.style.merge(style);
     }
     if (MediaQuery.boldTextOf(context)) {
-      effectiveTextStyle = effectiveTextStyle!
-          .merge(const TextStyle(fontWeight: FontWeight.bold));
+      effectiveTextStyle = effectiveTextStyle!.merge(
+        const TextStyle(fontWeight: FontWeight.bold),
+      );
     }
     final registrar = SelectionContainer.maybeOf(context);
     final textScaler = switch ((this.textScaler, textScaleFactor)) {
       (final TextScaler textScaler, _) => textScaler,
       // For unmigrated apps, fall back to textScaleFactor.
-      (null, final double textScaleFactor) =>
-        TextScaler.linear(textScaleFactor),
+      (null, final double textScaleFactor) => TextScaler.linear(
+        textScaleFactor,
+      ),
       (null, null) => MediaQuery.textScalerOf(context),
     };
     late Widget result;
     if (registrar != null) {
       result = MouseRegion(
-        cursor: DefaultSelectionStyle.of(context).mouseCursor ??
+        cursor:
+            DefaultSelectionStyle.of(context).mouseCursor ??
             SystemMouseCursors.text,
         child: _SelectableTextContainer(
           textAlign: textAlign ?? defaultTextStyle.textAlign ?? TextAlign.start,
@@ -385,17 +389,20 @@ class TText extends StatelessWidget {
           locale: locale,
           // RichText uses Localizations.localeOf to obtain a default if this is null
           softWrap: softWrap ?? defaultTextStyle.softWrap,
-          overflow: overflow ??
+          overflow:
+              overflow ??
               effectiveTextStyle?.overflow ??
               defaultTextStyle.overflow,
           textScaler: textScaler,
           maxLines: maxLines ?? defaultTextStyle.maxLines,
           strutStyle: strutStyle,
           textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
-          textHeightBehavior: textHeightBehavior ??
+          textHeightBehavior:
+              textHeightBehavior ??
               defaultTextStyle.textHeightBehavior ??
               DefaultTextHeightBehavior.maybeOf(context),
-          selectionColor: selectionColor ??
+          selectionColor:
+              selectionColor ??
               DefaultSelectionStyle.of(context).selectionColor ??
               DefaultSelectionStyle.defaultColor,
           text: TextSpan(
@@ -413,17 +420,20 @@ class TText extends StatelessWidget {
         locale: locale,
         // RichText uses Localizations.localeOf to obtain a default if this is null
         softWrap: softWrap ?? defaultTextStyle.softWrap,
-        overflow: overflow ??
+        overflow:
+            overflow ??
             effectiveTextStyle?.overflow ??
             defaultTextStyle.overflow,
         textScaler: textScaler,
         maxLines: maxLines ?? defaultTextStyle.maxLines,
         strutStyle: strutStyle,
         textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
-        textHeightBehavior: textHeightBehavior ??
+        textHeightBehavior:
+            textHeightBehavior ??
             defaultTextStyle.textHeightBehavior ??
             DefaultTextHeightBehavior.maybeOf(context),
-        selectionColor: selectionColor ??
+        selectionColor:
+            selectionColor ??
             DefaultSelectionStyle.of(context).selectionColor ??
             DefaultSelectionStyle.defaultColor,
         text: TextSpan(
@@ -437,9 +447,7 @@ class TText extends StatelessWidget {
       result = Semantics(
         textDirection: textDirection,
         label: semanticsLabel,
-        child: ExcludeSemantics(
-          child: result,
-        ),
+        child: ExcludeSemantics(child: result),
       );
     }
     return result;
@@ -450,32 +458,57 @@ class TText extends StatelessWidget {
     super.debugFillProperties(properties);
     properties.add(StringProperty('data', data, showName: false));
     if (textSpan != null) {
-      properties.add(textSpan!.toDiagnosticsNode(
-          name: 'textSpan', style: DiagnosticsTreeStyle.transition));
+      properties.add(
+        textSpan!.toDiagnosticsNode(
+          name: 'textSpan',
+          style: DiagnosticsTreeStyle.transition,
+        ),
+      );
     }
     style?.debugFillProperties(properties);
     properties.add(
-        EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null));
-    properties.add(EnumProperty<TextDirection>('textDirection', textDirection,
-        defaultValue: null));
-    properties
-        .add(DiagnosticsProperty<Locale>('locale', locale, defaultValue: null));
-    properties.add(FlagProperty('softWrap',
+      EnumProperty<TextAlign>('textAlign', textAlign, defaultValue: null),
+    );
+    properties.add(
+      EnumProperty<TextDirection>(
+        'textDirection',
+        textDirection,
+        defaultValue: null,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<Locale>('locale', locale, defaultValue: null),
+    );
+    properties.add(
+      FlagProperty(
+        'softWrap',
         value: softWrap,
         ifTrue: 'wrapping at box width',
         ifFalse: 'no wrapping except at line break characters',
-        showName: true));
+        showName: true,
+      ),
+    );
     properties.add(
-        EnumProperty<TextOverflow>('overflow', overflow, defaultValue: null));
+      EnumProperty<TextOverflow>('overflow', overflow, defaultValue: null),
+    );
     properties.add(
-        DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null));
+      DoubleProperty('textScaleFactor', textScaleFactor, defaultValue: null),
+    );
     properties.add(IntProperty('maxLines', maxLines, defaultValue: null));
-    properties.add(EnumProperty<TextWidthBasis>(
-        'textWidthBasis', textWidthBasis,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<ui.TextHeightBehavior>(
-        'textHeightBehavior', textHeightBehavior,
-        defaultValue: null));
+    properties.add(
+      EnumProperty<TextWidthBasis>(
+        'textWidthBasis',
+        textWidthBasis,
+        defaultValue: null,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<ui.TextHeightBehavior>(
+        'textHeightBehavior',
+        textHeightBehavior,
+        defaultValue: null,
+      ),
+    );
     if (semanticsLabel != null) {
       properties.add(StringProperty('semanticsLabel', semanticsLabel));
     }
@@ -534,25 +567,25 @@ class _SelectableTextContainerState extends State<_SelectableTextContainer> {
 
   @override
   Widget build(BuildContext context) => SelectionContainer(
-        delegate: _selectionDelegate,
-        // Use [_RichText] wrapper so the underlying [RenderParagraph] can register
-        // its [Selectable]s to the [SelectionContainer] created by this widget.
-        child: _RichText(
-          textKey: _textKey,
-          textAlign: widget.textAlign,
-          textDirection: widget.textDirection,
-          locale: widget.locale,
-          softWrap: widget.softWrap,
-          overflow: widget.overflow,
-          textScaler: widget.textScaler,
-          maxLines: widget.maxLines,
-          strutStyle: widget.strutStyle,
-          textWidthBasis: widget.textWidthBasis,
-          textHeightBehavior: widget.textHeightBehavior,
-          selectionColor: widget.selectionColor,
-          text: widget.text,
-        ),
-      );
+    delegate: _selectionDelegate,
+    // Use [_RichText] wrapper so the underlying [RenderParagraph] can register
+    // its [Selectable]s to the [SelectionContainer] created by this widget.
+    child: _RichText(
+      textKey: _textKey,
+      textAlign: widget.textAlign,
+      textDirection: widget.textDirection,
+      locale: widget.locale,
+      softWrap: widget.softWrap,
+      overflow: widget.overflow,
+      textScaler: widget.textScaler,
+      maxLines: widget.maxLines,
+      strutStyle: widget.strutStyle,
+      textWidthBasis: widget.textWidthBasis,
+      textHeightBehavior: widget.textHeightBehavior,
+      selectionColor: widget.selectionColor,
+      text: widget.text,
+    ),
+  );
 }
 
 class _RichText extends StatelessWidget {
@@ -615,9 +648,7 @@ const double _kSelectableVerticalComparingThreshold = 3.0;
 
 class _SelectableTextContainerDelegate
     extends MultiSelectableSelectionContainerDelegate {
-  _SelectableTextContainerDelegate(
-    GlobalKey textKey,
-  ) : _textKey = textKey;
+  _SelectableTextContainerDelegate(GlobalKey textKey) : _textKey = textKey;
 
   final GlobalKey _textKey;
 
@@ -650,13 +681,16 @@ class _SelectableTextContainerDelegate
     // First pass, if the position is on a placeholder then dispatch the selection
     // event to the [Selectable] at the location and terminate.
     for (var index = 0; index < selectables.length; index += 1) {
-      final selectableIsPlaceholder =
-          !paragraph.selectableBelongsToParagraph(selectables[index]);
+      final selectableIsPlaceholder = !paragraph.selectableBelongsToParagraph(
+        selectables[index],
+      );
       if (selectableIsPlaceholder &&
           selectables[index].boundingBoxes.isNotEmpty) {
         for (final rect in selectables[index].boundingBoxes) {
           final globalRect = MatrixUtils.transformRect(
-              selectables[index].getTransformTo(null), rect);
+            selectables[index].getTransformTo(null),
+            rect,
+          );
           if (globalRect.contains(event.globalPosition)) {
             currentSelectionStartIndex = currentSelectionEndIndex = index;
             return dispatchSelectionEventToChild(selectables[index], event);
@@ -672,9 +706,13 @@ class _SelectableTextContainerDelegate
       if (!paragraph.selectableBelongsToParagraph(selectables[index])) {
         if (foundStart) {
           final SelectionEvent synthesizedEvent = SelectParagraphSelectionEvent(
-              globalPosition: event.globalPosition, absorb: true);
+            globalPosition: event.globalPosition,
+            absorb: true,
+          );
           final result = dispatchSelectionEventToChild(
-              selectables[index], synthesizedEvent);
+            selectables[index],
+            synthesizedEvent,
+          );
           if (selectables.length - 1 == index) {
             currentSelectionEndIndex = index;
             _flushInactiveSelections();
@@ -684,8 +722,10 @@ class _SelectableTextContainerDelegate
         continue;
       }
       final existingGeometry = selectables[index].value;
-      lastSelectionResult =
-          dispatchSelectionEventToChild(selectables[index], event);
+      lastSelectionResult = dispatchSelectionEventToChild(
+        selectables[index],
+        event,
+      );
       if (index == selectables.length - 1 &&
           lastSelectionResult == SelectionResult.next) {
         if (foundStart) {
@@ -716,7 +756,9 @@ class _SelectableTextContainerDelegate
           for (var i = startIndex; i < index; i += 1) {
             final SelectionEvent synthesizedEvent =
                 SelectParagraphSelectionEvent(
-                    globalPosition: event.globalPosition, absorb: true);
+                  globalPosition: event.globalPosition,
+                  absorb: true,
+                );
             dispatchSelectionEventToChild(selectables[i], synthesizedEvent);
           }
           currentSelectionStartIndex = startIndex;
@@ -733,7 +775,9 @@ class _SelectableTextContainerDelegate
           for (var i = 0; i < index; i += 1) {
             final SelectionEvent synthesizedEvent =
                 SelectParagraphSelectionEvent(
-                    globalPosition: event.globalPosition, absorb: true);
+                  globalPosition: event.globalPosition,
+                  absorb: true,
+                );
             dispatchSelectionEventToChild(selectables[i], synthesizedEvent);
           }
         }
@@ -759,10 +803,14 @@ class _SelectableTextContainerDelegate
   /// Ideally, this method should only be called twice at the beginning of the
   /// drag selection, once for start edge update event, once for end edge update
   /// event.
-  SelectionResult _initSelection(SelectionEdgeUpdateEvent event,
-      {required bool isEnd}) {
-    assert((isEnd && currentSelectionEndIndex == -1) ||
-        (!isEnd && currentSelectionStartIndex == -1));
+  SelectionResult _initSelection(
+    SelectionEdgeUpdateEvent event, {
+    required bool isEnd,
+  }) {
+    assert(
+      (isEnd && currentSelectionEndIndex == -1) ||
+          (!isEnd && currentSelectionStartIndex == -1),
+    );
     SelectionResult? finalResult;
     // Begin the search for the selection edge at the opposite edge if it exists.
     final hasOppositeEdge = isEnd
@@ -788,10 +836,13 @@ class _SelectableTextContainerDelegate
     // 1. the selectable returns end, pending, none.
     // 2. the selectable returns previous when looking forward.
     // 2. the selectable returns next when looking backward.
-    while (
-        newIndex < selectables.length && newIndex >= 0 && finalResult == null) {
-      currentSelectableResult =
-          dispatchSelectionEventToChild(selectables[newIndex], event);
+    while (newIndex < selectables.length &&
+        newIndex >= 0 &&
+        finalResult == null) {
+      currentSelectableResult = dispatchSelectionEventToChild(
+        selectables[newIndex],
+        event,
+      );
       switch (currentSelectableResult) {
         case SelectionResult.end:
         case SelectionResult.pending:
@@ -828,16 +879,22 @@ class _SelectableTextContainerDelegate
     return finalResult!;
   }
 
-  SelectionResult _adjustSelection(SelectionEdgeUpdateEvent event,
-      {required bool isEnd}) {
+  SelectionResult _adjustSelection(
+    SelectionEdgeUpdateEvent event, {
+    required bool isEnd,
+  }) {
     assert(() {
       if (isEnd) {
-        assert(currentSelectionEndIndex < selectables.length &&
-            currentSelectionEndIndex >= 0);
+        assert(
+          currentSelectionEndIndex < selectables.length &&
+              currentSelectionEndIndex >= 0,
+        );
         return true;
       }
-      assert(currentSelectionStartIndex < selectables.length &&
-          currentSelectionStartIndex >= 0);
+      assert(
+        currentSelectionStartIndex < selectables.length &&
+            currentSelectionStartIndex >= 0,
+      );
       return true;
     }());
     SelectionResult? finalResult;
@@ -860,7 +917,7 @@ class _SelectableTextContainerDelegate
     var newIndex = switch ((
       isEnd,
       isCurrentEdgeWithinViewport,
-      isOppositeEdgeWithinViewport
+      isOppositeEdgeWithinViewport,
     )) {
       (true, true, true) => currentSelectionEndIndex,
       (true, true, false) => currentSelectionEndIndex,
@@ -887,10 +944,13 @@ class _SelectableTextContainerDelegate
     // 1. the selectable returns end, pending, none.
     // 2. the selectable returns previous when looking forward.
     // 2. the selectable returns next when looking backward.
-    while (
-        newIndex < selectables.length && newIndex >= 0 && finalResult == null) {
-      currentSelectableResult =
-          dispatchSelectionEventToChild(selectables[newIndex], event);
+    while (newIndex < selectables.length &&
+        newIndex >= 0 &&
+        finalResult == null) {
+      currentSelectableResult = dispatchSelectionEventToChild(
+        selectables[newIndex],
+        event,
+      );
       switch (currentSelectableResult) {
         case SelectionResult.end:
         case SelectionResult.pending:
@@ -1033,20 +1093,30 @@ class _SelectableTextContainerDelegate
           : currentSelectionStartIndex;
       selectables
           .where((Selectable target) => target != selectables[skipIndex])
-          .forEach((Selectable target) => dispatchSelectionEventToChild(
-              target, const ClearSelectionEvent()));
+          .forEach(
+            (Selectable target) => dispatchSelectionEventToChild(
+              target,
+              const ClearSelectionEvent(),
+            ),
+          );
       return;
     }
-    final int skipStart =
-        min(currentSelectionStartIndex, currentSelectionEndIndex);
-    final int skipEnd =
-        max(currentSelectionStartIndex, currentSelectionEndIndex);
+    final int skipStart = min(
+      currentSelectionStartIndex,
+      currentSelectionEndIndex,
+    );
+    final int skipEnd = max(
+      currentSelectionStartIndex,
+      currentSelectionEndIndex,
+    );
     for (var index = 0; index < selectables.length; index += 1) {
       if (index >= skipStart && index <= skipEnd) {
         continue;
       }
       dispatchSelectionEventToChild(
-          selectables[index], const ClearSelectionEvent());
+        selectables[index],
+        const ClearSelectionEvent(),
+      );
     }
   }
 
@@ -1067,18 +1137,24 @@ class _SelectableTextContainerDelegate
     if (currentSelectionStartIndex != -1 &&
         selectables[currentSelectionStartIndex].value.hasSelection) {
       final start = selectables[currentSelectionStartIndex];
-      final localStartEdge = start.value.startSelectionPoint!.localPosition +
+      final localStartEdge =
+          start.value.startSelectionPoint!.localPosition +
           Offset(0, -start.value.startSelectionPoint!.lineHeight / 2);
       _lastStartEdgeUpdateGlobalPosition = MatrixUtils.transformPoint(
-          start.getTransformTo(null), localStartEdge);
+        start.getTransformTo(null),
+        localStartEdge,
+      );
     }
     if (currentSelectionEndIndex != -1 &&
         selectables[currentSelectionEndIndex].value.hasSelection) {
       final end = selectables[currentSelectionEndIndex];
-      final localEndEdge = end.value.endSelectionPoint!.localPosition +
+      final localEndEdge =
+          end.value.endSelectionPoint!.localPosition +
           Offset(0, -end.value.endSelectionPoint!.lineHeight / 2);
-      _lastEndEdgeUpdateGlobalPosition =
-          MatrixUtils.transformPoint(end.getTransformTo(null), localEndEdge);
+      _lastEndEdgeUpdateGlobalPosition = MatrixUtils.transformPoint(
+        end.getTransformTo(null),
+        localEndEdge,
+      );
     }
   }
 
@@ -1150,7 +1226,9 @@ class _SelectableTextContainerDelegate
 
   @override
   SelectionResult dispatchSelectionEventToChild(
-      Selectable selectable, SelectionEvent event) {
+    Selectable selectable,
+    SelectionEvent event,
+  ) {
     switch (event.type) {
       case SelectionEventType.startEdgeUpdate:
         _hasReceivedStartEvent.add(selectable);
@@ -1216,9 +1294,11 @@ class _SelectableTextContainerDelegate
     }
     final selectableSet = selectables.toSet();
     _hasReceivedEndEvent.removeWhere(
-        (Selectable selectable) => !selectableSet.contains(selectable));
+      (Selectable selectable) => !selectableSet.contains(selectable),
+    );
     _hasReceivedStartEvent.removeWhere(
-        (Selectable selectable) => !selectableSet.contains(selectable));
+      (Selectable selectable) => !selectableSet.contains(selectable),
+    );
     super.didChangeSelectables();
   }
 }
@@ -1333,25 +1413,30 @@ class RichText extends MultiChildRenderObjectWidget {
     this.textHeightBehavior,
     this.selectionRegistrar,
     this.selectionColor,
-  })  : assert(maxLines == null || maxLines > 0),
-        assert(selectionRegistrar == null || selectionColor != null),
-        assert(
-            textScaleFactor == 1.0 ||
-                identical(textScaler, TextScaler.noScaling),
-            'Use textScaler instead.'),
-        textScaler = _effectiveTextScalerFrom(textScaler, textScaleFactor),
-        super(
-            children: WidgetSpan.extractFromInlineSpan(
-                text, _effectiveTextScalerFrom(textScaler, textScaleFactor)));
+  }) : assert(maxLines == null || maxLines > 0),
+       assert(selectionRegistrar == null || selectionColor != null),
+       assert(
+         textScaleFactor == 1.0 || identical(textScaler, TextScaler.noScaling),
+         'Use textScaler instead.',
+       ),
+       textScaler = _effectiveTextScalerFrom(textScaler, textScaleFactor),
+       super(
+         children: WidgetSpan.extractFromInlineSpan(
+           text,
+           _effectiveTextScalerFrom(textScaler, textScaleFactor),
+         ),
+       );
 
   static TextScaler _effectiveTextScalerFrom(
-          TextScaler textScaler, double textScaleFactor) =>
-      switch ((textScaler, textScaleFactor)) {
-        (final TextScaler scaler, 1.0) => scaler,
-        (TextScaler.noScaling, final double textScaleFactor) =>
-          TextScaler.linear(textScaleFactor),
-        (final TextScaler scaler, _) => scaler,
-      };
+    TextScaler textScaler,
+    double textScaleFactor,
+  ) => switch ((textScaler, textScaleFactor)) {
+    (final TextScaler scaler, 1.0) => scaler,
+    (TextScaler.noScaling, final double textScaleFactor) => TextScaler.linear(
+      textScaleFactor,
+    ),
+    (final TextScaler scaler, _) => scaler,
+  };
 
   /// The text to display in this widget.
   final InlineSpan text;
@@ -1482,30 +1567,68 @@ class RichText extends MultiChildRenderObjectWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(EnumProperty<TextAlign>('textAlign', textAlign,
-        defaultValue: TextAlign.start));
-    properties.add(EnumProperty<TextDirection>('textDirection', textDirection,
-        defaultValue: null));
-    properties.add(FlagProperty('softWrap',
+    properties.add(
+      EnumProperty<TextAlign>(
+        'textAlign',
+        textAlign,
+        defaultValue: TextAlign.start,
+      ),
+    );
+    properties.add(
+      EnumProperty<TextDirection>(
+        'textDirection',
+        textDirection,
+        defaultValue: null,
+      ),
+    );
+    properties.add(
+      FlagProperty(
+        'softWrap',
         value: softWrap,
         ifTrue: 'wrapping at box width',
         ifFalse: 'no wrapping except at line break characters',
-        showName: true));
-    properties.add(EnumProperty<TextOverflow>('overflow', overflow,
-        defaultValue: TextOverflow.clip));
-    properties.add(DiagnosticsProperty<TextScaler>('textScaler', textScaler,
-        defaultValue: TextScaler.noScaling));
+        showName: true,
+      ),
+    );
+    properties.add(
+      EnumProperty<TextOverflow>(
+        'overflow',
+        overflow,
+        defaultValue: TextOverflow.clip,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<TextScaler>(
+        'textScaler',
+        textScaler,
+        defaultValue: TextScaler.noScaling,
+      ),
+    );
     properties.add(IntProperty('maxLines', maxLines, ifNull: 'unlimited'));
-    properties.add(EnumProperty<TextWidthBasis>(
-        'textWidthBasis', textWidthBasis,
-        defaultValue: TextWidthBasis.parent));
+    properties.add(
+      EnumProperty<TextWidthBasis>(
+        'textWidthBasis',
+        textWidthBasis,
+        defaultValue: TextWidthBasis.parent,
+      ),
+    );
     properties.add(StringProperty('text', text.toPlainText()));
-    properties
-        .add(DiagnosticsProperty<Locale>('locale', locale, defaultValue: null));
-    properties.add(DiagnosticsProperty<StrutStyle>('strutStyle', strutStyle,
-        defaultValue: null));
-    properties.add(DiagnosticsProperty<TextHeightBehavior>(
-        'textHeightBehavior', textHeightBehavior,
-        defaultValue: null));
+    properties.add(
+      DiagnosticsProperty<Locale>('locale', locale, defaultValue: null),
+    );
+    properties.add(
+      DiagnosticsProperty<StrutStyle>(
+        'strutStyle',
+        strutStyle,
+        defaultValue: null,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<TextHeightBehavior>(
+        'textHeightBehavior',
+        textHeightBehavior,
+        defaultValue: null,
+      ),
+    );
   }
 }

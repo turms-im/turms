@@ -13,12 +13,12 @@ class TPopupFollowerController {
 
 class TPopupFollower extends StatefulWidget {
   const TPopupFollower({
-    Key? key,
+    super.key,
     this.animate = true,
     this.controller,
     required this.onDismissed,
     required this.child,
-  }) : super(key: key);
+  });
 
   final bool animate;
   final TPopupFollowerController? controller;
@@ -48,7 +48,9 @@ class _TPopupFollowerState extends State<TPopupFollower>
       )..addStatusListener(_handleStatusChanged);
       _animationController = animationController;
       animation = CurvedAnimation(
-          parent: animationController, curve: Curves.fastOutSlowIn);
+        parent: animationController,
+        curve: Curves.fastOutSlowIn,
+      );
     }
 
     final controller = widget.controller;
@@ -81,10 +83,8 @@ class _TPopupFollowerState extends State<TPopupFollower>
 
   @override
   Widget build(BuildContext context) {
-    final _animation = animation;
-    final child = SingleChildScrollView(
-      child: widget.child,
-    );
+    final localAnimation = animation;
+    final child = SingleChildScrollView(child: widget.child);
     return GlobalKeyboardListener(
       onKeyEvent: (KeyEvent event) {
         if (event is KeyDownEvent &&
@@ -97,12 +97,9 @@ class _TPopupFollowerState extends State<TPopupFollower>
         }
         return false;
       },
-      child: _animation == null
+      child: localAnimation == null
           ? child
-          : FadeTransition(
-              opacity: _animation,
-              child: child,
-            ),
+          : FadeTransition(opacity: localAnimation, child: child),
     );
   }
 

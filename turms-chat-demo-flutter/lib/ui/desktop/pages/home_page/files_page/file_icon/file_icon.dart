@@ -9,7 +9,7 @@ final _fileFormatToImage = <String, ui.Image>{};
 
 class FileIcon extends StatelessWidget {
   FileIcon({super.key, required String fileFormat})
-      : fileFormat = fileFormat.toUpperCase();
+    : fileFormat = fileFormat.toUpperCase();
 
   final String fileFormat;
 
@@ -38,41 +38,49 @@ class _FileIconPainter extends CustomPainter {
     final left = size.width - length;
     canvas
       // Clip the corner.
-      ..clipPath(Path()
-        ..lineTo(left, 0)
-        ..lineTo(size.width, length)
-        ..lineTo(size.width, size.height)
-        ..lineTo(0, size.height)
-        ..close())
+      ..clipPath(
+        Path()
+          ..lineTo(left, 0)
+          ..lineTo(size.width, length)
+          ..lineTo(size.width, size.height)
+          ..lineTo(0, size.height)
+          ..close(),
+      )
       // Clip a rounded rectangle.
       ..drawRRect(
-          RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width, size.height),
-              const Radius.circular(4)),
-          Paint()..color = color)
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(0, 0, size.width, size.height),
+          const Radius.circular(4),
+        ),
+        Paint()..color = color,
+      )
       // Draw the corner.
       ..drawRRect(
-          RRect.fromRectAndRadius(
-              Rect.fromLTWH(left, -length, length * 2, length * 2),
-              const Radius.circular(2)),
-          Paint()..color = color.darken(0.2));
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(left, -length, length * 2, length * 2),
+          const Radius.circular(2),
+        ),
+        Paint()..color = color.darken(0.2),
+      );
 
-    final paragraphBuilder = ui.ParagraphBuilder(
-      ui.ParagraphStyle(
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr,
-      ),
-    )
-      ..pushStyle(ui.TextStyle(
-        color: Colors.white,
-        fontSize: 10,
-      ))
-      ..addText(fileFormat);
+    final paragraphBuilder =
+        ui.ParagraphBuilder(
+            ui.ParagraphStyle(
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.ltr,
+            ),
+          )
+          ..pushStyle(ui.TextStyle(color: Colors.white, fontSize: 10))
+          ..addText(fileFormat);
     final paragraph = paragraphBuilder.build()
       ..layout(ui.ParagraphConstraints(width: size.width));
     canvas.drawParagraph(
-        paragraph,
-        Offset((size.width - paragraph.width) / 2,
-            (size.height - paragraph.height) / 2));
+      paragraph,
+      Offset(
+        (size.width - paragraph.width) / 2,
+        (size.height - paragraph.height) / 2,
+      ),
+    );
   }
 
   @override

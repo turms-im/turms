@@ -25,9 +25,12 @@ const _maxAllowedMb = 100;
 final _maxAllowedBytes = _maxAllowedMb.MB;
 
 class MessageBubbleVideo extends ConsumerStatefulWidget {
-  const MessageBubbleVideo(
-      {Key? key, required this.url, required this.width, required this.height})
-      : super(key: key);
+  const MessageBubbleVideo({
+    super.key,
+    required this.url,
+    required this.width,
+    required this.height,
+  });
 
   final Uri url;
   final double width;
@@ -52,8 +55,11 @@ class _MessageBubbleVideoState extends ConsumerState<MessageBubbleVideo> {
   void initState() {
     super.initState();
 
-    final size =
-        SizeUtils.keepAspectRatio(Size(widget.width, widget.height), 200, 200);
+    final size = SizeUtils.keepAspectRatio(
+      Size(widget.width, widget.height),
+      200,
+      200,
+    );
     _width = size.width;
     _height = size.height;
 
@@ -71,23 +77,29 @@ class _MessageBubbleVideoState extends ConsumerState<MessageBubbleVideo> {
         final DownloadedFile? downloadedFile;
         try {
           downloadedFile = await HttpUtils.downloadFile(
-              taskId: filePath,
-              uri: url,
-              filePath: filePath,
-              maxBytes: _maxAllowedBytes);
+            taskId: filePath,
+            uri: url,
+            filePath: filePath,
+            maxBytes: _maxAllowedBytes,
+          );
         } on FileTooLargeException catch (e) {
           throw UserVisibleException(
-              e,
-              (cause) => ref
-                  .read(appLocalizationsViewModel)
-                  .failedToDownloadFileTooLarge(_maxAllowedMb));
+            e,
+            (cause) => ref
+                .read(appLocalizationsViewModel)
+                .failedToDownloadFileTooLarge(_maxAllowedMb),
+          );
         } catch (e) {
           throw UserVisibleException(
-              e, (_) => ref.read(appLocalizationsViewModel).failedToDownload);
+            e,
+            (_) => ref.read(appLocalizationsViewModel).failedToDownload,
+          );
         }
         if (downloadedFile == null) {
           throw UserVisibleException(
-              null, (_) => ref.read(appLocalizationsViewModel).videoNotFound);
+            null,
+            (_) => ref.read(appLocalizationsViewModel).videoNotFound,
+          );
         }
         controller = VideoPlayerController.file(downloadedFile.file);
       }
@@ -111,45 +123,47 @@ class _MessageBubbleVideoState extends ConsumerState<MessageBubbleVideo> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: _width,
-      height: _height,
-      child: TAsyncBuilder(
-          future: _initializeVideoControllerFuture,
-          builder: (context, snapshot) => snapshot.when(
-                data: (data) => _buildStack(),
-                error: (error, stackTrace) {
-                  final message = switch (error) {
-                    UserVisibleException(:final message) => message,
-                    final Exception e =>
-                      '${ref.read(appLocalizationsViewModel).error}: ${e.message}',
-                    _ => '${ref.read(appLocalizationsViewModel).error}: $error',
-                  };
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: context.appThemeExtension.maskColor,
-                    ),
-                    child: Center(
-                      child: Row(
-                        spacing: 16,
-                        children: [
-                          const Icon(
-                            Symbols.info_i_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          Text(
-                            message,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                loading: () => const Center(
-                    child: RepaintBoundary(child: CircularProgressIndicator())),
-              )));
+    width: _width,
+    height: _height,
+    child: TAsyncBuilder(
+      future: _initializeVideoControllerFuture,
+      builder: (context, snapshot) => snapshot.when(
+        data: (data) => _buildStack(),
+        error: (error, stackTrace) {
+          final message = switch (error) {
+            UserVisibleException(:final message) => message,
+            final Exception e =>
+              '${ref.read(appLocalizationsViewModel).error}: ${e.message}',
+            _ => '${ref.read(appLocalizationsViewModel).error}: $error',
+          };
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              color: context.appThemeExtension.maskColor,
+            ),
+            child: Center(
+              child: Row(
+                spacing: 16,
+                children: [
+                  const Icon(
+                    Symbols.info_i_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  Text(
+                    message,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        loading: () => const Center(
+          child: RepaintBoundary(child: CircularProgressIndicator()),
+        ),
+      ),
+    ),
+  );
 
   Widget _buildStack() {
     final controller = _controller;
@@ -195,7 +209,7 @@ class _MessageBubbleVideoState extends ConsumerState<MessageBubbleVideo> {
               },
             ),
           ),
-        )
+        ),
       ],
     );
   }

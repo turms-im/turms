@@ -1,4 +1,1 @@
-enum ImageShape {
-  rectangle,
-  circle,
-}
+enum ImageShape { rectangle, circle }

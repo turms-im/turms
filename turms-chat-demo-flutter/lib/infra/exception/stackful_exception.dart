@@ -1,8 +1,9 @@
 class StackfulException implements Exception {
-  StackfulException(
-      {required this.cause,
-      required this.stackTrace,
-      required this.suppressed});
+  StackfulException({
+    required this.cause,
+    required this.stackTrace,
+    required this.suppressed,
+  });
 
   final Exception cause;
   final StackTrace stackTrace;

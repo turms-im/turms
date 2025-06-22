@@ -9,11 +9,7 @@ import '../../../../components/t_menu/t_context_menu.dart';
 import 'user_profile_image.dart';
 
 class UserProfile extends ConsumerStatefulWidget {
-  const UserProfile({
-    super.key,
-    required this.user,
-    this.onEditTap,
-  });
+  const UserProfile({super.key, required this.user, this.onEditTap});
 
   final User user;
   final VoidCallback? onEditTap;
@@ -35,10 +31,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
       child: Row(
         spacing: 16,
         children: [
-          UserProfileImage(
-            user: user,
-            onEditTap: widget.onEditTap,
-          ),
+          UserProfileImage(user: user, onEditTap: widget.onEditTap),
           Expanded(
             child: Padding(
               padding: Sizes.paddingV4,
@@ -59,7 +52,7 @@ class _UserProfileState extends ConsumerState<UserProfile> {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

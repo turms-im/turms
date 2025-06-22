@@ -16,6 +16,4 @@ class FileService {
   }
 }
 
-final fileServiceProvider = StateProvider<FileService?>(
-  (ref) => null,
-);
+final fileServiceProvider = StateProvider<FileService?>((ref) => null);

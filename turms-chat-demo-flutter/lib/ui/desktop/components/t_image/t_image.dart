@@ -48,44 +48,33 @@ class _TImageState extends State<TImage> {
 
   @override
   Widget build(BuildContext context) => TAsyncBuilder(
-        future: _loadImageInfoTask,
-        builder: (context, snapshot) => snapshot.when(
-          loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
-          data: (data) {
-            final image = data!.image;
-            return TRawImage(
-                image: image, cropRect: widget.cropRectProvider(data));
-          },
-        ),
-      );
+    future: _loadImageInfoTask,
+    builder: (context, snapshot) => snapshot.when(
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stackTrace) => Text('Error: $error'),
+      data: (data) {
+        final image = data!.image;
+        return TRawImage(image: image, cropRect: widget.cropRectProvider(data));
+      },
+    ),
+  );
 }
 
 class TRawImage extends StatelessWidget {
-  const TRawImage({
-    super.key,
-    required this.image,
-    required this.cropRect,
-  });
+  const TRawImage({super.key, required this.image, required this.cropRect});
 
   final ui.Image image;
   final Rect cropRect;
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-        painter: TImagePainter(
-          image: image,
-          cropRect: cropRect,
-        ),
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-      );
+    painter: TImagePainter(image: image, cropRect: cropRect),
+    size: Size(image.width.toDouble(), image.height.toDouble()),
+  );
 }
 
 class TImagePainter extends CustomPainter {
-  TImagePainter({
-    required this.image,
-    required this.cropRect,
-  });
+  TImagePainter({required this.image, required this.cropRect});
 
   final ui.Image image;
   final Rect cropRect;
@@ -97,14 +86,15 @@ class TImagePainter extends CustomPainter {
     final sizes = applyBoxFit(BoxFit.fitWidth, imageSize, size);
     final outputSubRect = Alignment.center.inscribe(sizes.destination, rect);
     canvas.drawImageRect(
-        image,
-        cropRect,
-        outputSubRect,
-        Paint()
-          ..isAntiAlias = true
-          // Use medium instead of high to get the best image quality.
-          // See [FilterQuality] for details.
-          ..filterQuality = ui.FilterQuality.medium);
+      image,
+      cropRect,
+      outputSubRect,
+      Paint()
+        ..isAntiAlias = true
+        // Use medium instead of high to get the best image quality.
+        // See [FilterQuality] for details.
+        ..filterQuality = ui.FilterQuality.medium,
+    );
   }
 
   @override

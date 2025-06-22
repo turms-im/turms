@@ -13,21 +13,21 @@ part './user_conversation.dart';
 part './system_conversation.dart';
 
 sealed class Conversation {
-  factory Conversation.from(
-          {required Contact contact, required List<ChatMessage> messages}) =>
-      switch (contact) {
-        UserContact() => UserConversation(contact: contact, messages: messages),
-        GroupContact() =>
-          GroupConversation(contact: contact, messages: messages),
-        SystemContact() =>
-          SystemConversation(contact: contact, messages: messages),
-      };
+  factory Conversation.from({
+    required Contact contact,
+    required List<ChatMessage> messages,
+  }) => switch (contact) {
+    UserContact() => UserConversation(contact: contact, messages: messages),
+    GroupContact() => GroupConversation(contact: contact, messages: messages),
+    SystemContact() => SystemConversation(contact: contact, messages: messages),
+  };
 
-  Conversation(
-      {required this.id,
-      required this.messages,
-      this.unreadMessageCount = 0,
-      this.draft});
+  Conversation({
+    required this.id,
+    required this.messages,
+    this.unreadMessageCount = 0,
+    this.draft,
+  });
 
   final IntListHolder id;
 
@@ -40,10 +40,15 @@ sealed class Conversation {
 
   bool hasSameContact(Contact contact);
 
-  static IntListHolder generateId(
-      {Int64? userId, Int64? groupId, SystemContactType? systemContactType}) {
-    assert((userId != null) ^ (groupId != null) ^ (systemContactType != null),
-        'Only one parameter should be not null');
+  static IntListHolder generateId({
+    Int64? userId,
+    Int64? groupId,
+    SystemContactType? systemContactType,
+  }) {
+    assert(
+      (userId != null) ^ (groupId != null) ^ (systemContactType != null),
+      'Only one parameter should be not null',
+    );
     final Int64 contactId;
     final int idFlag;
     if (userId != null) {
@@ -56,8 +61,10 @@ sealed class Conversation {
       contactId = Int64(systemContactType!.id);
       idFlag = 2;
     }
-    return ListHolder(List<int>.filled(9, 0)
-      ..setAll(0, contactId.toInt64().toBytes())
-      ..[8] = idFlag);
+    return ListHolder(
+      List<int>.filled(9, 0)
+        ..setAll(0, contactId.toInt64().toBytes())
+        ..[8] = idFlag,
+    );
   }
 }

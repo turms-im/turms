@@ -1,8 +1,12 @@
 import 'package:window_manager/window_manager.dart';
 
 class WindowEventListener extends WindowListener {
-  WindowEventListener(
-      {this.onClose, this.onFocus, this.onMaximize, this.onUnmaximize});
+  WindowEventListener({
+    this.onClose,
+    this.onFocus,
+    this.onMaximize,
+    this.onUnmaximize,
+  });
 
   final void Function()? onClose;
   final void Function()? onFocus;

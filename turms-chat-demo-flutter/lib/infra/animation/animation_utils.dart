@@ -6,10 +6,11 @@ class AnimationUtils {
   AnimationUtils._();
 
   static DismissedStatusChangeType detectDismissedStatusChange(
-          AnimationStatus previousStatus, AnimationStatus status) =>
-      switch ((previousStatus.isDismissed, status.isDismissed)) {
-        (false, true) => DismissedStatusChangeType.becomeDismissed,
-        (true, false) => DismissedStatusChangeType.becomeNotDismissed,
-        (true, true) || (false, false) => DismissedStatusChangeType.noChange
-      };
+    AnimationStatus previousStatus,
+    AnimationStatus status,
+  ) => switch ((previousStatus.isDismissed, status.isDismissed)) {
+    (false, true) => DismissedStatusChangeType.becomeDismissed,
+    (true, false) => DismissedStatusChangeType.becomeNotDismissed,
+    (true, true) || (false, false) => DismissedStatusChangeType.noChange,
+  };
 }

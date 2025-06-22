@@ -9,9 +9,10 @@ class LocaleUtils {
       1 => Locale(subtags[0]),
       2 => Locale(subtags[0], subtags[1]),
       3 => Locale.fromSubtags(
-          languageCode: subtags[0],
-          scriptCode: subtags[1],
-          countryCode: subtags[2]),
+        languageCode: subtags[0],
+        scriptCode: subtags[1],
+        countryCode: subtags[2],
+      ),
       _ => throw ArgumentError(),
     };
   }

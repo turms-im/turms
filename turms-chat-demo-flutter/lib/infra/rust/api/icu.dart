@@ -10,13 +10,21 @@ import '../frb_generated.dart';
 // These functions are ignored because they are not marked as `pub`: `get_locale_collator`, `init_collator_info`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollatorInfo`
 
-int? compareStrings(
-        {required String locale, required String s1, required String s2}) =>
-    RustLib.instance.api
-        .crateApiIcuCompareStrings(locale: locale, s1: s1, s2: s2);
+int? compareStrings({
+  required String locale,
+  required String s1,
+  required String s2,
+}) => RustLib.instance.api.crateApiIcuCompareStrings(
+  locale: locale,
+  s1: s1,
+  s2: s2,
+);
 
 /// TODO: Use `strings: &[&str]` when supported.
-Uint16List? compareStringVec(
-        {required String locale, required List<String> strings}) =>
-    RustLib.instance.api
-        .crateApiIcuCompareStringVec(locale: locale, strings: strings);
+Uint16List? compareStringVec({
+  required String locale,
+  required List<String> strings,
+}) => RustLib.instance.api.crateApiIcuCompareStringVec(
+  locale: locale,
+  strings: strings,
+);

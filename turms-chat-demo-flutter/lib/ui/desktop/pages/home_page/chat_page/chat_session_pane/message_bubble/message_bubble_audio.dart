@@ -26,7 +26,7 @@ const _maxAllowedMb = 100;
 final _maxAllowedBytes = _maxAllowedMb.MB;
 
 class MessageBubbleAudio extends ConsumerStatefulWidget {
-  const MessageBubbleAudio({Key? key, required this.url}) : super(key: key);
+  const MessageBubbleAudio({super.key, required this.url});
 
   final Uri url;
 
@@ -61,23 +61,29 @@ class _MessageBubbleAudioState extends ConsumerState<MessageBubbleAudio> {
         final DownloadedFile? downloadedFile;
         try {
           downloadedFile = await HttpUtils.downloadFile(
-              taskId: filePath,
-              uri: url,
-              filePath: filePath,
-              maxBytes: _maxAllowedBytes);
+            taskId: filePath,
+            uri: url,
+            filePath: filePath,
+            maxBytes: _maxAllowedBytes,
+          );
         } on FileTooLargeException catch (e) {
           throw UserVisibleException(
-              e,
-              (cause) => ref
-                  .read(appLocalizationsViewModel)
-                  .failedToDownloadFileTooLarge(_maxAllowedMb));
+            e,
+            (cause) => ref
+                .read(appLocalizationsViewModel)
+                .failedToDownloadFileTooLarge(_maxAllowedMb),
+          );
         } catch (e) {
           throw UserVisibleException(
-              e, (_) => ref.read(appLocalizationsViewModel).failedToDownload);
+            e,
+            (_) => ref.read(appLocalizationsViewModel).failedToDownload,
+          );
         }
         if (downloadedFile == null) {
           throw UserVisibleException(
-              null, (_) => ref.read(appLocalizationsViewModel).videoNotFound);
+            null,
+            (_) => ref.read(appLocalizationsViewModel).videoNotFound,
+          );
         }
         controller = VideoPlayerController.file(downloadedFile.file);
       }
@@ -101,35 +107,37 @@ class _MessageBubbleAudioState extends ConsumerState<MessageBubbleAudio> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: _width,
-      height: _height,
-      child: TAsyncBuilder(
-          future: _initializeAudioControllerFuture,
-          builder: (context, snapshot) => snapshot.when(
-                data: (data) => _buildStack(),
-                error: (error, stackTrace) {
-                  final message = switch (error) {
-                    UserVisibleException(:final message) => message,
-                    final Exception e =>
-                      '${ref.read(appLocalizationsViewModel).error}: ${e.message}',
-                    _ => '${ref.read(appLocalizationsViewModel).error}: $error',
-                  };
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: context.appThemeExtension.maskColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        message,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ),
-                  );
-                },
-                loading: () => const Center(
-                    child: RepaintBoundary(child: CircularProgressIndicator())),
-              )));
+    width: _width,
+    height: _height,
+    child: TAsyncBuilder(
+      future: _initializeAudioControllerFuture,
+      builder: (context, snapshot) => snapshot.when(
+        data: (data) => _buildStack(),
+        error: (error, stackTrace) {
+          final message = switch (error) {
+            UserVisibleException(:final message) => message,
+            final Exception e =>
+              '${ref.read(appLocalizationsViewModel).error}: ${e.message}',
+            _ => '${ref.read(appLocalizationsViewModel).error}: $error',
+          };
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              color: context.appThemeExtension.maskColor,
+            ),
+            child: Center(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          );
+        },
+        loading: () => const Center(
+          child: RepaintBoundary(child: CircularProgressIndicator()),
+        ),
+      ),
+    ),
+  );
 
   // TODO
   Widget _buildStack() {
@@ -176,7 +184,7 @@ class _MessageBubbleAudioState extends ConsumerState<MessageBubbleAudio> {
               },
             ),
           ),
-        )
+        ),
       ],
     );
   }

@@ -13,13 +13,14 @@ class UserContact extends PrivateContact implements User {
 
   factory UserContact.fromUser(User user, Int64 relationshipGroupId) =>
       UserContact(
-          userId: user.userId,
-          name: user.name,
-          intro: user.intro,
-          imageUrl: user.imageUrl,
-          imageBytes: user.imageBytes,
-          presence: user.presence,
-          relationshipGroupId: relationshipGroupId);
+        userId: user.userId,
+        name: user.name,
+        intro: user.intro,
+        imageUrl: user.imageUrl,
+        imageBytes: user.imageBytes,
+        presence: user.presence,
+        relationshipGroupId: relationshipGroupId,
+      );
 
   @override
   final Int64 userId;
@@ -29,12 +30,12 @@ class UserContact extends PrivateContact implements User {
 
   @override
   UserContact? copyWith({UserPresence? presence}) => UserContact(
-        userId: userId,
-        name: name,
-        intro: intro,
-        imageUrl: imageUrl,
-        imageBytes: imageBytes,
-        relationshipGroupId: relationshipGroupId,
-        presence: presence ?? this.presence,
-      );
+    userId: userId,
+    name: name,
+    intro: intro,
+    imageUrl: imageUrl,
+    imageBytes: imageBytes,
+    relationshipGroupId: relationshipGroupId,
+    presence: presence ?? this.presence,
+  );
 }

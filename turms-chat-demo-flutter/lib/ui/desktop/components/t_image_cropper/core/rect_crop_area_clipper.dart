@@ -13,17 +13,25 @@ class RectCropAreaClipper extends CustomClipper<Path> {
       ..addPath(
         Path()
           ..moveTo(rect.left, rect.top + radius)
-          ..arcToPoint(Offset(rect.left + radius, rect.top),
-              radius: radiusCircular)
+          ..arcToPoint(
+            Offset(rect.left + radius, rect.top),
+            radius: radiusCircular,
+          )
           ..lineTo(rect.right - radius, rect.top)
-          ..arcToPoint(Offset(rect.right, rect.top + radius),
-              radius: radiusCircular)
+          ..arcToPoint(
+            Offset(rect.right, rect.top + radius),
+            radius: radiusCircular,
+          )
           ..lineTo(rect.right, rect.bottom - radius)
-          ..arcToPoint(Offset(rect.right - radius, rect.bottom),
-              radius: radiusCircular)
+          ..arcToPoint(
+            Offset(rect.right - radius, rect.bottom),
+            radius: radiusCircular,
+          )
           ..lineTo(rect.left + radius, rect.bottom)
-          ..arcToPoint(Offset(rect.left, rect.bottom - radius),
-              radius: radiusCircular)
+          ..arcToPoint(
+            Offset(rect.left, rect.bottom - radius),
+            radius: radiusCircular,
+          )
           ..close(),
         Offset.zero,
       )

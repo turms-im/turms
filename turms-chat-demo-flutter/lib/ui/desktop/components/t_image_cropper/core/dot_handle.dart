@@ -4,13 +4,12 @@ import 'package:flutter/services.dart';
 
 class DotHandle extends StatelessWidget {
   const DotHandle({
-    Key? key,
+    super.key,
     required this.position,
     required this.dimension,
     this.padding = 4,
     this.color = Colors.white,
-  })  : assert(dimension > padding * 2),
-        super(key: key);
+  }) : assert(dimension > padding * 2);
 
   final DotHandlePosition position;
   final double dimension;
@@ -31,9 +30,7 @@ class DotHandle extends StatelessWidget {
             child: SizedBox(
               width: dotDimension,
               height: dotDimension,
-              child: ColoredBox(
-                color: color,
-              ),
+              child: ColoredBox(color: color),
             ),
           ),
         ),
@@ -66,24 +63,24 @@ enum DotHandlePosition {
       DotHandlePosition.values[(index + 1) % DotHandlePosition.values.length];
 
   DotHandlePosition flipX() => switch (this) {
-        DotHandlePosition.topLeft => DotHandlePosition.topRight,
-        DotHandlePosition.topRight => DotHandlePosition.topLeft,
-        DotHandlePosition.bottomLeft => DotHandlePosition.bottomRight,
-        DotHandlePosition.bottomRight => DotHandlePosition.bottomLeft,
-      };
+    DotHandlePosition.topLeft => DotHandlePosition.topRight,
+    DotHandlePosition.topRight => DotHandlePosition.topLeft,
+    DotHandlePosition.bottomLeft => DotHandlePosition.bottomRight,
+    DotHandlePosition.bottomRight => DotHandlePosition.bottomLeft,
+  };
 
   DotHandlePosition flipY() => switch (this) {
-        DotHandlePosition.topLeft => DotHandlePosition.bottomLeft,
-        DotHandlePosition.topRight => DotHandlePosition.bottomRight,
-        DotHandlePosition.bottomLeft => DotHandlePosition.topLeft,
-        DotHandlePosition.bottomRight => DotHandlePosition.topRight,
-      };
+    DotHandlePosition.topLeft => DotHandlePosition.bottomLeft,
+    DotHandlePosition.topRight => DotHandlePosition.bottomRight,
+    DotHandlePosition.bottomLeft => DotHandlePosition.topLeft,
+    DotHandlePosition.bottomRight => DotHandlePosition.topRight,
+  };
 
   DotHandlePosition rotate(double angle) => switch ((angle % 360) / 90) {
-        0 => DotHandlePosition.topLeft,
-        1 => DotHandlePosition.topRight,
-        2 => DotHandlePosition.bottomRight,
-        3 => DotHandlePosition.bottomLeft,
-        _ => throw UnsupportedError('Unsupported rotation angle: $angle'),
-      };
+    0 => DotHandlePosition.topLeft,
+    1 => DotHandlePosition.topRight,
+    2 => DotHandlePosition.bottomRight,
+    3 => DotHandlePosition.bottomLeft,
+    _ => throw UnsupportedError('Unsupported rotation angle: $angle'),
+  };
 }

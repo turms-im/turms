@@ -4,20 +4,22 @@ import 'autostart_manager.dart';
 
 class AutostartManagerLinux extends AutostartManager {
   AutostartManagerLinux({
-    required String appName,
-    required String appPath,
-    List<String> args = const [],
-  }) : super(appName: appName, appPath: appPath, args: args);
+    required super.appName,
+    required super.appPath,
+    super.args,
+  });
 
   File get _desktopFile => File(
-      '${Platform.environment['HOME']}/.config/autostart/$appName.desktop');
+    '${Platform.environment['HOME']}/.config/autostart/$appName.desktop',
+  );
 
   @override
   Future<bool> isEnabled() async => _desktopFile.exists();
 
   @override
   Future<void> enable() async {
-    final contents = '''
+    final contents =
+        '''
 [Desktop Entry]
 Type=Application
 Name=$appName

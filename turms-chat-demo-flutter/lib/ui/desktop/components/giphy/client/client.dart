@@ -15,7 +15,7 @@ import 'models/type.dart';
 /// Reference: https://developers.giphy.com/docs/api/endpoint
 class GiphyClient {
   GiphyClient({required String apiKey, required this.randomId})
-      : _apiKey = apiKey;
+    : _apiKey = apiKey;
 
   static final baseUri = Uri(scheme: 'https', host: 'api.giphy.com');
   static const String _apiVersion = 'v1';
@@ -30,18 +30,17 @@ class GiphyClient {
     String rating = GiphyRating.g,
     String lang = GiphyLanguage.english,
     GiphyType type = GiphyType.stickers,
-  }) async =>
-      _fetchCollection(
-        baseUri.replace(
-          path: '$_apiVersion/${type.name}/trending',
-          queryParameters: <String, String>{
-            'offset': '$offset',
-            'limit': '$limit',
-            'rating': rating,
-            'lang': lang
-          },
-        ),
-      );
+  }) async => _fetchCollection(
+    baseUri.replace(
+      path: '$_apiVersion/${type.name}/trending',
+      queryParameters: <String, String>{
+        'offset': '$offset',
+        'limit': '$limit',
+        'rating': rating,
+        'lang': lang,
+      },
+    ),
+  );
 
   Future<GiphyResponse> search(
     String query, {
@@ -50,52 +49,46 @@ class GiphyClient {
     String rating = GiphyRating.g,
     String lang = GiphyLanguage.english,
     GiphyType type = GiphyType.stickers,
-  }) async =>
-      _fetchCollection(
-        baseUri.replace(
-          path: '$_apiVersion/${type.name}/search',
-          queryParameters: <String, String>{
-            'q': query,
-            'offset': '$offset',
-            'limit': '$limit',
-            'rating': rating,
-            'lang': lang,
-          },
-        ),
-      );
+  }) async => _fetchCollection(
+    baseUri.replace(
+      path: '$_apiVersion/${type.name}/search',
+      queryParameters: <String, String>{
+        'q': query,
+        'offset': '$offset',
+        'limit': '$limit',
+        'rating': rating,
+        'lang': lang,
+      },
+    ),
+  );
 
   Future<GiphyResponse> emojis({
     int offset = 0,
     int limit = 30,
     String rating = GiphyRating.g,
     String lang = GiphyLanguage.english,
-  }) async =>
-      _fetchCollection(
-        baseUri.replace(
-          path: '$_apiVersion/${GiphyType.emoji.name}',
-          queryParameters: <String, String>{
-            'offset': '$offset',
-            'limit': '$limit',
-            'rating': rating,
-            'lang': lang,
-          },
-        ),
-      );
+  }) async => _fetchCollection(
+    baseUri.replace(
+      path: '$_apiVersion/${GiphyType.emoji.name}',
+      queryParameters: <String, String>{
+        'offset': '$offset',
+        'limit': '$limit',
+        'rating': rating,
+        'lang': lang,
+      },
+    ),
+  );
 
   Future<GiphyGif> random({
     required String tag,
     String rating = GiphyRating.g,
     GiphyType type = GiphyType.stickers,
-  }) async =>
-      _fetchGif(
-        baseUri.replace(
-          path: '$_apiVersion/${type.name}/random',
-          queryParameters: <String, String>{
-            'tag': tag,
-            'rating': rating,
-          },
-        ),
-      );
+  }) async => _fetchGif(
+    baseUri.replace(
+      path: '$_apiVersion/${type.name}/random',
+      queryParameters: <String, String>{'tag': tag, 'rating': rating},
+    ),
+  );
 
   Future<GiphyGif> byId(String id) async =>
       _fetchGif(baseUri.replace(path: 'v1/gifs/$id'));
@@ -123,15 +116,19 @@ class GiphyClient {
   }
 
   Future<Response> _getWithAuthorization(Uri uri) async {
-    final response = await _client.get(uri.replace(
+    final response = await _client.get(
+      uri.replace(
         queryParameters: Map<String, String>.from(uri.queryParameters)
           ..putIfAbsent('api_key', () => _apiKey)
-          ..putIfAbsent('random_id', () => randomId)));
+          ..putIfAbsent('random_id', () => randomId),
+      ),
+    );
     if (response.statusCode == 200) {
       return response;
     }
     throw Exception(
-        'Code: ${response.statusCode}. Response body: ${response.body}');
+      'Code: ${response.statusCode}. Response body: ${response.body}',
+    );
   }
 }
 

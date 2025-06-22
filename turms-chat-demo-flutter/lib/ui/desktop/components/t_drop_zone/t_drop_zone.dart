@@ -12,15 +12,16 @@ import '../../../themes/app_theme_extension.dart';
 import '../../../themes/sizes.dart';
 
 class TDropZone extends ConsumerStatefulWidget {
-  const TDropZone(
-      {super.key,
-      required this.formats,
-      this.onDropOver,
-      required this.onPerformDrop,
-      this.onDropEnter,
-      this.onDropLeave,
-      this.onDropEnded,
-      required this.child});
+  const TDropZone({
+    super.key,
+    required this.formats,
+    this.onDropOver,
+    required this.onPerformDrop,
+    this.onDropEnter,
+    this.onDropLeave,
+    this.onDropEnded,
+    required this.child,
+  });
 
   final List<DataFormat> formats;
   final FutureOr<DropOperation> Function(DropOverEvent)? onDropOver;
@@ -44,13 +45,14 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
     return Stack(
       children: [
         DropRegion(
-            formats: widget.formats,
-            onDropOver: widget.onDropOver ?? _onDropOver,
-            onDropEnter: _onDropEnter,
-            onDropLeave: _onDropLeave,
-            onPerformDrop: widget.onPerformDrop,
-            child: widget.child),
-        _buildMask(theme, appLocalizations)
+          formats: widget.formats,
+          onDropOver: widget.onDropOver ?? _onDropOver,
+          onDropEnter: _onDropEnter,
+          onDropLeave: _onDropLeave,
+          onPerformDrop: widget.onPerformDrop,
+          child: widget.child,
+        ),
+        _buildMask(theme, appLocalizations),
       ],
     );
   }
@@ -58,36 +60,38 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
   IgnorePointer _buildMask(ThemeData theme, AppLocalizations localizations) =>
       // Ignore pointer to not obstruct "DropRegion"
       IgnorePointer(
-          child: AnimatedOpacity(
-              opacity: _dragging ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 100),
-              child: Padding(
-                padding: Sizes.paddingV4H4,
-                child: DottedBorder(
-                  options: RoundedRectDottedBorderOptions(
-                    dashPattern: [12, 10],
-                    color: theme.primaryColor,
-                    strokeWidth: 2,
-                    radius: const Radius.circular(8),
-                  ),
-                  child: ClipRRect(
-                    child: ColoredBox(
-                      color: Colors.white.withValues(alpha: 0.6),
-                      child: Center(
-                        child: Text(
-                          localizations.dropFilesHere,
-                          style: TextStyle(color: theme.primaryColor),
-                        ),
-                      ),
+        child: AnimatedOpacity(
+          opacity: _dragging ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 100),
+          child: Padding(
+            padding: Sizes.paddingV4H4,
+            child: DottedBorder(
+              options: RoundedRectDottedBorderOptions(
+                dashPattern: [12, 10],
+                color: theme.primaryColor,
+                strokeWidth: 2,
+                radius: const Radius.circular(8),
+              ),
+              child: ClipRRect(
+                child: ColoredBox(
+                  color: Colors.white.withValues(alpha: 0.6),
+                  child: Center(
+                    child: Text(
+                      localizations.dropFilesHere,
+                      style: TextStyle(color: theme.primaryColor),
                     ),
                   ),
                 ),
-              )));
+              ),
+            ),
+          ),
+        ),
+      );
 
   DropOperation _onDropOver(DropOverEvent event) =>
       event.session.allowedOperations.contains(DropOperation.copy)
-          ? DropOperation.copy
-          : DropOperation.none;
+      ? DropOperation.copy
+      : DropOperation.none;
 
   void _onDropEnter(DropEvent event) {
     _dragging = true;
@@ -109,8 +113,11 @@ extension DropSessionExtensions on DropSession {
     final futures = items.map((item) {
       final completer = Completer<DataReaderFile>();
       try {
-        item.dataReader!.getFile(null, completer.complete,
-            onError: completer.completeError);
+        item.dataReader!.getFile(
+          null,
+          completer.complete,
+          onError: completer.completeError,
+        );
       } catch (e) {
         completer.completeError(e);
       }
@@ -121,9 +128,11 @@ extension DropSessionExtensions on DropSession {
       return files;
     }
     return files
-        .where((file) =>
-            // The size of directory is null
-            file.fileSize != null)
+        .where(
+          (file) =>
+              // The size of directory is null
+              file.fileSize != null,
+        )
         .toList();
   }
 }

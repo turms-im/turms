@@ -18,8 +18,8 @@ class ComparableUtils {
   static int compareBool(bool a, bool b) => a == b
       ? 0
       : a
-          ? 1
-          : -1;
+      ? 1
+      : -1;
 
   static int compareStrings(String locale, String s1, String s2) =>
       icu.compareStrings(locale: locale, s1: s1, s2: s2)!;
@@ -28,19 +28,27 @@ class ComparableUtils {
       icu.compareStringVec(locale: locale, strings: strings)!;
 
   static List<T> sortByStrings<T>(
-      String locale, List<T> items, String stringExtractor(T item)) {
+    String locale,
+    List<T> items,
+    String Function(T item) stringExtractor,
+  ) {
     final strings = items.map(stringExtractor).toList();
     final indexes = icu.compareStringVec(locale: locale, strings: strings)!;
     return List.generate(items.length, (i) => items[indexes[i]]);
   }
 
   static Map<T, int> sortByStringsAsMap<T>(
-      String locale, List<T> items, String stringExtractor(T item)) {
+    String locale,
+    List<T> items,
+    String Function(T item) stringExtractor,
+  ) {
     final strings = items.map(stringExtractor).toList();
     final indexes = icu.compareStringVec(locale: locale, strings: strings)!;
-    return Map.fromEntries(indexes.indexed.map((e) {
-      final (i, index) = e;
-      return MapEntry(items[index], i);
-    }));
+    return Map.fromEntries(
+      indexes.indexed.map((e) {
+        final (i, index) = e;
+        return MapEntry(items[index], i);
+      }),
+    );
   }
 }

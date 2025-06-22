@@ -24,7 +24,9 @@ class ChatSessionPane extends ConsumerWidget {
     final selectedConversation = ref.watch(selectedConversationViewModel);
     if (selectedConversation == null) {
       return const TWindowControlZone(
-          toggleMaximizeOnDoubleTap: true, child: TEmpty());
+        toggleMaximizeOnDoubleTap: true,
+        child: TEmpty(),
+      );
     }
     return ColoredBox(
       color: appThemeExtension.homePageBackgroundColor,
@@ -32,9 +34,12 @@ class ChatSessionPane extends ConsumerWidget {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        color: appThemeExtension.chatSessionPaneDividerColor))),
+              border: Border(
+                bottom: BorderSide(
+                  color: appThemeExtension.chatSessionPaneDividerColor,
+                ),
+              ),
+            ),
             child: Padding(
               // Note that we need the padding to make the border
               // the same height  with the header of the sub navigation rail.
@@ -60,17 +65,19 @@ class ChatSessionPane extends ConsumerWidget {
                 ),
                 if (!selectedConversation.contact.isFileTransfer)
                   TapRegion(
-                      groupId: chatSessionDetailsDrawerGroupId,
-                      onTapOutside: (event) {
-                        drawerController.hide?.call();
-                      },
-                      child: RepaintBoundary(
-                        child: TDrawer(
-                            controller: drawerController,
-                            child: ChatSessionDetailsDrawer(
-                              conversation: selectedConversation,
-                            )),
-                      )),
+                    groupId: chatSessionDetailsDrawerGroupId,
+                    onTapOutside: (event) {
+                      drawerController.hide?.call();
+                    },
+                    child: RepaintBoundary(
+                      child: TDrawer(
+                        controller: drawerController,
+                        child: ChatSessionDetailsDrawer(
+                          conversation: selectedConversation,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -93,27 +100,29 @@ class _ChatSessionPaneFooterState extends State<_ChatSessionPaneFooter> {
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TMovableHorizontalDivider(
-            onMove: () {
-              _heightOnPointDown = _height;
-            },
-            onMoved: (delta) {
-              final newHeight = (_heightOnPointDown - delta)
-                  .clamp(Sizes.chatSessionPaneFooterMinHeight,
-                      Sizes.chatSessionPaneFooterMaxHeight)
-                  .roundToDouble();
-              if (newHeight != _height) {
-                _height = newHeight;
-                setState(() {});
-              }
-            },
-          ),
-          ConstrainedBox(
-            constraints: BoxConstraints.tightFor(height: _height),
-            child: const ChatSessionPaneFooter(),
-          )
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      TMovableHorizontalDivider(
+        onMove: () {
+          _heightOnPointDown = _height;
+        },
+        onMoved: (delta) {
+          final newHeight = (_heightOnPointDown - delta)
+              .clamp(
+                Sizes.chatSessionPaneFooterMinHeight,
+                Sizes.chatSessionPaneFooterMaxHeight,
+              )
+              .roundToDouble();
+          if (newHeight != _height) {
+            _height = newHeight;
+            setState(() {});
+          }
+        },
+      ),
+      ConstrainedBox(
+        constraints: BoxConstraints.tightFor(height: _height),
+        child: const ChatSessionPaneFooter(),
+      ),
+    ],
+  );
 }

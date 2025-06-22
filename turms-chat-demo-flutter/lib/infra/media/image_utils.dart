@@ -30,16 +30,15 @@ final class ImageUtils {
         bottomRight.dx.toInt() > image.width ||
         bottomRight.dy.toInt() > image.height) {
       throw ArgumentError(
-          'Invalid rect: (topLeft: $topLeft, bottomRight: $bottomRight)');
+        'Invalid rect: (topLeft: $topLeft, bottomRight: $bottomRight)',
+      );
     }
     if (topLeft.dx > bottomRight.dx || topLeft.dy > bottomRight.dy) {
       throw ArgumentError(
-          'Invalid rect: (topLeft: $topLeft, bottomRight: $bottomRight)');
+        'Invalid rect: (topLeft: $topLeft, bottomRight: $bottomRight)',
+      );
     }
-    final size = Size(
-      bottomRight.dx - topLeft.dx,
-      bottomRight.dy - topLeft.dy,
-    );
+    final size = Size(bottomRight.dx - topLeft.dx, bottomRight.dy - topLeft.dy);
     Image outputImage;
     switch (shape) {
       case ImageShape.rectangle:
@@ -64,17 +63,16 @@ final class ImageUtils {
         );
     }
     if (rotationAngle != 0) {
-      outputImage = copyRotate(
-        outputImage,
-        angle: rotationAngle,
-      );
+      outputImage = copyRotate(outputImage, angle: rotationAngle);
     }
     if (flipX) {
       if (flipY) {
         outputImage = copyFlip(outputImage, direction: FlipDirection.both);
       } else {
-        outputImage =
-            copyFlip(outputImage, direction: FlipDirection.horizontal);
+        outputImage = copyFlip(
+          outputImage,
+          direction: FlipDirection.horizontal,
+        );
       }
     } else if (flipY) {
       outputImage = copyFlip(outputImage, direction: FlipDirection.vertical);
@@ -93,22 +91,19 @@ final class ImageUtils {
     ImageFormat outputFormat = ImageFormat.jpg,
   }) {
     final outputImage = crop(
-        image: image,
-        shape: shape,
-        topLeft: topLeft,
-        bottomRight: bottomRight,
-        flipX: flipX,
-        flipY: flipY,
-        rotationAngle: rotationAngle);
+      image: image,
+      shape: shape,
+      topLeft: topLeft,
+      bottomRight: bottomRight,
+      flipX: flipX,
+      flipY: flipY,
+      rotationAngle: rotationAngle,
+    );
     switch (shape) {
       case ImageShape.rectangle:
-        return _findEncodeFuncForRect(outputFormat)(
-          outputImage,
-        );
+        return _findEncodeFuncForRect(outputFormat)(outputImage);
       case ImageShape.circle:
-        return _findEncodeFuncForCircle(outputFormat)(
-          outputImage,
-        );
+        return _findEncodeFuncForCircle(outputFormat)(outputImage);
     }
   }
 
@@ -133,21 +128,21 @@ final class ImageUtils {
       };
 
   static Uint8List Function(Image) _findEncodeFuncForRect(
-          ImageFormat? outputFormat) =>
-      switch (outputFormat) {
-        ImageFormat.bmp => encodeBmp,
-        ImageFormat.ico => encodeIco,
-        ImageFormat.jpg => encodeJpg,
-        ImageFormat.png => encodePng,
-        _ => throw UnsupportedError('Unsupported format: $outputFormat'),
-      };
+    ImageFormat? outputFormat,
+  ) => switch (outputFormat) {
+    ImageFormat.bmp => encodeBmp,
+    ImageFormat.ico => encodeIco,
+    ImageFormat.jpg => encodeJpg,
+    ImageFormat.png => encodePng,
+    _ => throw UnsupportedError('Unsupported format: $outputFormat'),
+  };
 
   static Uint8List Function(Image) _findEncodeFuncForCircle(
-          ImageFormat? outputFormat) =>
-      switch (outputFormat) {
-        ImageFormat.bmp => encodeBmp,
-        ImageFormat.ico => encodeIco,
-        ImageFormat.png => encodePng,
-        _ => throw UnsupportedError('Unsupported format: $outputFormat'),
-      };
+    ImageFormat? outputFormat,
+  ) => switch (outputFormat) {
+    ImageFormat.bmp => encodeBmp,
+    ImageFormat.ico => encodeIco,
+    ImageFormat.png => encodePng,
+    _ => throw UnsupportedError('Unsupported format: $outputFormat'),
+  };
 }

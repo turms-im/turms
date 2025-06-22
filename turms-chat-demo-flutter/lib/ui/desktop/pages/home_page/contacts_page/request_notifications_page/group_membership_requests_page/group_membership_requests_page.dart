@@ -28,7 +28,8 @@ class _GroupMembershipRequestsPageState
         switch (requestStatus) {
           case RequestStatus.accepted:
             return _approveGroupMembershipRequest(
-                request as GroupMembershipRequest);
+              request as GroupMembershipRequest,
+            );
           default:
             return;
         }
@@ -40,7 +41,8 @@ class _GroupMembershipRequestsPageState
   }
 
   Future<void> _approveGroupMembershipRequest(
-      GroupMembershipRequest request) async {
+    GroupMembershipRequest request,
+  ) async {
     final notifier = ref.read(groupMembershipRequestsViewModel.notifier);
     await ref
         .read(groupServiceProvider)!
@@ -52,10 +54,13 @@ class _GroupMembershipRequestsPageState
     final group = request.group;
     ref
         .read(selectedConversationViewModel.notifier)
-        .selectByContact(GroupContact(
+        .selectByContact(
+          GroupContact(
             groupId: group.id,
             name: group.name,
             // TODO
-            members: []));
+            members: [],
+          ),
+        );
   }
 }

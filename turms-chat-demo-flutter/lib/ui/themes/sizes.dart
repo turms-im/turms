@@ -26,8 +26,10 @@ class Sizes {
   static const paddingV16 = EdgeInsets.symmetric(vertical: 16);
   static const paddingH16 = EdgeInsets.symmetric(horizontal: 16);
   static const paddingV16H8 = EdgeInsets.symmetric(vertical: 16, horizontal: 8);
-  static const paddingV16H16 =
-      EdgeInsets.symmetric(vertical: 16, horizontal: 16);
+  static const paddingV16H16 = EdgeInsets.symmetric(
+    vertical: 16,
+    horizontal: 16,
+  );
 
   static const paddingH8 = EdgeInsets.symmetric(horizontal: 8);
 

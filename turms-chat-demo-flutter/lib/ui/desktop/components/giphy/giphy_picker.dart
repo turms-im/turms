@@ -45,12 +45,12 @@ class GiphyPicker extends ConsumerWidget {
 }
 
 class GiphyPickerBody extends ConsumerStatefulWidget {
-  GiphyPickerBody(
-      {Key? key,
-      required this.type,
-      required this.scrollController,
-      required this.onSelected})
-      : super(key: key);
+  const GiphyPickerBody({
+    super.key,
+    required this.type,
+    required this.scrollController,
+    required this.onSelected,
+  });
 
   final GiphyType type;
   final ScrollController scrollController;
@@ -93,9 +93,7 @@ class _GiphyPickerBodyState extends ConsumerState<GiphyPickerBody> {
     final gifs = _gifs;
     if (gifs.isEmpty) {
       final appLocalizations = ref.watch(appLocalizationsViewModel);
-      return Center(
-        child: TLoadingIndicator(text: appLocalizations.loading),
-      );
+      return Center(child: TLoadingIndicator(text: appLocalizations.loading));
     }
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -114,7 +112,7 @@ class _GiphyPickerBodyState extends ConsumerState<GiphyPickerBody> {
   Widget _buildItem(GiphyGif gif) {
     final images = gif.images!;
     final image = images.fixedWidthSmall!;
-    final _aspectRatio = double.parse(image.width) / double.parse(image.height);
+    final aspectRatio = double.parse(image.width) / double.parse(image.height);
     final url = image.url;
     return ClipRRect(
       borderRadius: Sizes.borderRadiusCircular8,
@@ -123,18 +121,20 @@ class _GiphyPickerBodyState extends ConsumerState<GiphyPickerBody> {
         child: GestureDetector(
           onTap: () => widget.onSelected(gif),
           child: RepaintBoundary(
-            child: LayoutBuilder(builder: (context, constraints) {
-              final maxWidth = constraints.maxWidth;
-              return Image.network(
-                url,
-                cacheWidth: maxWidth.toInt(),
-                cacheHeight: maxWidth ~/ _aspectRatio,
-                semanticLabel: gif.title,
-                gaplessPlayback: true,
-                fit: BoxFit.fill,
-                headers: {'accept': 'image/*'},
-              );
-            }),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxWidth = constraints.maxWidth;
+                return Image.network(
+                  url,
+                  cacheWidth: maxWidth.toInt(),
+                  cacheHeight: maxWidth ~/ aspectRatio,
+                  semanticLabel: gif.title,
+                  gaplessPlayback: true,
+                  fit: BoxFit.fill,
+                  headers: {'accept': 'image/*'},
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -161,11 +161,18 @@ class _GiphyPickerBodyState extends ConsumerState<GiphyPickerBody> {
     } else {
       final queryText = ref.read(_queryTextViewModel);
       if (queryText.isNotEmpty) {
-        response = await client.search(queryText,
-            offset: _offset, type: type, limit: limit);
+        response = await client.search(
+          queryText,
+          offset: _offset,
+          type: type,
+          limit: limit,
+        );
       } else {
-        response =
-            await client.trending(offset: _offset, type: type, limit: limit);
+        response = await client.trending(
+          offset: _offset,
+          type: type,
+          limit: limit,
+        );
       }
     }
 

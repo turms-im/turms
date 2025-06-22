@@ -9,8 +9,6 @@ class DatabaseUtils {
     bool inMemory = false,
     required bool logStatements,
   }) {
-    throw UnsupportedError(
-      'Unsupported platform',
-    );
+    throw UnsupportedError('Unsupported platform');
   }
 }

@@ -12,28 +12,51 @@ class $AppSettingTableTable extends AppSettingTable
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
   late final GeneratedColumn<DriftAny> value = GeneratedColumn<DriftAny>(
-      'value', aliasedName, false,
-      type: DriftSqlType.any, requiredDuringInsert: true);
-  static const VerificationMeta _createdDateMeta =
-      const VerificationMeta('createdDate');
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.any,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdDateMeta = const VerificationMeta(
+    'createdDate',
+  );
   @override
   late final GeneratedColumn<DateTime> createdDate = GeneratedColumn<DateTime>(
-      'created_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _lastModifiedDateMeta =
-      const VerificationMeta('lastModifiedDate');
+    'created_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastModifiedDateMeta = const VerificationMeta(
+    'lastModifiedDate',
+  );
   @override
   late final GeneratedColumn<DateTime> lastModifiedDate =
-      GeneratedColumn<DateTime>('last_modified_date', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      GeneratedColumn<DateTime>(
+        'last_modified_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, value, createdDate, lastModifiedDate];
+  List<GeneratedColumn> get $columns => [
+    id,
+    value,
+    createdDate,
+    lastModifiedDate,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -41,8 +64,9 @@ class $AppSettingTableTable extends AppSettingTable
   static const String $name = 'app_setting';
   @override
   VerificationContext validateIntegrity(
-      Insertable<AppSettingTableData> instance,
-      {bool isInserting = false}) {
+    Insertable<AppSettingTableData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -52,23 +76,31 @@ class $AppSettingTableTable extends AppSettingTable
     }
     if (data.containsKey('value')) {
       context.handle(
-          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
     } else if (isInserting) {
       context.missing(_valueMeta);
     }
     if (data.containsKey('created_date')) {
       context.handle(
+        _createdDateMeta,
+        createdDate.isAcceptableOrUnknown(
+          data['created_date']!,
           _createdDateMeta,
-          createdDate.isAcceptableOrUnknown(
-              data['created_date']!, _createdDateMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_createdDateMeta);
     }
     if (data.containsKey('last_modified_date')) {
       context.handle(
+        _lastModifiedDateMeta,
+        lastModifiedDate.isAcceptableOrUnknown(
+          data['last_modified_date']!,
           _lastModifiedDateMeta,
-          lastModifiedDate.isAcceptableOrUnknown(
-              data['last_modified_date']!, _lastModifiedDateMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_lastModifiedDateMeta);
     }
@@ -81,14 +113,22 @@ class $AppSettingTableTable extends AppSettingTable
   AppSettingTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AppSettingTableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      value: attachedDatabase.typeMapping
-          .read(DriftSqlType.any, data['${effectivePrefix}value'])!,
-      createdDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.any,
+        data['${effectivePrefix}value'],
+      )!,
+      createdDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_date'],
+      )!,
       lastModifiedDate: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}last_modified_date'])!,
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_modified_date'],
+      )!,
     );
   }
 
@@ -109,11 +149,12 @@ class AppSettingTableData extends DataClass
   final DriftAny value;
   final DateTime createdDate;
   final DateTime lastModifiedDate;
-  const AppSettingTableData(
-      {required this.id,
-      required this.value,
-      required this.createdDate,
-      required this.lastModifiedDate});
+  const AppSettingTableData({
+    required this.id,
+    required this.value,
+    required this.createdDate,
+    required this.lastModifiedDate,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -133,8 +174,10 @@ class AppSettingTableData extends DataClass
     );
   }
 
-  factory AppSettingTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory AppSettingTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AppSettingTableData(
       id: serializer.fromJson<int>(json['id']),
@@ -154,23 +197,24 @@ class AppSettingTableData extends DataClass
     };
   }
 
-  AppSettingTableData copyWith(
-          {int? id,
-          DriftAny? value,
-          DateTime? createdDate,
-          DateTime? lastModifiedDate}) =>
-      AppSettingTableData(
-        id: id ?? this.id,
-        value: value ?? this.value,
-        createdDate: createdDate ?? this.createdDate,
-        lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
-      );
+  AppSettingTableData copyWith({
+    int? id,
+    DriftAny? value,
+    DateTime? createdDate,
+    DateTime? lastModifiedDate,
+  }) => AppSettingTableData(
+    id: id ?? this.id,
+    value: value ?? this.value,
+    createdDate: createdDate ?? this.createdDate,
+    lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+  );
   AppSettingTableData copyWithCompanion(AppSettingTableCompanion data) {
     return AppSettingTableData(
       id: data.id.present ? data.id.value : this.id,
       value: data.value.present ? data.value.value : this.value,
-      createdDate:
-          data.createdDate.present ? data.createdDate.value : this.createdDate,
+      createdDate: data.createdDate.present
+          ? data.createdDate.value
+          : this.createdDate,
       lastModifiedDate: data.lastModifiedDate.present
           ? data.lastModifiedDate.value
           : this.lastModifiedDate,
@@ -216,10 +260,10 @@ class AppSettingTableCompanion extends UpdateCompanion<AppSettingTableData> {
     required DriftAny value,
     required DateTime createdDate,
     required DateTime lastModifiedDate,
-  })  : id = Value(id),
-        value = Value(value),
-        createdDate = Value(createdDate),
-        lastModifiedDate = Value(lastModifiedDate);
+  }) : id = Value(id),
+       value = Value(value),
+       createdDate = Value(createdDate),
+       lastModifiedDate = Value(lastModifiedDate);
   static Insertable<AppSettingTableData> custom({
     Expression<int>? id,
     Expression<DriftAny>? value,
@@ -234,11 +278,12 @@ class AppSettingTableCompanion extends UpdateCompanion<AppSettingTableData> {
     });
   }
 
-  AppSettingTableCompanion copyWith(
-      {Value<int>? id,
-      Value<DriftAny>? value,
-      Value<DateTime>? createdDate,
-      Value<DateTime>? lastModifiedDate}) {
+  AppSettingTableCompanion copyWith({
+    Value<int>? id,
+    Value<DriftAny>? value,
+    Value<DateTime>? createdDate,
+    Value<DateTime>? lastModifiedDate,
+  }) {
     return AppSettingTableCompanion(
       id: id ?? this.id,
       value: value ?? this.value,
@@ -286,30 +331,54 @@ class $UserLoginInfoTableTable extends UserLoginInfoTable
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumnWithTypeConverter<Int64, BigInt> userId =
-      GeneratedColumn<BigInt>('user_id', aliasedName, false,
-              type: DriftSqlType.bigInt, requiredDuringInsert: true)
-          .withConverter<Int64>($UserLoginInfoTableTable.$converteruserId);
-  static const VerificationMeta _passwordMeta =
-      const VerificationMeta('password');
+      GeneratedColumn<BigInt>(
+        'user_id',
+        aliasedName,
+        false,
+        type: DriftSqlType.bigInt,
+        requiredDuringInsert: true,
+      ).withConverter<Int64>($UserLoginInfoTableTable.$converteruserId);
+  static const VerificationMeta _passwordMeta = const VerificationMeta(
+    'password',
+  );
   @override
   late final GeneratedColumn<String> password = GeneratedColumn<String>(
-      'password', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdDateMeta =
-      const VerificationMeta('createdDate');
+    'password',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdDateMeta = const VerificationMeta(
+    'createdDate',
+  );
   @override
   late final GeneratedColumn<DateTime> createdDate = GeneratedColumn<DateTime>(
-      'created_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _lastModifiedDateMeta =
-      const VerificationMeta('lastModifiedDate');
+    'created_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastModifiedDateMeta = const VerificationMeta(
+    'lastModifiedDate',
+  );
   @override
   late final GeneratedColumn<DateTime> lastModifiedDate =
-      GeneratedColumn<DateTime>('last_modified_date', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      GeneratedColumn<DateTime>(
+        'last_modified_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
   @override
-  List<GeneratedColumn> get $columns =>
-      [userId, password, createdDate, lastModifiedDate];
+  List<GeneratedColumn> get $columns => [
+    userId,
+    password,
+    createdDate,
+    lastModifiedDate,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -317,30 +386,39 @@ class $UserLoginInfoTableTable extends UserLoginInfoTable
   static const String $name = 'user_login_info';
   @override
   VerificationContext validateIntegrity(
-      Insertable<UserLoginInfoTableData> instance,
-      {bool isInserting = false}) {
+    Insertable<UserLoginInfoTableData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     context.handle(_userIdMeta, const VerificationResult.success());
     if (data.containsKey('password')) {
-      context.handle(_passwordMeta,
-          password.isAcceptableOrUnknown(data['password']!, _passwordMeta));
+      context.handle(
+        _passwordMeta,
+        password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
+      );
     } else if (isInserting) {
       context.missing(_passwordMeta);
     }
     if (data.containsKey('created_date')) {
       context.handle(
+        _createdDateMeta,
+        createdDate.isAcceptableOrUnknown(
+          data['created_date']!,
           _createdDateMeta,
-          createdDate.isAcceptableOrUnknown(
-              data['created_date']!, _createdDateMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_createdDateMeta);
     }
     if (data.containsKey('last_modified_date')) {
       context.handle(
+        _lastModifiedDateMeta,
+        lastModifiedDate.isAcceptableOrUnknown(
+          data['last_modified_date']!,
           _lastModifiedDateMeta,
-          lastModifiedDate.isAcceptableOrUnknown(
-              data['last_modified_date']!, _lastModifiedDateMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_lastModifiedDateMeta);
     }
@@ -353,15 +431,24 @@ class $UserLoginInfoTableTable extends UserLoginInfoTable
   UserLoginInfoTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return UserLoginInfoTableData(
-      userId: $UserLoginInfoTableTable.$converteruserId.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.bigInt, data['${effectivePrefix}user_id'])!),
-      password: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}password'])!,
-      createdDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date'])!,
+      userId: $UserLoginInfoTableTable.$converteruserId.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.bigInt,
+          data['${effectivePrefix}user_id'],
+        )!,
+      ),
+      password: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}password'],
+      )!,
+      createdDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_date'],
+      )!,
       lastModifiedDate: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}last_modified_date'])!,
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_modified_date'],
+      )!,
     );
   }
 
@@ -383,17 +470,19 @@ class UserLoginInfoTableData extends DataClass
   final String password;
   final DateTime createdDate;
   final DateTime lastModifiedDate;
-  const UserLoginInfoTableData(
-      {required this.userId,
-      required this.password,
-      required this.createdDate,
-      required this.lastModifiedDate});
+  const UserLoginInfoTableData({
+    required this.userId,
+    required this.password,
+    required this.createdDate,
+    required this.lastModifiedDate,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     {
       map['user_id'] = Variable<BigInt>(
-          $UserLoginInfoTableTable.$converteruserId.toSql(userId));
+        $UserLoginInfoTableTable.$converteruserId.toSql(userId),
+      );
     }
     map['password'] = Variable<String>(password);
     map['created_date'] = Variable<DateTime>(createdDate);
@@ -410,8 +499,10 @@ class UserLoginInfoTableData extends DataClass
     );
   }
 
-  factory UserLoginInfoTableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory UserLoginInfoTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserLoginInfoTableData(
       userId: serializer.fromJson<Int64>(json['userId']),
@@ -431,23 +522,24 @@ class UserLoginInfoTableData extends DataClass
     };
   }
 
-  UserLoginInfoTableData copyWith(
-          {Int64? userId,
-          String? password,
-          DateTime? createdDate,
-          DateTime? lastModifiedDate}) =>
-      UserLoginInfoTableData(
-        userId: userId ?? this.userId,
-        password: password ?? this.password,
-        createdDate: createdDate ?? this.createdDate,
-        lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
-      );
+  UserLoginInfoTableData copyWith({
+    Int64? userId,
+    String? password,
+    DateTime? createdDate,
+    DateTime? lastModifiedDate,
+  }) => UserLoginInfoTableData(
+    userId: userId ?? this.userId,
+    password: password ?? this.password,
+    createdDate: createdDate ?? this.createdDate,
+    lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+  );
   UserLoginInfoTableData copyWithCompanion(UserLoginInfoTableCompanion data) {
     return UserLoginInfoTableData(
       userId: data.userId.present ? data.userId.value : this.userId,
       password: data.password.present ? data.password.value : this.password,
-      createdDate:
-          data.createdDate.present ? data.createdDate.value : this.createdDate,
+      createdDate: data.createdDate.present
+          ? data.createdDate.value
+          : this.createdDate,
       lastModifiedDate: data.lastModifiedDate.present
           ? data.lastModifiedDate.value
           : this.lastModifiedDate,
@@ -495,10 +587,10 @@ class UserLoginInfoTableCompanion
     required String password,
     required DateTime createdDate,
     required DateTime lastModifiedDate,
-  })  : userId = Value(userId),
-        password = Value(password),
-        createdDate = Value(createdDate),
-        lastModifiedDate = Value(lastModifiedDate);
+  }) : userId = Value(userId),
+       password = Value(password),
+       createdDate = Value(createdDate),
+       lastModifiedDate = Value(lastModifiedDate);
   static Insertable<UserLoginInfoTableData> custom({
     Expression<BigInt>? userId,
     Expression<String>? password,
@@ -513,11 +605,12 @@ class UserLoginInfoTableCompanion
     });
   }
 
-  UserLoginInfoTableCompanion copyWith(
-      {Value<Int64>? userId,
-      Value<String>? password,
-      Value<DateTime>? createdDate,
-      Value<DateTime>? lastModifiedDate}) {
+  UserLoginInfoTableCompanion copyWith({
+    Value<Int64>? userId,
+    Value<String>? password,
+    Value<DateTime>? createdDate,
+    Value<DateTime>? lastModifiedDate,
+  }) {
     return UserLoginInfoTableCompanion(
       userId: userId ?? this.userId,
       password: password ?? this.password,
@@ -531,7 +624,8 @@ class UserLoginInfoTableCompanion
     final map = <String, Expression>{};
     if (userId.present) {
       map['user_id'] = Variable<BigInt>(
-          $UserLoginInfoTableTable.$converteruserId.toSql(userId.value));
+        $UserLoginInfoTableTable.$converteruserId.toSql(userId.value),
+      );
     }
     if (password.present) {
       map['password'] = Variable<String>(password.value);
@@ -560,32 +654,35 @@ class UserLoginInfoTableCompanion
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $AppSettingTableTable appSettingTable =
-      $AppSettingTableTable(this);
+  late final $AppSettingTableTable appSettingTable = $AppSettingTableTable(
+    this,
+  );
   late final $UserLoginInfoTableTable userLoginInfoTable =
       $UserLoginInfoTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [appSettingTable, userLoginInfoTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    appSettingTable,
+    userLoginInfoTable,
+  ];
 }
 
-typedef $$AppSettingTableTableCreateCompanionBuilder = AppSettingTableCompanion
-    Function({
-  required int id,
-  required DriftAny value,
-  required DateTime createdDate,
-  required DateTime lastModifiedDate,
-});
-typedef $$AppSettingTableTableUpdateCompanionBuilder = AppSettingTableCompanion
-    Function({
-  Value<int> id,
-  Value<DriftAny> value,
-  Value<DateTime> createdDate,
-  Value<DateTime> lastModifiedDate,
-});
+typedef $$AppSettingTableTableCreateCompanionBuilder =
+    AppSettingTableCompanion Function({
+      required int id,
+      required DriftAny value,
+      required DateTime createdDate,
+      required DateTime lastModifiedDate,
+    });
+typedef $$AppSettingTableTableUpdateCompanionBuilder =
+    AppSettingTableCompanion Function({
+      Value<int> id,
+      Value<DriftAny> value,
+      Value<DateTime> createdDate,
+      Value<DateTime> lastModifiedDate,
+    });
 
 class $$AppSettingTableTableFilterComposer
     extends Composer<_$AppDatabase, $AppSettingTableTable> {
@@ -597,17 +694,24 @@ class $$AppSettingTableTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DriftAny> get value => $composableBuilder(
-      column: $table.value, builder: (column) => ColumnFilters(column));
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => ColumnFilters(column));
+    column: $table.createdDate,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate,
-      builder: (column) => ColumnFilters(column));
+    column: $table.lastModifiedDate,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$AppSettingTableTableOrderingComposer
@@ -620,17 +724,24 @@ class $$AppSettingTableTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DriftAny> get value => $composableBuilder(
-      column: $table.value, builder: (column) => ColumnOrderings(column));
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => ColumnOrderings(column));
+    column: $table.createdDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.lastModifiedDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AppSettingTableTableAnnotationComposer
@@ -649,30 +760,43 @@ class $$AppSettingTableTableAnnotationComposer
       $composableBuilder(column: $table.value, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => column);
+    column: $table.createdDate,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate, builder: (column) => column);
+    column: $table.lastModifiedDate,
+    builder: (column) => column,
+  );
 }
 
-class $$AppSettingTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $AppSettingTableTable,
-    AppSettingTableData,
-    $$AppSettingTableTableFilterComposer,
-    $$AppSettingTableTableOrderingComposer,
-    $$AppSettingTableTableAnnotationComposer,
-    $$AppSettingTableTableCreateCompanionBuilder,
-    $$AppSettingTableTableUpdateCompanionBuilder,
-    (
-      AppSettingTableData,
-      BaseReferences<_$AppDatabase, $AppSettingTableTable, AppSettingTableData>
-    ),
-    AppSettingTableData,
-    PrefetchHooks Function()> {
+class $$AppSettingTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AppSettingTableTable,
+          AppSettingTableData,
+          $$AppSettingTableTableFilterComposer,
+          $$AppSettingTableTableOrderingComposer,
+          $$AppSettingTableTableAnnotationComposer,
+          $$AppSettingTableTableCreateCompanionBuilder,
+          $$AppSettingTableTableUpdateCompanionBuilder,
+          (
+            AppSettingTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $AppSettingTableTable,
+              AppSettingTableData
+            >,
+          ),
+          AppSettingTableData,
+          PrefetchHooks Function()
+        > {
   $$AppSettingTableTableTableManager(
-      _$AppDatabase db, $AppSettingTableTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $AppSettingTableTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -681,66 +805,73 @@ class $$AppSettingTableTableTableManager extends RootTableManager<
               $$AppSettingTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$AppSettingTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<DriftAny> value = const Value.absent(),
-            Value<DateTime> createdDate = const Value.absent(),
-            Value<DateTime> lastModifiedDate = const Value.absent(),
-          }) =>
-              AppSettingTableCompanion(
-            id: id,
-            value: value,
-            createdDate: createdDate,
-            lastModifiedDate: lastModifiedDate,
-          ),
-          createCompanionCallback: ({
-            required int id,
-            required DriftAny value,
-            required DateTime createdDate,
-            required DateTime lastModifiedDate,
-          }) =>
-              AppSettingTableCompanion.insert(
-            id: id,
-            value: value,
-            createdDate: createdDate,
-            lastModifiedDate: lastModifiedDate,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DriftAny> value = const Value.absent(),
+                Value<DateTime> createdDate = const Value.absent(),
+                Value<DateTime> lastModifiedDate = const Value.absent(),
+              }) => AppSettingTableCompanion(
+                id: id,
+                value: value,
+                createdDate: createdDate,
+                lastModifiedDate: lastModifiedDate,
+              ),
+          createCompanionCallback:
+              ({
+                required int id,
+                required DriftAny value,
+                required DateTime createdDate,
+                required DateTime lastModifiedDate,
+              }) => AppSettingTableCompanion.insert(
+                id: id,
+                value: value,
+                createdDate: createdDate,
+                lastModifiedDate: lastModifiedDate,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$AppSettingTableTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $AppSettingTableTable,
-    AppSettingTableData,
-    $$AppSettingTableTableFilterComposer,
-    $$AppSettingTableTableOrderingComposer,
-    $$AppSettingTableTableAnnotationComposer,
-    $$AppSettingTableTableCreateCompanionBuilder,
-    $$AppSettingTableTableUpdateCompanionBuilder,
-    (
+typedef $$AppSettingTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AppSettingTableTable,
       AppSettingTableData,
-      BaseReferences<_$AppDatabase, $AppSettingTableTable, AppSettingTableData>
-    ),
-    AppSettingTableData,
-    PrefetchHooks Function()>;
-typedef $$UserLoginInfoTableTableCreateCompanionBuilder
-    = UserLoginInfoTableCompanion Function({
-  required Int64 userId,
-  required String password,
-  required DateTime createdDate,
-  required DateTime lastModifiedDate,
-});
-typedef $$UserLoginInfoTableTableUpdateCompanionBuilder
-    = UserLoginInfoTableCompanion Function({
-  Value<Int64> userId,
-  Value<String> password,
-  Value<DateTime> createdDate,
-  Value<DateTime> lastModifiedDate,
-});
+      $$AppSettingTableTableFilterComposer,
+      $$AppSettingTableTableOrderingComposer,
+      $$AppSettingTableTableAnnotationComposer,
+      $$AppSettingTableTableCreateCompanionBuilder,
+      $$AppSettingTableTableUpdateCompanionBuilder,
+      (
+        AppSettingTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $AppSettingTableTable,
+          AppSettingTableData
+        >,
+      ),
+      AppSettingTableData,
+      PrefetchHooks Function()
+    >;
+typedef $$UserLoginInfoTableTableCreateCompanionBuilder =
+    UserLoginInfoTableCompanion Function({
+      required Int64 userId,
+      required String password,
+      required DateTime createdDate,
+      required DateTime lastModifiedDate,
+    });
+typedef $$UserLoginInfoTableTableUpdateCompanionBuilder =
+    UserLoginInfoTableCompanion Function({
+      Value<Int64> userId,
+      Value<String> password,
+      Value<DateTime> createdDate,
+      Value<DateTime> lastModifiedDate,
+    });
 
 class $$UserLoginInfoTableTableFilterComposer
     extends Composer<_$AppDatabase, $UserLoginInfoTableTable> {
@@ -753,18 +884,24 @@ class $$UserLoginInfoTableTableFilterComposer
   });
   ColumnWithTypeConverterFilters<Int64, Int64, BigInt> get userId =>
       $composableBuilder(
-          column: $table.userId,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+        column: $table.userId,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get password => $composableBuilder(
-      column: $table.password, builder: (column) => ColumnFilters(column));
+    column: $table.password,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => ColumnFilters(column));
+    column: $table.createdDate,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate,
-      builder: (column) => ColumnFilters(column));
+    column: $table.lastModifiedDate,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$UserLoginInfoTableTableOrderingComposer
@@ -777,17 +914,24 @@ class $$UserLoginInfoTableTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<BigInt> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get password => $composableBuilder(
-      column: $table.password, builder: (column) => ColumnOrderings(column));
+    column: $table.password,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => ColumnOrderings(column));
+    column: $table.createdDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.lastModifiedDate,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UserLoginInfoTableTableAnnotationComposer
@@ -806,31 +950,43 @@ class $$UserLoginInfoTableTableAnnotationComposer
       $composableBuilder(column: $table.password, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdDate => $composableBuilder(
-      column: $table.createdDate, builder: (column) => column);
+    column: $table.createdDate,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get lastModifiedDate => $composableBuilder(
-      column: $table.lastModifiedDate, builder: (column) => column);
+    column: $table.lastModifiedDate,
+    builder: (column) => column,
+  );
 }
 
-class $$UserLoginInfoTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $UserLoginInfoTableTable,
-    UserLoginInfoTableData,
-    $$UserLoginInfoTableTableFilterComposer,
-    $$UserLoginInfoTableTableOrderingComposer,
-    $$UserLoginInfoTableTableAnnotationComposer,
-    $$UserLoginInfoTableTableCreateCompanionBuilder,
-    $$UserLoginInfoTableTableUpdateCompanionBuilder,
-    (
-      UserLoginInfoTableData,
-      BaseReferences<_$AppDatabase, $UserLoginInfoTableTable,
-          UserLoginInfoTableData>
-    ),
-    UserLoginInfoTableData,
-    PrefetchHooks Function()> {
+class $$UserLoginInfoTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserLoginInfoTableTable,
+          UserLoginInfoTableData,
+          $$UserLoginInfoTableTableFilterComposer,
+          $$UserLoginInfoTableTableOrderingComposer,
+          $$UserLoginInfoTableTableAnnotationComposer,
+          $$UserLoginInfoTableTableCreateCompanionBuilder,
+          $$UserLoginInfoTableTableUpdateCompanionBuilder,
+          (
+            UserLoginInfoTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $UserLoginInfoTableTable,
+              UserLoginInfoTableData
+            >,
+          ),
+          UserLoginInfoTableData,
+          PrefetchHooks Function()
+        > {
   $$UserLoginInfoTableTableTableManager(
-      _$AppDatabase db, $UserLoginInfoTableTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $UserLoginInfoTableTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -839,54 +995,62 @@ class $$UserLoginInfoTableTableTableManager extends RootTableManager<
               $$UserLoginInfoTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$UserLoginInfoTableTableAnnotationComposer(
-                  $db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<Int64> userId = const Value.absent(),
-            Value<String> password = const Value.absent(),
-            Value<DateTime> createdDate = const Value.absent(),
-            Value<DateTime> lastModifiedDate = const Value.absent(),
-          }) =>
-              UserLoginInfoTableCompanion(
-            userId: userId,
-            password: password,
-            createdDate: createdDate,
-            lastModifiedDate: lastModifiedDate,
-          ),
-          createCompanionCallback: ({
-            required Int64 userId,
-            required String password,
-            required DateTime createdDate,
-            required DateTime lastModifiedDate,
-          }) =>
-              UserLoginInfoTableCompanion.insert(
-            userId: userId,
-            password: password,
-            createdDate: createdDate,
-            lastModifiedDate: lastModifiedDate,
-          ),
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<Int64> userId = const Value.absent(),
+                Value<String> password = const Value.absent(),
+                Value<DateTime> createdDate = const Value.absent(),
+                Value<DateTime> lastModifiedDate = const Value.absent(),
+              }) => UserLoginInfoTableCompanion(
+                userId: userId,
+                password: password,
+                createdDate: createdDate,
+                lastModifiedDate: lastModifiedDate,
+              ),
+          createCompanionCallback:
+              ({
+                required Int64 userId,
+                required String password,
+                required DateTime createdDate,
+                required DateTime lastModifiedDate,
+              }) => UserLoginInfoTableCompanion.insert(
+                userId: userId,
+                password: password,
+                createdDate: createdDate,
+                lastModifiedDate: lastModifiedDate,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$UserLoginInfoTableTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $UserLoginInfoTableTable,
-    UserLoginInfoTableData,
-    $$UserLoginInfoTableTableFilterComposer,
-    $$UserLoginInfoTableTableOrderingComposer,
-    $$UserLoginInfoTableTableAnnotationComposer,
-    $$UserLoginInfoTableTableCreateCompanionBuilder,
-    $$UserLoginInfoTableTableUpdateCompanionBuilder,
-    (
+typedef $$UserLoginInfoTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserLoginInfoTableTable,
       UserLoginInfoTableData,
-      BaseReferences<_$AppDatabase, $UserLoginInfoTableTable,
-          UserLoginInfoTableData>
-    ),
-    UserLoginInfoTableData,
-    PrefetchHooks Function()>;
+      $$UserLoginInfoTableTableFilterComposer,
+      $$UserLoginInfoTableTableOrderingComposer,
+      $$UserLoginInfoTableTableAnnotationComposer,
+      $$UserLoginInfoTableTableCreateCompanionBuilder,
+      $$UserLoginInfoTableTableUpdateCompanionBuilder,
+      (
+        UserLoginInfoTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $UserLoginInfoTableTable,
+          UserLoginInfoTableData
+        >,
+      ),
+      UserLoginInfoTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

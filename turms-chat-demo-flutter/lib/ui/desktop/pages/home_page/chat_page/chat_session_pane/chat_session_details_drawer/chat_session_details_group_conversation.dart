@@ -5,8 +5,10 @@ const _participantItemElementSpacing = 8.0;
 const _participantItemSpacing = Sizes.sizedBoxH4;
 
 class ChatSessionDetailsGroupConversation extends ConsumerStatefulWidget {
-  const ChatSessionDetailsGroupConversation(
-      {super.key, required this.conversation});
+  const ChatSessionDetailsGroupConversation({
+    super.key,
+    required this.conversation,
+  });
 
   final GroupConversation conversation;
 
@@ -25,8 +27,9 @@ class _ChatSessionDetailsGroupConversationState
     final loggedInUser = ref.watch(loggedInUserViewModel)!;
     final conversation = widget.conversation;
     final conversationId = conversation.id;
-    final conversationSettings =
-        ref.watch(idToConversationSettingsViewModel)[conversationId];
+    final conversationSettings = ref.watch(
+      idToConversationSettingsViewModel,
+    )[conversationId];
 
     const divider = THorizontalDivider();
     final contact = conversation.contact;
@@ -34,39 +37,40 @@ class _ChatSessionDetailsGroupConversationState
 
     final locale = appLocalizations.localeName;
     final members = contact.members;
-    final memberToIndex =
-        ComparableUtils.sortByStringsAsMap(locale, members, (m) => m.name);
-    members.sort(
-      (a, b) {
-        if (a.isAdmin) {
-          if (b.isAdmin) {
-            return memberToIndex[a]!.compareTo(memberToIndex[b]!);
-          } else {
-            return -1;
-          }
-        } else if (b.isAdmin) {
-          return 1;
-        } else {
-          return memberToIndex[a]!.compareTo(memberToIndex[b]!);
-        }
-      },
+    final memberToIndex = ComparableUtils.sortByStringsAsMap(
+      locale,
+      members,
+      (m) => m.name,
     );
-    final isCurrentUserAdmin =
-        members.any((m) => m.isAdmin && m.userId == loggedInUser.userId);
+    members.sort((a, b) {
+      if (a.isAdmin) {
+        if (b.isAdmin) {
+          return memberToIndex[a]!.compareTo(memberToIndex[b]!);
+        } else {
+          return -1;
+        }
+      } else if (b.isAdmin) {
+        return 1;
+      } else {
+        return memberToIndex[a]!.compareTo(memberToIndex[b]!);
+      }
+    });
+    final isCurrentUserAdmin = members.any(
+      (m) => m.isAdmin && m.userId == loggedInUser.userId,
+    );
 
     return Column(
       children: [
         isCurrentUserAdmin
-            ? _ChatSessionDetailsGroupConversationName(
-                groupName: contact.name,
-              )
+            ? _ChatSessionDetailsGroupConversationName(groupName: contact.name)
             : SelectionArea(
                 contextMenuBuilder: buildContextMenuForSelectableRegion,
                 child: Text(
                   contact.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                )),
+                ),
+              ),
         if (intro.isNotBlank) ...[
           Sizes.sizedBoxH8,
           SizedBox(
@@ -79,7 +83,7 @@ class _ChatSessionDetailsGroupConversationState
                 style: appThemeExtension.descriptionTextStyle,
               ),
             ),
-          )
+          ),
         ],
         Sizes.sizedBoxH8,
         divider,
@@ -91,7 +95,9 @@ class _ChatSessionDetailsGroupConversationState
             TSwitch(
               value: conversationSettings?.pinned ?? false,
               onChanged: (value) {
-                ref.read(conversationServiceProvider)!.updateSettingPinned(
+                ref
+                    .read(conversationServiceProvider)!
+                    .updateSettingPinned(
                       conversationId: conversationId,
                       newValue: value,
                       contact: contact,
@@ -124,7 +130,8 @@ class _ChatSessionDetailsGroupConversationState
         divider,
         Sizes.sizedBoxH8,
         Expanded(
-            child: _ChatSessionDetailsGroupConversationMemberList(members)),
+          child: _ChatSessionDetailsGroupConversationMemberList(members),
+        ),
         Sizes.sizedBoxH8,
         divider,
         SizedBox(
@@ -147,7 +154,7 @@ class _ChatSessionDetailsGroupConversationState
             text: appLocalizations.leaveGroup,
             textStyle: appThemeExtension.dangerTextStyle,
           ),
-        )
+        ),
       ],
     );
   }
@@ -178,25 +185,30 @@ class _ChatSessionDetailsGroupConversationMemberListState
     final matchedMembers = isSearching
         ? widget.members.expand<_StyledMember>((member) {
             final nameTextSpans = TextUtils.highlightSearchText(
-                text: member.name,
-                searchText: _searchText,
-                searchTextStyle: appThemeExtension.highlightTextStyle);
+              text: member.name,
+              searchText: _searchText,
+              searchTextStyle: appThemeExtension.highlightTextStyle,
+            );
             if (nameTextSpans.length == 1) {
               return [];
             }
             return [
-              _StyledMember(member: member, nameTextSpans: nameTextSpans)
+              _StyledMember(member: member, nameTextSpans: nameTextSpans),
             ];
           }).toList()
         : widget.members
-            .map((member) => _StyledMember(
-                member: member, nameTextSpans: [TextSpan(text: member.name)]))
-            .toList();
+              .map(
+                (member) => _StyledMember(
+                  member: member,
+                  nameTextSpans: [TextSpan(text: member.name)],
+                ),
+              )
+              .toList();
 
     final matchedMemberCount = matchedMembers.length;
     final matchedMemberIdToIndex = {
       for (var i = 0; i < matchedMemberCount; i++)
-        matchedMembers[i].member.userId: i
+        matchedMembers[i].member.userId: i,
     };
     return Column(
       children: [
@@ -209,79 +221,81 @@ class _ChatSessionDetailsGroupConversationMemberListState
         ),
         Sizes.sizedBoxH8,
         if (!isSearching) ...[
-          _buildAddParticipantItem(
-            theme,
-            appLocalizations.addNewMember,
-            () {
-              // TODO
-            },
-          ),
-          _participantItemSpacing
+          _buildAddParticipantItem(theme, appLocalizations.addNewMember, () {
+            // TODO
+          }),
+          _participantItemSpacing,
         ],
         Expanded(
-            child: isSearching && matchedMemberCount == 0
-                ? Center(
-                    child: Text(
+          child: isSearching && matchedMemberCount == 0
+              ? Center(
+                  child: Text(
                     appLocalizations.noMatchingGroupMembersFound,
                     style: appThemeExtension.descriptionTextStyle,
-                  ))
-                : ListView.separated(
-                    // Used to not overlay on the scrollbar
-                    padding: const EdgeInsets.only(right: 12),
-                    itemCount: matchedMemberCount,
-                    findChildIndexCallback: (key) =>
-                        matchedMemberIdToIndex[(key as ValueKey<Int64>).value],
-                    itemBuilder: (context, index) {
-                      final item = matchedMembers[index];
-                      final member = item.member;
-                      return Row(
-                        spacing: _participantItemElementSpacing,
-                        children: [
-                          UserProfilePopup(
-                              user: member,
-                              popupAnchor: Alignment.topRight,
-                              size: _avatarSize),
-                          Expanded(
-                              child: Text.rich(
+                  ),
+                )
+              : ListView.separated(
+                  // Used to not overlay on the scrollbar
+                  padding: const EdgeInsets.only(right: 12),
+                  itemCount: matchedMemberCount,
+                  findChildIndexCallback: (key) =>
+                      matchedMemberIdToIndex[(key as ValueKey<Int64>).value],
+                  itemBuilder: (context, index) {
+                    final item = matchedMembers[index];
+                    final member = item.member;
+                    return Row(
+                      spacing: _participantItemElementSpacing,
+                      children: [
+                        UserProfilePopup(
+                          user: member,
+                          popupAnchor: Alignment.topRight,
+                          size: _avatarSize,
+                        ),
+                        Expanded(
+                          child: Text.rich(
                             TextSpan(children: item.nameTextSpans),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             softWrap: false,
-                          )),
-                          if (member.isAdmin)
-                            Icon(
-                              Symbols.supervisor_account_rounded,
-                              size: 22,
-                              color: Colors.yellow.shade800,
-                            )
-                        ],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        _participantItemSpacing,
-                  ))
+                          ),
+                        ),
+                        if (member.isAdmin)
+                          Icon(
+                            Symbols.supervisor_account_rounded,
+                            size: 22,
+                            color: Colors.yellow.shade800,
+                          ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      _participantItemSpacing,
+                ),
+        ),
       ],
     );
   }
 }
 
 Row _buildAddParticipantItem(
-        ThemeData theme, String hint, VoidCallback onTap) =>
-    Row(
-      spacing: _participantItemElementSpacing,
-      children: [
-        TIconButton(
-          iconData: Symbols.person_add_rounded,
-          containerSize: Size.square(_avatarSize.containerSize),
-          iconSize: 20,
-          iconColor: Colors.grey.shade600,
-          containerBorder: Border.all(color: theme.dividerColor),
-          containerBorderHovered: Border.all(color: theme.primaryColor),
-          onTap: onTap,
-        ),
-        Flexible(child: Text(hint))
-      ],
-    );
+  ThemeData theme,
+  String hint,
+  VoidCallback onTap,
+) => Row(
+  spacing: _participantItemElementSpacing,
+  children: [
+    TIconButton(
+      iconData: Symbols.person_add_rounded,
+      containerSize: Size.square(_avatarSize.containerSize),
+      iconSize: 20,
+      iconColor: Colors.grey.shade600,
+      containerBorder: Border.all(color: theme.dividerColor),
+      containerBorderHovered: Border.all(color: theme.primaryColor),
+      onTap: onTap,
+    ),
+    Flexible(child: Text(hint)),
+  ],
+);
 
 class _ChatSessionDetailsGroupConversationName extends ConsumerStatefulWidget {
   const _ChatSessionDetailsGroupConversationName({required this.groupName});
@@ -327,13 +341,15 @@ class _ChatSessionDetailsGroupConversationNameState
           child: Row(
             children: [
               Flexible(
-                  child: SelectionArea(
-                      contextMenuBuilder: buildContextMenuForSelectableRegion,
-                      child: Text(
-                        widget.groupName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ))),
+                child: SelectionArea(
+                  contextMenuBuilder: buildContextMenuForSelectableRegion,
+                  child: Text(
+                    widget.groupName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
               if (_isHovered)
                 MouseRegion(
                   cursor: SystemMouseCursors.click,
@@ -343,16 +359,15 @@ class _ChatSessionDetailsGroupConversationNameState
                       _textEditingController ??=
                           TextEditingController(text: name)
                             ..selection = TextSelection(
-                                baseOffset: 0, extentOffset: name.length);
+                              baseOffset: 0,
+                              extentOffset: name.length,
+                            );
                       _editingGroupName = true;
                       setState(() {});
                     },
-                    child: const Icon(
-                      Symbols.edit_rounded,
-                      size: 18,
-                    ),
+                    child: const Icon(Symbols.edit_rounded, size: 18),
                   ),
-                )
+                ),
             ],
           ),
         );

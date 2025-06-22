@@ -10,10 +10,11 @@ import '../models/message_type.dart';
 import '../repositories/message_repository.dart';
 
 final _document = Document(
-    withDefaultBlockSyntaxes: false,
-    withDefaultInlineSyntaxes: false,
-    encodeHtml: false,
-    inlineSyntaxes: [ResourceSyntax(), MentionSyntax()]);
+  withDefaultBlockSyntaxes: false,
+  withDefaultInlineSyntaxes: false,
+  encodeHtml: false,
+  inlineSyntaxes: [ResourceSyntax(), MentionSyntax()],
+);
 
 class MessageService {
   const MessageService(this._messageRepository);
@@ -48,7 +49,9 @@ class MessageService {
   }
 
   static MessageInfo _parseResourceOrTextMessage(
-      List<Node> nodes, Element element) {
+    List<Node> nodes,
+    Element element,
+  ) {
     final src = element.attributes[ResourceSyntax.attributeSrc];
     if (src == null) {
       return _parseTextMessageFromNode(nodes, element);
@@ -74,8 +77,9 @@ class MessageService {
       if (xIndex < 0 || xIndex <= sizeDividerIndex) {
         return _parseTextMessageFromNode(nodes, element);
       }
-      final width =
-          double.tryParse(alt.substring(sizeDividerIndex + 1, xIndex));
+      final width = double.tryParse(
+        alt.substring(sizeDividerIndex + 1, xIndex),
+      );
       if (width == null) {
         return _parseTextMessageFromNode(nodes, element);
       }
@@ -105,8 +109,9 @@ class MessageService {
       if (xIndex < 0) {
         return _parseTextMessageFromNode(nodes, element);
       }
-      final width =
-          double.tryParse(alt.substring(sizeDividerIndex + 1, xIndex));
+      final width = double.tryParse(
+        alt.substring(sizeDividerIndex + 1, xIndex),
+      );
       if (width == null) {
         return _parseTextMessageFromNode(nodes, element);
       }
@@ -146,10 +151,11 @@ class MessageService {
       }
     }
     return MessageInfo(
-        type: MessageType.text,
-        nodes: nodes,
-        mentionAll: mentionAll,
-        mentionedUserIds: mentionedUserIds);
+      type: MessageType.text,
+      nodes: nodes,
+      mentionAll: mentionAll,
+      mentionedUserIds: mentionedUserIds,
+    );
   }
 
   static MessageInfo _parseTextMessageFromNode(List<Node> nodes, Node node) {
@@ -167,10 +173,11 @@ class MessageService {
       }
     }
     return MessageInfo(
-        type: MessageType.text,
-        nodes: nodes,
-        mentionAll: mentionAll,
-        mentionedUserIds: mentionedUserIds);
+      type: MessageType.text,
+      nodes: nodes,
+      mentionAll: mentionAll,
+      mentionedUserIds: mentionedUserIds,
+    );
   }
 
   static bool _isSupportedImageType(String originalUrl) =>
@@ -180,12 +187,12 @@ class MessageService {
       originalUrl.endsWith('.gif') ||
       originalUrl.endsWith('.webp');
 
-  static String encodeImageMessage(
-          {required String originalUrl,
-          required String thumbnailUrl,
-          required int width,
-          required int height}) =>
-      '![$thumbnailUrl|${width}x$height]($originalUrl)';
+  static String encodeImageMessage({
+    required String originalUrl,
+    required String thumbnailUrl,
+    required int width,
+    required int height,
+  }) => '![$thumbnailUrl|${width}x$height]($originalUrl)';
 
   Future<ChatMessage> sendMessage(String text, ChatMessage message) async {
     await Future<void>.delayed(const Duration(seconds: 1));
@@ -211,18 +218,17 @@ class MessageService {
     required int limit,
   }) async {
     final messageRecords = await _messageRepository.selectMessages(
-        idStart: idStart,
-        groupId: groupId,
-        participantIds: participantIds,
-        text: text,
-        messageType: messageType,
-        createdDateStart: createdDateStart,
-        createdDateEnd: createdDateEnd,
-        limit: limit);
+      idStart: idStart,
+      groupId: groupId,
+      participantIds: participantIds,
+      text: text,
+      messageType: messageType,
+      createdDateStart: createdDateStart,
+      createdDateEnd: createdDateEnd,
+      limit: limit,
+    );
     return messageRecords
-        .map(
-          (e) => ChatMessage.fromMessageTableData(e, loggedInUserId),
-        )
+        .map((e) => ChatMessage.fromMessageTableData(e, loggedInUserId))
         .toList();
   }
 }

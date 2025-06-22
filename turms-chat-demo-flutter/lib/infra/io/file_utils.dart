@@ -22,8 +22,8 @@ class FileUtils {
     ext = ext == null
         ? ''
         : ext.startsWith('.')
-            ? ext
-            : '.$ext';
+        ? ext
+        : '.$ext';
     var path =
         '${downloadsDir.path}$pathSeparator${AppConfig.packageInfo.packageName}$pathSeparator$name$ext';
     var num = 1;
@@ -49,8 +49,10 @@ class FileUtils {
     return file;
   }
 
-  static Future<FilePickerResult?> pickFile(
-      {List<String>? allowedExtensions, bool withReadStream = false}) async {
+  static Future<FilePickerResult?> pickFile({
+    List<String>? allowedExtensions,
+    bool withReadStream = false,
+  }) async {
     if (_isPickingFile) {
       return null;
     }

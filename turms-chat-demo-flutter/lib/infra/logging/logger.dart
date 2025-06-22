@@ -20,17 +20,13 @@ class Logger {
   }
 
   void error(String message, [Object? error, StackTrace? stackTrace]) {
-    log(LogEntry(LogLevel.error, message,
-        error: error, stackTrace: stackTrace));
+    log(
+      LogEntry(LogLevel.error, message, error: error, stackTrace: stackTrace),
+    );
   }
 
   void warn(String message, [Object? error, StackTrace? stackTrace]) {
-    log(LogEntry(
-      LogLevel.warn,
-      message,
-      error: error,
-      stackTrace: stackTrace,
-    ));
+    log(LogEntry(LogLevel.warn, message, error: error, stackTrace: stackTrace));
   }
 
   void info(String message) {

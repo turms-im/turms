@@ -33,17 +33,17 @@ class MessageImageProvider extends ImageProvider<MessageImageProvider> {
 
   @override
   ImageStreamCompleter loadImage(
-          MessageImageProvider key, ImageDecoderCallback decode) =>
-      MultiFrameImageStreamCompleter(
-        codec: _load(decode),
-        scale: 1.0,
-        debugLabel: '$originalImageUrl:$asThumbnail',
-        chunkEvents: chunkEvents.stream,
-        informationCollector: () sync* {
-          yield ErrorDescription(
-              'Cache Entry ID: $originalImageUrl:$asThumbnail');
-        },
-      );
+    MessageImageProvider key,
+    ImageDecoderCallback decode,
+  ) => MultiFrameImageStreamCompleter(
+    codec: _load(decode),
+    scale: 1.0,
+    debugLabel: '$originalImageUrl:$asThumbnail',
+    chunkEvents: chunkEvents.stream,
+    informationCollector: () sync* {
+      yield ErrorDescription('Cache Entry ID: $originalImageUrl:$asThumbnail');
+    },
+  );
 
   Future<Codec> _load(ImageDecoderCallback decode) async {
     final bytes = await _fetchImage();
@@ -57,26 +57,36 @@ class MessageImageProvider extends ImageProvider<MessageImageProvider> {
     final ext = extension(urlStr);
     final fileBaseName = CryptoUtils.getSha256ByString(urlStr);
     final fileFullName = '$fileBaseName$ext';
-    final outputOriginalImagePath =
-        PathUtils.joinPathInUserScope(['files', fileFullName]);
-    final outputThumbnailPath =
-        PathUtils.joinPathInUserScope(['files', '$fileBaseName-thumbnail$ext']);
+    final outputOriginalImagePath = PathUtils.joinPathInUserScope([
+      'files',
+      fileFullName,
+    ]);
+    final outputThumbnailPath = PathUtils.joinPathInUserScope([
+      'files',
+      '$fileBaseName-thumbnail$ext',
+    ]);
     if (asThumbnail) {
       final outputThumbnailFile = File(outputThumbnailPath);
       if (await outputThumbnailFile.exists()) {
         final bytes = await outputThumbnailFile.readAsBytes();
         this.mediaFile = MessageMediaFile(
-            originalMediaUrl: url,
-            thumbnailPath: outputThumbnailPath,
-            thumbnailBytes: bytes);
+          originalMediaUrl: url,
+          thumbnailPath: outputThumbnailPath,
+          thumbnailBytes: bytes,
+        );
         return bytes;
       }
-      chunkEvents.add(const ImageChunkEvent(
-          cumulativeBytesLoaded: 0, expectedTotalBytes: null));
+      chunkEvents.add(
+        const ImageChunkEvent(
+          cumulativeBytesLoaded: 0,
+          expectedTotalBytes: null,
+        ),
+      );
       final mediaFile = await TaskUtils.cacheFutureProvider(
-          id: 'download:$url',
-          futureProvider: () =>
-              _fetchImage0(url, outputOriginalImagePath, outputThumbnailPath));
+        id: 'download:$url',
+        futureProvider: () =>
+            _fetchImage0(url, outputOriginalImagePath, outputThumbnailPath),
+      );
       this.mediaFile = mediaFile;
       return mediaFile.thumbnailBytes ?? mediaFile.originalMediaBytes!;
     } else {
@@ -84,24 +94,33 @@ class MessageImageProvider extends ImageProvider<MessageImageProvider> {
       if (await outputOriginalImageFile.exists()) {
         final bytes = await outputOriginalImageFile.readAsBytes();
         this.mediaFile = MessageMediaFile(
-            originalMediaUrl: url,
-            originalMediaPath: outputOriginalImagePath,
-            originalMediaBytes: bytes);
+          originalMediaUrl: url,
+          originalMediaPath: outputOriginalImagePath,
+          originalMediaBytes: bytes,
+        );
         return bytes;
       }
-      chunkEvents.add(const ImageChunkEvent(
-          cumulativeBytesLoaded: 0, expectedTotalBytes: null));
+      chunkEvents.add(
+        const ImageChunkEvent(
+          cumulativeBytesLoaded: 0,
+          expectedTotalBytes: null,
+        ),
+      );
       final mediaFile = await TaskUtils.cacheFutureProvider(
-          id: 'download:$url',
-          futureProvider: () =>
-              _fetchImage0(url, outputOriginalImagePath, outputThumbnailPath));
+        id: 'download:$url',
+        futureProvider: () =>
+            _fetchImage0(url, outputOriginalImagePath, outputThumbnailPath),
+      );
       this.mediaFile = mediaFile;
       return mediaFile.originalMediaBytes!;
     }
   }
 
-  Future<MessageMediaFile> _fetchImage0(String uri,
-      String outputOriginalImagePath, String outputThumbnailPath) async {
+  Future<MessageMediaFile> _fetchImage0(
+    String uri,
+    String outputOriginalImagePath,
+    String outputThumbnailPath,
+  ) async {
     final originalImageFile = await HttpUtils.downloadFile(
       uri: Uri.parse(uri),
       filePath: outputOriginalImagePath,
@@ -115,10 +134,11 @@ class MessageImageProvider extends ImageProvider<MessageImageProvider> {
       throw ResourceNotFoundException(uri);
     }
     final resizeResult = await resize(
-        inputPath: originalImageFile.file.path,
-        outputPath: outputThumbnailPath,
-        width: EnvVars.messageImageThumbnailSizeWidth.toInt(),
-        height: EnvVars.messageImageThumbnailSizeHeight.toInt());
+      inputPath: originalImageFile.file.path,
+      outputPath: outputThumbnailPath,
+      width: EnvVars.messageImageThumbnailSizeWidth.toInt(),
+      height: EnvVars.messageImageThumbnailSizeHeight.toInt(),
+    );
     final errorType = resizeResult.errorType;
     if (errorType == null) {
       // TODO: optimize memory usage.
@@ -143,7 +163,7 @@ class MessageImageProvider extends ImageProvider<MessageImageProvider> {
         ResizeError.decoding => throw const CorruptedMediaFileException(),
         ResizeError.parameter => throw ArgumentError(),
         ResizeError.limits => throw const FileTooLargeException(),
-        ResizeError.unsupported || ResizeError.ioError => throw Exception('io')
+        ResizeError.unsupported || ResizeError.ioError => throw Exception('io'),
       };
     }
   }

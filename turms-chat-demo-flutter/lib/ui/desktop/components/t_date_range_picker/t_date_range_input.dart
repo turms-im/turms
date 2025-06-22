@@ -1,15 +1,14 @@
 part of 't_date_range_picker.dart';
 
 class _TDateRangeInput extends ConsumerStatefulWidget {
-  const _TDateRangeInput(
-      {Key? key,
-      this.startDate,
-      this.endDate,
-      this.previewStartDate,
-      this.previewEndDate,
-      required this.startDateFocusNode,
-      required this.endDateFocusNode})
-      : super(key: key);
+  const _TDateRangeInput({
+    this.startDate,
+    this.endDate,
+    this.previewStartDate,
+    this.previewEndDate,
+    required this.startDateFocusNode,
+    required this.endDateFocusNode,
+  });
 
   final DateTime? startDate;
   final DateTime? endDate;
@@ -62,12 +61,15 @@ class _TDateRangeInputState extends ConsumerState<_TDateRangeInput> {
     }
 
     final dateFormat = ref.read(dateFormatViewModel_yMd);
-    _startDateInputController.text =
-        startDate == null ? '' : dateFormat.format(startDate);
-    _endDateInputController.text =
-        endDate == null ? '' : dateFormat.format(endDate);
-    final textStyle =
-        appThemeExtension.descriptionTextStyle.copyWith(height: 1);
+    _startDateInputController.text = startDate == null
+        ? ''
+        : dateFormat.format(startDate);
+    _endDateInputController.text = endDate == null
+        ? ''
+        : dateFormat.format(endDate);
+    final textStyle = appThemeExtension.descriptionTextStyle.copyWith(
+      height: 1,
+    );
 
     return Row(
       mainAxisSize: MainAxisSize.min,

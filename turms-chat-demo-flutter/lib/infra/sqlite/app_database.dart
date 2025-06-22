@@ -19,15 +19,19 @@ class AppDatabase extends _$AppDatabase {
   int get schemaVersion => 1;
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(beforeOpen: (details) async {
-        if (kDebugMode) {
-          await validateDatabaseSchema();
-        }
-      });
+  MigrationStrategy get migration => MigrationStrategy(
+    beforeOpen: (details) async {
+      if (kDebugMode) {
+        await validateDatabaseSchema();
+      }
+    },
+  );
 }
 
-final appDatabase = AppDatabase(DatabaseUtils.createDatabase(
+final appDatabase = AppDatabase(
+  DatabaseUtils.createDatabase(
     dbName: 'app',
     isAppDatabase: true,
-    logStatements: EnvVars.databaseLogStatements));
+    logStatements: EnvVars.databaseLogStatements,
+  ),
+);

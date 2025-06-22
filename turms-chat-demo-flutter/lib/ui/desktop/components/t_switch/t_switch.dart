@@ -8,12 +8,9 @@ class TSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 24,
-        child: FittedBox(
-          child: CupertinoSwitch(
-            value: value,
-            onChanged: onChanged,
-          ),
-        ),
-      );
+    height: 24,
+    child: FittedBox(
+      child: CupertinoSwitch(value: value, onChanged: onChanged),
+    ),
+  );
 }

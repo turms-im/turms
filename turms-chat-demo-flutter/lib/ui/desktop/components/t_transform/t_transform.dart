@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../infra/units/math_extensions.dart';
 
 class TTransform extends StatelessWidget {
-  const TTransform(
-      {Key? key,
-      required this.flipX,
-      required this.flipY,
-      required this.rotationAngle,
-      required this.child})
-      : super(key: key);
+  const TTransform({
+    super.key,
+    required this.flipX,
+    required this.flipY,
+    required this.rotationAngle,
+    required this.child,
+  });
 
   final bool flipX;
   final bool flipY;
@@ -26,11 +26,7 @@ class TTransform extends StatelessWidget {
       );
     }
     if (flipX || flipY) {
-      content = Transform.flip(
-        flipX: flipX,
-        flipY: flipY,
-        child: content,
-      );
+      content = Transform.flip(flipX: flipX, flipY: flipY, child: content);
     }
     return content;
   }

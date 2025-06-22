@@ -113,7 +113,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<DiskSpaceInfo> sse_decode_list_disk_space_info(
-      SseDeserializer deserializer);
+    SseDeserializer deserializer,
+  );
 
   @protected
   Uint16List sse_decode_list_prim_u_16_strict(SseDeserializer deserializer);
@@ -126,11 +127,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ResizeError? sse_decode_opt_box_autoadd_resize_error(
-      SseDeserializer deserializer);
+    SseDeserializer deserializer,
+  );
 
   @protected
   Uint16List? sse_decode_opt_list_prim_u_16_strict(
-      SseDeserializer deserializer);
+    SseDeserializer deserializer,
+  );
 
   @protected
   ResizeError sse_decode_resize_error(SseDeserializer deserializer);
@@ -164,7 +167,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_resize_error(
-      ResizeError self, SseSerializer serializer);
+    ResizeError self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_disk_space_info(DiskSpaceInfo self, SseSerializer serializer);
@@ -180,26 +185,36 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_disk_space_info(
-      List<DiskSpaceInfo> self, SseSerializer serializer);
+    List<DiskSpaceInfo> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_prim_u_16_strict(
-      Uint16List self, SseSerializer serializer);
+    Uint16List self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_prim_u_8_strict(
-      Uint8List self, SseSerializer serializer);
+    Uint8List self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_box_autoadd_i_8(int? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_resize_error(
-      ResizeError? self, SseSerializer serializer);
+    ResizeError? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_list_prim_u_16_strict(
-      Uint16List? self, SseSerializer serializer);
+    Uint16List? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_resize_error(ResizeError self, SseSerializer serializer);

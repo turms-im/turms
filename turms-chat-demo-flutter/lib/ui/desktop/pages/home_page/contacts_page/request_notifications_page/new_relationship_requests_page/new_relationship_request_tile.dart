@@ -11,12 +11,12 @@ import '../../../../../components/t_button/t_text_button.dart';
 import '../../../../../components/t_menu/t_context_menu.dart';
 
 class NewRelationshipRequestTile extends ConsumerStatefulWidget {
-  const NewRelationshipRequestTile(
-      {Key? key,
-      required this.request,
-      required this.onAccept,
-      required this.onStartConversation})
-      : super(key: key);
+  const NewRelationshipRequestTile({
+    super.key,
+    required this.request,
+    required this.onAccept,
+    required this.onStartConversation,
+  });
 
   final NewRelationshipRequest request;
   final Future<void> Function() onAccept;
@@ -42,11 +42,7 @@ class _NewRelationshipRequestTileState
     final status = request.status;
     return Row(
       children: [
-        TAvatar(
-          id: sender.userId,
-          name: sender.name,
-          image: sender.image,
-        ),
+        TAvatar(id: sender.userId, name: sender.name, image: sender.image),
         Sizes.sizedBoxW16,
         Expanded(
           child: SelectionArea(
@@ -55,17 +51,14 @@ class _NewRelationshipRequestTileState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  sender.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Text(sender.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                 Text(
                   message,
                   style: appThemeExtension.descriptionTextStyle,
                   strutStyle: StrutStyle.fromTextStyle(
-                      appThemeExtension.descriptionTextStyle,
-                      forceStrutHeight: true),
+                    appThemeExtension.descriptionTextStyle,
+                    forceStrutHeight: true,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

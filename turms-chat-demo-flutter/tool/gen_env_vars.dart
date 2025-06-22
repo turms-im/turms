@@ -26,12 +26,14 @@ Future<void> generateEnvFile() async {
       code.write("  static const bool $name = bool.fromEnvironment('$key');\n");
     } else if (value.contains('.') && double.tryParse(value) != null) {
       code.write(
-          "  static final double $name = double.parse(const String.fromEnvironment('$key'));\n");
+        "  static final double $name = double.parse(const String.fromEnvironment('$key'));\n",
+      );
     } else if (int.tryParse(value) != null) {
       code.write("  static const int $name = int.fromEnvironment('$key');\n");
     } else {
       code.write(
-          "  static const String $name = String.fromEnvironment('$key');\n");
+        "  static const String $name = String.fromEnvironment('$key');\n",
+      );
     }
   }
   code.write('}');

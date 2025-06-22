@@ -9,31 +9,22 @@ import '../frb_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `resize0`, `resize_gif`, `should_resize`
 
-Future<ResizeResult> resize(
-        {required String inputPath,
-        required String outputPath,
-        required int width,
-        required int height}) =>
-    RustLib.instance.api.crateApiImageResize(
-        inputPath: inputPath,
-        outputPath: outputPath,
-        width: width,
-        height: height);
+Future<ResizeResult> resize({
+  required String inputPath,
+  required String outputPath,
+  required int width,
+  required int height,
+}) => RustLib.instance.api.crateApiImageResize(
+  inputPath: inputPath,
+  outputPath: outputPath,
+  width: width,
+  height: height,
+);
 
-enum ResizeError {
-  decoding,
-  parameter,
-  limits,
-  unsupported,
-  ioError,
-  ;
-}
+enum ResizeError { decoding, parameter, limits, unsupported, ioError }
 
 class ResizeResult {
-  const ResizeResult({
-    required this.resized,
-    this.errorType,
-  });
+  const ResizeResult({required this.resized, this.errorType});
   final bool resized;
   final ResizeError? errorType;
 

@@ -9,20 +9,27 @@ Future<Uint8List> svgToPng(Uint8List svgData, int outputDimension) async {
   // 1. load
   final pictureInfo = await vg.loadPicture(SvgBytesLoader(svgData), null);
   final pictureSize = pictureInfo.size;
-  final image = await pictureInfo.picture
-      .toImage(pictureSize.width.toInt(), pictureSize.height.toInt());
+  final image = await pictureInfo.picture.toImage(
+    pictureSize.width.toInt(),
+    pictureSize.height.toInt(),
+  );
 
   // 2. paint
   WidgetsFlutterBinding.ensureInitialized();
   final recorder = PictureRecorder();
   final canvas = Canvas(recorder);
   paintImage(
-      canvas: canvas,
-      rect: Rect.fromLTWH(
-          0, 0, outputDimension.toDouble(), outputDimension.toDouble()),
-      image: image,
-      filterQuality: FilterQuality.high,
-      fit: BoxFit.contain);
+    canvas: canvas,
+    rect: Rect.fromLTWH(
+      0,
+      0,
+      outputDimension.toDouble(),
+      outputDimension.toDouble(),
+    ),
+    image: image,
+    filterQuality: FilterQuality.high,
+    fit: BoxFit.contain,
+  );
   final picture = recorder.endRecording();
 
   // 3. export
@@ -42,7 +49,8 @@ Future<void> main() async {
     final srcIconFile = File('$baseDir/../turms-admin/ui/public/favicon.svg');
     if (!await srcIconFile.exists()) {
       throw Exception(
-          'Unable to find the source icon file: ${srcIconFile.absolute.path}');
+        'Unable to find the source icon file: ${srcIconFile.absolute.path}',
+      );
     }
     await srcIconFile.copy(iconPath);
   }

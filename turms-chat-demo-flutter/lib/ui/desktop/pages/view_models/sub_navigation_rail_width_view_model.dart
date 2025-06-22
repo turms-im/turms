@@ -18,4 +18,5 @@ class SubNavigationRailWidthViewModelNotifier extends Notifier<double> {
 
 final subNavigationRailWidthViewModel =
     NotifierProvider<SubNavigationRailWidthViewModelNotifier, double>(
-        SubNavigationRailWidthViewModelNotifier.new);
+      SubNavigationRailWidthViewModelNotifier.new,
+    );

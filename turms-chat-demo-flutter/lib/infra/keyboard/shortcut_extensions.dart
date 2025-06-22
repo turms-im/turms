@@ -11,25 +11,13 @@ extension ShortcutActivatorExtensions on ShortcutActivator {
       case SingleActivator():
         final singleActivator = this as SingleActivator;
         if (singleActivator.control) {
-          return [
-            LogicalKeyboardKey.control,
-            singleActivator.trigger,
-          ];
+          return [LogicalKeyboardKey.control, singleActivator.trigger];
         } else if (singleActivator.shift) {
-          return [
-            LogicalKeyboardKey.shift,
-            singleActivator.trigger,
-          ];
+          return [LogicalKeyboardKey.shift, singleActivator.trigger];
         } else if (singleActivator.alt) {
-          return [
-            LogicalKeyboardKey.alt,
-            singleActivator.trigger,
-          ];
+          return [LogicalKeyboardKey.alt, singleActivator.trigger];
         } else if (singleActivator.meta) {
-          return [
-            LogicalKeyboardKey.meta,
-            singleActivator.trigger,
-          ];
+          return [LogicalKeyboardKey.meta, singleActivator.trigger];
         } else {
           return [singleActivator.trigger];
         }

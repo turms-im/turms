@@ -30,32 +30,38 @@ extension FixturesExtensions on Fixtures {
           var date = now;
           for (var i = 0; i < count; i++) {
             date = date.subtract(
-                Duration(seconds: _random.nextInt(60 * 60 * 24 * 30)));
+              Duration(seconds: _random.nextInt(60 * 60 * 24 * 30)),
+            );
             timestamps.add(date);
           }
           return UserConversation(
-              contact: contact,
-              unreadMessageCount:
-                  rawMessages.isEmpty ? 0 : _random.nextInt(rawMessages.length),
-              messages: rawMessages.indexed.map((item) {
-                final (messageIndex, message) = item;
-                final sentByMe = _random.nextBool();
-                return ChatMessage.parse(
-                    text: message,
-                    messageId: --messageId,
-                    senderId: sentByMe ? loggedInUserId : contact.userId,
-                    sentByMe: sentByMe,
-                    recipientId: sentByMe ? contact.userId : loggedInUserId,
-                    isGroupMessage: false,
-                    timestamp: timestamps[count - messageIndex - 1],
-                    status: sentByMe
-                        ? _deliveryStatuses[
-                            _random.nextInt(_deliveryStatuses.length)]
-                        : MessageDeliveryStatus.delivered);
-              }).toList());
+            contact: contact,
+            unreadMessageCount: rawMessages.isEmpty
+                ? 0
+                : _random.nextInt(rawMessages.length),
+            messages: rawMessages.indexed.map((item) {
+              final (messageIndex, message) = item;
+              final sentByMe = _random.nextBool();
+              return ChatMessage.parse(
+                text: message,
+                messageId: --messageId,
+                senderId: sentByMe ? loggedInUserId : contact.userId,
+                sentByMe: sentByMe,
+                recipientId: sentByMe ? contact.userId : loggedInUserId,
+                isGroupMessage: false,
+                timestamp: timestamps[count - messageIndex - 1],
+                status: sentByMe
+                    ? _deliveryStatuses[_random.nextInt(
+                        _deliveryStatuses.length,
+                      )]
+                    : MessageDeliveryStatus.delivered,
+              );
+            }).toList(),
+          );
         case GroupContact():
-          final memberIds =
-              contact.members.map((member) => member.userId).toList();
+          final memberIds = contact.members
+              .map((member) => member.userId)
+              .toList();
           final memberCount = memberIds.length;
           final maxMessageCount = RandomUtils.nextInt() % 20;
           final messages = <ChatMessage>[];
@@ -63,7 +69,8 @@ extension FixturesExtensions on Fixtures {
           final timestamps = <DateTime>[];
           for (var i = 0; i < maxMessageCount; i++) {
             date = date.subtract(
-                Duration(seconds: _random.nextInt(60 * 60 * 24 * 30)));
+              Duration(seconds: _random.nextInt(60 * 60 * 24 * 30)),
+            );
             timestamps.add(date);
           }
           for (var i = 0; i < maxMessageCount; i++) {
@@ -75,7 +82,8 @@ extension FixturesExtensions on Fixtures {
             }
             final rawMessage =
                 rawMessages[RandomUtils.nextInt() % messageCount];
-            messages.add(ChatMessage.parse(
+            messages.add(
+              ChatMessage.parse(
                 text: rawMessage,
                 messageId: --messageId,
                 groupId: contact.groupId,
@@ -83,13 +91,17 @@ extension FixturesExtensions on Fixtures {
                 sentByMe: loggedInUserId == memberId,
                 isGroupMessage: true,
                 timestamp: timestamps[maxMessageCount - i - 1],
-                status: MessageDeliveryStatus.delivered));
+                status: MessageDeliveryStatus.delivered,
+              ),
+            );
           }
           return GroupConversation(
-              contact: contact,
-              unreadMessageCount:
-                  messages.isEmpty ? 0 : _random.nextInt(messages.length),
-              messages: messages);
+            contact: contact,
+            unreadMessageCount: messages.isEmpty
+                ? 0
+                : _random.nextInt(messages.length),
+            messages: messages,
+          );
         case SystemContact():
           throw UnimplementedError();
       }

@@ -265,8 +265,7 @@ class TSelectableRegion extends StatefulWidget {
       TargetPlatform.macOS ||
       TargetPlatform.fuchsia ||
       TargetPlatform.linux ||
-      TargetPlatform.windows =>
-        false,
+      TargetPlatform.windows => false,
       // TODO(bleroux): the share button should be shown on iOS but the share
       // functionality requires some changes on the engine side because, on iPad,
       // it needs an anchor for the popup.
@@ -318,35 +317,49 @@ class TSelectableRegionState extends State<TSelectableRegion>
     // SelectAllTextIntent: _makeOverridable(_SelectAllAction(this)),
     CopySelectionTextIntent: _makeOverridable(_CopySelectionAction(this)),
     ExtendSelectionToNextWordBoundaryOrCaretLocationIntent: _makeOverridable(
-        _GranularlyExtendSelectionAction<
-                ExtendSelectionToNextWordBoundaryOrCaretLocationIntent>(this,
-            granularity: TextGranularity.word)),
+      _GranularlyExtendSelectionAction<
+        ExtendSelectionToNextWordBoundaryOrCaretLocationIntent
+      >(this, granularity: TextGranularity.word),
+    ),
     ExpandSelectionToDocumentBoundaryIntent: _makeOverridable(
-        _GranularlyExtendSelectionAction<
-                ExpandSelectionToDocumentBoundaryIntent>(this,
-            granularity: TextGranularity.document)),
+      _GranularlyExtendSelectionAction<ExpandSelectionToDocumentBoundaryIntent>(
+        this,
+        granularity: TextGranularity.document,
+      ),
+    ),
     ExpandSelectionToLineBreakIntent: _makeOverridable(
-        _GranularlyExtendSelectionAction<ExpandSelectionToLineBreakIntent>(this,
-            granularity: TextGranularity.line)),
+      _GranularlyExtendSelectionAction<ExpandSelectionToLineBreakIntent>(
+        this,
+        granularity: TextGranularity.line,
+      ),
+    ),
     ExtendSelectionByCharacterIntent: _makeOverridable(
-        _GranularlyExtendCaretSelectionAction<ExtendSelectionByCharacterIntent>(
-            this,
-            granularity: TextGranularity.character)),
+      _GranularlyExtendCaretSelectionAction<ExtendSelectionByCharacterIntent>(
+        this,
+        granularity: TextGranularity.character,
+      ),
+    ),
     ExtendSelectionToNextWordBoundaryIntent: _makeOverridable(
-        _GranularlyExtendCaretSelectionAction<
-                ExtendSelectionToNextWordBoundaryIntent>(this,
-            granularity: TextGranularity.word)),
+      _GranularlyExtendCaretSelectionAction<
+        ExtendSelectionToNextWordBoundaryIntent
+      >(this, granularity: TextGranularity.word),
+    ),
     ExtendSelectionToLineBreakIntent: _makeOverridable(
-        _GranularlyExtendCaretSelectionAction<ExtendSelectionToLineBreakIntent>(
-            this,
-            granularity: TextGranularity.line)),
+      _GranularlyExtendCaretSelectionAction<ExtendSelectionToLineBreakIntent>(
+        this,
+        granularity: TextGranularity.line,
+      ),
+    ),
     ExtendSelectionVerticallyToAdjacentLineIntent: _makeOverridable(
-        _DirectionallyExtendCaretSelectionAction<
-            ExtendSelectionVerticallyToAdjacentLineIntent>(this)),
+      _DirectionallyExtendCaretSelectionAction<
+        ExtendSelectionVerticallyToAdjacentLineIntent
+      >(this),
+    ),
     ExtendSelectionToDocumentBoundaryIntent: _makeOverridable(
-        _GranularlyExtendCaretSelectionAction<
-                ExtendSelectionToDocumentBoundaryIntent>(this,
-            granularity: TextGranularity.document)),
+      _GranularlyExtendCaretSelectionAction<
+        ExtendSelectionToDocumentBoundaryIntent
+      >(this, granularity: TextGranularity.document),
+    ),
   };
 
   final Map<Type, GestureRecognizerFactory> _gestureRecognizers =
@@ -390,11 +403,11 @@ class TSelectableRegionState extends State<TSelectableRegion>
     // Right clicks.
     _gestureRecognizers[TapGestureRecognizer] =
         GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-      () => TapGestureRecognizer(debugOwner: this),
-      (TapGestureRecognizer instance) {
-        instance.onSecondaryTapDown = _handleRightClickDown;
-      },
-    );
+          () => TapGestureRecognizer(debugOwner: this),
+          (TapGestureRecognizer instance) {
+            instance.onSecondaryTapDown = _handleRightClickDown;
+          },
+        );
     _initProcessTextActions();
   }
 
@@ -476,8 +489,7 @@ class TSelectableRegionState extends State<TSelectableRegion>
   void _updateSelectionStatus() {
     final geometry = _selectionDelegate.value;
     final selection = switch (geometry.status) {
-      SelectionStatus.uncollapsed ||
-      SelectionStatus.collapsed =>
+      SelectionStatus.uncollapsed || SelectionStatus.collapsed =>
         const TextSelection(baseOffset: 0, extentOffset: 1),
       SelectionStatus.none => const TextSelection.collapsed(offset: 1),
     };
@@ -545,8 +557,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
         return rawCount <= maxConsecutiveTap
             ? rawCount
             : (rawCount % maxConsecutiveTap == 0
-                ? maxConsecutiveTap
-                : rawCount % maxConsecutiveTap);
+                  ? maxConsecutiveTap
+                  : rawCount % maxConsecutiveTap);
       case TargetPlatform.linux:
         // From observation, these platforms reset their tap count to 0 when
         // the number of consecutive taps exceeds the max consecutive tap supported.
@@ -557,8 +569,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
         return rawCount <= maxConsecutiveTap
             ? rawCount
             : (rawCount % maxConsecutiveTap == 0
-                ? maxConsecutiveTap
-                : rawCount % maxConsecutiveTap);
+                  ? maxConsecutiveTap
+                  : rawCount % maxConsecutiveTap);
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
       case TargetPlatform.windows:
@@ -573,31 +585,32 @@ class TSelectableRegionState extends State<TSelectableRegion>
   void _initMouseGestureRecognizer() {
     _gestureRecognizers[TapAndPanGestureRecognizer] =
         GestureRecognizerFactoryWithHandlers<TapAndPanGestureRecognizer>(
-      () => TapAndPanGestureRecognizer(
-        debugOwner: this,
-        supportedDevices: <PointerDeviceKind>{PointerDeviceKind.mouse},
-      ),
-      (TapAndPanGestureRecognizer instance) {
-        instance
-          ..onTapTrackStart = _onTapTrackStart
-          ..onTapTrackReset = _onTapTrackReset
-          ..onTapDown = _startNewMouseSelectionGesture
-          ..onTapUp = _handleMouseTapUp
-          ..onDragStart = _handleMouseDragStart
-          ..onDragUpdate = _handleMouseDragUpdate
-          ..onDragEnd = _handleMouseDragEnd
-          ..onCancel = clearSelection
-          ..dragStartBehavior = DragStartBehavior.down;
-      },
-    );
+          () => TapAndPanGestureRecognizer(
+            debugOwner: this,
+            supportedDevices: <PointerDeviceKind>{PointerDeviceKind.mouse},
+          ),
+          (TapAndPanGestureRecognizer instance) {
+            instance
+              ..onTapTrackStart = _onTapTrackStart
+              ..onTapTrackReset = _onTapTrackReset
+              ..onTapDown = _startNewMouseSelectionGesture
+              ..onTapUp = _handleMouseTapUp
+              ..onDragStart = _handleMouseDragStart
+              ..onDragUpdate = _handleMouseDragUpdate
+              ..onDragEnd = _handleMouseDragEnd
+              ..onCancel = clearSelection
+              ..dragStartBehavior = DragStartBehavior.down;
+          },
+        );
   }
 
   void _onTapTrackStart() {
-    _isShiftPressed = HardwareKeyboard.instance.logicalKeysPressed
-        .intersection(<LogicalKeyboardKey>{
-      LogicalKeyboardKey.shiftLeft,
-      LogicalKeyboardKey.shiftRight
-    }).isNotEmpty;
+    _isShiftPressed = HardwareKeyboard.instance.logicalKeysPressed.intersection(
+      <LogicalKeyboardKey>{
+        LogicalKeyboardKey.shiftLeft,
+        LogicalKeyboardKey.shiftRight,
+      },
+    ).isNotEmpty;
   }
 
   void _onTapTrackReset() {
@@ -610,50 +623,55 @@ class TSelectableRegionState extends State<TSelectableRegion>
     // ancestor Scrollable gestures in common scenarios like a vertically scrolling list view.
     _gestureRecognizers[TapAndHorizontalDragGestureRecognizer] =
         GestureRecognizerFactoryWithHandlers<
-            TapAndHorizontalDragGestureRecognizer>(
-      () => TapAndHorizontalDragGestureRecognizer(
-        debugOwner: this,
-        supportedDevices: PointerDeviceKind.values
-            .where(
-                (PointerDeviceKind device) => device != PointerDeviceKind.mouse)
-            .toSet(),
-      ),
-      (TapAndHorizontalDragGestureRecognizer instance) {
-        instance
-          // iOS does not provide a device specific touch slop
-          // unlike Android (~8.0), so the touch slop for a [Scrollable]
-          // always default to kTouchSlop which is 18.0. When
-          // [SelectableRegion] is the child of a horizontal
-          // scrollable that means the [SelectableRegion] will
-          // always win the gesture arena when competing with
-          // the ancestor scrollable because they both have
-          // the same touch slop threshold and the child receives
-          // the [PointerEvent] first. To avoid this conflict
-          // and ensure a smooth scrolling experience, on
-          // iOS the [TapAndHorizontalDragGestureRecognizer]
-          // will wait for all other gestures to lose before
-          // declaring victory.
-          ..eagerVictoryOnDrag = defaultTargetPlatform != TargetPlatform.iOS
-          ..onTapDown = _startNewMouseSelectionGesture
-          ..onTapUp = _handleMouseTapUp
-          ..onDragStart = _handleMouseDragStart
-          ..onDragUpdate = _handleMouseDragUpdate
-          ..onDragEnd = _handleMouseDragEnd
-          ..onCancel = clearSelection
-          ..dragStartBehavior = DragStartBehavior.down;
-      },
-    );
+          TapAndHorizontalDragGestureRecognizer
+        >(
+          () => TapAndHorizontalDragGestureRecognizer(
+            debugOwner: this,
+            supportedDevices: PointerDeviceKind.values
+                .where(
+                  (PointerDeviceKind device) =>
+                      device != PointerDeviceKind.mouse,
+                )
+                .toSet(),
+          ),
+          (TapAndHorizontalDragGestureRecognizer instance) {
+            instance
+              // iOS does not provide a device specific touch slop
+              // unlike Android (~8.0), so the touch slop for a [Scrollable]
+              // always default to kTouchSlop which is 18.0. When
+              // [SelectableRegion] is the child of a horizontal
+              // scrollable that means the [SelectableRegion] will
+              // always win the gesture arena when competing with
+              // the ancestor scrollable because they both have
+              // the same touch slop threshold and the child receives
+              // the [PointerEvent] first. To avoid this conflict
+              // and ensure a smooth scrolling experience, on
+              // iOS the [TapAndHorizontalDragGestureRecognizer]
+              // will wait for all other gestures to lose before
+              // declaring victory.
+              ..eagerVictoryOnDrag = defaultTargetPlatform != TargetPlatform.iOS
+              ..onTapDown = _startNewMouseSelectionGesture
+              ..onTapUp = _handleMouseTapUp
+              ..onDragStart = _handleMouseDragStart
+              ..onDragUpdate = _handleMouseDragUpdate
+              ..onDragEnd = _handleMouseDragEnd
+              ..onCancel = clearSelection
+              ..dragStartBehavior = DragStartBehavior.down;
+          },
+        );
     _gestureRecognizers[LongPressGestureRecognizer] =
         GestureRecognizerFactoryWithHandlers<LongPressGestureRecognizer>(
-      () => LongPressGestureRecognizer(
-          debugOwner: this, supportedDevices: _kLongPressSelectionDevices),
-      (LongPressGestureRecognizer instance) {
-        instance
-          ..onLongPressStart = _handleTouchLongPressStart
-          ..onLongPressMoveUpdate = _handleTouchLongPressMoveUpdate
-          ..onLongPressEnd = _handleTouchLongPressEnd;
-      },
-    );
+          () => LongPressGestureRecognizer(
+            debugOwner: this,
+            supportedDevices: _kLongPressSelectionDevices,
+          ),
+          (LongPressGestureRecognizer instance) {
+            instance
+              ..onLongPressStart = _handleTouchLongPressStart
+              ..onLongPressMoveUpdate = _handleTouchLongPressMoveUpdate
+              ..onLongPressEnd = _handleTouchLongPressEnd;
+          },
+        );
   }
 
   Offset? _doubleTapOffset;
@@ -678,7 +696,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
             // pressed and the start of the selection has not been initialized.
             // In this case we fallback on collapsing the selection to first
             // initialize the selection.
-            final isShiftPressedValid = _isShiftPressed &&
+            final isShiftPressedValid =
+                _isShiftPressed &&
                 _selectionDelegate.value.startSelectionPoint != null;
             if (isShiftPressedValid) {
               _selectEndTo(offset: details.globalPosition);
@@ -758,9 +777,10 @@ class TSelectableRegionState extends State<TSelectableRegion>
                 details.kind != null &&
                     _isPrecisePointerDevice(details.kind!)) {
               _selectEndTo(
-                  offset: details.globalPosition,
-                  continuous: true,
-                  textGranularity: TextGranularity.word);
+                offset: details.globalPosition,
+                continuous: true,
+                textGranularity: TextGranularity.word,
+              );
             }
           case TargetPlatform.iOS:
             if (kIsWeb &&
@@ -773,9 +793,10 @@ class TSelectableRegionState extends State<TSelectableRegion>
               _doubleTapOffset = null;
             }
             _selectEndTo(
-                offset: details.globalPosition,
-                continuous: true,
-                textGranularity: TextGranularity.word);
+              offset: details.globalPosition,
+              continuous: true,
+              textGranularity: TextGranularity.word,
+            );
             if (details.kind != null &&
                 !_isPrecisePointerDevice(details.kind!)) {
               _showHandles();
@@ -784,9 +805,10 @@ class TSelectableRegionState extends State<TSelectableRegion>
           case TargetPlatform.linux:
           case TargetPlatform.windows:
             _selectEndTo(
-                offset: details.globalPosition,
-                continuous: true,
-                textGranularity: TextGranularity.word);
+              offset: details.globalPosition,
+              continuous: true,
+              textGranularity: TextGranularity.word,
+            );
         }
       case 3:
         switch (defaultTargetPlatform) {
@@ -798,24 +820,27 @@ class TSelectableRegionState extends State<TSelectableRegion>
             if (details.kind != null &&
                 _isPrecisePointerDevice(details.kind!)) {
               _selectEndTo(
-                  offset: details.globalPosition,
-                  continuous: true,
-                  textGranularity: TextGranularity.paragraph);
+                offset: details.globalPosition,
+                continuous: true,
+                textGranularity: TextGranularity.paragraph,
+              );
             }
           case TargetPlatform.macOS:
           case TargetPlatform.linux:
           case TargetPlatform.windows:
             _selectEndTo(
-                offset: details.globalPosition,
-                continuous: true,
-                textGranularity: TextGranularity.paragraph);
+              offset: details.globalPosition,
+              continuous: true,
+              textGranularity: TextGranularity.paragraph,
+            );
         }
     }
     _updateSelectedContentIfNeeded();
   }
 
   void _handleMouseDragEnd(TapDragEndDetails details) {
-    final isPointerPrecise = _lastPointerDeviceKind != null &&
+    final isPointerPrecise =
+        _lastPointerDeviceKind != null &&
         _lastPointerDeviceKind == PointerDeviceKind.mouse;
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -920,7 +945,9 @@ class TSelectableRegionState extends State<TSelectableRegion>
 
   void _handleTouchLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
     _selectEndTo(
-        offset: details.globalPosition, textGranularity: TextGranularity.word);
+      offset: details.globalPosition,
+      textGranularity: TextGranularity.word,
+    );
     _updateSelectedContentIfNeeded();
   }
 
@@ -957,7 +984,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
         // keep the current selection, if not then collapse it.
         final lastSecondaryTapDownPositionWasOnActiveSelection =
             _positionIsOnActiveSelection(
-                globalPosition: details.globalPosition);
+              globalPosition: details.globalPosition,
+            );
         if (!lastSecondaryTapDownPositionWasOnActiveSelection) {
           _collapseSelectionAt(offset: _lastSecondaryTapDownPosition!);
         }
@@ -985,7 +1013,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
         // keep the current selection, if not then collapse it.
         final lastSecondaryTapDownPositionWasOnActiveSelection =
             _positionIsOnActiveSelection(
-                globalPosition: details.globalPosition);
+              globalPosition: details.globalPosition,
+            );
         if (!lastSecondaryTapDownPositionWasOnActiveSelection) {
           _collapseSelectionAt(offset: _lastSecondaryTapDownPosition!);
         }
@@ -1015,9 +1044,12 @@ class TSelectableRegionState extends State<TSelectableRegion>
     if (_scheduledSelectionEndEdgeUpdate || !_userDraggingSelectionEnd) {
       return;
     }
-    if (_selectable?.dispatchSelectionEvent(SelectionEdgeUpdateEvent.forEnd(
+    if (_selectable?.dispatchSelectionEvent(
+          SelectionEdgeUpdateEvent.forEnd(
             globalPosition: _selectionEndPosition!,
-            granularity: textGranularity)) ==
+            granularity: textGranularity,
+          ),
+        ) ==
         SelectionResult.pending) {
       _scheduledSelectionEndEdgeUpdate = true;
       SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
@@ -1071,9 +1103,12 @@ class TSelectableRegionState extends State<TSelectableRegion>
     if (_scheduledSelectionStartEdgeUpdate || !_userDraggingSelectionStart) {
       return;
     }
-    if (_selectable?.dispatchSelectionEvent(SelectionEdgeUpdateEvent.forStart(
+    if (_selectable?.dispatchSelectionEvent(
+          SelectionEdgeUpdateEvent.forStart(
             globalPosition: _selectionStartPosition!,
-            granularity: textGranularity)) ==
+            granularity: textGranularity,
+          ),
+        ) ==
         SelectionResult.pending) {
       _scheduledSelectionStartEdgeUpdate = true;
       SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
@@ -1103,13 +1138,17 @@ class TSelectableRegionState extends State<TSelectableRegion>
     final localPosition =
         _selectionDelegate.value.startSelectionPoint!.localPosition;
     final globalTransform = _selectable!.getTransformTo(null);
-    _selectionStartHandleDragPosition =
-        MatrixUtils.transformPoint(globalTransform, localPosition);
+    _selectionStartHandleDragPosition = MatrixUtils.transformPoint(
+      globalTransform,
+      localPosition,
+    );
 
-    _selectionOverlay!.showMagnifier(_buildInfoForMagnifier(
-      details.globalPosition,
-      _selectionDelegate.value.startSelectionPoint!,
-    ));
+    _selectionOverlay!.showMagnifier(
+      _buildInfoForMagnifier(
+        details.globalPosition,
+        _selectionDelegate.value.startSelectionPoint!,
+      ),
+    );
     _updateSelectedContentIfNeeded();
   }
 
@@ -1118,14 +1157,17 @@ class TSelectableRegionState extends State<TSelectableRegion>
         _selectionStartHandleDragPosition + details.delta;
     // The value corresponds to the paint origin of the selection handle.
     // Offset it to the center of the line to make it feel more natural.
-    _selectionStartPosition = _selectionStartHandleDragPosition -
+    _selectionStartPosition =
+        _selectionStartHandleDragPosition -
         Offset(0, _selectionDelegate.value.startSelectionPoint!.lineHeight / 2);
     _triggerSelectionStartEdgeUpdate();
 
-    _selectionOverlay!.updateMagnifier(_buildInfoForMagnifier(
-      details.globalPosition,
-      _selectionDelegate.value.startSelectionPoint!,
-    ));
+    _selectionOverlay!.updateMagnifier(
+      _buildInfoForMagnifier(
+        details.globalPosition,
+        _selectionDelegate.value.startSelectionPoint!,
+      ),
+    );
     _updateSelectedContentIfNeeded();
   }
 
@@ -1134,13 +1176,17 @@ class TSelectableRegionState extends State<TSelectableRegion>
     final localPosition =
         _selectionDelegate.value.endSelectionPoint!.localPosition;
     final globalTransform = _selectable!.getTransformTo(null);
-    _selectionEndHandleDragPosition =
-        MatrixUtils.transformPoint(globalTransform, localPosition);
+    _selectionEndHandleDragPosition = MatrixUtils.transformPoint(
+      globalTransform,
+      localPosition,
+    );
 
-    _selectionOverlay!.showMagnifier(_buildInfoForMagnifier(
-      details.globalPosition,
-      _selectionDelegate.value.endSelectionPoint!,
-    ));
+    _selectionOverlay!.showMagnifier(
+      _buildInfoForMagnifier(
+        details.globalPosition,
+        _selectionDelegate.value.endSelectionPoint!,
+      ),
+    );
     _updateSelectedContentIfNeeded();
   }
 
@@ -1149,29 +1195,37 @@ class TSelectableRegionState extends State<TSelectableRegion>
         _selectionEndHandleDragPosition + details.delta;
     // The value corresponds to the paint origin of the selection handle.
     // Offset it to the center of the line to make it feel more natural.
-    _selectionEndPosition = _selectionEndHandleDragPosition -
+    _selectionEndPosition =
+        _selectionEndHandleDragPosition -
         Offset(0, _selectionDelegate.value.endSelectionPoint!.lineHeight / 2);
     _triggerSelectionEndEdgeUpdate();
 
-    _selectionOverlay!.updateMagnifier(_buildInfoForMagnifier(
-      details.globalPosition,
-      _selectionDelegate.value.endSelectionPoint!,
-    ));
+    _selectionOverlay!.updateMagnifier(
+      _buildInfoForMagnifier(
+        details.globalPosition,
+        _selectionDelegate.value.endSelectionPoint!,
+      ),
+    );
     _updateSelectedContentIfNeeded();
   }
 
   MagnifierInfo _buildInfoForMagnifier(
-      Offset globalGesturePosition, SelectionPoint selectionPoint) {
+    Offset globalGesturePosition,
+    SelectionPoint selectionPoint,
+  ) {
     final globalTransform = _selectable!.getTransformTo(null).getTranslation();
-    final globalTransformAsOffset =
-        Offset(globalTransform.x, globalTransform.y);
+    final globalTransformAsOffset = Offset(
+      globalTransform.x,
+      globalTransform.y,
+    );
     final globalSelectionPointPosition =
         selectionPoint.localPosition + globalTransformAsOffset;
     final caretRect = Rect.fromLTWH(
-        globalSelectionPointPosition.dx,
-        globalSelectionPointPosition.dy - selectionPoint.lineHeight,
-        0,
-        selectionPoint.lineHeight);
+      globalSelectionPointPosition.dx,
+      globalSelectionPointPosition.dy - selectionPoint.lineHeight,
+      0,
+      selectionPoint.lineHeight,
+    );
 
     return MagnifierInfo(
       globalGesturePosition: globalGesturePosition,
@@ -1189,26 +1243,27 @@ class TSelectableRegionState extends State<TSelectableRegion>
     final start = _selectionDelegate.value.startSelectionPoint;
     final end = _selectionDelegate.value.endSelectionPoint;
     _selectionOverlay = SelectionOverlay(
-        context: context,
-        debugRequiredFor: widget,
-        startHandleType: start?.handleType ?? TextSelectionHandleType.left,
-        lineHeightAtStart: start?.lineHeight ?? end!.lineHeight,
-        onStartHandleDragStart: _handleSelectionStartHandleDragStart,
-        onStartHandleDragUpdate: _handleSelectionStartHandleDragUpdate,
-        onStartHandleDragEnd: _onAnyDragEnd,
-        endHandleType: end?.handleType ?? TextSelectionHandleType.right,
-        lineHeightAtEnd: end?.lineHeight ?? start!.lineHeight,
-        onEndHandleDragStart: _handleSelectionEndHandleDragStart,
-        onEndHandleDragUpdate: _handleSelectionEndHandleDragUpdate,
-        onEndHandleDragEnd: _onAnyDragEnd,
-        selectionEndpoints: selectionEndpoints,
-        selectionControls: widget.selectionControls,
-        selectionDelegate: this,
-        clipboardStatus: null,
-        startHandleLayerLink: _startHandleLayerLink,
-        endHandleLayerLink: _endHandleLayerLink,
-        toolbarLayerLink: _toolbarLayerLink,
-        magnifierConfiguration: widget.magnifierConfiguration);
+      context: context,
+      debugRequiredFor: widget,
+      startHandleType: start?.handleType ?? TextSelectionHandleType.left,
+      lineHeightAtStart: start?.lineHeight ?? end!.lineHeight,
+      onStartHandleDragStart: _handleSelectionStartHandleDragStart,
+      onStartHandleDragUpdate: _handleSelectionStartHandleDragUpdate,
+      onStartHandleDragEnd: _onAnyDragEnd,
+      endHandleType: end?.handleType ?? TextSelectionHandleType.right,
+      lineHeightAtEnd: end?.lineHeight ?? start!.lineHeight,
+      onEndHandleDragStart: _handleSelectionEndHandleDragStart,
+      onEndHandleDragUpdate: _handleSelectionEndHandleDragUpdate,
+      onEndHandleDragEnd: _onAnyDragEnd,
+      selectionEndpoints: selectionEndpoints,
+      selectionControls: widget.selectionControls,
+      selectionDelegate: this,
+      clipboardStatus: null,
+      startHandleLayerLink: _startHandleLayerLink,
+      endHandleLayerLink: _endHandleLayerLink,
+      toolbarLayerLink: _toolbarLayerLink,
+      magnifierConfiguration: widget.magnifierConfiguration,
+    );
   }
 
   void _updateSelectionOverlay() {
@@ -1317,13 +1372,18 @@ class TSelectableRegionState extends State<TSelectableRegion>
   ///  * [_selectParagraphAt], which selects an entire paragraph at the location.
   ///  * [_collapseSelectionAt], which collapses the selection at the location.
   ///  * [selectAll], which selects the entire content.
-  void _selectEndTo(
-      {required Offset offset,
-      bool continuous = false,
-      TextGranularity? textGranularity}) {
+  void _selectEndTo({
+    required Offset offset,
+    bool continuous = false,
+    TextGranularity? textGranularity,
+  }) {
     if (!continuous) {
-      _selectable?.dispatchSelectionEvent(SelectionEdgeUpdateEvent.forEnd(
-          globalPosition: offset, granularity: textGranularity));
+      _selectable?.dispatchSelectionEvent(
+        SelectionEdgeUpdateEvent.forEnd(
+          globalPosition: offset,
+          granularity: textGranularity,
+        ),
+      );
       return;
     }
     if (_selectionEndPosition != offset) {
@@ -1362,13 +1422,18 @@ class TSelectableRegionState extends State<TSelectableRegion>
   ///  * [_selectParagraphAt], which selects an entire paragraph at the location.
   ///  * [_collapseSelectionAt], which collapses the selection at the location.
   ///  * [selectAll], which selects the entire content.
-  void _selectStartTo(
-      {required Offset offset,
-      bool continuous = false,
-      TextGranularity? textGranularity}) {
+  void _selectStartTo({
+    required Offset offset,
+    bool continuous = false,
+    TextGranularity? textGranularity,
+  }) {
     if (!continuous) {
-      _selectable?.dispatchSelectionEvent(SelectionEdgeUpdateEvent.forStart(
-          globalPosition: offset, granularity: textGranularity));
+      _selectable?.dispatchSelectionEvent(
+        SelectionEdgeUpdateEvent.forStart(
+          globalPosition: offset,
+          granularity: textGranularity,
+        ),
+      );
       return;
     }
     if (_selectionStartPosition != offset) {
@@ -1417,7 +1482,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
     // There may be other selection ongoing.
     _finalizeSelection();
     _selectable?.dispatchSelectionEvent(
-        SelectWordSelectionEvent(globalPosition: offset));
+      SelectWordSelectionEvent(globalPosition: offset),
+    );
   }
 
   /// Selects the entire paragraph at the `offset` location.
@@ -1442,7 +1508,8 @@ class TSelectableRegionState extends State<TSelectableRegion>
     // There may be other selection ongoing.
     _finalizeSelection();
     _selectable?.dispatchSelectionEvent(
-        SelectParagraphSelectionEvent(globalPosition: offset));
+      SelectParagraphSelectionEvent(globalPosition: offset),
+    );
   }
 
   /// Stops any ongoing selection updates.
@@ -1552,8 +1619,9 @@ class TSelectableRegionState extends State<TSelectableRegion>
         : _selectionDelegate.value.startSelectionPoint!;
     _directionalHorizontalBaseline ??= baseLinePoint.localPosition.dx;
     final globalSelectionPointOffset = MatrixUtils.transformPoint(
-        context.findRenderObject()!.getTransformTo(null),
-        Offset(_directionalHorizontalBaseline!, 0));
+      context.findRenderObject()!.getTransformTo(null),
+      Offset(_directionalHorizontalBaseline!, 0),
+    );
     _selectable?.dispatchSelectionEvent(
       DirectionallyExtendSelectionEvent(
         isEnd: _adjustingSelectionEnd!,
@@ -1642,17 +1710,22 @@ class TSelectableRegionState extends State<TSelectableRegion>
     }
 
     for (final action in _processTextActions) {
-      buttonItems.add(ContextMenuButtonItem(
-        label: action.label,
-        onPressed: () async {
-          final selectedText = data.plainText;
-          if (selectedText.isNotEmpty) {
-            await _processTextService.processTextAction(
-                action.id, selectedText, true);
-            hideToolbar();
-          }
-        },
-      ));
+      buttonItems.add(
+        ContextMenuButtonItem(
+          label: action.label,
+          onPressed: () async {
+            final selectedText = data.plainText;
+            if (selectedText.isNotEmpty) {
+              await _processTextService.processTextAction(
+                action.id,
+                selectedText,
+                true,
+              );
+              hideToolbar();
+            }
+          },
+        ),
+      );
     }
     return buttonItems;
   }
@@ -1765,7 +1838,9 @@ class TSelectableRegionState extends State<TSelectableRegion>
   )
   @override
   void userUpdateTextEditingValue(
-      TextEditingValue value, SelectionChangedCause cause) {
+    TextEditingValue value,
+    SelectionChangedCause cause,
+  ) {
     /* SelectableRegion maintains its own state */
   }
 
@@ -1818,9 +1893,7 @@ class TSelectableRegionState extends State<TSelectableRegion>
       child: widget.child,
     );
     if (kIsWeb) {
-      result = PlatformSelectableRegionContextMenu(
-        child: result,
-      );
+      result = PlatformSelectableRegionContextMenu(child: result);
     }
     return CompositedTransformTarget(
       link: _toolbarLayerLink,
@@ -1894,9 +1967,13 @@ class _GranularlyExtendSelectionAction<T extends DirectionalTextEditingIntent>
 }
 
 class _GranularlyExtendCaretSelectionAction<
-    T extends DirectionalCaretMovementIntent> extends _NonOverrideAction<T> {
-  _GranularlyExtendCaretSelectionAction(this.state,
-      {required this.granularity});
+  T extends DirectionalCaretMovementIntent
+>
+    extends _NonOverrideAction<T> {
+  _GranularlyExtendCaretSelectionAction(
+    this.state, {
+    required this.granularity,
+  });
 
   final TSelectableRegionState state;
   final TextGranularity granularity;
@@ -1912,7 +1989,9 @@ class _GranularlyExtendCaretSelectionAction<
 }
 
 class _DirectionallyExtendCaretSelectionAction<
-    T extends DirectionalCaretMovementIntent> extends _NonOverrideAction<T> {
+  T extends DirectionalCaretMovementIntent
+>
+    extends _NonOverrideAction<T> {
   _DirectionallyExtendCaretSelectionAction(this.state);
 
   final TSelectableRegionState state;
@@ -1946,18 +2025,24 @@ class _SelectableRegionContainerDelegate
     if (currentSelectionStartIndex != -1 &&
         selectables[currentSelectionStartIndex].value.hasSelection) {
       final start = selectables[currentSelectionStartIndex];
-      final localStartEdge = start.value.startSelectionPoint!.localPosition +
+      final localStartEdge =
+          start.value.startSelectionPoint!.localPosition +
           Offset(0, -start.value.startSelectionPoint!.lineHeight / 2);
       _lastStartEdgeUpdateGlobalPosition = MatrixUtils.transformPoint(
-          start.getTransformTo(null), localStartEdge);
+        start.getTransformTo(null),
+        localStartEdge,
+      );
     }
     if (currentSelectionEndIndex != -1 &&
         selectables[currentSelectionEndIndex].value.hasSelection) {
       final end = selectables[currentSelectionEndIndex];
-      final localEndEdge = end.value.endSelectionPoint!.localPosition +
+      final localEndEdge =
+          end.value.endSelectionPoint!.localPosition +
           Offset(0, -end.value.endSelectionPoint!.lineHeight / 2);
-      _lastEndEdgeUpdateGlobalPosition =
-          MatrixUtils.transformPoint(end.getTransformTo(null), localEndEdge);
+      _lastEndEdgeUpdateGlobalPosition = MatrixUtils.transformPoint(
+        end.getTransformTo(null),
+        localEndEdge,
+      );
     }
   }
 
@@ -2032,7 +2117,9 @@ class _SelectableRegionContainerDelegate
 
   @override
   SelectionResult dispatchSelectionEventToChild(
-      Selectable selectable, SelectionEvent event) {
+    Selectable selectable,
+    SelectionEvent event,
+  ) {
     switch (event.type) {
       case SelectionEventType.startEdgeUpdate:
         _hasReceivedStartEvent.add(selectable);
@@ -2099,9 +2186,7 @@ class _SelectableRegionContainerDelegate
       buffer.write(selection.plainText);
       isFirst = false;
     }
-    return SelectedContent(
-      plainText: buffer.toString(),
-    );
+    return SelectedContent(plainText: buffer.toString());
   }
 
   @override
@@ -2122,17 +2207,20 @@ class _SelectableRegionContainerDelegate
     }
     final selectableSet = selectables.toSet();
     _hasReceivedEndEvent.removeWhere(
-        (Selectable selectable) => !selectableSet.contains(selectable));
+      (Selectable selectable) => !selectableSet.contains(selectable),
+    );
     _hasReceivedStartEvent.removeWhere(
-        (Selectable selectable) => !selectableSet.contains(selectable));
+      (Selectable selectable) => !selectableSet.contains(selectable),
+    );
     super.didChangeSelectables();
   }
 }
 
-typedef TSelectableRegionContextMenuBuilder = Widget Function(
-  BuildContext context,
-  TSelectableRegionState selectableRegionState,
-);
+typedef TSelectableRegionContextMenuBuilder =
+    Widget Function(
+      BuildContext context,
+      TSelectableRegionState selectableRegionState,
+    );
 
 class TSelectableRegionController {
   VoidCallback? hideContextMenu;

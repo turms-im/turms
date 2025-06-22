@@ -11,38 +11,48 @@ class ConversationSettingRepository {
 
   final UserDatabase _userDatabase;
 
-  Future<void> upsert(
-      {required Int64 contactId,
-      required bool isGroupConversation,
-      required ConversationSetting<dynamic, dynamic> setting,
-      required dynamic settingValue}) async {
+  Future<void> upsert({
+    required Int64 contactId,
+    required bool isGroupConversation,
+    required ConversationSetting<dynamic, dynamic> setting,
+    required dynamic settingValue,
+  }) async {
     final sqlValue = setting.convertValueToSql(settingValue) as Object;
     final now = DateTime.now();
-    await _userDatabase.into(_userDatabase.conversationSettingTable).insert(
-        ConversationSettingTableCompanion.insert(
-          contactId: contactId.toBigInt(),
-          isGroupConversation: isGroupConversation,
-          settingId: setting.id,
-          value: DriftAny(sqlValue),
-          createdDate: now,
-          lastModifiedDate: now,
-        ),
-        onConflict: DoUpdate((old) => ConversationSettingTableCompanion.custom(
-            value: Constant(DriftAny(sqlValue)),
-            lastModifiedDate: Constant(now))));
+    await _userDatabase
+        .into(_userDatabase.conversationSettingTable)
+        .insert(
+          ConversationSettingTableCompanion.insert(
+            contactId: contactId.toBigInt(),
+            isGroupConversation: isGroupConversation,
+            settingId: setting.id,
+            value: DriftAny(sqlValue),
+            createdDate: now,
+            lastModifiedDate: now,
+          ),
+          onConflict: DoUpdate(
+            (old) => ConversationSettingTableCompanion.custom(
+              value: Constant(DriftAny(sqlValue)),
+              lastModifiedDate: Constant(now),
+            ),
+          ),
+        );
   }
 
-  Future<int> delete(
-      {required Int64 userId,
-      required Int64 contactId,
-      required bool isGroupConversation,
-      required ConversationSetting<dynamic, dynamic> setting}) async {
+  Future<int> delete({
+    required Int64 userId,
+    required Int64 contactId,
+    required bool isGroupConversation,
+    required ConversationSetting<dynamic, dynamic> setting,
+  }) async {
     final delete = _userDatabase.delete(_userDatabase.conversationSettingTable)
-      ..where((t) => Expression.and([
-            t.contactId.equals(contactId.toBigInt()),
-            t.isGroupConversation.equals(isGroupConversation),
-            t.settingId.equals(setting.id)
-          ]));
+      ..where(
+        (t) => Expression.and([
+          t.contactId.equals(contactId.toBigInt()),
+          t.isGroupConversation.equals(isGroupConversation),
+          t.settingId.equals(setting.id),
+        ]),
+      );
     return delete.go();
   }
 
@@ -51,6 +61,4 @@ class ConversationSettingRepository {
 }
 
 final conversationSettingRepositoryProvider =
-    StateProvider<ConversationSettingRepository?>(
-  (ref) => null,
-);
+    StateProvider<ConversationSettingRepository?>((ref) => null);

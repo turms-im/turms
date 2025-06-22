@@ -14,23 +14,25 @@ class GroupMember extends User {
 
   factory GroupMember.fromUser(User user, {bool isAdmin = false}) =>
       GroupMember(
-          userId: user.userId,
-          name: user.name,
-          intro: user.intro,
-          imageUrl: user.imageUrl,
-          imageBytes: user.imageBytes,
-          isAdmin: isAdmin,
-          presence: user.presence);
+        userId: user.userId,
+        name: user.name,
+        intro: user.intro,
+        imageUrl: user.imageUrl,
+        imageBytes: user.imageBytes,
+        isAdmin: isAdmin,
+        presence: user.presence,
+      );
 
   final bool isAdmin;
 
   @override
   GroupMember? copyWith({UserPresence? presence}) => GroupMember(
-      userId: userId,
-      name: name,
-      intro: intro,
-      imageUrl: imageUrl,
-      imageBytes: imageBytes,
-      isAdmin: isAdmin,
-      presence: presence ?? this.presence);
+    userId: userId,
+    name: name,
+    intro: intro,
+    imageUrl: imageUrl,
+    imageBytes: imageBytes,
+    isAdmin: isAdmin,
+    presence: presence ?? this.presence,
+  );
 }

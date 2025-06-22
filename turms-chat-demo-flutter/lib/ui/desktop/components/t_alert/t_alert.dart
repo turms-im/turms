@@ -36,10 +36,7 @@ class TAlert extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             if (title case final title?) ...[
-              Text(
-                title,
-                style: theme.textTheme.titleMedium,
-              ),
+              Text(title, style: theme.textTheme.titleMedium),
             ],
             content,
             Align(
@@ -54,9 +51,10 @@ class TAlert extends ConsumerWidget {
                       onTap: onTapCancel,
                     ),
                   TTextButton(
-                      text: appLocalizations.confirm,
-                      containerPadding: Sizes.paddingV4H8,
-                      onTap: onTapConfirm),
+                    text: appLocalizations.confirm,
+                    containerPadding: Sizes.paddingV4H8,
+                    onTap: onTapConfirm,
+                  ),
                 ],
               ),
             ),
@@ -67,20 +65,20 @@ class TAlert extends ConsumerWidget {
   }
 }
 
-Future<void> showAlertDialog(BuildContext context,
-        {String? title,
-        required String content,
-        VoidCallback? onTapCancel,
-        required VoidCallback onTapConfirm}) =>
-    showCustomTDialog(
-        routeName: '/t-alert',
-        context: context,
-        borderRadius: Sizes.borderRadiusCircular8,
-        child: TAlert(
-          title: title,
-          content: Text(
-            content,
-          ),
-          onTapCancel: onTapCancel,
-          onTapConfirm: onTapConfirm,
-        ));
+Future<void> showAlertDialog(
+  BuildContext context, {
+  String? title,
+  required String content,
+  VoidCallback? onTapCancel,
+  required VoidCallback onTapConfirm,
+}) => showCustomTDialog(
+  routeName: '/t-alert',
+  context: context,
+  borderRadius: Sizes.borderRadiusCircular8,
+  child: TAlert(
+    title: title,
+    content: Text(content),
+    onTapCancel: onTapCancel,
+    onTapConfirm: onTapConfirm,
+  ),
+);

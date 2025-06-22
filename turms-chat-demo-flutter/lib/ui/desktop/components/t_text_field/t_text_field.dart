@@ -10,35 +10,36 @@ import '../index.dart';
 import '../t_menu/t_context_menu.dart';
 
 class TTextField extends ConsumerStatefulWidget {
-  const TTextField(
-      {super.key,
-      this.textEditingController,
-      this.autofocus = false,
-      this.keepFocusOnSubmit = false,
-      this.focusNode,
-      this.mouseCursor,
-      this.hintText,
-      this.prefixIcon,
-      this.prefixIconConstraints,
-      this.suffixIcon,
-      this.showDeleteButtonIfHasText = false,
-      this.showCursor = true,
-      this.readOnly = false,
-      this.enableInteractiveSelection,
-      this.maxLength,
-      this.expands = false,
-      this.style,
-      this.textAlign = TextAlign.start,
-      TextAlignVertical? textAlignVertical,
-      this.debounceTimeout,
-      this.transformValue,
-      this.onChanged,
-      this.onSubmitted,
-      this.onCaretMoved,
-      this.onTapOutside})
-      : assert(!showDeleteButtonIfHasText || suffixIcon == null),
-        textAlignVertical = textAlignVertical ??
-            (expands ? TextAlignVertical.top : TextAlignVertical.center);
+  const TTextField({
+    super.key,
+    this.textEditingController,
+    this.autofocus = false,
+    this.keepFocusOnSubmit = false,
+    this.focusNode,
+    this.mouseCursor,
+    this.hintText,
+    this.prefixIcon,
+    this.prefixIconConstraints,
+    this.suffixIcon,
+    this.showDeleteButtonIfHasText = false,
+    this.showCursor = true,
+    this.readOnly = false,
+    this.enableInteractiveSelection,
+    this.maxLength,
+    this.expands = false,
+    this.style,
+    this.textAlign = TextAlign.start,
+    TextAlignVertical? textAlignVertical,
+    this.debounceTimeout,
+    this.transformValue,
+    this.onChanged,
+    this.onSubmitted,
+    this.onCaretMoved,
+    this.onTapOutside,
+  }) : assert(!showDeleteButtonIfHasText || suffixIcon == null),
+       textAlignVertical =
+           textAlignVertical ??
+           (expands ? TextAlignVertical.top : TextAlignVertical.center);
 
   final TextEditingController? textEditingController;
   final bool autofocus;
@@ -107,7 +108,8 @@ class _TTextFieldState extends ConsumerState<TTextField> {
     final prefixIcon = widget.prefixIcon;
     final controller =
         (widget.textEditingController ?? _textEditingController)!;
-    final showSuffixIcon = (widget.suffixIcon != null) ||
+    final showSuffixIcon =
+        (widget.suffixIcon != null) ||
         (widget.showDeleteButtonIfHasText && controller.text.isNotEmpty);
     final suffixIcon = widget.suffixIcon;
     return TextField(
@@ -159,13 +161,13 @@ class _TTextFieldState extends ConsumerState<TTextField> {
       },
       onSubmitted: _onChangedDebouncer == null
           ? widget.keepFocusOnSubmit
-              ? (value) {
-                  widget.onSubmitted?.call(value);
-                  if (widget.keepFocusOnSubmit) {
-                    _focusNode?.requestFocus();
+                ? (value) {
+                    widget.onSubmitted?.call(value);
+                    if (widget.keepFocusOnSubmit) {
+                      _focusNode?.requestFocus();
+                    }
                   }
-                }
-              : widget.onSubmitted
+                : widget.onSubmitted
           : (value) {
               _onChangedDebouncer?.cancel();
               widget.onSubmitted?.call(value);
@@ -174,11 +176,13 @@ class _TTextFieldState extends ConsumerState<TTextField> {
               }
             },
       onTapOutside: widget.onTapOutside,
-      style: widget.style ??
+      style:
+          widget.style ??
           const TextStyle(
-              fontSize: 14,
-              // cursor height
-              height: 1.2),
+            fontSize: 14,
+            // cursor height
+            height: 1.2,
+          ),
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: appThemeExtension.textFieldHintTextStyle,
@@ -189,7 +193,8 @@ class _TTextFieldState extends ConsumerState<TTextField> {
         prefixIconConstraints: prefixIcon == null
             ? null
             : const BoxConstraints.tightFor(width: 24),
-        suffixIcon: suffixIcon ??
+        suffixIcon:
+            suffixIcon ??
             (showSuffixIcon
                 ? TIconButton(
                     addContainer: false,
@@ -204,15 +209,14 @@ class _TTextFieldState extends ConsumerState<TTextField> {
                     },
                   )
                 : null),
-        suffixIconConstraints:
-            showSuffixIcon ? const BoxConstraints.tightFor(width: 30) : null,
+        suffixIconConstraints: showSuffixIcon
+            ? const BoxConstraints.tightFor(width: 30)
+            : null,
         isCollapsed: true,
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue),
         ),
-        border: const OutlineInputBorder(
-          borderSide: BorderSide.none,
-        ),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
       ),
     );
   }
@@ -264,8 +268,9 @@ Rect? _getCaretRect(RenderBox box) {
   if (selection == null) {
     return null;
   }
-  final firstEndpoint =
-      renderEditable.getEndpointsForSelection(selection).firstOrNull;
+  final firstEndpoint = renderEditable
+      .getEndpointsForSelection(selection)
+      .firstOrNull;
   if (firstEndpoint == null) {
     return null;
   }
@@ -288,8 +293,8 @@ Rect? _getCaretRect(RenderBox box) {
 Widget buildTextFieldContextMenu(
   BuildContext context,
   EditableTextState editableTextState,
-) =>
-    buildContextMenu(
-        context: context,
-        items: editableTextState.contextMenuButtonItems,
-        anchors: editableTextState.contextMenuAnchors);
+) => buildContextMenu(
+  context: context,
+  items: editableTextState.contextMenuButtonItems,
+  anchors: editableTextState.contextMenuAnchors,
+);

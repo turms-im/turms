@@ -2,7 +2,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class TSelectionContainer extends StatefulWidget {
-  TSelectionContainer({super.key, required this.visible, required this.child});
+  const TSelectionContainer({
+    super.key,
+    required this.visible,
+    required this.child,
+  });
 
   final bool visible;
   final Widget child;
@@ -23,18 +27,21 @@ class _TSelectionContainerState extends State<TSelectionContainer> {
         return widget.child;
       }
       return SelectionRegistrarScope(
-          registrar: scope.registrar, child: widget.child);
+        registrar: scope.registrar,
+        child: widget.child,
+      );
     }
-    final _registrar = context
+    final registrar = context
         .dependOnInheritedWidgetOfExactType<SelectionRegistrarScope>()
         ?.registrar;
-    if (_registrar == null) {
+    if (registrar == null) {
       return SelectionContainer.disabled(child: widget.child);
     }
-    registrar = _registrar;
+    this.registrar = registrar;
     return TSelectionRegistrarScope(
-        registrar: _registrar,
-        child: SelectionContainer.disabled(child: widget.child));
+      registrar: registrar,
+      child: SelectionContainer.disabled(child: widget.child),
+    );
   }
 }
 

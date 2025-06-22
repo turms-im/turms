@@ -15,16 +15,18 @@ class NotificationUtils {
 
   static final FlutterLocalNotificationsPlugin _notificationPlugin =
       FlutterLocalNotificationsPlugin();
-  static final _windowsNotification =
-      WindowsNotification(applicationId: AppConfig.packageInfo.appName);
+  static final _windowsNotification = WindowsNotification(
+    applicationId: AppConfig.packageInfo.appName,
+  );
 
   static Future<void> initPlugin() async {
     await _notificationPlugin.initialize(
       const InitializationSettings(
-          linux: LinuxInitializationSettings(
-            defaultActionName: 'Open Notification',
-          ),
-          macOS: DarwinInitializationSettings()),
+        linux: LinuxInitializationSettings(
+          defaultActionName: 'Open Notification',
+        ),
+        macOS: DarwinInitializationSettings(),
+      ),
     );
   }
 
@@ -37,26 +39,19 @@ class NotificationUtils {
         id,
         header,
         body,
-        const NotificationDetails(
-          linux: linuxDetails,
-        ),
+        const NotificationDetails(linux: linuxDetails),
       );
     } else if (Platform.isMacOS) {
       await _notificationPlugin.show(
         id,
         header,
         body,
-        const NotificationDetails(
-          macOS: darwinDetails,
-        ),
+        const NotificationDetails(macOS: darwinDetails),
       );
     } else if (Platform.isWindows) {
       await _windowsNotification.showNotificationPluginTemplate(
-          NotificationMessage.fromPluginTemplate(
-        id.toString(),
-        header,
-        body,
-      ));
+        NotificationMessage.fromPluginTemplate(id.toString(), header, body),
+      );
     }
   }
 }

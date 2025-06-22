@@ -29,10 +29,10 @@ extension BoolExtensions on bool {
 
 extension StringExtensions on String {
   bool? toBool() => switch (this) {
-        '1' => true,
-        '0' => false,
-        _ => null,
-      };
+    '1' => true,
+    '0' => false,
+    _ => null,
+  };
 
   (String, String) splitFirst(String separator) {
     final separatorPosition = indexOf(separator);
@@ -41,7 +41,7 @@ extension StringExtensions on String {
     }
     return (
       substring(0, separatorPosition),
-      substring(separatorPosition + separator.length)
+      substring(separatorPosition + separator.length),
     );
   }
 
@@ -79,16 +79,18 @@ extension EnumExtensionsIterable<T extends Enum> on Iterable<T> {
 
 extension Iterables<E> on Iterable<E> {
   Map<K, List<E>> groupBy<K>(K Function(E) keyFunction) => fold(
-      <K, List<E>>{},
-      (Map<K, List<E>> map, E element) =>
-          map..putIfAbsent(keyFunction(element), () => <E>[]).add(element));
+    <K, List<E>>{},
+    (Map<K, List<E>> map, E element) =>
+        map..putIfAbsent(keyFunction(element), () => <E>[]).add(element),
+  );
 
   LinkedHashMap<K, List<E>> groupByAsLinkedHashMap<K>(
-          K Function(E) keyFunction) =>
-      fold(
-          LinkedHashMap<K, List<E>>(),
-          (LinkedHashMap<K, List<E>> map, E element) =>
-              map..putIfAbsent(keyFunction(element), () => <E>[]).add(element));
+    K Function(E) keyFunction,
+  ) => fold(
+    LinkedHashMap<K, List<E>>(),
+    (LinkedHashMap<K, List<E>> map, E element) =>
+        map..putIfAbsent(keyFunction(element), () => <E>[]).add(element),
+  );
 }
 
 extension ListExtensions<T> on List<T> {

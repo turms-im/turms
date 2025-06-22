@@ -8,11 +8,12 @@ import '../../../components/index.dart';
 import 'new_relationship_page.dart';
 
 class RelationshipInfoTile extends ConsumerWidget {
-  const RelationshipInfoTile(
-      {super.key,
-      required this.isGroup,
-      required this.contact,
-      required this.onTap});
+  const RelationshipInfoTile({
+    super.key,
+    required this.isGroup,
+    required this.contact,
+    required this.onTap,
+  });
 
   final bool isGroup;
   final Contact contact;
@@ -22,23 +23,32 @@ class RelationshipInfoTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appLocalizations = ref.watch(appLocalizationsViewModel);
     return TListTile(
-        padding: const EdgeInsets.symmetric(
-            vertical: 12, horizontal: safeAreaPaddingHorizontal),
-        child: Row(mainAxisSize: MainAxisSize.min, spacing: 12, children: [
+      padding: const EdgeInsets.symmetric(
+        vertical: 12,
+        horizontal: safeAreaPaddingHorizontal,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 12,
+        children: [
           TAvatar(id: contact.id, name: contact.name, image: contact.image),
           Expanded(
-              child: Text(
-            contact.name,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            softWrap: false,
-          )),
+            child: Text(
+              contact.name,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ),
           TTextButton(
-              text: isGroup
-                  ? appLocalizations.joinGroup
-                  : appLocalizations.addContact,
-              containerPadding: Sizes.paddingV4H8,
-              onTap: onTap),
-        ]));
+            text: isGroup
+                ? appLocalizations.joinGroup
+                : appLocalizations.addContact,
+            containerPadding: Sizes.paddingV4H8,
+            onTap: onTap,
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MessageBubbleYoutube extends StatelessWidget {
-  const MessageBubbleYoutube({Key? key}) : super(key: key);
+  const MessageBubbleYoutube({super.key});
 
   @override
   Widget build(BuildContext context) {
