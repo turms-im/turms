@@ -64,11 +64,12 @@ class _TDropZoneState extends ConsumerState<TDropZone> {
               child: Padding(
                 padding: Sizes.paddingV4H4,
                 child: DottedBorder(
-                  borderType: BorderType.RRect,
-                  dashPattern: [12, 10],
-                  color: theme.primaryColor,
-                  strokeWidth: 2,
-                  radius: const Radius.circular(8),
+                  options: RoundedRectDottedBorderOptions(
+                    dashPattern: [12, 10],
+                    color: theme.primaryColor,
+                    strokeWidth: 2,
+                    radius: const Radius.circular(8),
+                  ),
                   child: ClipRRect(
                     child: ColoredBox(
                       color: Colors.white.withValues(alpha: 0.6),
