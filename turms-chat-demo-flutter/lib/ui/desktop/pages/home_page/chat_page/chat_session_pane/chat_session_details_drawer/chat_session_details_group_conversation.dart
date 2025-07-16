@@ -351,21 +351,20 @@ class _ChatSessionDetailsGroupConversationNameState
                 ),
               ),
               if (_isHovered)
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      final name = widget.groupName;
-                      _textEditingController ??=
-                          TextEditingController(text: name)
-                            ..selection = TextSelection(
-                              baseOffset: 0,
-                              extentOffset: name.length,
-                            );
-                      _editingGroupName = true;
-                      setState(() {});
-                    },
-                    child: const Icon(Symbols.edit_rounded, size: 18),
+                GestureDetector(
+                  onTap: () {
+                    final name = widget.groupName;
+                    _textEditingController ??= TextEditingController(text: name)
+                      ..selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: name.length,
+                      );
+                    _editingGroupName = true;
+                    setState(() {});
+                  },
+                  child: const MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: Icon(Symbols.edit_rounded, size: 18),
                   ),
                 ),
             ],

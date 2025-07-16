@@ -105,21 +105,21 @@ class _TTableRowViewState extends State<_TTableRowView> {
     final widths = widget.widths;
     final onTap = row.onTap;
     final onDoubleTap = row.onDoubleTap;
-    final child = MouseRegion(
-      cursor: onTap == null && onDoubleTap == null
-          ? SystemMouseCursors.basic
-          : SystemMouseCursors.click,
-      onEnter: (_) {
-        _isHovered = true;
-        setState(() {});
-      },
-      onExit: (_) {
-        _isHovered = false;
-        setState(() {});
-      },
-      child: GestureDetector(
-        onTap: () => onTap?.call(),
-        onDoubleTap: () => onDoubleTap?.call(),
+    final child = GestureDetector(
+      onTap: () => onTap?.call(),
+      onDoubleTap: () => onDoubleTap?.call(),
+      child: MouseRegion(
+        cursor: onTap == null && onDoubleTap == null
+            ? SystemMouseCursors.basic
+            : SystemMouseCursors.click,
+        onEnter: (_) {
+          _isHovered = true;
+          setState(() {});
+        },
+        onExit: (_) {
+          _isHovered = false;
+          setState(() {});
+        },
         child: Row(
           children: List.generate(
             widget.columnCount,

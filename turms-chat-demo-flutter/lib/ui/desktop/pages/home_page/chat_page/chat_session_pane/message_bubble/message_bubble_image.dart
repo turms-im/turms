@@ -56,13 +56,13 @@ class _MessageBubbleImageState extends State<MessageBubbleImage> {
   }
 
   @override
-  Widget build(BuildContext context) => MouseRegion(
-    cursor: SystemMouseCursors.click,
-    child: GestureDetector(
-      onTap: () async {
-        // TODO: show a tip to let user know if the original image has been deleted.
-        unawaited(showImageViewerDialog(context, _originalImageProvider));
-      },
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: () async {
+      // TODO: show a tip to let user know if the original image has been deleted.
+      unawaited(showImageViewerDialog(context, _originalImageProvider));
+    },
+    child: MouseRegion(
+      cursor: SystemMouseCursors.click,
       child: _buildThumbnail(),
     ),
   );

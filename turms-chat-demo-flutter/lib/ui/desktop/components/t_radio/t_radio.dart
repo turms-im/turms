@@ -63,10 +63,10 @@ class _TRadioState<T> extends State<TRadio<T>> with TickerProviderStateMixin {
     _selected = widget.value == widget.groupValue;
     final label = widget.label;
     final size = widget.size;
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onStatusChange,
+    return GestureDetector(
+      onTap: onStatusChange,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
         child: Row(
           spacing: 8,
           mainAxisSize: MainAxisSize.min,

@@ -195,19 +195,17 @@ class _MessageBubbleVideoState extends ConsumerState<MessageBubbleVideo> {
             ),
           ),
         Positioned.fill(
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () async {
-                if (controller.value.isPlaying) {
-                  await controller.pause();
-                } else {
-                  await controller.play();
-                }
-                setState(() {});
-              },
-            ),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () async {
+              if (controller.value.isPlaying) {
+                await controller.pause();
+              } else {
+                await controller.play();
+              }
+              setState(() {});
+            },
+            child: const MouseRegion(cursor: SystemMouseCursors.click),
           ),
         ),
       ],

@@ -41,13 +41,13 @@ class _TListTileState extends State<TListTile> {
   @override
   Widget build(BuildContext context) {
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
-      cursor: widget.mouseCursor,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        onSecondaryTapUp: widget.onSecondaryTapUp,
+    return GestureDetector(
+      onTap: widget.onTap,
+      onSecondaryTapUp: widget.onSecondaryTapUp,
+      child: MouseRegion(
+        cursor: widget.mouseCursor,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
         child: AnimatedContainer(
           height: widget.height,
           alignment: Alignment.center,

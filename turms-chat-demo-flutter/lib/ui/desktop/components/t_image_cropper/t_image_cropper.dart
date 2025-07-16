@@ -436,11 +436,11 @@ extension _ImageCropperStateView on _ImageCropperState {
       Positioned(
         left: cropRect.left,
         top: cropRect.top,
-        child: MouseRegion(
-          cursor: SystemMouseCursors.move,
-          child: GestureDetector(
-            onPanUpdate: (details) =>
-                _updateCropRect(_data!.moveRect(details.delta)),
+        child: GestureDetector(
+          onPanUpdate: (details) =>
+              _updateCropRect(_data!.moveRect(details.delta)),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.move,
             child: Container(
               width: cropRect.width,
               height: cropRect.height,

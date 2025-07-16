@@ -161,21 +161,21 @@ class _TMenuState<T> extends State<TMenu<T>> {
       content = Row(spacing: 8, children: [prefix, content]);
     }
     content = Padding(padding: widget.padding, child: content);
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (event) => setState(() {
-        _hoveredEntryIndex = index;
-      }),
-      onExit: (event) => setState(() {
-        if (_hoveredEntryIndex == index) {
-          _hoveredEntryIndex = null;
-        }
-      }),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          _select(entry);
-        },
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        _select(entry);
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (event) => setState(() {
+          _hoveredEntryIndex = index;
+        }),
+        onExit: (event) => setState(() {
+          if (_hoveredEntryIndex == index) {
+            _hoveredEntryIndex = null;
+          }
+        }),
         child: ColoredBox(
           color: _hoveredEntryIndex == index
               ? appThemeExtension.menuItemHoveredColor

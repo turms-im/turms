@@ -39,35 +39,32 @@ class _UserProfileImageState extends ConsumerState<UserProfileImage> {
     }
     return image == null
         ? avatar
-        : MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () {
-                showImageViewerDialog(context, image);
-              },
-              child: avatar,
-            ),
+        : GestureDetector(
+            onTap: () {
+              showImageViewerDialog(context, image);
+            },
+            child: MouseRegion(cursor: SystemMouseCursors.click, child: avatar),
           );
   }
 
-  MouseRegion _buildEditableAvatar(
+  Widget _buildEditableAvatar(
     AppLocalizations appLocalizations,
     VoidCallback onEditTap,
     TAvatar avatar,
-  ) => MouseRegion(
-    cursor: SystemMouseCursors.click,
-    onEnter: (_) {
-      setState(() {
-        _imageOpacity = 1;
-      });
-    },
-    onExit: (_) {
-      setState(() {
-        _imageOpacity = 0;
-      });
-    },
-    child: GestureDetector(
-      onTap: onEditTap,
+  ) => GestureDetector(
+    onTap: onEditTap,
+    child: MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) {
+        setState(() {
+          _imageOpacity = 1;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _imageOpacity = 0;
+        });
+      },
       child: Stack(
         children: [
           avatar,

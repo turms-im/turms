@@ -116,10 +116,10 @@ class _GiphyPickerBodyState extends ConsumerState<GiphyPickerBody> {
     final url = image.url;
     return ClipRRect(
       borderRadius: Sizes.borderRadiusCircular8,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () => widget.onSelected(gif),
+      child: GestureDetector(
+        onTap: () => widget.onSelected(gif),
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
           child: RepaintBoundary(
             child: LayoutBuilder(
               builder: (context, constraints) {

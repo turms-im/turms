@@ -115,10 +115,10 @@ class _TAccordionState extends State<TAccordion>
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: _toggleCollapsed,
+      GestureDetector(
+        onTap: _toggleCollapsed,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: widget.titleBorderRadius,

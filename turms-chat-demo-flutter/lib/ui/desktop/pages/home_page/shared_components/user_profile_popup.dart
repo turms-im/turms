@@ -82,21 +82,19 @@ class _UserProfilePopupState extends ConsumerState<UserProfilePopup> {
       onPresenceSelected: onPresenceSelected,
       presencePopupOffset: widget.presencePopupOffset,
     );
+    final child = MouseRegion(cursor: SystemMouseCursors.click, child: avatar);
     return TPopup(
       controller: _popupController,
       targetAnchor: Alignment.center,
       followerAnchor: widget.popupAnchor,
-      target: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: image == null
-            ? avatar
-            : GestureDetector(
-                onTap: () {
-                  showImageViewerDialog(context, image);
-                },
-                child: avatar,
-              ),
-      ),
+      target: image == null
+          ? child
+          : GestureDetector(
+              onTap: () {
+                showImageViewerDialog(context, image);
+              },
+              child: child,
+            ),
       followerBorderRadius: Sizes.borderRadiusCircular4,
       follower: SizedBox(
         width: Sizes.userProfilePopupWidth,

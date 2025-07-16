@@ -153,26 +153,26 @@ class _TButtonState extends State<TButton> {
       );
     }
     return RepaintBoundary(
-      child: MouseRegion(
-        cursor: widget.disabled
-            ? SystemMouseCursors.forbidden
-            : SystemMouseCursors.click,
-        onEnter: (_) {
-          _isHovered = true;
+      child: GestureDetector(
+        onTap: !widget.disabled && !widget.isLoading && widget.onTap != null
+            ? widget.onTap
+            : null,
+        onPanDown: (details) {
+          _isPressed = true;
+          widget.onPanDown?.call(details);
           setState(() {});
         },
-        onExit: (_) {
-          _isHovered = false;
-          _isPressed = false;
-          setState(() {});
-        },
-        child: GestureDetector(
-          onTap: !widget.disabled && !widget.isLoading && widget.onTap != null
-              ? widget.onTap
-              : null,
-          onPanDown: (details) {
-            _isPressed = true;
-            widget.onPanDown?.call(details);
+        child: MouseRegion(
+          cursor: widget.disabled
+              ? SystemMouseCursors.forbidden
+              : SystemMouseCursors.click,
+          onEnter: (_) {
+            _isHovered = true;
+            setState(() {});
+          },
+          onExit: (_) {
+            _isHovered = false;
+            _isPressed = false;
             setState(() {});
           },
           child: child,

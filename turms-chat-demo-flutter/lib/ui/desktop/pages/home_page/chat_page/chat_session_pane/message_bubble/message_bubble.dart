@@ -170,12 +170,12 @@ class _MessageBubbleState extends ConsumerState<MessageBubble> {
       spacing: spacing,
       children: [
         if (deliveryStatus == MessageDeliveryStatus.failed)
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () async {
-                await widget.onRetry!();
-              },
+          GestureDetector(
+            onTap: () async {
+              await widget.onRetry!();
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color:
@@ -242,13 +242,13 @@ class _MessageBubbleState extends ConsumerState<MessageBubble> {
           children: [
             if (sender.userId != widget.currentUser.userId)
               if (message.isGroupMessage)
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      // TODO
-                      // widget.mentionUser(message.senderId);
-                    },
+                GestureDetector(
+                  onTap: () {
+                    // TODO
+                    // widget.mentionUser(message.senderId);
+                  },
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
                     child: Text(
                       sender.name,
                       style: const TextStyle(

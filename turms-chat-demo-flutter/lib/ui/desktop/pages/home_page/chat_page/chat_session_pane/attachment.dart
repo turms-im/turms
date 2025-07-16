@@ -27,12 +27,12 @@ class _AttachmentState extends ConsumerState<Attachment> {
   @override
   Widget build(BuildContext context) {
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isContainerHovered = true),
-      onExit: (_) => setState(() => _isContainerHovered = false),
-      child: GestureDetector(
-        onTap: () {},
+    return GestureDetector(
+      onTap: () {},
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isContainerHovered = true),
+        onExit: (_) => setState(() => _isContainerHovered = false),
         child: AnimatedContainer(
           width: 300,
           height: 48,

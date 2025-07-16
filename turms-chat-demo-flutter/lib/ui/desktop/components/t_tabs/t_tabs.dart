@@ -31,19 +31,19 @@ class _TTabsState extends State<TTabs> {
   );
 
   Widget _buildTab(ThemeData theme, TTab tab, int index, bool isSelected) {
-    final child = MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hoveringTabId = tab.id),
-      onExit: (_) => setState(() {
-        if (_hoveringTabId == tab.id) {
-          _hoveringTabId = null;
-        }
-      }),
-      child: GestureDetector(
-        onTap: () {
-          widget.onTabSelected(index, tab);
-          setState(() {});
-        },
+    final child = GestureDetector(
+      onTap: () {
+        widget.onTabSelected(index, tab);
+        setState(() {});
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hoveringTabId = tab.id),
+        onExit: (_) => setState(() {
+          if (_hoveringTabId == tab.id) {
+            _hoveringTabId = null;
+          }
+        }),
         child: SizedBox(
           width: double.maxFinite,
           child: DecoratedBox(

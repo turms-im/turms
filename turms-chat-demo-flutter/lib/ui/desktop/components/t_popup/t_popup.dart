@@ -71,12 +71,12 @@ class _TPopupState extends State<TPopup> {
   }
 
   @override
-  Widget build(BuildContext context) => MouseRegion(
-    cursor: SystemMouseCursors.click,
-    child: GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      key: _targetKey,
-      onTap: _togglePopup,
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    key: _targetKey,
+    onTap: _togglePopup,
+    child: MouseRegion(
+      cursor: SystemMouseCursors.click,
       child: CompositedTransformTarget(link: _layerLink, child: widget.target),
     ),
   );

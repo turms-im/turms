@@ -78,14 +78,11 @@ class _TSimpleCheckboxState extends State<TSimpleCheckbox> {
         children: [child, Text(label)],
       );
     }
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          widget.onChanged(!widget.value);
-        },
-        child: child,
-      ),
+    return GestureDetector(
+      onTap: () {
+        widget.onChanged(!widget.value);
+      },
+      child: MouseRegion(cursor: SystemMouseCursors.click, child: child),
     );
   }
 }

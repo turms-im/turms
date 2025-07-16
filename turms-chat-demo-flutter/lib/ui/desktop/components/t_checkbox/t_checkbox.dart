@@ -27,14 +27,14 @@ class _TCheckboxState extends State<TCheckbox> {
     _isChecked ??= widget.initialValue;
     final isChecked = _isChecked!;
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          _isChecked = !isChecked;
-          widget.onCheckedChanged(isChecked);
-          setState(() {});
-        },
+    return GestureDetector(
+      onTap: () {
+        _isChecked = !isChecked;
+        widget.onCheckedChanged(isChecked);
+        setState(() {});
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
         child: Row(
           spacing: 4,
           mainAxisSize: MainAxisSize.min,

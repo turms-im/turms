@@ -211,34 +211,34 @@ class _TDateCellState extends ConsumerState<TDateCell> {
         ],
       );
     }
-    return MouseRegion(
-      cursor: disabled
-          ? SystemMouseCursors.forbidden
-          : SystemMouseCursors.click,
-      onEnter: (event) {
+    return GestureDetector(
+      onTap: () {
         if (!disabled) {
-          setState(() {
-            _isHovered = true;
-          });
-          if (widget.inCurrentCalendarMonth) {
-            widget.onMouseRegionEntered?.call(widget.date);
-          }
+          widget.onTap(widget.date);
         }
       },
-      onExit: (event) {
-        if (!disabled) {
-          setState(() {
-            _isHovered = false;
-          });
-          if (widget.inCurrentCalendarMonth) {
-            widget.onMouseRegionExited?.call(widget.date);
-          }
-        }
-      },
-      child: GestureDetector(
-        onTap: () {
+      child: MouseRegion(
+        cursor: disabled
+            ? SystemMouseCursors.forbidden
+            : SystemMouseCursors.click,
+        onEnter: (event) {
           if (!disabled) {
-            widget.onTap(widget.date);
+            setState(() {
+              _isHovered = true;
+            });
+            if (widget.inCurrentCalendarMonth) {
+              widget.onMouseRegionEntered?.call(widget.date);
+            }
+          }
+        },
+        onExit: (event) {
+          if (!disabled) {
+            setState(() {
+              _isHovered = false;
+            });
+            if (widget.inCurrentCalendarMonth) {
+              widget.onMouseRegionExited?.call(widget.date);
+            }
           }
         },
         child: TTooltip(
