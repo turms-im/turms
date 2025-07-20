@@ -89,8 +89,11 @@ final _allowedKeys = <LogicalKeyboardKey>{
 };
 
 class TShortcutTextField extends ConsumerStatefulWidget {
-  const TShortcutTextField(
-      {super.key, this.initialKeys, required this.onShortcutChanged});
+  const TShortcutTextField({
+    super.key,
+    this.initialKeys,
+    required this.onShortcutChanged,
+  });
 
   final List<LogicalKeyboardKey>? initialKeys;
   final void Function(List<LogicalKeyboardKey> keys) onShortcutChanged;
@@ -136,15 +139,15 @@ class _TShortcutTextFieldState extends ConsumerState<TShortcutTextField> {
 
   @override
   Widget build(BuildContext context) => KeyboardListener(
-        focusNode: _focusNode,
-        onKeyEvent: _onKeyEvent,
-        child: TTextField(
-          textEditingController: _textEditingController,
-          showCursor: false,
-          readOnly: true,
-          enableInteractiveSelection: false,
-        ),
-      );
+    focusNode: _focusNode,
+    onKeyEvent: _onKeyEvent,
+    child: TTextField(
+      textEditingController: _textEditingController,
+      showCursor: false,
+      readOnly: true,
+      enableInteractiveSelection: false,
+    ),
+  );
 
   void _onKeyEvent(KeyEvent event) {
     switch (event) {
@@ -153,25 +156,28 @@ class _TShortcutTextFieldState extends ConsumerState<TShortcutTextField> {
           return;
         }
         if (_keys.length == 1) {
-          _textEditingController.text =
-              ref.read(appLocalizationsViewModel).none;
+          _textEditingController.text = ref
+              .read(appLocalizationsViewModel)
+              .none;
           widget.onShortcutChanged([]);
         } else if (_keys.any((element) => element.isModifier) &&
             _keys.any((element) => !element.isModifier)) {
           widget.onShortcutChanged(_keys);
         } else {
-          _textEditingController.text =
-              ref.read(appLocalizationsViewModel).none;
+          _textEditingController.text = ref
+              .read(appLocalizationsViewModel)
+              .none;
           widget.onShortcutChanged([]);
         }
       case KeyDownEvent():
-        _keys = HardwareKeyboard.instance.logicalKeysPressed
-            .map((key) => key.normalizedKey)
-            .where(_allowedKeys.contains)
-            .toSet()
-            .take(4)
-            .toList()
-          ..sortKeys();
+        _keys =
+            HardwareKeyboard.instance.logicalKeysPressed
+                .map((key) => key.normalizedKey)
+                .where(_allowedKeys.contains)
+                .toSet()
+                .take(4)
+                .toList()
+              ..sortKeys();
         _textEditingController.text = _formatKeys();
     }
   }

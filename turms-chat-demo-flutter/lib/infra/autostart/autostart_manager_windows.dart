@@ -4,34 +4,30 @@ import 'autostart_manager.dart';
 
 class AutostartManagerWindows extends AutostartManager {
   AutostartManagerWindows({
-    required String appName,
+    required super.appName,
     required String appPath,
     List<String> args = const [],
-  }) : super(appName: appName, appPath: appPath, args: args) {
+  }) : super(appPath: appPath, args: args) {
     _registryValue = args.isEmpty ? appPath : '$appPath ${args.join(' ')}';
   }
 
   late String _registryValue;
 
   RegistryKey get _regKey => Registry.openPath(
-        RegistryHive.currentUser,
-        path: r'Software\Microsoft\Windows\CurrentVersion\Run',
-        desiredAccessRights: AccessRights.allAccess,
-      );
+    RegistryHive.currentUser,
+    path: r'Software\Microsoft\Windows\CurrentVersion\Run',
+    desiredAccessRights: AccessRights.allAccess,
+  );
 
   @override
   Future<bool> isEnabled() async {
-    final value = _regKey.getValueAsString(appName);
+    final value = _regKey.getStringValue(appName);
     return value == _registryValue;
   }
 
   @override
   Future<void> enable() async {
-    _regKey.createValue(RegistryValue(
-      appName,
-      RegistryValueType.string,
-      _registryValue,
-    ));
+    _regKey.createValue(RegistryValue.string(appName, _registryValue));
   }
 
   @override

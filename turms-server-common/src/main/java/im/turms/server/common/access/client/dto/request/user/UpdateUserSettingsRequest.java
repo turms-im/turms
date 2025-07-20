@@ -28,8 +28,8 @@ public final class UpdateUserSettingsRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateUserSettingsRequest.class.getName());
     }
@@ -47,16 +47,16 @@ public final class UpdateUserSettingsRequest extends com.google.protobuf.Generat
         return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOuterClass.internal_static_im_turms_proto_UpdateUserSettingsRequest_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 1 -> internalGetSettings();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 1) {
+            return internalGetSettings();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -424,26 +424,26 @@ public final class UpdateUserSettingsRequest extends com.google.protobuf.Generat
             return im.turms.server.common.access.client.dto.request.user.UpdateUserSettingsRequestOuterClass.internal_static_im_turms_proto_UpdateUserSettingsRequest_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 1 -> internalGetSettings();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 1) {
+                return internalGetSettings();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 1 -> internalGetMutableSettings();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 1) {
+                return internalGetMutableSettings();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

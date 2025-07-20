@@ -13,10 +13,10 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.compilerVersion>21</maven.compiler.compilerVersion>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-        <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
-        <spotless-maven-plugin.eclipse.version>4.31</spotless-maven-plugin.eclipse.version>
+        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.34</spotless-maven-plugin.eclipse.version>
     </properties>
 
     <dependencies>

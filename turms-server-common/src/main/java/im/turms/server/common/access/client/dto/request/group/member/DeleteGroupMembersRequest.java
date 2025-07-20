@@ -28,8 +28,8 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupMembersRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -106,7 +106,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
     private int memberIdsMemoizedSerializedSize = -1;
 
     public static final int SUCCESSOR_ID_FIELD_NUMBER = 3;
-    private long successorId_;
+    private long successorId_ = 0L;
 
     /**
      * <code>optional int64 successor_id = 3;</code>
@@ -129,7 +129,7 @@ public final class DeleteGroupMembersRequest extends com.google.protobuf.Generat
     }
 
     public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 4;
-    private boolean quitAfterTransfer_;
+    private boolean quitAfterTransfer_ = false;
 
     /**
      * <code>optional bool quit_after_transfer = 4;</code>

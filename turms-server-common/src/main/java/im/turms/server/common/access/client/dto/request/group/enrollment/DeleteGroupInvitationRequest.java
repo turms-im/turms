@@ -29,8 +29,8 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupInvitationRequest.class.getName());
     }
@@ -170,10 +170,8 @@ public final class DeleteGroupInvitationRequest extends com.google.protobuf.Gene
             return super.equals(obj);
         }
 
-        if (getInvitationId() != other.getInvitationId()) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getInvitationId() == other.getInvitationId()
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

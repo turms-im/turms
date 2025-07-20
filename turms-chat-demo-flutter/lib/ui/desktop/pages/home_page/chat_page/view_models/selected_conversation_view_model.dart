@@ -40,10 +40,11 @@ class SelectedConversationViewModelNotifier extends Notifier<Conversation?> {
     }
     // 4. Create a new conversation
     final newConversation = Conversation.from(
-        contact: contact,
-        // TODO: get history messages from local database
-        // and (optional) server.
-        messages: []);
+      contact: contact,
+      // TODO: get history messages from local database
+      // and (optional) server.
+      messages: [],
+    );
     ref
         .read(conversationsDataViewModel.notifier)
         .addConversation(newConversation);
@@ -76,4 +77,5 @@ class SelectedConversationViewModelNotifier extends Notifier<Conversation?> {
 
 final selectedConversationViewModel =
     NotifierProvider<SelectedConversationViewModelNotifier, Conversation?>(
-        SelectedConversationViewModelNotifier.new);
+      SelectedConversationViewModelNotifier.new,
+    );

@@ -1,12 +1,10 @@
 #include "turms/client/exception/response_exception.h"
 
-namespace turms {
-namespace client {
-namespace exception {
+namespace turms::client::exception {
 ResponseException::ResponseException(int code,
                                      int64_t requestId,
                                      const std::string& reason,
-                                     const boost::optional<std::exception>& cause)
+                                     const std::optional<std::exception>& cause)
     : std::runtime_error(reason.empty() ? "code: " + std::to_string(code)
                                         : "code: " + std::to_string(code) + ", reason: " + reason),
       code_(code),
@@ -17,11 +15,11 @@ ResponseException::ResponseException(int code,
 
 ResponseException::ResponseException(int code,
                                      const std::string& reason,
-                                     const boost::optional<std::exception>& cause)
+                                     const std::optional<std::exception>& cause)
     : std::runtime_error(reason.empty() ? "code: " + std::to_string(code)
                                         : "code: " + std::to_string(code) + ", reason: " + reason),
       code_(code),
-      requestId_(boost::none),
+      requestId_(std::nullopt),
       reason_(reason),
       cause_(cause) {
 }
@@ -32,7 +30,7 @@ ResponseException::ResponseException(const model::proto::TurmsNotification& noti
                         notification.has_reason() ? notification.reason() : ""} {
 }
 
-auto ResponseException::requestId() const noexcept -> const boost::optional<int64_t>& {
+auto ResponseException::requestId() const noexcept -> const std::optional<int64_t>& {
     return requestId_;
 }
 
@@ -44,10 +42,8 @@ auto ResponseException::reason() const noexcept -> const std::string& {
     return reason_;
 }
 
-auto ResponseException::cause() const noexcept -> const boost::optional<std::exception>& {
+auto ResponseException::cause() const noexcept -> const std::optional<std::exception>& {
     return cause_;
 }
 
-}  // namespace exception
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::exception

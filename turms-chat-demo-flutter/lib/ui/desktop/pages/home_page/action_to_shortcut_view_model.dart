@@ -4,8 +4,9 @@ import '../../../../domain/user/view_models/user_settings_view_model.dart';
 import '../../../../infra/shortcut/shortcut.dart';
 import 'home_page_action.dart';
 
-final actionToShortcutViewModel =
-    StateProvider<Map<HomePageAction, Shortcut>>((ref) {
+final actionToShortcutViewModel = StateProvider<Map<HomePageAction, Shortcut>>((
+  ref,
+) {
   final actionToShortcut = <HomePageAction, Shortcut>{};
   final userSettings = ref.watch(userSettingsViewModel);
   // We allow the user to unset shortcuts,

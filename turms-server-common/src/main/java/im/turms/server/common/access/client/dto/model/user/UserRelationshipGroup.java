@@ -28,8 +28,8 @@ public final class UserRelationshipGroup extends com.google.protobuf.GeneratedMe
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserRelationshipGroup.class.getName());
     }
@@ -219,10 +219,8 @@ public final class UserRelationshipGroup extends com.google.protobuf.GeneratedMe
         if (getIndex() != other.getIndex()) {
             return false;
         }
-        if (!getName().equals(other.getName())) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getName().equals(other.getName())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

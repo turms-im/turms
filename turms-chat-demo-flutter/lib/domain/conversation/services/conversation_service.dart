@@ -22,10 +22,7 @@ class ConversationService {
     return Fixtures.instance.getConversations(_loggedInUser);
   }
 
-  Future<void> resetSharedUnreadMessageCount({
-    Int64? groupId,
-    Int64? userId,
-  }) =>
+  Future<void> resetSharedUnreadMessageCount({Int64? groupId, Int64? userId}) =>
       Future<void>.delayed(const Duration(seconds: 1));
 
   Future<void> updateSettingPinned({
@@ -33,13 +30,15 @@ class ConversationService {
     required bool newValue,
     required Contact contact,
   }) async {
-    readGlobalState(idToConversationSettingsViewModel.notifier)
-        .update(conversationId, pinned: newValue);
+    readGlobalState(
+      idToConversationSettingsViewModel.notifier,
+    ).update(conversationId, pinned: newValue);
     await readGlobalState(conversationSettingRepositoryProvider)!.upsert(
-        contactId: contact is SystemContact ? _loggedInUser.userId : contact.id,
-        isGroupConversation: contact is GroupContact,
-        setting: ConversationSetting.pinned,
-        settingValue: newValue);
+      contactId: contact is SystemContact ? _loggedInUser.userId : contact.id,
+      isGroupConversation: contact is GroupContact,
+      setting: ConversationSetting.pinned,
+      settingValue: newValue,
+    );
   }
 
   Future<void> updateSettingEnableNewMessageNotification({
@@ -47,15 +46,18 @@ class ConversationService {
     required bool newValue,
     required Contact contact,
   }) async {
-    readGlobalState(idToConversationSettingsViewModel.notifier)
-        .update(conversationId, enableNewMessageNotification: newValue);
+    readGlobalState(
+      idToConversationSettingsViewModel.notifier,
+    ).update(conversationId, enableNewMessageNotification: newValue);
     await readGlobalState(conversationSettingRepositoryProvider)!.upsert(
-        contactId: contact is SystemContact ? _loggedInUser.userId : contact.id,
-        isGroupConversation: contact is GroupContact,
-        setting: ConversationSetting.enableNewMessageNotification,
-        settingValue: newValue);
+      contactId: contact is SystemContact ? _loggedInUser.userId : contact.id,
+      isGroupConversation: contact is GroupContact,
+      setting: ConversationSetting.enableNewMessageNotification,
+      settingValue: newValue,
+    );
   }
 }
 
-final conversationServiceProvider =
-    StateProvider<ConversationService?>((ref) => null);
+final conversationServiceProvider = StateProvider<ConversationService?>(
+  (ref) => null,
+);

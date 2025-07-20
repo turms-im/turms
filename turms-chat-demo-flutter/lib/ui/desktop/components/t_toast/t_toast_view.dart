@@ -4,13 +4,13 @@ import '../../../../infra/animation/animation_utils.dart';
 import '../../../../infra/animation/dismissed_status_change_type.dart';
 
 class TToastView extends StatefulWidget {
-  const TToastView(
-      {Key? key,
-      required this.duration,
-      required this.onDismissed,
-      this.fadeDuration = 500,
-      required this.child})
-      : super(key: key);
+  const TToastView({
+    super.key,
+    required this.duration,
+    required this.onDismissed,
+    this.fadeDuration = 500,
+    required this.child,
+  });
 
   final Widget child;
   final Duration duration;
@@ -30,28 +30,33 @@ class TToastViewState extends State<TToastView>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: widget.fadeDuration),
-    )..addStatusListener((status) {
-        switch (AnimationUtils.detectDismissedStatusChange(
-            _animationStatus, status)) {
-          case DismissedStatusChangeType.becomeDismissed:
-            widget.onDismissed();
-          case DismissedStatusChangeType.becomeNotDismissed:
-            Future<void>.delayed(widget.duration, () {
-              if (mounted &&
-                  _animationController?.status == AnimationStatus.completed) {
-                _hideAnimation();
-              }
-            });
-          case DismissedStatusChangeType.noChange:
-            break;
-        }
-        _animationStatus = status;
-      });
-    _fadeAnimation =
-        CurvedAnimation(parent: _animationController!, curve: Curves.easeIn);
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: widget.fadeDuration),
+        )..addStatusListener((status) {
+          switch (AnimationUtils.detectDismissedStatusChange(
+            _animationStatus,
+            status,
+          )) {
+            case DismissedStatusChangeType.becomeDismissed:
+              widget.onDismissed();
+            case DismissedStatusChangeType.becomeNotDismissed:
+              Future<void>.delayed(widget.duration, () {
+                if (mounted &&
+                    _animationController?.status == AnimationStatus.completed) {
+                  _hideAnimation();
+                }
+              });
+            case DismissedStatusChangeType.noChange:
+              break;
+          }
+          _animationStatus = status;
+        });
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController!,
+      curve: Curves.easeIn,
+    );
     super.initState();
 
     _showAnimation();
@@ -71,14 +76,11 @@ class TToastViewState extends State<TToastView>
 
   @override
   Widget build(BuildContext context) => FadeTransition(
-        opacity: _fadeAnimation,
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: widget.child,
-          ),
-        ),
-      );
+    opacity: _fadeAnimation,
+    child: Center(
+      child: Material(color: Colors.transparent, child: widget.child),
+    ),
+  );
 
   void _showAnimation() {
     _animationController!.forward();

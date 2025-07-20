@@ -55,48 +55,50 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
     _searchBarTextEditingController = TextEditingController();
     _searchBarFocusNode = FocusNode()
       ..addListener(
-          _updateHighlightedContactTileItemIndexOnSearchBarFocusChanged);
+        _updateHighlightedContactTileItemIndexOnSearchBarFocusChanged,
+      );
     _scrollControllerForNormal = ScrollController();
     _scrollControllerForSearch = ScrollController();
     ref
-      ..listenManual(
-        fireImmediately: true,
-        appLocalizationsViewModel,
-        (previous, next) {
-          _appLocalizations = next;
-          if (_contactsData.isInitialized) {
-            _contactsData = _contactsData.copyWith(
-                value: ref.read(userServiceProvider)!.getSystemContacts(next) +
-                    _contactsData.value!);
-            if (_searchData.isSearching) {
-              _onSearchTextUpdated(_searchData.searchText);
-            } else {
-              setState(() {});
-            }
-          }
-        },
-      )
-      ..listenManual(
-        fireImmediately: true,
-        contactsDataViewModel,
-        (previous, next) {
-          if (next.isInitialized) {
-            final appLocalizations = ref.read(appLocalizationsViewModel);
-            final newContacts = ref
-                    .read(userServiceProvider)!
-                    .getSystemContacts(appLocalizations) +
-                next.value!;
-            _contactsData = next.copyWith(value: newContacts);
-          } else {
-            _contactsData = next;
-          }
+      ..listenManual(fireImmediately: true, appLocalizationsViewModel, (
+        previous,
+        next,
+      ) {
+        _appLocalizations = next;
+        if (_contactsData.isInitialized) {
+          _contactsData = _contactsData.copyWith(
+            value:
+                ref.read(userServiceProvider)!.getSystemContacts(next) +
+                _contactsData.value!,
+          );
           if (_searchData.isSearching) {
             _onSearchTextUpdated(_searchData.searchText);
           } else {
             setState(() {});
           }
-        },
-      );
+        }
+      })
+      ..listenManual(fireImmediately: true, contactsDataViewModel, (
+        previous,
+        next,
+      ) {
+        if (next.isInitialized) {
+          final appLocalizations = ref.read(appLocalizationsViewModel);
+          final newContacts =
+              ref
+                  .read(userServiceProvider)!
+                  .getSystemContacts(appLocalizations) +
+              next.value!;
+          _contactsData = next.copyWith(value: newContacts);
+        } else {
+          _contactsData = next;
+        }
+        if (_searchData.isSearching) {
+          _onSearchTextUpdated(_searchData.searchText);
+        } else {
+          setState(() {});
+        }
+      });
   }
 
   @override
@@ -118,7 +120,9 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
         in _relationshipGroupsData.value ?? <RelationshipGroup>[]) {
       for (final contact in group.contacts) {
         _relationshipContactIndexToKey[index++] = _RelationshipGroupContactKey(
-            groupId: group.id, recordId: contact.recordId);
+          groupId: group.id,
+          recordId: contact.recordId,
+        );
       }
     }
 
@@ -126,7 +130,11 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
     final appThemeExtension = theme.appThemeExtension;
 
     return _buildView(
-        theme, appThemeExtension, _appLocalizations, selectedContact);
+      theme,
+      appThemeExtension,
+      _appLocalizations,
+      selectedContact,
+    );
   }
 
   void _selectContact(Contact contact) {
@@ -144,8 +152,12 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
         ..isSearching = true
         ..searchText = newSearchText
         ..searchResults = (_contactsData.value ?? [])
-            .where((contact) => TextUtils.shouldHighlightText(
-                text: contact.name, searchText: newSearchText))
+            .where(
+              (contact) => TextUtils.shouldHighlightText(
+                text: contact.name,
+                searchText: newSearchText,
+              ),
+            )
             .toList();
     } else {
       _searchData.reset();
@@ -155,8 +167,8 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
 
   void _updateHighlightedContactTileItemIndexOnSearchBarFocusChanged() {
     if (_searchBarFocusNode.hasFocus) {
-      final _selectedContact = ref.read(selectedContactViewModel);
-      final selectedConversationRecordId = _selectedContact?.recordId;
+      final selectedContact = ref.read(selectedContactViewModel);
+      final selectedConversationRecordId = selectedContact?.recordId;
       if (selectedConversationRecordId == null) {
         _highlightedContactTileItemIndex = null;
         setState(() {});
@@ -190,17 +202,23 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
         ? _searchData.searchResults.length
         : _relationshipContactIndexToKey.length;
     final (result, newIndex) = NavigationUtils.navigateByKeyEvent(
-        event, total, _highlightedContactTileItemIndex);
+      event,
+      total,
+      _highlightedContactTileItemIndex,
+    );
     if (result == KeyEventResult.handled) {
       if (_highlightedContactTileItemIndex != newIndex) {
         _highlightedContactTileItemIndex = newIndex!;
         setState(() {});
         if (isSearching) {
-          _scrollToByContactKey(newIndex,
-              _ContactKey(_searchData.searchResults[newIndex].recordId));
+          _scrollToByContactKey(
+            newIndex,
+            _ContactKey(_searchData.searchResults[newIndex].recordId),
+          );
         } else {
           _scrollToByRelationshipGroupContactKey(
-              _relationshipContactIndexToKey[newIndex]!);
+            _relationshipContactIndexToKey[newIndex]!,
+          );
         }
       }
       return KeyEventResult.handled;
@@ -208,18 +226,21 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
       if (_highlightedContactTileItemIndex case final itemIndex?) {
         if (_searchData.isSearching) {
           _selectConversationWhenSearching(
-              _searchData.searchResults[itemIndex].recordId);
+            _searchData.searchResults[itemIndex].recordId,
+          );
         } else {
           _selectConversationWhenNotSearching(
-              _relationshipContactIndexToKey[itemIndex]!.recordId);
+            _relationshipContactIndexToKey[itemIndex]!.recordId,
+          );
         }
       }
       return KeyEventResult.handled;
     } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
       if (_highlightedContactTileItemIndex case final itemIndex?) {
         if (!_searchData.isSearching) {
-          final controller = _relationshipGroupIdToController[
-              _relationshipContactIndexToKey[itemIndex]!.groupId];
+          final controller =
+              _relationshipGroupIdToController[_relationshipContactIndexToKey[itemIndex]!
+                  .groupId];
           if (controller != null) {
             controller.close?.call();
           }
@@ -242,25 +263,31 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
         return;
       }
       ScrollUtils.ensureVisible(
-          controller: _scrollControllerForSearch,
-          viewportDimension:
-              _scrollControllerForSearch.position.viewportDimension,
-          itemOffset: Sizes.conversationTileHeight * itemIndex,
-          itemHeight: Sizes.conversationTileHeight);
+        controller: _scrollControllerForSearch,
+        viewportDimension:
+            _scrollControllerForSearch.position.viewportDimension,
+        itemOffset: Sizes.conversationTileHeight * itemIndex,
+        itemHeight: Sizes.conversationTileHeight,
+      );
     });
   }
 
   void _scrollToByRelationshipGroupContactKey(
-      _RelationshipGroupContactKey relationshipGroupContactKey) {
+    _RelationshipGroupContactKey relationshipGroupContactKey,
+  ) {
     var isOpening = false;
     final controller =
         _relationshipGroupIdToController[relationshipGroupContactKey.groupId];
     assert(controller != null);
     if (controller != null) {
-      isOpening = controller.open?.call(onOpenCompleted: () {
-            _scrollToByRelationshipGroupContactKey0(
-                relationshipGroupContactKey);
-          }) ??
+      isOpening =
+          controller.open?.call(
+            onOpenCompleted: () {
+              _scrollToByRelationshipGroupContactKey0(
+                relationshipGroupContactKey,
+              );
+            },
+          ) ??
           false;
     }
     if (!isOpening) {
@@ -271,9 +298,11 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
   }
 
   void _scrollToByRelationshipGroupContactKey0(
-      _RelationshipGroupContactKey relationshipGroupContactKey) {
-    final found =
-        _relationshipGroupContactKeys.lookup(relationshipGroupContactKey);
+    _RelationshipGroupContactKey relationshipGroupContactKey,
+  ) {
+    final found = _relationshipGroupContactKeys.lookup(
+      relationshipGroupContactKey,
+    );
     if (found == null) {
       return;
     }
@@ -309,81 +338,94 @@ class _SubNavigationRailState extends ConsumerState<SubNavigationRail> {
 }
 
 extension _SubNavigationRailStateView on _SubNavigationRailState {
-  Widget _buildView(ThemeData theme, AppThemeExtension appThemeExtension,
-          AppLocalizations appLocalizations, Contact? selectedContact) =>
-      Focus(
-        onKeyEvent: _onKeyEvent,
-        child: Padding(
-          padding: EdgeInsets.only(
-              right: Sizes.subNavigationRailDividerSize.thickness),
-          child: ColoredBox(
-              color: appThemeExtension.tileBackgroundColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSearchBar(appThemeExtension, appLocalizations),
-                  if (_contactsData.isLoading ||
-                      _relationshipGroupsData.isLoading)
-                    _buildLoadingIndicator(appThemeExtension),
-                  Expanded(
-                    child: _searchData.isSearching
-                        ? _buildContactTiles(appThemeExtension,
-                            appLocalizations, selectedContact)
-                        // TODO: use builder
-                        : ListView(
-                            cacheExtent: 128,
-                            controller: _scrollControllerForNormal,
-                            children: _buildRelationshipGroups(appLocalizations,
-                                selectedContact, _relationshipGroupsData),
-                          ),
-                  ),
-                ],
-              )),
-        ),
-      );
-
-  Widget _buildLoadingIndicator(AppThemeExtension appThemeExtension) =>
-      SizedBox(
-        height: 40,
-        child: ColoredBox(
-          color: appThemeExtension
-              .subNavigationRailLoadingIndicatorBackgroundColor,
-          child: const Center(
-            child: CupertinoActivityIndicator(radius: 8),
-          ),
-        ),
-      );
-
-  Widget _buildSearchBar(AppThemeExtension appThemeExtension,
-          AppLocalizations appLocalizations) =>
-      SizedBox(
-        height: Sizes.homePageHeaderHeight,
-        child: ColoredBox(
-          color: appThemeExtension.subNavigationRailSearchBarBackgroundColor,
-          child: Padding(
-            padding: Sizes.subNavigationRailPadding,
-            child: Center(
-              child: TSearchBar(
-                textEditingController: _searchBarTextEditingController,
-                focusNode: _searchBarFocusNode,
-                hintText: appLocalizations.search,
-                onChanged: _onSearchTextUpdated,
-              ),
+  Widget _buildView(
+    ThemeData theme,
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+    Contact? selectedContact,
+  ) => Focus(
+    onKeyEvent: _onKeyEvent,
+    child: Padding(
+      padding: EdgeInsets.only(
+        right: Sizes.subNavigationRailDividerSize.thickness,
+      ),
+      child: ColoredBox(
+        color: appThemeExtension.tileBackgroundColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearchBar(appThemeExtension, appLocalizations),
+            if (_contactsData.isLoading || _relationshipGroupsData.isLoading)
+              _buildLoadingIndicator(appThemeExtension),
+            Expanded(
+              child: _searchData.isSearching
+                  ? _buildContactTiles(
+                      appThemeExtension,
+                      appLocalizations,
+                      selectedContact,
+                    )
+                  // TODO: use builder
+                  : ListView(
+                      cacheExtent: 128,
+                      controller: _scrollControllerForNormal,
+                      children: _buildRelationshipGroups(
+                        appLocalizations,
+                        selectedContact,
+                        _relationshipGroupsData,
+                      ),
+                    ),
             ),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Widget _buildLoadingIndicator(
+    AppThemeExtension appThemeExtension,
+  ) => SizedBox(
+    height: 40,
+    child: ColoredBox(
+      color: appThemeExtension.subNavigationRailLoadingIndicatorBackgroundColor,
+      child: const Center(child: CupertinoActivityIndicator(radius: 8)),
+    ),
+  );
+
+  Widget _buildSearchBar(
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+  ) => SizedBox(
+    height: Sizes.homePageHeaderHeight,
+    child: ColoredBox(
+      color: appThemeExtension.subNavigationRailSearchBarBackgroundColor,
+      child: Padding(
+        padding: Sizes.subNavigationRailPadding,
+        child: Center(
+          child: TSearchBar(
+            textEditingController: _searchBarTextEditingController,
+            focusNode: _searchBarFocusNode,
+            hintText: appLocalizations.search,
+            onChanged: _onSearchTextUpdated,
           ),
         ),
-      );
+      ),
+    ),
+  );
 
-  Widget _buildContactTiles(AppThemeExtension appThemeExtension,
-      AppLocalizations appLocalizations, Contact? selectedContact) {
+  Widget _buildContactTiles(
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+    Contact? selectedContact,
+  ) {
     final selectedContactRecordId = selectedContact?.recordId;
-    final matchedContacts =
-        _searchData.searchResults.expand<_StyledContact>((contact) {
+    final matchedContacts = _searchData.searchResults.expand<_StyledContact>((
+      contact,
+    ) {
       final nameTextSpans = TextUtils.highlightSearchText(
-          text: contact.name,
-          searchText: _searchData.searchText,
-          searchTextStyle:
-              appThemeExtension.conversationTileHighlightedTextStyle);
+        text: contact.name,
+        searchText: _searchData.searchText,
+        searchTextStyle: appThemeExtension.conversationTileHighlightedTextStyle,
+      );
       if (nameTextSpans.length == 1) {
         return [];
       }
@@ -392,48 +434,50 @@ extension _SubNavigationRailStateView on _SubNavigationRailState {
 
     final itemCount = matchedContacts.length;
     final contactRecordIdToIndex = {
-      for (var i = 0; i < itemCount; i++) matchedContacts[i].contact.recordId: i
+      for (var i = 0; i < itemCount; i++)
+        matchedContacts[i].contact.recordId: i,
     };
     _contactKeysForSearch.clear();
     return ListView.builder(
-        controller: _scrollControllerForSearch,
-        addAutomaticKeepAlives: false,
-        itemCount: itemCount,
-        findChildIndexCallback: (key) =>
-            contactRecordIdToIndex[(key as _ContactKey).value],
-        prototypeItem: ContactTile(
-          contact: UserContact(userId: Int64.MIN_VALUE, name: ''),
-          nameTextSpans: [],
+      controller: _scrollControllerForSearch,
+      addAutomaticKeepAlives: false,
+      itemCount: itemCount,
+      findChildIndexCallback: (key) =>
+          contactRecordIdToIndex[(key as _ContactKey).value],
+      prototypeItem: ContactTile(
+        contact: UserContact(userId: Int64.MIN_VALUE, name: ''),
+        nameTextSpans: [],
+        isSearching: true,
+        highlighted: false,
+        selected: false,
+        onTap: () {},
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        final _StyledContact(:contact, :nameTextSpans) = matchedContacts[index];
+        final contactKey = _ContactKey(contact.recordId);
+        if (!_contactKeysForSearch.add(contactKey)) {
+          throw AssertionError('Duplicate contact key: $contactKey');
+        }
+        return ContactTile(
+          key: contactKey,
+          contact: contact,
+          nameTextSpans: nameTextSpans,
           isSearching: true,
-          highlighted: false,
-          selected: false,
-          onTap: () {},
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          final _StyledContact(:contact, :nameTextSpans) =
-              matchedContacts[index];
-          final contactKey = _ContactKey(contact.recordId);
-          if (!_contactKeysForSearch.add(contactKey)) {
-            throw AssertionError('Duplicate contact key: $contactKey');
-          }
-          return ContactTile(
-            key: contactKey,
-            contact: contact,
-            nameTextSpans: nameTextSpans,
-            isSearching: true,
-            highlighted: _highlightedContactTileItemIndex == index,
-            selected: contact.recordId == selectedContactRecordId,
-            onTap: () {
-              _selectContact(contact);
-            },
-          );
-        });
+          highlighted: _highlightedContactTileItemIndex == index,
+          selected: contact.recordId == selectedContactRecordId,
+          onTap: () {
+            _selectContact(contact);
+          },
+        );
+      },
+    );
   }
 
   List<Widget> _buildRelationshipGroups(
-      AppLocalizations appLocalizations,
-      Contact? selectedContact,
-      TAsyncData<List<RelationshipGroup>> relationshipGroupsData) {
+    AppLocalizations appLocalizations,
+    Contact? selectedContact,
+    TAsyncData<List<RelationshipGroup>> relationshipGroupsData,
+  ) {
     final selectedContactRecordId = selectedContact?.recordId;
     // final widgets = ref
     //     .read(userServiceProvider)!
@@ -457,7 +501,12 @@ extension _SubNavigationRailStateView on _SubNavigationRailState {
     var index = 0;
     for (final group in groups) {
       final entry = _buildRelationshipGroup(
-          index, group.id, group.name, group.contacts, selectedContactRecordId);
+        index,
+        group.id,
+        group.name,
+        group.contacts,
+        selectedContactRecordId,
+      );
       index = entry.$2;
       widgets.add(entry.$1);
     }
@@ -465,8 +514,13 @@ extension _SubNavigationRailStateView on _SubNavigationRailState {
     return widgets;
   }
 
-  (Widget, int) _buildRelationshipGroup(int startIndex, Int64 groupId,
-      String name, List<Contact> contacts, String? selectedContactRecordId) {
+  (Widget, int) _buildRelationshipGroup(
+    int startIndex,
+    Int64 groupId,
+    String name,
+    List<Contact> contacts,
+    String? selectedContactRecordId,
+  ) {
     assert(_relationshipGroupIdToController[groupId] == null);
     final controller = TAccordionController();
     _relationshipGroupIdToController[groupId] = controller;
@@ -474,19 +528,19 @@ extension _SubNavigationRailStateView on _SubNavigationRailState {
       controller: controller,
       titleChild: Row(
         spacing: 4,
-        children: [
-          Text(name),
-          Text('(${contacts.length})'),
-        ],
+        children: [Text(name), Text('(${contacts.length})')],
       ),
       // TODO: Use ListView for better performance
       contentChild: Column(
         children: contacts.map((contact) {
           final relationshipGroupContactKey = _RelationshipGroupContactKey(
-              groupId: groupId, recordId: contact.recordId);
+            groupId: groupId,
+            recordId: contact.recordId,
+          );
           if (!_relationshipGroupContactKeys.add(relationshipGroupContactKey)) {
             throw AssertionError(
-                'Duplicate relationship group contact key: $relationshipGroupContactKey');
+              'Duplicate relationship group contact key: $relationshipGroupContactKey',
+            );
           }
           return ContactTile(
             key: relationshipGroupContactKey,
@@ -552,7 +606,7 @@ class _RelationshipGroupContactKey extends GlobalObjectKey {
 }
 
 class _ContactKey extends GlobalObjectKey {
-  const _ContactKey(String recordId) : super(recordId);
+  const _ContactKey(String super.recordId);
 
   @override
   int get hashCode => value.hashCode;

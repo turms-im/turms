@@ -8,7 +8,9 @@ class UserLoginInfoRepository {
     final selectResult = appDatabase.select(appDatabase.userLoginInfoTable)
       ..orderBy([
         (record) => OrderingTerm(
-            expression: record.lastModifiedDate, mode: OrderingMode.desc)
+          expression: record.lastModifiedDate,
+          mode: OrderingMode.desc,
+        ),
       ]);
     return selectResult.get();
   }
@@ -16,14 +18,22 @@ class UserLoginInfoRepository {
   /// TODO: encrypt password for security.
   Future<void> upsert(Int64 userId, String password) async {
     final now = DateTime.now();
-    await appDatabase.into(appDatabase.userLoginInfoTable).insert(
-        UserLoginInfoTableCompanion.insert(
+    await appDatabase
+        .into(appDatabase.userLoginInfoTable)
+        .insert(
+          UserLoginInfoTableCompanion.insert(
             userId: userId,
             password: password,
             createdDate: now,
-            lastModifiedDate: now),
-        onConflict: DoUpdate((old) => UserLoginInfoTableCompanion.custom(
-            password: Constant(password), lastModifiedDate: Constant(now))));
+            lastModifiedDate: now,
+          ),
+          onConflict: DoUpdate(
+            (old) => UserLoginInfoTableCompanion.custom(
+              password: Constant(password),
+              lastModifiedDate: Constant(now),
+            ),
+          ),
+        );
   }
 
   Future<void> deleteAll() =>

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'ansi_escape_codes.dart';
+import 'ansi_color.dart';
 import 'log_appender.dart';
 import 'log_entry.dart';
 import 'log_level.dart';
@@ -33,22 +33,27 @@ class LogAppenderConsole extends LogAppender {
     if (color != null) {
       if (error == null) {
         stdout.writeln(
-            '$color${entry.timestamp.toIso8601String()} $levelName : ${entry.message}${AnsiColor.ansiDefault}');
+          '$color${entry.timestamp.toIso8601String()} $levelName : ${entry.message}${AnsiColor.ansiDefault}',
+        );
       } else {
         stderr.writeln(
-            '$color${entry.timestamp.toIso8601String()} $levelName : ${entry.message}\n${error.toString()}${AnsiColor.ansiDefault}');
+          '$color${entry.timestamp.toIso8601String()} $levelName : ${entry.message}\n${error.toString()}${AnsiColor.ansiDefault}',
+        );
         if (stackTrace != null) {
           stderr.writeln(
-              '$color${stackTrace.toString()}${AnsiColor.ansiDefault}');
+            '$color${stackTrace.toString()}${AnsiColor.ansiDefault}',
+          );
         }
       }
     } else {
       if (error == null) {
         stdout.writeln(
-            '${entry.timestamp.toIso8601String()} $levelName : ${entry.message}');
+          '${entry.timestamp.toIso8601String()} $levelName : ${entry.message}',
+        );
       } else {
         stderr.writeln(
-            '${entry.timestamp.toIso8601String()} $levelName : ${entry.message}\n${error.toString()}');
+          '${entry.timestamp.toIso8601String()} $levelName : ${entry.message}\n${error.toString()}',
+        );
         if (stackTrace != null) {
           stderr.writeln(stackTrace.toString());
         }

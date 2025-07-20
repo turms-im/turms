@@ -28,8 +28,8 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateRelationshipRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -71,7 +71,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
     }
 
     public static final int BLOCKED_FIELD_NUMBER = 2;
-    private boolean blocked_;
+    private boolean blocked_ = false;
 
     /**
      * <code>bool blocked = 2;</code>
@@ -84,7 +84,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 3;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <code>optional int32 group_index = 3;</code>
@@ -224,7 +224,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
             output.writeInt64(1, userId_);
         }
         if (blocked_) {
-            output.writeBool(2, blocked_);
+            output.writeBool(2, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeInt32(3, groupIndex_);
@@ -250,7 +250,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, userId_);
         }
         if (blocked_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, blocked_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, true);
         }
         if (((bitField0_ & 0x00000001) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt32Size(3, groupIndex_);
@@ -569,7 +569,7 @@ public final class CreateRelationshipRequest extends com.google.protobuf.Generat
                 setUserId(other.getUserId());
             }
             if (other.getBlocked()) {
-                setBlocked(other.getBlocked());
+                setBlocked(true);
             }
             if (other.hasGroupIndex()) {
                 setGroupIndex(other.getGroupIndex());

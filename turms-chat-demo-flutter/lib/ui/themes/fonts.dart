@@ -7,9 +7,8 @@ class Fonts {
     TargetPlatform.iOS || TargetPlatform.macOS => 'Apple Color Emoji',
     TargetPlatform.android ||
     TargetPlatform.fuchsia ||
-    TargetPlatform.linux =>
-      'Noto Color Emoji',
-    TargetPlatform.windows => 'Segoe UI Emoji'
+    TargetPlatform.linux => 'Noto Color Emoji',
+    TargetPlatform.windows => 'Segoe UI Emoji',
   };
   static const emojiFontFamilyFallback = [
     'Apple Color Emoji',
@@ -18,6 +17,6 @@ class Fonts {
     'Noto Color Emoji',
     'Noto Color Emoji Compat',
     'Android Emoji',
-    'EmojiSymbols'
+    'EmojiSymbols',
   ];
 }

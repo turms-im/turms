@@ -6,15 +6,11 @@
 
 #include "turms/client/model/notification.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
-#include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 class TurmsClient;
 
 namespace service {
-
 class NotificationService : private boost::noncopyable {
    private:
     using Notification = model::Notification;
@@ -38,9 +34,7 @@ class NotificationService : private boost::noncopyable {
    private:
     std::vector<NotificationListener> notificationListeners_;
 };
-
 }  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
 
 #endif  // TURMS_CLIENT_SERVICE_NOTIFICATION_SERVICE_H

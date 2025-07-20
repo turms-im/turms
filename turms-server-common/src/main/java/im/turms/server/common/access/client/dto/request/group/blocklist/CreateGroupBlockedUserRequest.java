@@ -29,8 +29,8 @@ public final class CreateGroupBlockedUserRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupBlockedUserRequest.class.getName());
     }
@@ -192,10 +192,8 @@ public final class CreateGroupBlockedUserRequest extends com.google.protobuf.Gen
         if (getGroupId() != other.getGroupId()) {
             return false;
         }
-        if (getUserId() != other.getUserId()) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getUserId() == other.getUserId()
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

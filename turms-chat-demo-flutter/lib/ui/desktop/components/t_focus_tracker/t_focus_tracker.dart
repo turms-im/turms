@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../themes/index.dart';
 
 class TFocusTracker extends StatefulWidget {
-  const TFocusTracker({Key? key, required this.child}) : super(key: key);
+  const TFocusTracker({super.key, required this.child});
 
   final Widget child;
 
@@ -48,13 +48,15 @@ class _TFocusTrackerState extends State<TFocusTracker> {
     _removeOverlayEntry();
     _overlayState = Overlay.of(context);
     _overlayEntry = OverlayEntry(
-        builder: (BuildContext context) =>
-            _buildOverlayEntry(context, focus, rect));
+      builder: (BuildContext context) =>
+          _buildOverlayEntry(context, focus, rect),
+    );
     _overlayState!.insert(_overlayEntry!);
   }
 
   Widget _buildOverlayEntry(BuildContext context, FocusNode focus, Rect rect) {
-    final parentFocusDebugLabel = focus.parent?.debugLabel ??
+    final parentFocusDebugLabel =
+        focus.parent?.debugLabel ??
         focus.parent?.context?.widget.runtimeType.toString() ??
         '';
     final focusDebugLabel =
@@ -67,15 +69,16 @@ class _TFocusTrackerState extends State<TFocusTracker> {
           child: Stack(
             children: [
               SizedBox(
-                  width: rect.width,
-                  height: rect.height,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: Sizes.borderRadiusCircular4,
-                      color: Colors.black.withValues(alpha: 0.3),
-                    ),
-                    child: const SizedBox.shrink(),
-                  )),
+                width: rect.width,
+                height: rect.height,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: Sizes.borderRadiusCircular4,
+                    color: Colors.black.withValues(alpha: 0.3),
+                  ),
+                  child: const SizedBox.shrink(),
+                ),
+              ),
               Positioned.fill(
                 // The text rect size maybe larger than the box,
                 // so we allow the text overflow.
@@ -84,12 +87,15 @@ class _TFocusTrackerState extends State<TFocusTracker> {
                   maxHeight: double.infinity,
                   child: Center(
                     child: Text(
-                        'Parent Focus: $parentFocusDebugLabel\nCurrent Focus: $focusDebugLabel',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Colors.red, fontWeight: FontWeight.w700)),
+                      'Parent Focus: $parentFocusDebugLabel\nCurrent Focus: $focusDebugLabel',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

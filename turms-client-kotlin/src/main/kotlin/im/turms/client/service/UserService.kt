@@ -72,7 +72,9 @@ import java.util.LinkedList
 /**
  * @author James Chen
  */
-class UserService(private val turmsClient: TurmsClient) {
+class UserService(
+    private val turmsClient: TurmsClient,
+) {
     /**
      * The user information of the logged-in user.
      */
@@ -191,10 +193,12 @@ class UserService(private val turmsClient: TurmsClient) {
                     onlineStatus.let { this.userStatus = it }
                     location?.let {
                         this.location =
-                            im.turms.client.model.proto.model.user.UserLocation.newBuilder().apply {
-                                this.longitude = it.longitude
-                                this.latitude = it.latitude
-                            }.build()
+                            im.turms.client.model.proto.model.user.UserLocation
+                                .newBuilder()
+                                .apply {
+                                    this.longitude = it.longitude
+                                    this.latitude = it.latitude
+                                }.build()
                     }
                 },
             )
@@ -354,8 +358,7 @@ class UserService(private val turmsClient: TurmsClient) {
                             this.putAllUserDefinedAttributes(it)
                         }
                     },
-                )
-                .toResponse()
+                ).toResponse()
         }
 
     /**
@@ -458,14 +461,13 @@ class UserService(private val turmsClient: TurmsClient) {
      * @throws ResponseException if an error occurs.
      * * If trying to delete any non-deletable setting, throws [ResponseException] with the code [ResponseStatusCode.ILLEGAL_ARGUMENT].
      */
-    suspend fun deleteUserSettings(names: Set<String>? = null): Response<Unit> {
-        return turmsClient.driver
+    suspend fun deleteUserSettings(names: Set<String>? = null): Response<Unit> =
+        turmsClient.driver
             .send(
                 DeleteUserSettingsRequest.newBuilder().apply {
                     names?.let { addAllNames(it) }
                 },
             ).toResponse()
-    }
 
     /**
      * Find user settings.
@@ -478,8 +480,8 @@ class UserService(private val turmsClient: TurmsClient) {
     suspend fun queryUserSettings(
         names: Set<String>? = null,
         lastUpdatedDate: Date? = null,
-    ): Response<UserSettings?> {
-        return turmsClient.driver
+    ): Response<UserSettings?> =
+        turmsClient.driver
             .send(
                 QueryUserSettingsRequest.newBuilder().apply {
                     names?.let { addAllNames(it) }
@@ -492,7 +494,6 @@ class UserService(private val turmsClient: TurmsClient) {
                     null
                 }
             }
-    }
 
     /**
      * Find nearby users.
@@ -684,8 +685,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.blocked = isBlocked
                     groupIndex?.let { this.groupIndex = it }
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Create a friend (non-blocked) relationship.
@@ -752,8 +752,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     deleteGroupIndex?.let { this.groupIndex = it }
                     targetGroupIndex?.let { this.targetGroupIndex = it }
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Update a relationship.
@@ -784,8 +783,7 @@ class UserService(private val turmsClient: TurmsClient) {
                         isBlocked?.let { this.blocked = it }
                         groupIndex?.let { this.newGroupIndex = it }
                     },
-                )
-                .toResponse()
+                ).toResponse()
         }
 
     /**
@@ -842,8 +840,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 DeleteFriendRequestRequest.newBuilder().apply {
                     this.requestId = requestId
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Reply to a friend request.
@@ -880,8 +877,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.responseAction = responseAction
                     reason?.let { this.reason = it }
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Find friend requests.
@@ -952,8 +948,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.groupIndex = groupIndex
                     targetGroupIndex?.let { this.targetGroupIndex = it }
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Update a relationship group.
@@ -978,8 +973,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.groupIndex = groupIndex
                     this.newName = newName
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Find relationship groups.
@@ -1024,8 +1018,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.userId = relatedUserId
                     this.newGroupIndex = groupIndex
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Update the location of the logged-in user.
@@ -1055,8 +1048,7 @@ class UserService(private val turmsClient: TurmsClient) {
                     this.longitude = longitude
                     details?.let { putAllDetails(it) }
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     private fun changeToOnline() {
         if (!isLoggedIn) {

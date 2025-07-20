@@ -29,8 +29,8 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryMessageAttachmentInfosRequest.class.getName());
     }
@@ -131,7 +131,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
     private int groupIdsMemoizedSerializedSize = -1;
 
     public static final int CREATION_DATE_START_FIELD_NUMBER = 3;
-    private long creationDateStart_;
+    private long creationDateStart_ = 0L;
 
     /**
      * <code>optional int64 creation_date_start = 3;</code>
@@ -154,7 +154,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
     }
 
     public static final int CREATION_DATE_END_FIELD_NUMBER = 4;
-    private long creationDateEnd_;
+    private long creationDateEnd_ = 0L;
 
     /**
      * <code>optional int64 creation_date_end = 4;</code>
@@ -177,7 +177,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
     }
 
     public static final int IN_PRIVATE_CONVERSATION_FIELD_NUMBER = 5;
-    private boolean inPrivateConversation_;
+    private boolean inPrivateConversation_ = false;
 
     /**
      * <code>optional bool in_private_conversation = 5;</code>
@@ -200,7 +200,7 @@ public final class QueryMessageAttachmentInfosRequest extends com.google.protobu
     }
 
     public static final int ARE_SHARED_BY_ME_FIELD_NUMBER = 6;
-    private boolean areSharedByMe_;
+    private boolean areSharedByMe_ = false;
 
     /**
      * <code>optional bool are_shared_by_me = 6;</code>

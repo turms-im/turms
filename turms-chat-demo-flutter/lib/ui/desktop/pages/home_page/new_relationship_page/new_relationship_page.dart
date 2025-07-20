@@ -17,11 +17,13 @@ import 'relationship_info_tile.dart';
 const safeAreaPaddingHorizontal = 24.0;
 
 Future<void> showNewRelationshipDialog(
-        BuildContext context, bool showAddContactPage) =>
-    showCustomTDialog(
-        routeName: '/new-relationship-dialog',
-        context: context,
-        child: NewRelationshipPage(showAddContactPage: showAddContactPage));
+  BuildContext context,
+  bool showAddContactPage,
+) => showCustomTDialog(
+  routeName: '/new-relationship-dialog',
+  context: context,
+  child: NewRelationshipPage(showAddContactPage: showAddContactPage),
+);
 
 class NewRelationshipPage extends ConsumerStatefulWidget {
   const NewRelationshipPage({super.key, required this.showAddContactPage});
@@ -50,18 +52,16 @@ class _NewRelationshipPageState extends ConsumerState<NewRelationshipPage>
     super.initState();
     _searchTextController = TextEditingController();
     _tabController = TabController(length: 2, vsync: this)
-      ..addListener(
-        () {
-          if (_tabController.index == 0) {
-            _searchType = _SearchType.user;
-            _searchTextController.text = _userContactSearchText;
-          } else {
-            _searchType = _SearchType.group;
-            _searchTextController.text = _groupContactSearchText;
-          }
-          setState(() {});
-        },
-      );
+      ..addListener(() {
+        if (_tabController.index == 0) {
+          _searchType = _SearchType.user;
+          _searchTextController.text = _userContactSearchText;
+        } else {
+          _searchType = _SearchType.group;
+          _searchTextController.text = _groupContactSearchText;
+        }
+        setState(() {});
+      });
     if (widget.showAddContactPage) {
       _searchType = _SearchType.user;
       _tabController.index = 0;
@@ -84,8 +84,11 @@ class _NewRelationshipPageState extends ConsumerState<NewRelationshipPage>
     return _buildView(appLocalizations);
   }
 
-  Future<void> _search<T>(_SearchType searchType, String value,
-      ValueChanged<TAsyncData<List<T>>> contactsDataListener) async {
+  Future<void> _search<T>(
+    _SearchType searchType,
+    String value,
+    ValueChanged<TAsyncData<List<T>>> contactsDataListener,
+  ) async {
     final num = Int64.tryParseInt(value);
     if (num == null) {
       contactsDataListener(const TAsyncData(value: []));
@@ -94,8 +97,9 @@ class _NewRelationshipPageState extends ConsumerState<NewRelationshipPage>
     contactsDataListener(const TAsyncData(isLoading: true));
     switch (searchType) {
       case _SearchType.user:
-        final searchResult =
-            await ref.read(userServiceProvider)!.searchUserContacts(num, value);
+        final searchResult = await ref
+            .read(userServiceProvider)!
+            .searchUserContacts(num, value);
         contactsDataListener(TAsyncData(value: searchResult as List<T>));
         break;
       case _SearchType.group:
@@ -111,23 +115,17 @@ class _NewRelationshipPageState extends ConsumerState<NewRelationshipPage>
     setState(() {});
   }
 
-  Future<void> _searchUser(String value) => _search<UserContact>(
-        _SearchType.user,
-        value,
-        (value) {
-          _userContacts = value;
-          setState(() {});
-        },
-      );
+  Future<void> _searchUser(String value) =>
+      _search<UserContact>(_SearchType.user, value, (value) {
+        _userContacts = value;
+        setState(() {});
+      });
 
-  Future<void> _searchGroup(String value) => _search<GroupContact>(
-        _SearchType.group,
-        value,
-        (value) {
-          _groupContacts = value;
-          setState(() {});
-        },
-      );
+  Future<void> _searchGroup(String value) =>
+      _search<GroupContact>(_SearchType.group, value, (value) {
+        _groupContacts = value;
+        setState(() {});
+      });
 
   void _openFriendRequestDialog(Contact contact) {
     showFriendRequestDialog(context, contact);
@@ -149,93 +147,86 @@ class _NewRelationshipPageState extends ConsumerState<NewRelationshipPage>
 
 extension _NewRelationshipPageView on _NewRelationshipPageState {
   Widget _buildView(AppLocalizations appLocalizations) => SizedBox(
-        width: Sizes.dialogWidthMedium,
-        height: Sizes.dialogHeightMedium,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: _buildPage(appLocalizations),
-            ),
-            const TTitleBar(
-              displayCloseOnly: true,
-              popOnCloseTapped: true,
-            )
-          ],
-        ),
-      );
+    width: Sizes.dialogWidthMedium,
+    height: Sizes.dialogHeightMedium,
+    child: Stack(
+      children: [
+        Positioned.fill(child: _buildPage(appLocalizations)),
+        const TTitleBar(displayCloseOnly: true, popOnCloseTapped: true),
+      ],
+    ),
+  );
 
-  Column _buildPage(AppLocalizations appLocalizations) => Column(children: [
-        Sizes.sizedBoxH16,
-        TabBar(
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          dividerHeight: 0,
+  Column _buildPage(AppLocalizations appLocalizations) => Column(
+    children: [
+      Sizes.sizedBoxH16,
+      TabBar(
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        dividerHeight: 0,
+        controller: _tabController,
+        tabs: [
+          Tab(text: appLocalizations.addContact, height: 40),
+          Tab(text: appLocalizations.joinGroup, height: 40),
+        ],
+      ),
+      Sizes.sizedBoxH16,
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: safeAreaPaddingHorizontal,
+        ),
+        child: TSearchBar(
+          textEditingController: _searchTextController,
+          hintText: appLocalizations.search,
+          autofocus: true,
+          keepFocusOnSubmit: true,
+          onChanged: _updateSearchText,
+          onSubmitted: (value) {
+            if (_searchType == _SearchType.user) {
+              _searchUser(value);
+            } else {
+              _searchGroup(value);
+            }
+            _updateSearchText(value);
+          },
+        ),
+      ),
+      Sizes.sizedBoxH16,
+      Expanded(
+        child: TabBarView(
           controller: _tabController,
-          tabs: [
-            Tab(
-              text: appLocalizations.addContact,
-              height: 40,
-            ),
-            Tab(
-              text: appLocalizations.joinGroup,
-              height: 40,
-            )
-          ],
-        ),
-        Sizes.sizedBoxH16,
-        Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: safeAreaPaddingHorizontal),
-          child: TSearchBar(
-            textEditingController: _searchTextController,
-            hintText: appLocalizations.search,
-            autofocus: true,
-            keepFocusOnSubmit: true,
-            onChanged: _updateSearchText,
-            onSubmitted: (value) {
-              if (_searchType == _SearchType.user) {
-                _searchUser(value);
-              } else {
-                _searchGroup(value);
-              }
-              _updateSearchText(value);
-            },
-          ),
-        ),
-        Sizes.sizedBoxH16,
-        Expanded(
-          child: TabBarView(controller: _tabController, children: [
+          children: [
             _buildSearchResultView(false, _userContacts),
             _buildSearchResultView(true, _groupContacts),
-          ]),
+          ],
         ),
-      ]);
+      ),
+    ],
+  );
 
   Widget _buildSearchResultView(
-      bool isGroupContact, TAsyncData<List<Contact>> contactsData) {
+    bool isGroupContact,
+    TAsyncData<List<Contact>> contactsData,
+  ) {
     if (contactsData.isLoading) {
       return const Center(
         child: SizedBox(
           height: 24,
           width: 24,
-          child: CircularProgressIndicator(
-            color: Colors.blue,
-          ),
+          child: CircularProgressIndicator(color: Colors.blue),
         ),
       );
     }
     final contacts = contactsData.value ?? [];
     final contactCount = contacts.length;
     final idToIndex = {
-      for (var i = 0; i < contactCount; i++) contacts[i].recordId: i
+      for (var i = 0; i < contactCount; i++) contacts[i].recordId: i,
     };
     return contacts.isEmpty
         ? contactsData.isInitialized
-            ? const TEmptyResult(
-                icon: Symbols.person_rounded,
-              )
-            : const TEmpty()
+              ? const TEmptyResult(icon: Symbols.person_rounded)
+              : const TEmpty()
         : ListView.builder(
             itemCount: contactCount,
             findChildIndexCallback: (key) =>
@@ -254,11 +245,9 @@ extension _NewRelationshipPageView on _NewRelationshipPageState {
                   }
                 },
               );
-            });
+            },
+          );
   }
 }
 
-enum _SearchType {
-  user,
-  group,
-}
+enum _SearchType { user, group }

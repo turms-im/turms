@@ -1,8 +1,10 @@
 part of 'chat_session_details_drawer.dart';
 
 class ChatSessionDetailsUserConversation extends ConsumerStatefulWidget {
-  const ChatSessionDetailsUserConversation(
-      {super.key, required this.conversation});
+  const ChatSessionDetailsUserConversation({
+    super.key,
+    required this.conversation,
+  });
 
   final UserConversation conversation;
 
@@ -20,8 +22,9 @@ class _ChatSessionDetailsUserConversationState
     final loggedInUser = ref.watch(loggedInUserViewModel)!;
     final conversation = widget.conversation;
     final conversationId = conversation.id;
-    final conversationSettings =
-        ref.watch(idToConversationSettingsViewModel)[conversationId];
+    final conversationSettings = ref.watch(
+      idToConversationSettingsViewModel,
+    )[conversationId];
     const divider = THorizontalDivider();
     final contact = conversation.contact;
     return Column(
@@ -33,7 +36,9 @@ class _ChatSessionDetailsUserConversationState
             TSwitch(
               value: conversationSettings?.pinned ?? false,
               onChanged: (value) {
-                ref.read(conversationServiceProvider)!.updateSettingPinned(
+                ref
+                    .read(conversationServiceProvider)!
+                    .updateSettingPinned(
                       conversationId: conversationId,
                       newValue: value,
                       contact: contact,
@@ -67,7 +72,9 @@ class _ChatSessionDetailsUserConversationState
         Sizes.sizedBoxH8,
         _buildAddParticipantItem(theme, appLocalizations.createGroup, () {
           showCreateGroupDialog(
-              context: context, selectedUserIds: {contact.userId});
+            context: context,
+            selectedUserIds: {contact.userId},
+          );
         }),
         _participantItemSpacing,
         _buildParticipantItem(loggedInUser),
@@ -84,23 +91,27 @@ class _ChatSessionDetailsUserConversationState
             text: appLocalizations.clearChatHistory,
             textStyle: context.appThemeExtension.dangerTextStyle,
           ),
-        )
+        ),
       ],
     );
   }
 
   Row _buildParticipantItem(User user) => Row(
-        spacing: _participantItemElementSpacing,
-        children: [
-          UserProfilePopup(
-              user: user, popupAnchor: Alignment.topRight, size: _avatarSize),
-          Expanded(
-              child: Text(
-            user.name,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            softWrap: false,
-          )),
-        ],
-      );
+    spacing: _participantItemElementSpacing,
+    children: [
+      UserProfilePopup(
+        user: user,
+        popupAnchor: Alignment.topRight,
+        size: _avatarSize,
+      ),
+      Expanded(
+        child: Text(
+          user.name,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          softWrap: false,
+        ),
+      ),
+    ],
+  );
 }

@@ -25,7 +25,7 @@ const _messageIconSize = 16.0;
 const _fontWeightBold = FontWeight.w600;
 
 class ConversationTile extends ConsumerStatefulWidget {
-  ConversationTile({
+  const ConversationTile({
     super.key,
     required this.item,
     this.conversationSettings,
@@ -59,7 +59,8 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
   Widget build(BuildContext context) {
     final appLocalizations = ref.watch(appLocalizationsViewModel);
     final appThemeExtension = context.appThemeExtension;
-    _useBoldText = !widget.isSearching &&
+    _useBoldText =
+        !widget.isSearching &&
         (widget.item as ConversationTileItemForNormalMode)
                 .conversation
                 .unreadMessageCount >
@@ -75,12 +76,13 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
           onTap: widget.onTap,
           onSecondaryTapUp: (details) {
             _showConversationContextMenu(
-                context,
-                details.globalPosition,
-                appLocalizations,
-                conversationId,
-                pinned,
-                enableNewMessageNotification);
+              context,
+              details.globalPosition,
+              appLocalizations,
+              conversationId,
+              pinned,
+              enableNewMessageNotification,
+            );
           },
           focused: widget.selected,
           backgroundColor: widget.highlighted
@@ -90,36 +92,51 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
               // use more right padding to reserve space for scrollbar
               // TODO: adapt the padding to not hide part of text (e.g. contact name).
               const EdgeInsets.only(left: 10, right: 14, top: 12, bottom: 12),
-          child: Row(mainAxisSize: MainAxisSize.min, spacing: 8, children: [
-            _buildAvatar(),
-            Expanded(
-                child: _buildConversation(context, appThemeExtension,
-                    appLocalizations, enableNewMessageNotification))
-          ]),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8,
+            children: [
+              _buildAvatar(),
+              Expanded(
+                child: _buildConversation(
+                  context,
+                  appThemeExtension,
+                  appLocalizations,
+                  enableNewMessageNotification,
+                ),
+              ),
+            ],
+          ),
         ),
         if (widget.conversationSettings?.pinned ?? false)
           const Positioned(
-              top: 2,
-              left: 2,
-              child: CustomPaint(
-                painter: _PinnedConversationMarkerPainter(),
-                size: Size.square(12),
-              )),
+            top: 2,
+            left: 2,
+            child: CustomPaint(
+              painter: _PinnedConversationMarkerPainter(),
+              size: Size.square(12),
+            ),
+          ),
       ],
     );
   }
 
   void _showConversationContextMenu(
-      BuildContext context,
-      Offset globalPosition,
-      AppLocalizations appLocalizations,
-      IntListHolder conversationId,
-      bool pinned,
-      bool enableNewMessageNotification) {
+    BuildContext context,
+    Offset globalPosition,
+    AppLocalizations appLocalizations,
+    IntListHolder conversationId,
+    bool pinned,
+    bool enableNewMessageNotification,
+  ) {
     showPopup(
       context: context,
-      targetGlobalRect:
-          Rect.fromLTWH(globalPosition.dx, globalPosition.dy, 0, 0),
+      targetGlobalRect: Rect.fromLTWH(
+        globalPosition.dx,
+        globalPosition.dy,
+        0,
+        0,
+      ),
       targetAnchor: Alignment.topLeft,
       followerAnchor: Alignment.topLeft,
       follower: TMenu(
@@ -130,7 +147,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             value: 'pin',
             label: pinned ? appLocalizations.unpin : appLocalizations.pin,
             onSelected: () {
-              ref.read(conversationServiceProvider)!.updateSettingPinned(
+              ref
+                  .read(conversationServiceProvider)!
+                  .updateSettingPinned(
                     conversationId: conversationId,
                     newValue: !pinned,
                     contact: widget.item.contact,
@@ -161,47 +180,51 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
             onSelected: () {
               hideAllPopups();
               showAlertTDialog(
-                  routeName: 'deleteChat',
-                  context: context,
-                  contentTextProvider: (appLocalizations) =>
-                      appLocalizations.deleteChat,
-                  confirmAction: TDialogAction(
-                    style: TDialogActionStyle.danger,
-                    textProvider: (appLocalizations) => appLocalizations.delete,
-                    onPressed: () {
-                      final messageRepository =
-                          ref.read(messageRepositoryProvider)!;
-                      final item = widget.item;
-                      final conversationId = item.conversationId;
-                      final contact = item.contact;
-                      ref
-                          .read(conversationsDataViewModel.notifier)
-                          .deleteConversation(conversationId);
-                      switch (contact) {
-                        case GroupContact():
-                          messageRepository.delete(groupId: contact.groupId);
-                        case UserContact():
-                          messageRepository.delete(participantIds: [
+                routeName: 'deleteChat',
+                context: context,
+                contentTextProvider: (appLocalizations) =>
+                    appLocalizations.deleteChat,
+                confirmAction: TDialogAction(
+                  style: TDialogActionStyle.danger,
+                  textProvider: (appLocalizations) => appLocalizations.delete,
+                  onPressed: () {
+                    final messageRepository = ref.read(
+                      messageRepositoryProvider,
+                    )!;
+                    final item = widget.item;
+                    final conversationId = item.conversationId;
+                    final contact = item.contact;
+                    ref
+                        .read(conversationsDataViewModel.notifier)
+                        .deleteConversation(conversationId);
+                    switch (contact) {
+                      case GroupContact():
+                        messageRepository.delete(groupId: contact.groupId);
+                      case UserContact():
+                        messageRepository.delete(
+                          participantIds: [
                             ref.read(loggedInUserViewModel)!.userId,
                             contact.userId,
-                          ]);
-                        case SystemContact():
-                          switch (contact.type) {
-                            case SystemContactType.fileTransfer:
-                              final userId =
-                                  ref.read(loggedInUserViewModel)!.userId;
-                              messageRepository.delete(participantIds: [
-                                userId,
-                                userId,
-                              ]);
-                            case SystemContactType.requestNotification:
-                              throw UnsupportedError('unsupported');
-                          }
-                      }
-                      widget.onDeleted();
-                      return true;
-                    },
-                  ));
+                          ],
+                        );
+                      case SystemContact():
+                        switch (contact.type) {
+                          case SystemContactType.fileTransfer:
+                            final userId = ref
+                                .read(loggedInUserViewModel)!
+                                .userId;
+                            messageRepository.delete(
+                              participantIds: [userId, userId],
+                            );
+                          case SystemContactType.requestNotification:
+                            throw UnsupportedError('unsupported');
+                        }
+                    }
+                    widget.onDeleted();
+                    return true;
+                  },
+                ),
+              );
             },
           ),
         ],
@@ -211,21 +234,27 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
 
   Stack _buildAvatar() {
     final contact = widget.item.contact;
-    return Stack(clipBehavior: Clip.none, children: [
-      TAvatar(
-        id: contact.id,
-        name: contact.name,
-        image: contact.image,
-        presence: contact is UserContact ? contact.presence : UserPresence.none,
-      ),
-    ]);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        TAvatar(
+          id: contact.id,
+          name: contact.name,
+          image: contact.image,
+          presence: contact is UserContact
+              ? contact.presence
+              : UserPresence.none,
+        ),
+      ],
+    );
   }
 
   Column _buildConversation(
-      BuildContext context,
-      AppThemeExtension appThemeExtension,
-      AppLocalizations appLocalizations,
-      bool enableNewMessageNotification) {
+    BuildContext context,
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+    bool enableNewMessageNotification,
+  ) {
     final item = widget.item;
     final String? draft;
     final latestMessage = item.latestMessage;
@@ -236,121 +265,140 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
     }
     final now = DateTime.now();
     return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-              child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             spacing: 12,
             children: [
               Flexible(
-                  child: Text.rich(
-                TextSpan(children: item.nameTextSpans),
-                style: _useBoldText
-                    ? const TextStyle(fontWeight: _fontWeightBold)
-                    : null,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                softWrap: false,
-              )),
+                child: Text.rich(
+                  TextSpan(children: item.nameTextSpans),
+                  style: _useBoldText
+                      ? const TextStyle(fontWeight: _fontWeightBold)
+                      : null,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
               _buildDatetime(
-                  latestMessage, now, appLocalizations, appThemeExtension)
+                latestMessage,
+                now,
+                appLocalizations,
+                appThemeExtension,
+              ),
             ],
-          )),
-          _buildMessage(draft, appThemeExtension, appLocalizations,
-              latestMessage, enableNewMessageNotification)
-        ]);
+          ),
+        ),
+        _buildMessage(
+          draft,
+          appThemeExtension,
+          appLocalizations,
+          latestMessage,
+          enableNewMessageNotification,
+        ),
+      ],
+    );
   }
 
-  Text _buildDatetime(ChatMessage? latestMessage, DateTime now,
-      AppLocalizations appLocalizations, AppThemeExtension appThemeExtension) {
+  Text _buildDatetime(
+    ChatMessage? latestMessage,
+    DateTime now,
+    AppLocalizations appLocalizations,
+    AppThemeExtension appThemeExtension,
+  ) {
     final timestamp = latestMessage?.timestamp;
     return Text(
       timestamp == null || widget.isSearching
           ? ''
           : DateUtils.isSameDay(now, timestamp)
-              ? ref.watch(dateFormatViewModel_jm).format(timestamp)
-              : DateUtils.isSameMonth(now, timestamp)
-                  ? ref.watch(dateFormatViewModel_Md).format(timestamp)
-                  : DateUtils.isSameDay(
-                          now.subtract(const Duration(days: 1)), timestamp)
-                      ? appLocalizations.yesterday
-                      : ref.watch(dateFormatViewModel_yMd).format(timestamp),
+          ? ref.watch(dateFormatViewModel_jm).format(timestamp)
+          : DateUtils.isSameMonth(now, timestamp)
+          ? ref.watch(dateFormatViewModel_Md).format(timestamp)
+          : DateUtils.isSameDay(
+              now.subtract(const Duration(days: 1)),
+              timestamp,
+            )
+          ? appLocalizations.yesterday
+          : ref.watch(dateFormatViewModel_yMd).format(timestamp),
       style: _useBoldText
-          ? appThemeExtension.conversationTileTimestampTextStyle
-              .copyWith(fontWeight: _fontWeightBold)
+          ? appThemeExtension.conversationTileTimestampTextStyle.copyWith(
+              fontWeight: _fontWeightBold,
+            )
           : appThemeExtension.conversationTileTimestampTextStyle,
       strutStyle: const StrutStyle(fontSize: 14, forceStrutHeight: true),
     );
   }
 
   Row _buildMessage(
-      String? draft,
-      AppThemeExtension appThemeExtension,
-      AppLocalizations localizations,
-      ChatMessage? latestMessage,
-      bool enableNewMessageNotification) {
+    String? draft,
+    AppThemeExtension appThemeExtension,
+    AppLocalizations localizations,
+    ChatMessage? latestMessage,
+    bool enableNewMessageNotification,
+  ) {
     final children = draft?.isNotBlank ?? false
         ? [
             // Note: the draft is always a text instead of image, video, or etc as
             // we haven't supported embedded images, videos, and etc, into a message.
             TextSpan(
-                text: '[${localizations.draft}]',
-                style: _useBoldText
-                    ? appThemeExtension.conversationTileDraftTextStyle
-                        .copyWith(fontWeight: _fontWeightBold)
-                    : appThemeExtension.conversationTileDraftTextStyle),
+              text: '[${localizations.draft}]',
+              style: _useBoldText
+                  ? appThemeExtension.conversationTileDraftTextStyle.copyWith(
+                      fontWeight: _fontWeightBold,
+                    )
+                  : appThemeExtension.conversationTileDraftTextStyle,
+            ),
             TextSpan(text: draft),
           ]
         : latestMessage == null
-            ? <TextSpan>[]
-            : switch (latestMessage.type) {
-                MessageType.text => [TextSpan(text: latestMessage.text)],
-                MessageType.image => [
-                    const WidgetSpan(
-                        child: Icon(Symbols.image_rounded,
-                            size: _messageIconSize)),
-                    TextSpan(
-                      text: localizations.image,
-                    )
-                  ],
-                MessageType.file => [
-                    const WidgetSpan(
-                        child: Icon(Symbols.description_rounded,
-                            size: _messageIconSize)),
-                    TextSpan(
-                      text: localizations.file,
-                    )
-                  ],
-                MessageType.video => [
-                    const WidgetSpan(
-                        child: Icon(Symbols.video_file_rounded,
-                            size: _messageIconSize)),
-                    TextSpan(
-                      text: localizations.video,
-                    )
-                  ],
-                MessageType.audio => [
-                    const WidgetSpan(
-                        child: Icon(Symbols.audio_file_rounded,
-                            size: _messageIconSize)),
-                    TextSpan(
-                      text: localizations.audio,
-                    )
-                  ],
-                MessageType.youtube => [
-                    const WidgetSpan(
-                        child: Icon(Symbols.smart_display_rounded,
-                            size: _messageIconSize)),
-                    TextSpan(
-                      text: localizations.youtube,
-                    )
-                  ],
-              };
+        ? <TextSpan>[]
+        : switch (latestMessage.type) {
+            MessageType.text => [TextSpan(text: latestMessage.text)],
+            MessageType.image => [
+              const WidgetSpan(
+                child: Icon(Symbols.image_rounded, size: _messageIconSize),
+              ),
+              TextSpan(text: localizations.image),
+            ],
+            MessageType.file => [
+              const WidgetSpan(
+                child: Icon(
+                  Symbols.description_rounded,
+                  size: _messageIconSize,
+                ),
+              ),
+              TextSpan(text: localizations.file),
+            ],
+            MessageType.video => [
+              const WidgetSpan(
+                child: Icon(Symbols.video_file_rounded, size: _messageIconSize),
+              ),
+              TextSpan(text: localizations.video),
+            ],
+            MessageType.audio => [
+              const WidgetSpan(
+                child: Icon(Symbols.audio_file_rounded, size: _messageIconSize),
+              ),
+              TextSpan(text: localizations.audio),
+            ],
+            MessageType.youtube => [
+              const WidgetSpan(
+                child: Icon(
+                  Symbols.smart_display_rounded,
+                  size: _messageIconSize,
+                ),
+              ),
+              TextSpan(text: localizations.youtube),
+            ],
+          };
     final strutStyle = StrutStyle(
-        fontSize: appThemeExtension.conversationTileMessageTextStyle.fontSize!,
-        forceStrutHeight: true);
+      fontSize: appThemeExtension.conversationTileMessageTextStyle.fontSize!,
+      forceStrutHeight: true,
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -358,9 +406,9 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
           child: widget.isSearching
               ? Text.rich(
                   TextSpan(
-                      children:
-                          (widget.item as ConversationTileItemForSearchMode)
-                              .messageTextSpans),
+                    children: (widget.item as ConversationTileItemForSearchMode)
+                        .messageTextSpans,
+                  ),
                   style: appThemeExtension.conversationTileMessageTextStyle,
                   strutStyle: strutStyle,
                   overflow: TextOverflow.ellipsis,
@@ -371,7 +419,7 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
                   TextSpan(children: children),
                   style: _useBoldText
                       ? appThemeExtension.conversationTileMessageTextStyle
-                          .copyWith(fontWeight: _fontWeightBold)
+                            .copyWith(fontWeight: _fontWeightBold)
                       : appThemeExtension.conversationTileMessageTextStyle,
                   strutStyle: strutStyle,
                   overflow: TextOverflow.ellipsis,
@@ -382,12 +430,13 @@ class _ConversationTileState extends ConsumerState<ConversationTile> {
         if (enableNewMessageNotification)
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Icon(Symbols.notifications_off_rounded,
-                size: 14,
-                // TODO
-                color:
-                    appThemeExtension.conversationTileMessageTextStyle.color!),
-          )
+            child: Icon(
+              Symbols.notifications_off_rounded,
+              size: 14,
+              // TODO
+              color: appThemeExtension.conversationTileMessageTextStyle.color!,
+            ),
+          ),
       ],
     );
   }
@@ -407,20 +456,23 @@ class _PinnedConversationMarkerPainter extends CustomPainter {
     final radius = Radius.circular(height / 2 + dimension / 8);
 
     canvas.drawPath(
-        Path()
-          ..moveTo(_leg, 0)
-          ..arcToPoint(const Offset(0, _leg), radius: radius, clockwise: false)
-          ..lineTo(0, dimension - _leg)
-          ..arcToPoint(Offset(_leg, dimension),
-              radius: radius, clockwise: false)
-          ..lineTo(dimension, _leg)
-          ..arcToPoint(Offset(dimension - _leg, 0),
-              radius: radius, clockwise: false)
-          ..lineTo(_leg, 0)
-          ..close(),
-        Paint()
-          ..color = const Color.fromARGB(255, 170, 207, 244)
-          ..style = PaintingStyle.fill);
+      Path()
+        ..moveTo(_leg, 0)
+        ..arcToPoint(const Offset(0, _leg), radius: radius, clockwise: false)
+        ..lineTo(0, dimension - _leg)
+        ..arcToPoint(Offset(_leg, dimension), radius: radius, clockwise: false)
+        ..lineTo(dimension, _leg)
+        ..arcToPoint(
+          Offset(dimension - _leg, 0),
+          radius: radius,
+          clockwise: false,
+        )
+        ..lineTo(_leg, 0)
+        ..close(),
+      Paint()
+        ..color = const Color.fromARGB(255, 170, 207, 244)
+        ..style = PaintingStyle.fill,
+    );
   }
 
   @override
@@ -428,11 +480,12 @@ class _PinnedConversationMarkerPainter extends CustomPainter {
 }
 
 sealed class ConversationTileItem {
-  const ConversationTileItem(
-      {required this.conversationId,
-      required this.contact,
-      required this.nameTextSpans,
-      this.latestMessage});
+  const ConversationTileItem({
+    required this.conversationId,
+    required this.contact,
+    required this.nameTextSpans,
+    this.latestMessage,
+  });
 
   final IntListHolder conversationId;
   final Contact contact;
@@ -445,21 +498,23 @@ class ConversationTileItemForNormalMode extends ConversationTileItem {
     required super.nameTextSpans,
     required this.conversation,
   }) : super(
-            conversationId: conversation.id,
-            contact: conversation.contact,
-            latestMessage: conversation.messages.lastOrNull);
+         conversationId: conversation.id,
+         contact: conversation.contact,
+         latestMessage: conversation.messages.lastOrNull,
+       );
 
   final Conversation conversation;
 }
 
 class ConversationTileItemForSearchMode extends ConversationTileItem {
-  const ConversationTileItemForSearchMode(
-      {required super.conversationId,
-      required super.contact,
-      required super.nameTextSpans,
-      required super.latestMessage,
-      required this.count,
-      required this.messageTextSpans});
+  const ConversationTileItemForSearchMode({
+    required super.conversationId,
+    required super.contact,
+    required super.nameTextSpans,
+    required super.latestMessage,
+    required this.count,
+    required this.messageTextSpans,
+  });
 
   final int count;
   final List<TextSpan> messageTextSpans;

@@ -35,20 +35,24 @@ class WindowUtils {
 
   static Future<void> ensureInitialized() => windowManager.ensureInitialized();
 
-  static Future<void> setupWindow(
-      {Size? size,
-      Size? minimumSize,
-      bool resizable = false,
-      Color? backgroundColor,
-      String? title}) async {
-    await windowManager.waitUntilReadyToShow(WindowOptions(
+  static Future<void> setupWindow({
+    Size? size,
+    Size? minimumSize,
+    bool resizable = false,
+    Color? backgroundColor,
+    String? title,
+  }) async {
+    await windowManager.waitUntilReadyToShow(
+      WindowOptions(
         minimumSize: minimumSize,
         size: size,
         backgroundColor: Colors.transparent,
         center: true,
         titleBarStyle: TitleBarStyle.hidden,
         skipTaskbar: false,
-        title: title));
+        title: title,
+      ),
+    );
     if (backgroundColor != null) {
       await windowManager.setBackgroundColor(backgroundColor);
     }

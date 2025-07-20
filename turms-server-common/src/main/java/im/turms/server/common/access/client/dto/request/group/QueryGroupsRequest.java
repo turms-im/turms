@@ -28,8 +28,8 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryGroupsRequest.class.getName());
     }
@@ -95,7 +95,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
     private int groupIdsMemoizedSerializedSize = -1;
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>
@@ -168,7 +168,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int SKIP_FIELD_NUMBER = 10;
-    private int skip_;
+    private int skip_ = 0;
 
     /**
      * <code>optional int32 skip = 10;</code>
@@ -191,7 +191,7 @@ public final class QueryGroupsRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int LIMIT_FIELD_NUMBER = 11;
-    private int limit_;
+    private int limit_ = 0;
 
     /**
      * <code>optional int32 limit = 11;</code>

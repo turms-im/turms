@@ -28,8 +28,8 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateGroupMemberRequest.class.getName());
     }
@@ -42,6 +42,7 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
     private UpdateGroupMemberRequest() {
         name_ = "";
         role_ = 0;
+        note_ = "";
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -210,6 +211,56 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         return muteEndDate_;
     }
 
+    public static final int NOTE_FIELD_NUMBER = 6;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object note_ = "";
+
+    /**
+     * <code>optional string note = 6;</code>
+     *
+     * @return Whether the note field is set.
+     */
+    @java.lang.Override
+    public boolean hasNote() {
+        return ((bitField0_ & 0x00000008) != 0);
+    }
+
+    /**
+     * <code>optional string note = 6;</code>
+     *
+     * @return The note.
+     */
+    @java.lang.Override
+    public java.lang.String getNote() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            note_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string note = 6;</code>
+     *
+     * @return The bytes for note.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNoteBytes() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            note_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
     public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
     @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
@@ -289,6 +340,9 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         if (((bitField0_ & 0x00000004) != 0)) {
             output.writeInt64(5, muteEndDate_);
         }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            com.google.protobuf.GeneratedMessage.writeString(output, 6, note_);
+        }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
         }
@@ -317,6 +371,9 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         }
         if (((bitField0_ & 0x00000004) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(5, muteEndDate_);
+        }
+        if (((bitField0_ & 0x00000008) != 0)) {
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(6, note_);
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
@@ -365,6 +422,14 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
                 return false;
             }
         }
+        if (hasNote() != other.hasNote()) {
+            return false;
+        }
+        if (hasNote()) {
+            if (!getNote().equals(other.getNote())) {
+                return false;
+            }
+        }
         return getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -391,6 +456,10 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         if (hasMuteEndDate()) {
             hash = (37 * hash) + MUTE_END_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getMuteEndDate());
+        }
+        if (hasNote()) {
+            hash = (37 * hash) + NOTE_FIELD_NUMBER;
+            hash = (53 * hash) + getNote().hashCode();
         }
         if (getCustomAttributesCount() > 0) {
             hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
@@ -543,13 +612,14 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
             name_ = "";
             role_ = 0;
             muteEndDate_ = 0L;
+            note_ = "";
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
                 customAttributes_ = null;
                 customAttributesBuilder_.clear();
             }
-            bitField0_ &= ~0x00000020;
+            bitField0_ &= ~0x00000040;
             return this;
         }
 
@@ -590,9 +660,9 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.request.group.member.UpdateGroupMemberRequest result) {
             if (customAttributesBuilder_ == null) {
-                if (((bitField0_ & 0x00000020) != 0)) {
+                if (((bitField0_ & 0x00000040) != 0)) {
                     customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
-                    bitField0_ &= ~0x00000020;
+                    bitField0_ &= ~0x00000040;
                 }
                 result.customAttributes_ = customAttributes_;
             } else {
@@ -621,6 +691,10 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
             if (((from_bitField0_ & 0x00000010) != 0)) {
                 result.muteEndDate_ = muteEndDate_;
                 to_bitField0_ |= 0x00000004;
+            }
+            if (((from_bitField0_ & 0x00000020) != 0)) {
+                result.note_ = note_;
+                to_bitField0_ |= 0x00000008;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -659,11 +733,16 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
             if (other.hasMuteEndDate()) {
                 setMuteEndDate(other.getMuteEndDate());
             }
+            if (other.hasNote()) {
+                note_ = other.note_;
+                bitField0_ |= 0x00000020;
+                onChanged();
+            }
             if (customAttributesBuilder_ == null) {
                 if (!other.customAttributes_.isEmpty()) {
                     if (customAttributes_.isEmpty()) {
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000020;
+                        bitField0_ &= ~0x00000040;
                     } else {
                         ensureCustomAttributesIsMutable();
                         customAttributes_.addAll(other.customAttributes_);
@@ -676,7 +755,7 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
                         customAttributesBuilder_.dispose();
                         customAttributesBuilder_ = null;
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000020;
+                        bitField0_ &= ~0x00000040;
                         customAttributesBuilder_ =
                                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getCustomAttributesFieldBuilder()
@@ -730,6 +809,10 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
                             muteEndDate_ = input.readInt64();
                             bitField0_ |= 0x00000010;
                         } // case 40
+                        case 50 -> {
+                            note_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000020;
+                        } // case 50
                         case 122 -> {
                             im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
@@ -1089,13 +1172,103 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
             return this;
         }
 
+        private java.lang.Object note_ = "";
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @return Whether the note field is set.
+         */
+        public boolean hasNote() {
+            return ((bitField0_ & 0x00000020) != 0);
+        }
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @return The note.
+         */
+        public java.lang.String getNote() {
+            java.lang.Object ref = note_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                note_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @return The bytes for note.
+         */
+        public com.google.protobuf.ByteString getNoteBytes() {
+            java.lang.Object ref = note_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                note_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @param value The note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNote(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            note_ = value;
+            bitField0_ |= 0x00000020;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearNote() {
+            note_ = getDefaultInstance().getNote();
+            bitField0_ &= ~0x00000020;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 6;</code>
+         *
+         * @param value The bytes for note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNoteBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            note_ = value;
+            bitField0_ |= 0x00000020;
+            onChanged();
+            return this;
+        }
+
         private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
                 java.util.Collections.emptyList();
 
         private void ensureCustomAttributesIsMutable() {
-            if ((bitField0_ & 0x00000020) == 0) {
+            if ((bitField0_ & 0x00000040) == 0) {
                 customAttributes_ = new java.util.ArrayList<>(customAttributes_);
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000040;
             }
         }
 
@@ -1259,7 +1432,7 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
         public Builder clearCustomAttributes() {
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
-                bitField0_ &= ~0x00000020;
+                bitField0_ &= ~0x00000040;
                 onChanged();
             } else {
                 customAttributesBuilder_.clear();
@@ -1342,7 +1515,7 @@ public final class UpdateGroupMemberRequest extends com.google.protobuf.Generate
             if (customAttributesBuilder_ == null) {
                 customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         customAttributes_,
-                        ((bitField0_ & 0x00000020) != 0),
+                        ((bitField0_ & 0x00000040) != 0),
                         getParentForChildren(),
                         isClean());
                 customAttributes_ = null;

@@ -28,8 +28,8 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupMember.class.getName());
     }
@@ -43,7 +43,8 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         name_ = "";
         role_ = 0;
         userStatus_ = 0;
-        usingDeviceTypes_ = java.util.Collections.emptyList();
+        usingDeviceTypes_ = emptyIntList();
+        note_ = "";
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -61,7 +62,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 1;</code>
@@ -84,7 +85,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     }
 
     public static final int USER_ID_FIELD_NUMBER = 2;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>optional int64 user_id = 2;</code>
@@ -157,7 +158,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     }
 
     public static final int ROLE_FIELD_NUMBER = 4;
-    private int role_;
+    private int role_ = 0;
 
     /**
      * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
@@ -194,7 +195,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     }
 
     public static final int JOIN_DATE_FIELD_NUMBER = 5;
-    private long joinDate_;
+    private long joinDate_ = 0L;
 
     /**
      * <code>optional int64 join_date = 5;</code>
@@ -217,7 +218,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 6;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 6;</code>
@@ -240,7 +241,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     }
 
     public static final int USER_STATUS_FIELD_NUMBER = 7;
-    private int userStatus_;
+    private int userStatus_ = 0;
 
     /**
      * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
@@ -278,8 +279,8 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
 
     public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 8;
     @SuppressWarnings("serial")
-    private java.util.List<java.lang.Integer> usingDeviceTypes_;
-    private static final com.google.protobuf.Internal.ListAdapter.Converter<java.lang.Integer, im.turms.server.common.access.client.dto.constant.DeviceType> usingDeviceTypes_converter_ =
+    private com.google.protobuf.Internal.IntList usingDeviceTypes_;
+    private static final com.google.protobuf.Internal.IntListAdapter.IntConverter<im.turms.server.common.access.client.dto.constant.DeviceType> usingDeviceTypes_converter_ =
             from -> {
                 im.turms.server.common.access.client.dto.constant.DeviceType result =
                         im.turms.server.common.access.client.dto.constant.DeviceType
@@ -296,7 +297,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
      */
     @java.lang.Override
     public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
-        return new com.google.protobuf.Internal.ListAdapter<>(
+        return new com.google.protobuf.Internal.IntListAdapter<>(
                 usingDeviceTypes_,
                 usingDeviceTypes_converter_);
     }
@@ -320,7 +321,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
     @java.lang.Override
     public im.turms.server.common.access.client.dto.constant.DeviceType getUsingDeviceTypes(
             int index) {
-        return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
+        return usingDeviceTypes_converter_.convert(usingDeviceTypes_.getInt(index));
     }
 
     /**
@@ -341,10 +342,60 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
      */
     @java.lang.Override
     public int getUsingDeviceTypesValue(int index) {
-        return usingDeviceTypes_.get(index);
+        return usingDeviceTypes_.getInt(index);
     }
 
     private int usingDeviceTypesMemoizedSerializedSize;
+
+    public static final int NOTE_FIELD_NUMBER = 9;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object note_ = "";
+
+    /**
+     * <code>optional string note = 9;</code>
+     *
+     * @return Whether the note field is set.
+     */
+    @java.lang.Override
+    public boolean hasNote() {
+        return ((bitField0_ & 0x00000080) != 0);
+    }
+
+    /**
+     * <code>optional string note = 9;</code>
+     *
+     * @return The note.
+     */
+    @java.lang.Override
+    public java.lang.String getNote() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            note_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string note = 9;</code>
+     *
+     * @return The bytes for note.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNoteBytes() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            note_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
 
     public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
     @SuppressWarnings("serial")
@@ -436,8 +487,11 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             output.writeUInt32NoTag(66);
             output.writeUInt32NoTag(usingDeviceTypesMemoizedSerializedSize);
         }
-        for (Integer integer : usingDeviceTypes_) {
-            output.writeEnumNoTag(integer);
+        for (int i = 0; i < usingDeviceTypes_.size(); i++) {
+            output.writeEnumNoTag(usingDeviceTypes_.getInt(i));
+        }
+        if (((bitField0_ & 0x00000080) != 0)) {
+            com.google.protobuf.GeneratedMessage.writeString(output, 9, note_);
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
@@ -476,8 +530,9 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         }
         {
             int dataSize = 0;
-            for (Integer integer : usingDeviceTypes_) {
-                dataSize += com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag(integer);
+            for (int i = 0; i < usingDeviceTypes_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeEnumSizeNoTag(usingDeviceTypes_.getInt(i));
             }
             size += dataSize;
             if (!getUsingDeviceTypesList().isEmpty()) {
@@ -485,6 +540,9 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 size += com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(dataSize);
             }
             usingDeviceTypesMemoizedSerializedSize = dataSize;
+        }
+        if (((bitField0_ & 0x00000080) != 0)) {
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(9, note_);
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
@@ -559,8 +617,18 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 return false;
             }
         }
-        return usingDeviceTypes_.equals(other.usingDeviceTypes_)
-                && getCustomAttributesList().equals(other.getCustomAttributesList())
+        if (!usingDeviceTypes_.equals(other.usingDeviceTypes_)) {
+            return false;
+        }
+        if (hasNote() != other.hasNote()) {
+            return false;
+        }
+        if (hasNote()) {
+            if (!getNote().equals(other.getNote())) {
+                return false;
+            }
+        }
+        return getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -602,6 +670,10 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         if (getUsingDeviceTypesCount() > 0) {
             hash = (37 * hash) + USING_DEVICE_TYPES_FIELD_NUMBER;
             hash = (53 * hash) + usingDeviceTypes_.hashCode();
+        }
+        if (hasNote()) {
+            hash = (37 * hash) + NOTE_FIELD_NUMBER;
+            hash = (53 * hash) + getNote().hashCode();
         }
         if (getCustomAttributesCount() > 0) {
             hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
@@ -756,14 +828,16 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             joinDate_ = 0L;
             muteEndDate_ = 0L;
             userStatus_ = 0;
-            usingDeviceTypes_ = java.util.Collections.emptyList();
+            usingDeviceTypes_ = emptyIntList();
+            bitField0_ &= ~0x00000080;
+            note_ = "";
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
                 customAttributes_ = null;
                 customAttributesBuilder_.clear();
             }
-            bitField0_ &= ~0x00000100;
+            bitField0_ &= ~0x00000200;
             return this;
         }
 
@@ -803,14 +877,14 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.model.group.GroupMember result) {
             if (((bitField0_ & 0x00000080) != 0)) {
-                usingDeviceTypes_ = java.util.Collections.unmodifiableList(usingDeviceTypes_);
+                usingDeviceTypes_.makeImmutable();
                 bitField0_ &= ~0x00000080;
             }
             result.usingDeviceTypes_ = usingDeviceTypes_;
             if (customAttributesBuilder_ == null) {
-                if (((bitField0_ & 0x00000100) != 0)) {
+                if (((bitField0_ & 0x00000200) != 0)) {
                     customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
-                    bitField0_ &= ~0x00000100;
+                    bitField0_ &= ~0x00000200;
                 }
                 result.customAttributes_ = customAttributes_;
             } else {
@@ -849,6 +923,10 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             if (((from_bitField0_ & 0x00000040) != 0)) {
                 result.userStatus_ = userStatus_;
                 to_bitField0_ |= 0x00000040;
+            }
+            if (((from_bitField0_ & 0x00000100) != 0)) {
+                result.note_ = note_;
+                to_bitField0_ |= 0x00000080;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -903,11 +981,16 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 }
                 onChanged();
             }
+            if (other.hasNote()) {
+                note_ = other.note_;
+                bitField0_ |= 0x00000100;
+                onChanged();
+            }
             if (customAttributesBuilder_ == null) {
                 if (!other.customAttributes_.isEmpty()) {
                     if (customAttributes_.isEmpty()) {
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000100;
+                        bitField0_ &= ~0x00000200;
                     } else {
                         ensureCustomAttributesIsMutable();
                         customAttributes_.addAll(other.customAttributes_);
@@ -920,7 +1003,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                         customAttributesBuilder_.dispose();
                         customAttributesBuilder_ = null;
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000100;
+                        bitField0_ &= ~0x00000200;
                         customAttributesBuilder_ =
                                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getCustomAttributesFieldBuilder()
@@ -985,7 +1068,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                         case 64 -> {
                             int tmpRaw = input.readEnum();
                             ensureUsingDeviceTypesIsMutable();
-                            usingDeviceTypes_.add(tmpRaw);
+                            usingDeviceTypes_.addInt(tmpRaw);
                         } // case 64
                         case 66 -> {
                             int length = input.readRawVarint32();
@@ -993,10 +1076,14 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                             while (input.getBytesUntilLimit() > 0) {
                                 int tmpRaw = input.readEnum();
                                 ensureUsingDeviceTypesIsMutable();
-                                usingDeviceTypes_.add(tmpRaw);
+                                usingDeviceTypes_.addInt(tmpRaw);
                             }
                             input.popLimit(oldLimit);
                         } // case 66
+                        case 74 -> {
+                            note_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000100;
+                        } // case 74
                         case 122 -> {
                             im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
@@ -1213,7 +1300,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             return this;
         }
 
-        private int role_;
+        private int role_ = 0;
 
         /**
          * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
@@ -1388,7 +1475,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             return this;
         }
 
-        private int userStatus_;
+        private int userStatus_ = 0;
 
         /**
          * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
@@ -1467,12 +1554,11 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             return this;
         }
 
-        private java.util.List<java.lang.Integer> usingDeviceTypes_ =
-                java.util.Collections.emptyList();
+        private com.google.protobuf.Internal.IntList usingDeviceTypes_ = emptyIntList();
 
         private void ensureUsingDeviceTypesIsMutable() {
             if ((bitField0_ & 0x00000080) == 0) {
-                usingDeviceTypes_ = new java.util.ArrayList<>(usingDeviceTypes_);
+                usingDeviceTypes_ = makeMutableCopy(usingDeviceTypes_);
                 bitField0_ |= 0x00000080;
             }
         }
@@ -1483,7 +1569,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          * @return A list containing the usingDeviceTypes.
          */
         public java.util.List<im.turms.server.common.access.client.dto.constant.DeviceType> getUsingDeviceTypesList() {
-            return new com.google.protobuf.Internal.ListAdapter<>(
+            return new com.google.protobuf.Internal.IntListAdapter<>(
                     usingDeviceTypes_,
                     usingDeviceTypes_converter_);
         }
@@ -1505,7 +1591,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          */
         public im.turms.server.common.access.client.dto.constant.DeviceType getUsingDeviceTypes(
                 int index) {
-            return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
+            return usingDeviceTypes_converter_.convert(usingDeviceTypes_.getInt(index));
         }
 
         /**
@@ -1522,7 +1608,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 throw new NullPointerException();
             }
             ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.set(index, value.getNumber());
+            usingDeviceTypes_.setInt(index, value.getNumber());
             onChanged();
             return this;
         }
@@ -1539,7 +1625,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 throw new NullPointerException();
             }
             ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.add(value.getNumber());
+            usingDeviceTypes_.addInt(value.getNumber());
             onChanged();
             return this;
         }
@@ -1554,7 +1640,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 java.lang.Iterable<? extends im.turms.server.common.access.client.dto.constant.DeviceType> values) {
             ensureUsingDeviceTypesIsMutable();
             for (im.turms.server.common.access.client.dto.constant.DeviceType value : values) {
-                usingDeviceTypes_.add(value.getNumber());
+                usingDeviceTypes_.addInt(value.getNumber());
             }
             onChanged();
             return this;
@@ -1566,7 +1652,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          * @return This builder for chaining.
          */
         public Builder clearUsingDeviceTypes() {
-            usingDeviceTypes_ = java.util.Collections.emptyList();
+            usingDeviceTypes_ = emptyIntList();
             bitField0_ &= ~0x00000080;
             onChanged();
             return this;
@@ -1588,7 +1674,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
          */
         public int getUsingDeviceTypesValue(int index) {
-            return usingDeviceTypes_.get(index);
+            return usingDeviceTypes_.getInt(index);
         }
 
         /**
@@ -1600,7 +1686,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          */
         public Builder setUsingDeviceTypesValue(int index, int value) {
             ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.set(index, value);
+            usingDeviceTypes_.setInt(index, value);
             onChanged();
             return this;
         }
@@ -1613,7 +1699,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
          */
         public Builder addUsingDeviceTypesValue(int value) {
             ensureUsingDeviceTypesIsMutable();
-            usingDeviceTypes_.add(value);
+            usingDeviceTypes_.addInt(value);
             onChanged();
             return this;
         }
@@ -1627,8 +1713,98 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         public Builder addAllUsingDeviceTypesValue(java.lang.Iterable<java.lang.Integer> values) {
             ensureUsingDeviceTypesIsMutable();
             for (int value : values) {
-                usingDeviceTypes_.add(value);
+                usingDeviceTypes_.addInt(value);
             }
+            onChanged();
+            return this;
+        }
+
+        private java.lang.Object note_ = "";
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @return Whether the note field is set.
+         */
+        public boolean hasNote() {
+            return ((bitField0_ & 0x00000100) != 0);
+        }
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @return The note.
+         */
+        public java.lang.String getNote() {
+            java.lang.Object ref = note_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                note_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @return The bytes for note.
+         */
+        public com.google.protobuf.ByteString getNoteBytes() {
+            java.lang.Object ref = note_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                note_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @param value The note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNote(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            note_ = value;
+            bitField0_ |= 0x00000100;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearNote() {
+            note_ = getDefaultInstance().getNote();
+            bitField0_ &= ~0x00000100;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 9;</code>
+         *
+         * @param value The bytes for note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNoteBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            note_ = value;
+            bitField0_ |= 0x00000100;
             onChanged();
             return this;
         }
@@ -1637,9 +1813,9 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
                 java.util.Collections.emptyList();
 
         private void ensureCustomAttributesIsMutable() {
-            if ((bitField0_ & 0x00000100) == 0) {
+            if ((bitField0_ & 0x00000200) == 0) {
                 customAttributes_ = new java.util.ArrayList<>(customAttributes_);
-                bitField0_ |= 0x00000100;
+                bitField0_ |= 0x00000200;
             }
         }
 
@@ -1803,7 +1979,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
         public Builder clearCustomAttributes() {
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
-                bitField0_ &= ~0x00000100;
+                bitField0_ &= ~0x00000200;
                 onChanged();
             } else {
                 customAttributesBuilder_.clear();
@@ -1886,7 +2062,7 @@ public final class GroupMember extends com.google.protobuf.GeneratedMessage impl
             if (customAttributesBuilder_ == null) {
                 customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         customAttributes_,
-                        ((bitField0_ & 0x00000100) != 0),
+                        ((bitField0_ & 0x00000200) != 0),
                         getParentForChildren(),
                         isClean());
                 customAttributes_ = null;

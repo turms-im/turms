@@ -54,36 +54,42 @@ class UserSessionManager {
   StateController<User?>? _loggedInUserController;
   StateController<UserSettings?>? _userSettingsController;
   IdToConversationSettingsViewModelNotifier?
-      _idToConversationSettingsController;
+  _idToConversationSettingsController;
   StateController<TAsyncData<List<Contact>>>? _contactsDataController;
   StateController<TAsyncData<List<RelationshipGroup>>>?
-      _relationshipGroupsDataController;
+  _relationshipGroupsDataController;
   ConversationsDataViewModelNotifier? _conversationsDataController;
   SelectedConversationViewModelNotifier? _selectedConversationController;
 
-  Future<void> onLoggedIn(
-      {required WidgetRef ref,
-      required bool rememberMe,
-      required User user,
-      required String password}) async {
+  Future<void> onLoggedIn({
+    required WidgetRef ref,
+    required bool rememberMe,
+    required User user,
+    required String password,
+  }) async {
     _loggedInUserController = ref.read(loggedInUserViewModel.notifier);
     _userSettingsController = ref.read(userSettingsViewModel.notifier);
-    _idToConversationSettingsController =
-        ref.read(idToConversationSettingsViewModel.notifier);
+    _idToConversationSettingsController = ref.read(
+      idToConversationSettingsViewModel.notifier,
+    );
     _contactsDataController = ref.read(contactsDataViewModel.notifier);
-    _relationshipGroupsDataController =
-        ref.read(relationshipGroupsDataViewModel.notifier);
-    _conversationsDataController =
-        ref.read(conversationsDataViewModel.notifier);
-    _selectedConversationController =
-        ref.read(selectedConversationViewModel.notifier);
+    _relationshipGroupsDataController = ref.read(
+      relationshipGroupsDataViewModel.notifier,
+    );
+    _conversationsDataController = ref.read(
+      conversationsDataViewModel.notifier,
+    );
+    _selectedConversationController = ref.read(
+      selectedConversationViewModel.notifier,
+    );
 
     // init repositories
     final userId = user.userId;
     final userDatabase = createUserDatabaseIfNotExists(userId);
     final userMessageDatabase = createUserMessageDatabaseIfNotExists(userId);
-    final conversationSettingRepository =
-        ConversationSettingRepository(userDatabase);
+    final conversationSettingRepository = ConversationSettingRepository(
+      userDatabase,
+    );
     final messageRepository = MessageRepository(userMessageDatabase);
     ref.read(conversationSettingRepositoryProvider.notifier).state =
         conversationSettingRepository;
@@ -108,8 +114,8 @@ class UserSessionManager {
     } else {
       await userLoginInfoRepository.deleteAll();
     }
-    final _logAppenderDatabase = LogAppenderDatabase(userId: _loggedInUserId);
-    logger.addAppender(_logAppenderDatabase);
+    final logAppenderDatabase = LogAppenderDatabase(userId: _loggedInUserId);
+    logger.addAppender(logAppenderDatabase);
     await appSettingRepository.upsertRememberMe(shouldRemember);
     // read user settings
     _userSettingsController!.state = await _getUserSettings();
@@ -120,10 +126,12 @@ class UserSessionManager {
   }
 
   Future<UserSettings> _getUserSettings() async {
-    final userSettingsTableData =
-        await userSettingRepository.selectAll(_loggedInUserId);
-    final (userSettings, exception) =
-        UserSettings.fromTableData(userSettingsTableData);
+    final userSettingsTableData = await userSettingRepository.selectAll(
+      _loggedInUserId,
+    );
+    final (userSettings, exception) = UserSettings.fromTableData(
+      userSettingsTableData,
+    );
     if (exception != null) {
       if (kReleaseMode) {
         logger.warn('Failed to read user settings: ${exception.toString()}');
@@ -136,32 +144,42 @@ class UserSessionManager {
       switch (type) {
         case HomePageAction.showChatPage:
           if (!userSettings.shortcutShowChatPage.initialized) {
-            userSettings.shortcutShowChatPage =
-                Shortcut(type.defaultShortcutActivator, true);
+            userSettings.shortcutShowChatPage = Shortcut(
+              type.defaultShortcutActivator,
+              true,
+            );
           }
           break;
         case HomePageAction.showContactsPage:
           if (!userSettings.shortcutShowContactsPage.initialized) {
-            userSettings.shortcutShowContactsPage =
-                Shortcut(type.defaultShortcutActivator, true);
+            userSettings.shortcutShowContactsPage = Shortcut(
+              type.defaultShortcutActivator,
+              true,
+            );
           }
           break;
         case HomePageAction.showFilesPage:
           if (!userSettings.shortcutShowFilesPage.initialized) {
-            userSettings.shortcutShowFilesPage =
-                Shortcut(type.defaultShortcutActivator, true);
+            userSettings.shortcutShowFilesPage = Shortcut(
+              type.defaultShortcutActivator,
+              true,
+            );
           }
           break;
         case HomePageAction.showSettingsDialog:
           if (!userSettings.shortcutShowSettingsDialog.initialized) {
-            userSettings.shortcutShowSettingsDialog =
-                Shortcut(type.defaultShortcutActivator, true);
+            userSettings.shortcutShowSettingsDialog = Shortcut(
+              type.defaultShortcutActivator,
+              true,
+            );
           }
           break;
         case HomePageAction.showAboutDialog:
           if (!userSettings.shortcutShowAboutDialog.initialized) {
-            userSettings.shortcutShowAboutDialog =
-                Shortcut(type.defaultShortcutActivator, true);
+            userSettings.shortcutShowAboutDialog = Shortcut(
+              type.defaultShortcutActivator,
+              true,
+            );
           }
           break;
       }
@@ -175,15 +193,18 @@ class UserSessionManager {
   }
 
   Future<Map<IntListHolder, ConversationSettings>> _getIdToConversationSettings(
-      ConversationSettingRepository conversationSettingRepository) async {
-    final conversationSettingsTableData =
-        await conversationSettingRepository.selectAll();
-    final (idToSettings, exception) =
-        ConversationSettings.fromTableData(conversationSettingsTableData);
+    ConversationSettingRepository conversationSettingRepository,
+  ) async {
+    final conversationSettingsTableData = await conversationSettingRepository
+        .selectAll();
+    final (idToSettings, exception) = ConversationSettings.fromTableData(
+      conversationSettingsTableData,
+    );
     if (exception != null) {
       if (kReleaseMode) {
         logger.warn(
-            'Failed to read conversation settings: ${exception.toString()}');
+          'Failed to read conversation settings: ${exception.toString()}',
+        );
       } else {
         throw exception;
       }
@@ -191,12 +212,15 @@ class UserSessionManager {
     return idToSettings;
   }
 
-  Future<void> loadData(ConversationService conversationService,
-      UserService userService, MessageRepository messageRepository) async {
+  Future<void> loadData(
+    ConversationService conversationService,
+    UserService userService,
+    MessageRepository messageRepository,
+  ) async {
     await Future.wait([
       loadContacts(userService),
       loadRelationshipGroups(userService),
-      loadConversations(conversationService, messageRepository)
+      loadConversations(conversationService, messageRepository),
     ]);
   }
 
@@ -211,17 +235,19 @@ class UserSessionManager {
   }
 
   Future<void> loadContacts(UserService userService) async {
-    await TAsyncData.fromFuture(
-      () => userService.queryContacts(),
-    ).forEach((data) {
+    await TAsyncData.fromFuture(() => userService.queryContacts()).forEach((
+      data,
+    ) {
       if (_isLoggedIn) {
         _contactsDataController!.state = data;
       }
     });
   }
 
-  Future<void> loadConversations(ConversationService conversationService,
-      MessageRepository messageRepository) async {
+  Future<void> loadConversations(
+    ConversationService conversationService,
+    MessageRepository messageRepository,
+  ) async {
     final user = _loggedInUserController!.state!;
     final userId = user.userId;
     final dataStream = TAsyncData.fromFuture(
@@ -257,7 +283,10 @@ class UserSessionManager {
   }
 
   void _generateFakeMessage(
-      MessageRepository messageRepository, Timer timer, Random random) {
+    MessageRepository messageRepository,
+    Timer timer,
+    Random random,
+  ) {
     if (!_isLoggedIn) {
       timer.cancel();
       return;
@@ -283,17 +312,22 @@ class UserSessionManager {
         final contactId = conversation.contact.userId;
         if (contactId != _loggedInUserId) {
           final chatMessage = ChatMessage.parse(
-              text: message,
-              // Use a negative id so that we can identify these fake message.
-              messageId: -RandomUtils.nextUniquePositiveInt64(),
-              senderId: contactId,
-              recipientId: _loggedInUserId,
-              sentByMe: false,
-              isGroupMessage: false,
-              timestamp: now,
-              status: MessageDeliveryStatus.delivered);
+            text: message,
+            // Use a negative id so that we can identify these fake message.
+            messageId: -RandomUtils.nextUniquePositiveInt64(),
+            senderId: contactId,
+            recipientId: _loggedInUserId,
+            sentByMe: false,
+            isGroupMessage: false,
+            timestamp: now,
+            status: MessageDeliveryStatus.delivered,
+          );
           _onMessageReceived(
-              messageRepository, chatMessage, conversation, conversations);
+            messageRepository,
+            chatMessage,
+            conversation,
+            conversations,
+          );
           return;
         }
       } else if (conversation is GroupConversation &&
@@ -302,16 +336,21 @@ class UserSessionManager {
             .firstWhere((member) => member.userId != _loggedInUserId)
             .userId;
         final chatMessage = ChatMessage.parse(
-            text: message,
-            messageId: -RandomUtils.nextUniquePositiveInt64(),
-            senderId: senderId,
-            groupId: conversation.contact.groupId,
-            sentByMe: false,
-            isGroupMessage: true,
-            timestamp: now,
-            status: MessageDeliveryStatus.delivered);
+          text: message,
+          messageId: -RandomUtils.nextUniquePositiveInt64(),
+          senderId: senderId,
+          groupId: conversation.contact.groupId,
+          sentByMe: false,
+          isGroupMessage: true,
+          timestamp: now,
+          status: MessageDeliveryStatus.delivered,
+        );
         _onMessageReceived(
-            messageRepository, chatMessage, conversation, conversations);
+          messageRepository,
+          chatMessage,
+          conversation,
+          conversations,
+        );
         break;
       }
       if (conversationCount == 1) {
@@ -321,14 +360,17 @@ class UserSessionManager {
   }
 
   void _onMessageReceived(
-      MessageRepository messageRepository,
-      ChatMessage message,
-      Conversation conversationForIncomingMessage,
-      List<Conversation> conversations) {
+    MessageRepository messageRepository,
+    ChatMessage message,
+    Conversation conversationForIncomingMessage,
+    List<Conversation> conversations,
+  ) {
     final user = _loggedInUserController!.state!;
     unawaited(messageRepository.upsertMessage(message: message));
-    _conversationsDataController!
-        .addMessage(conversationForIncomingMessage, message);
+    _conversationsDataController!.addMessage(
+      conversationForIncomingMessage,
+      message,
+    );
 
     final selectedConversation = _selectedConversationController!.value;
     if (selectedConversation?.id == conversationForIncomingMessage.id) {

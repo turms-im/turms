@@ -29,8 +29,8 @@ public final class CreateGroupJoinRequestRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupJoinRequestRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class CreateGroupJoinRequestRequest extends com.google.protobuf.Gen
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -217,8 +217,10 @@ public final class CreateGroupJoinRequestRequest extends com.google.protobuf.Gen
             return super.equals(obj);
         }
 
-        return getGroupId() == other.getGroupId()
-                && getContent().equals(other.getContent())
+        if (getGroupId() != other.getGroupId()) {
+            return false;
+        }
+        return getContent().equals(other.getContent())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

@@ -7,10 +7,11 @@ import '../../../../../themes/index.dart';
 import '../../../../components/t_button/t_icon_button.dart';
 
 class Attachment extends ConsumerStatefulWidget {
-  const Attachment(
-      {super.key,
-      required this.fileName,
-      required this.onRemoveAttachmentTapped});
+  const Attachment({
+    super.key,
+    required this.fileName,
+    required this.onRemoveAttachmentTapped,
+  });
 
   final String fileName;
   final void Function() onRemoveAttachmentTapped;
@@ -26,12 +27,12 @@ class _AttachmentState extends ConsumerState<Attachment> {
   @override
   Widget build(BuildContext context) {
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isContainerHovered = true),
-      onExit: (_) => setState(() => _isContainerHovered = false),
-      child: GestureDetector(
-        onTap: () {},
+    return GestureDetector(
+      onTap: () {},
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isContainerHovered = true),
+        onExit: (_) => setState(() => _isContainerHovered = false),
         child: AnimatedContainer(
           width: 300,
           height: 48,
@@ -44,9 +45,10 @@ class _AttachmentState extends ConsumerState<Attachment> {
             borderRadius: Sizes.borderRadiusCircular8,
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  offset: const Offset(1, 1),
-                  blurRadius: 2)
+                color: Colors.black.withValues(alpha: 0.2),
+                offset: const Offset(1, 1),
+                blurRadius: 2,
+              ),
             ],
           ),
           child: Row(
@@ -73,12 +75,14 @@ class _AttachmentState extends ConsumerState<Attachment> {
                 onEnter: (_) => setState(() => _isCloseHovered = true),
                 onExit: (_) => setState(() => _isCloseHovered = false),
                 child: TIconButton(
-                    iconData: Symbols.close_rounded,
-                    iconWeight: _isCloseHovered ? 700 : 400,
-                    tooltip:
-                        ref.watch(appLocalizationsViewModel).removeAttachment,
-                    onTap: widget.onRemoveAttachmentTapped),
-              )
+                  iconData: Symbols.close_rounded,
+                  iconWeight: _isCloseHovered ? 700 : 400,
+                  tooltip: ref
+                      .watch(appLocalizationsViewModel)
+                      .removeAttachment,
+                  onTap: widget.onRemoveAttachmentTapped,
+                ),
+              ),
             ],
           ),
         ),

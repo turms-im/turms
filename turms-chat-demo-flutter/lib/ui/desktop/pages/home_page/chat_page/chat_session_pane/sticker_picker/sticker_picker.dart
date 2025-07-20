@@ -13,10 +13,11 @@ const _containerColorHovered = Color.fromARGB(255, 242, 242, 242);
 final _isGiphyEnabled = EnvVars.giphyApiKey.isNotBlank;
 
 class StickerPicker extends StatefulWidget {
-  const StickerPicker(
-      {super.key,
-      required this.onGiphyGifSelected,
-      required this.onEmojiSelected});
+  const StickerPicker({
+    super.key,
+    required this.onGiphyGifSelected,
+    required this.onEmojiSelected,
+  });
 
   final ValueChanged<GiphyGif> onGiphyGifSelected;
   final ValueChanged<String> onEmojiSelected;
@@ -30,77 +31,73 @@ class _StickerPickerState extends State<StickerPicker> {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: Colors.transparent,
-        child: SizedBox(
-          width: Sizes.stickerPickerWidth,
-          height: Sizes.stickerPickerHeight,
-          child: DecoratedBox(
-            decoration: context.appThemeExtension.popupDecoration,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: _isGiphyEnabled
-                  ? Column(
-                      children: [
-                        Flexible(
-                          child: Padding(
-                            padding: Sizes.paddingH16,
-                            child: TLazyIndexedStack(
-                              index: switch (_currentTab) {
-                                _Tab.emoji => 0,
-                                _Tab.giphy => 1,
-                              },
-                              children: [
-                                EmojiPickerPane(
-                                  onEmojiSelected: widget.onEmojiSelected,
-                                ),
-                                GiphyPicker(
-                                  onSelected: widget.onGiphyGifSelected,
-                                ),
-                              ],
+    color: Colors.transparent,
+    child: SizedBox(
+      width: Sizes.stickerPickerWidth,
+      height: Sizes.stickerPickerHeight,
+      child: DecoratedBox(
+        decoration: context.appThemeExtension.popupDecoration,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: _isGiphyEnabled
+              ? Column(
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: Sizes.paddingH16,
+                        child: TLazyIndexedStack(
+                          index: switch (_currentTab) {
+                            _Tab.emoji => 0,
+                            _Tab.giphy => 1,
+                          },
+                          children: [
+                            EmojiPickerPane(
+                              onEmojiSelected: widget.onEmojiSelected,
                             ),
-                          ),
+                            GiphyPicker(onSelected: widget.onGiphyGifSelected),
+                          ],
                         ),
-                        const THorizontalDivider(
-                          color: _containerColorHovered,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 16),
-                          child: Row(
-                            spacing: 16,
-                            children: [
-                              TIconButton(
-                                iconData: Symbols.emoji_emotions_rounded,
-                                containerSize: const Size.square(32),
-                                containerColorHovered: _containerColorHovered,
-                                containerPadding: EdgeInsets.zero,
-                                onTap: () {
-                                  _currentTab = _Tab.emoji;
-                                  setState(() {});
-                                },
-                              ),
-                              TIconButton(
-                                iconData: Symbols.search_rounded,
-                                containerSize: const Size.square(32),
-                                containerColorHovered: _containerColorHovered,
-                                containerPadding: EdgeInsets.zero,
-                                onTap: () {
-                                  _currentTab = _Tab.giphy;
-                                  setState(() {});
-                                },
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  : EmojiPickerPane(
-                      onEmojiSelected: widget.onEmojiSelected,
+                      ),
                     ),
-            ),
-          ),
+                    const THorizontalDivider(color: _containerColorHovered),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 16,
+                      ),
+                      child: Row(
+                        spacing: 16,
+                        children: [
+                          TIconButton(
+                            iconData: Symbols.emoji_emotions_rounded,
+                            containerSize: const Size.square(32),
+                            containerColorHovered: _containerColorHovered,
+                            containerPadding: EdgeInsets.zero,
+                            onTap: () {
+                              _currentTab = _Tab.emoji;
+                              setState(() {});
+                            },
+                          ),
+                          TIconButton(
+                            iconData: Symbols.search_rounded,
+                            containerSize: const Size.square(32),
+                            containerColorHovered: _containerColorHovered,
+                            containerPadding: EdgeInsets.zero,
+                            onTap: () {
+                              _currentTab = _Tab.giphy;
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : EmojiPickerPane(onEmojiSelected: widget.onEmojiSelected),
         ),
-      );
+      ),
+    ),
+  );
 }
 
 enum _Tab { emoji, giphy }

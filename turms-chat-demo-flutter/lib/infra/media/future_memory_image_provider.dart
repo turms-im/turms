@@ -12,20 +12,21 @@ class FutureMemoryImageProvider
 
   @override
   Future<FutureMemoryImageProvider> obtainKey(
-          ImageConfiguration configuration) =>
-      SynchronousFuture<FutureMemoryImageProvider>(this);
+    ImageConfiguration configuration,
+  ) => SynchronousFuture<FutureMemoryImageProvider>(this);
 
   @override
   ImageStreamCompleter loadImage(
-          FutureMemoryImageProvider key, ImageDecoderCallback decode) =>
-      MultiFrameImageStreamCompleter(
-        codec: _load(decode),
-        scale: 1.0,
-        debugLabel: cacheEntryId,
-        informationCollector: () sync* {
-          yield ErrorDescription('Cache Entry ID: $cacheEntryId');
-        },
-      );
+    FutureMemoryImageProvider key,
+    ImageDecoderCallback decode,
+  ) => MultiFrameImageStreamCompleter(
+    codec: _load(decode),
+    scale: 1.0,
+    debugLabel: cacheEntryId,
+    informationCollector: () sync* {
+      yield ErrorDescription('Cache Entry ID: $cacheEntryId');
+    },
+  );
 
   Future<Codec> _load(ImageDecoderCallback decode) async {
     final bytes = await imageBytes;
@@ -33,7 +34,8 @@ class FutureMemoryImageProvider
       // The file may become available later.
       PaintingBinding.instance.imageCache.evict(this);
       throw StateError(
-          '$cacheEntryId is empty and cannot be loaded as an image');
+        '$cacheEntryId is empty and cannot be loaded as an image',
+      );
     }
     final buffer = await ImmutableBuffer.fromUint8List(bytes);
     return decode(buffer);

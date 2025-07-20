@@ -61,7 +61,8 @@ internal class StorageServiceET {
     fun uploadUserProfilePicture_shouldReturnUploadResult() =
         runBlocking {
             val result =
-                turmsClient.storageService.uploadUserProfilePicture(PROFILE_PICTURE, MEDIA_TYPE)
+                turmsClient.storageService
+                    .uploadUserProfilePicture(PROFILE_PICTURE, MEDIA_TYPE)
                     .data
             assertNotNull(result)
         }
@@ -72,7 +73,8 @@ internal class StorageServiceET {
     fun uploadGroupProfilePicture_shouldReturnUploadResult() =
         runBlocking {
             val result =
-                turmsClient.storageService.uploadGroupProfilePicture(GROUP_ID, PROFILE_PICTURE, MEDIA_TYPE)
+                turmsClient.storageService
+                    .uploadGroupProfilePicture(GROUP_ID, PROFILE_PICTURE, MEDIA_TYPE)
                     .data
             assertNotNull(result)
         }
@@ -94,7 +96,8 @@ internal class StorageServiceET {
     fun queryUserProfilePicture_shouldEqualUploadedPicture() =
         runBlocking {
             val bytes =
-                turmsClient.storageService.queryUserProfilePicture(USER_ID)
+                turmsClient.storageService
+                    .queryUserProfilePicture(USER_ID)
                     .data
                     .data
             assertArrayEquals(PROFILE_PICTURE, bytes)
@@ -106,7 +109,8 @@ internal class StorageServiceET {
     fun queryGroupProfilePicture_shouldEqualUploadedPicture() =
         runBlocking {
             val bytes =
-                turmsClient.storageService.queryGroupProfilePicture(GROUP_ID)
+                turmsClient.storageService
+                    .queryGroupProfilePicture(GROUP_ID)
                     .data
                     .data
             assertArrayEquals(PROFILE_PICTURE, bytes)
@@ -118,7 +122,8 @@ internal class StorageServiceET {
     fun queryMessageAttachment_shouldEqualUploadedAttachment() =
         runBlocking {
             val bytes =
-                turmsClient.storageService.queryMessageAttachment(messageId)
+                turmsClient.storageService
+                    .queryMessageAttachment(messageId)
                     .data
                     .data
             assertArrayEquals(PROFILE_PICTURE, bytes)
@@ -132,7 +137,8 @@ internal class StorageServiceET {
     fun deleteUserProfilePicture_shouldSucceed() =
         runBlocking {
             val result =
-                turmsClient.storageService.deleteUserProfilePicture()
+                turmsClient.storageService
+                    .deleteUserProfilePicture()
                     .data
             assertNotNull(result)
         }
@@ -143,7 +149,8 @@ internal class StorageServiceET {
     fun deleteGroupProfilePicture_shouldSucceed() =
         runBlocking {
             val result =
-                turmsClient.storageService.deleteGroupProfilePicture(GROUP_ID)
+                turmsClient.storageService
+                    .deleteGroupProfilePicture(GROUP_ID)
                     .data
             assertNotNull(result)
         }

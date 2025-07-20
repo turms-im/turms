@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4.2.2
 
       - name: Set up Dart
-        uses: dart-lang/setup-dart@v1.6.5
+        uses: dart-lang/setup-dart@v1.7.1
         with:
           sdk: ${{ matrix.sdk }}
 

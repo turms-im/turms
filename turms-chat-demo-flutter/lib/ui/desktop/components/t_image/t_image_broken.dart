@@ -6,10 +6,10 @@ class TImageBroken extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const DecoratedBox(
-        decoration: BoxDecoration(color: Color.fromARGB(255, 244, 244, 244)),
-        child: Icon(
-          Symbols.image_not_supported_rounded,
-          color: Color.fromARGB(255, 82, 82, 82),
-        ),
-      );
+    decoration: BoxDecoration(color: Color.fromARGB(255, 244, 244, 244)),
+    child: Icon(
+      Symbols.image_not_supported_rounded,
+      color: Color.fromARGB(255, 82, 82, 82),
+    ),
+  );
 }

@@ -40,18 +40,18 @@ class ChatSessionDetailsDrawer extends StatelessWidget {
       height: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-            color: appThemeExtension.chatSessionDetailsDrawerBackgroundColor,
-            border: Border(
-              left: BorderSide(color: theme.dividerColor),
-            )),
+          color: appThemeExtension.chatSessionDetailsDrawerBackgroundColor,
+          border: Border(left: BorderSide(color: theme.dividerColor)),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(left: 16, top: 8, right: 16),
           child: switch (conversation) {
-            final UserConversation c =>
-              ChatSessionDetailsUserConversation(conversation: c),
+            final UserConversation c => ChatSessionDetailsUserConversation(
+              conversation: c,
+            ),
             final GroupConversation c => ChatSessionDetailsGroupConversation(
-                conversation: c,
-              ),
+              conversation: c,
+            ),
             SystemConversation() => throw UnsupportedError(''),
           },
         ),

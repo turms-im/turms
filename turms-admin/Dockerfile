@@ -4,8 +4,8 @@
 # Do NOT use alpine because if we use alpine:
 # 1. We need to try which phython packages we use and install them one by one
 # 2. We need to install python packages in every build
-# 3. "node:20.9.0-slim" is small and can make life easier
-FROM node:20.9.0-slim AS builder
+# 3. "node:22.16.0-slim" is small and can make life easier
+FROM node:22.16.0-slim AS builder
 COPY . .
 
 # build in China
@@ -23,7 +23,7 @@ RUN cd ./turms-admin \
 ####################################################################
 # Stage 1 : RUN
 ####################################################################
-FROM nginx:1.24.0-alpine
+FROM nginx:1.28.0-alpine
 COPY --from=builder /turms-admin/dist /usr/share/nginx/html
 
 RUN echo '                                                        \

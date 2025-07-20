@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../themes/index.dart';
 
 class TCheckbox extends StatefulWidget {
-  const TCheckbox(this.initialValue, this.text,
-      {super.key, required this.onCheckedChanged});
+  const TCheckbox(
+    this.initialValue,
+    this.text, {
+    super.key,
+    required this.onCheckedChanged,
+  });
 
   final bool initialValue;
   final String text;
@@ -23,21 +27,26 @@ class _TCheckboxState extends State<TCheckbox> {
     _isChecked ??= widget.initialValue;
     final isChecked = _isChecked!;
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
+    return GestureDetector(
+      onTap: () {
+        _isChecked = !isChecked;
+        widget.onCheckedChanged(isChecked);
+        setState(() {});
+      },
+      child: MouseRegion(
         cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () {
-            _isChecked = !isChecked;
-            widget.onCheckedChanged(isChecked);
-            setState(() {});
-          },
-          child: Row(spacing: 4, mainAxisSize: MainAxisSize.min, children: [
+        child: Row(
+          spacing: 4,
+          mainAxisSize: MainAxisSize.min,
+          children: [
             AbsorbPointer(
               child: Checkbox(
                 // focusNode: FocusNode(skipTraversal: true),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity:
-                    const VisualDensity(horizontal: -4, vertical: -4),
+                visualDensity: const VisualDensity(
+                  horizontal: -4,
+                  vertical: -4,
+                ),
                 splashRadius: 0,
                 side: BorderSide(
                   color: appThemeExtension.checkboxColor,
@@ -53,8 +62,10 @@ class _TCheckboxState extends State<TCheckbox> {
                 },
               ),
             ),
-            Text(widget.text, style: appThemeExtension.checkboxTextStyle)
-          ]),
-        ));
+            Text(widget.text, style: appThemeExtension.checkboxTextStyle),
+          ],
+        ),
+      ),
+    );
   }
 }

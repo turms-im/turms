@@ -5,7 +5,7 @@ on: [ push, pull_request ]
 jobs:
   ui-tests:
     runs-on: ubuntu-24.04
-    container: cypress/browsers:node16.14.0-chrome99-ff97
+    container: cypress/browsers:22.16.0
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -19,7 +19,7 @@ jobs:
         run: npm run lint
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6.7.7
+        uses: cypress-io/github-action@v6.10.1
         with:
           working-directory: turms-admin
           build: npm run build

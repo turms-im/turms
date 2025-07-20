@@ -25,8 +25,8 @@ public final class GroupOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupOuterClass.class.getName());
     }
@@ -75,7 +75,7 @@ public final class GroupOuterClass {
                         im.turms.server.common.access.client.dto.model.common.ValueOuterClass
                                 .getDescriptor(),});
         internal_static_im_turms_proto_Group_descriptor = getDescriptor().getMessageTypes()
-                .get(0);
+                .getFirst();
         internal_static_im_turms_proto_Group_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_Group_descriptor,
@@ -94,7 +94,7 @@ public final class GroupOuterClass {
                                 "CustomAttributes",});
         internal_static_im_turms_proto_Group_UserDefinedAttributesEntry_descriptor =
                 internal_static_im_turms_proto_Group_descriptor.getNestedTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_Group_UserDefinedAttributesEntry_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_Group_UserDefinedAttributesEntry_descriptor,

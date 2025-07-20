@@ -29,8 +29,8 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserRelationshipGroupsWithVersion.class.getName());
     }
@@ -105,7 +105,7 @@ public final class UserRelationshipGroupsWithVersion extends com.google.protobuf
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>

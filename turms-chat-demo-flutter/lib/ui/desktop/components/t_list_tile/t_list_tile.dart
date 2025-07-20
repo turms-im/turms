@@ -6,19 +6,19 @@ const defaultListTile = 64.0;
 const _animationDuration = Duration(milliseconds: 100);
 
 class TListTile extends StatefulWidget {
-  const TListTile(
-      {Key? key,
-      this.height = defaultListTile,
-      this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      this.focused = false,
-      this.backgroundColor,
-      this.backgroundFocusedColor,
-      this.backgroundHoveredColor,
-      this.mouseCursor = SystemMouseCursors.basic,
-      this.onTap,
-      this.onSecondaryTapUp,
-      required this.child})
-      : super(key: key);
+  const TListTile({
+    super.key,
+    this.height = defaultListTile,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+    this.focused = false,
+    this.backgroundColor,
+    this.backgroundFocusedColor,
+    this.backgroundHoveredColor,
+    this.mouseCursor = SystemMouseCursors.basic,
+    this.onTap,
+    this.onSecondaryTapUp,
+    required this.child,
+  });
 
   final bool focused;
   final double? height;
@@ -41,26 +41,29 @@ class _TListTileState extends State<TListTile> {
   @override
   Widget build(BuildContext context) {
     final appThemeExtension = context.appThemeExtension;
-    return MouseRegion(
+    return GestureDetector(
+      onTap: widget.onTap,
+      onSecondaryTapUp: widget.onSecondaryTapUp,
+      child: MouseRegion(
         cursor: widget.mouseCursor,
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
-        child: GestureDetector(
-            onTap: widget.onTap,
-            onSecondaryTapUp: widget.onSecondaryTapUp,
-            child: AnimatedContainer(
-                height: widget.height,
-                alignment: Alignment.center,
-                color: widget.focused
-                    ? (widget.backgroundFocusedColor ??
-                        appThemeExtension.tileBackgroundFocusedColor)
-                    : (_isHovered
-                        ? (widget.backgroundHoveredColor ??
-                            appThemeExtension.tileBackgroundHoveredColor)
-                        : (widget.backgroundColor ??
-                            appThemeExtension.tileBackgroundColor)),
-                padding: widget.padding,
-                duration: _animationDuration,
-                child: widget.child)));
+        child: AnimatedContainer(
+          height: widget.height,
+          alignment: Alignment.center,
+          color: widget.focused
+              ? (widget.backgroundFocusedColor ??
+                    appThemeExtension.tileBackgroundFocusedColor)
+              : (_isHovered
+                    ? (widget.backgroundHoveredColor ??
+                          appThemeExtension.tileBackgroundHoveredColor)
+                    : (widget.backgroundColor ??
+                          appThemeExtension.tileBackgroundColor)),
+          padding: widget.padding,
+          duration: _animationDuration,
+          child: widget.child,
+        ),
+      ),
+    );
   }
 }

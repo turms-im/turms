@@ -24,12 +24,15 @@ class DatabaseUtils {
           : PathUtils.joinPathInUserScope(['database', '$dbName.sqlite']);
       database = LazyDatabase(() async {
         final file = File(path);
-        return NativeDatabase.createInBackground(file, setup: (database) {
-          // Configure for better performance.
-          database
-            ..execute('PRAGMA journal_mode=WAL;')
-            ..execute('PRAGMA synchronous=NORMAL;');
-        });
+        return NativeDatabase.createInBackground(
+          file,
+          setup: (database) {
+            // Configure for better performance.
+            database
+              ..execute('PRAGMA journal_mode=WAL;')
+              ..execute('PRAGMA synchronous=NORMAL;');
+          },
+        );
       });
     }
     if (logStatements) {

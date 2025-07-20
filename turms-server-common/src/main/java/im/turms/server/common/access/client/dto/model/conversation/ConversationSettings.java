@@ -28,8 +28,8 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 ConversationSettings.class.getName());
     }
@@ -47,16 +47,16 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
         return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsOuterClass.internal_static_im_turms_proto_ConversationSettings_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 3 -> internalGetSettings();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 3) {
+            return internalGetSettings();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -69,7 +69,7 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>optional int64 user_id = 1;</code>
@@ -92,7 +92,7 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 2;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 2;</code>
@@ -207,7 +207,7 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 4;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 4;</code>
@@ -534,26 +534,26 @@ public final class ConversationSettings extends com.google.protobuf.GeneratedMes
             return im.turms.server.common.access.client.dto.model.conversation.ConversationSettingsOuterClass.internal_static_im_turms_proto_ConversationSettings_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 3 -> internalGetSettings();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 3) {
+                return internalGetSettings();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 3 -> internalGetMutableSettings();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 3) {
+                return internalGetMutableSettings();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

@@ -10,8 +10,9 @@ enum LogLevel {
 
   final int value;
 
-  static Map<int, LogLevel> valueToLevel =
-      Map.fromEntries(LogLevel.values.map((e) => MapEntry(e.value, e)));
+  static Map<int, LogLevel> valueToLevel = Map.fromEntries(
+    LogLevel.values.map((e) => MapEntry(e.value, e)),
+  );
 
   static LogLevel? fromInt(int value) => valueToLevel[value];
 }

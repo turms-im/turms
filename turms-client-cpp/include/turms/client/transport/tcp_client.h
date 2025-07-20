@@ -9,13 +9,11 @@
 
 #include "tcp_metrics.h"
 
-namespace turms {
-namespace client {
-namespace transport {
+namespace turms::client::transport {
 class TcpClient : private std::enable_shared_from_this<TcpClient> {
    public:
     using OnBytesReceivedHandler = std::function<void(boost::asio::streambuf&)>;
-    using OnCloseHandler = std::function<void(const boost::optional<std::exception>&)>;
+    using OnCloseHandler = std::function<void(const std::optional<std::exception>&)>;
 
     template <typename OnClose, typename OnBytesReceived>
     explicit TcpClient(boost::asio::io_context& ioContext,
@@ -24,7 +22,7 @@ class TcpClient : private std::enable_shared_from_this<TcpClient> {
         : ioContext_(ioContext),
           socket_(boost::asio::ip::tcp::socket{ioContext}),
           resolver_(ioContext),
-          readBuffer_(TcpClient::kMaxReadBufferCapacity),
+          readBuffer_(kMaxReadBufferCapacity),
           onClose_(std::forward<OnClose>(onClose)),
           onBytesReceived_(std::forward<OnBytesReceived>(onBytesReceived)) {
     }
@@ -32,7 +30,7 @@ class TcpClient : private std::enable_shared_from_this<TcpClient> {
     auto connect(const std::string& host, int port, int connectTimeoutMillis)
         -> boost::future<void>;
 
-    auto close(const boost::optional<std::exception>& e = boost::none) -> boost::future<void>;
+    auto close(const std::optional<std::exception>& e = std::nullopt) -> boost::future<void>;
 
     template <size_t N>
     auto write(const std::shared_ptr<std::array<uint8_t, N>>& errorCode) -> boost::future<void>;
@@ -44,7 +42,7 @@ class TcpClient : private std::enable_shared_from_this<TcpClient> {
         return remoteEndpoint_;
     }
 
-    auto metrics() -> const TcpMetrics& {
+    auto metrics() const -> const TcpMetrics& {
         return metrics_;
     }
 
@@ -64,8 +62,6 @@ class TcpClient : private std::enable_shared_from_this<TcpClient> {
 
     void read();
 };
-}  // namespace transport
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::transport
 
 #endif  // TURMS_CLIENT_TRANSPORT_TCP_CLIENT_H

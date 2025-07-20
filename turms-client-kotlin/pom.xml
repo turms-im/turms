@@ -15,19 +15,19 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <kotlin.version>1.9.23</kotlin.version>
-        <kotlinx-coroutines.version>1.8.0</kotlinx-coroutines.version>
+        <kotlin.version>2.1.0</kotlin.version>
+        <kotlinx-coroutines.version>1.10.1</kotlinx-coroutines.version>
         <okhttp.version>4.12.0</okhttp.version>
-        <protobuf.version>4.27.2</protobuf.version>
+        <protobuf.version>4.29.1</protobuf.version>
 
-        <junit.version>5.10.3</junit.version>
+        <junit.version>5.11.4</junit.version>
 
-        <ktlint-cli.version>1.2.1</ktlint-cli.version>
+        <ktlint-cli.version>1.5.0</ktlint-cli.version>
 
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
-        <spotless-maven-plugin.eclipse.version>4.31</spotless-maven-plugin.eclipse.version>
+        <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+        <spotless-maven-plugin.eclipse.version>4.34</spotless-maven-plugin.eclipse.version>
     </properties>
 
     <build>

@@ -1,20 +1,19 @@
 #include "turms/client/service/conference_service.h"
 
+#include "turms/client/time/time_util.h"
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-namespace service {
+namespace turms::client::service {
 ConferenceService::ConferenceService(TurmsClient& turmsClient)
     : turmsClient_(turmsClient) {
 }
 
-auto ConferenceService::createMeeting(const boost::optional<int64_t>& userId,
-                                      const boost::optional<int64_t>& groupId,
-                                      const boost::optional<absl::string_view>& name,
-                                      const boost::optional<absl::string_view>& intro,
-                                      const boost::optional<absl::string_view>& password,
-                                      const boost::optional<time_point>& startDate)
+auto ConferenceService::createMeeting(const std::optional<int64_t>& userId,
+                                      const std::optional<int64_t>& groupId,
+                                      const std::optional<absl::string_view>& name,
+                                      const std::optional<absl::string_view>& intro,
+                                      const std::optional<absl::string_view>& password,
+                                      const std::optional<time_point>& startDate) const
     -> boost::future<Response<int64_t>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_create_meeting_request();
@@ -45,7 +44,8 @@ auto ConferenceService::createMeeting(const boost::optional<int64_t>& userId,
         });
 }
 
-auto ConferenceService::cancelMeeting(int64_t meetingId) -> boost::future<Response<void>> {
+auto ConferenceService::cancelMeeting(const int64_t meetingId) const
+    -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_meeting_request();
     request->set_id(meetingId);
@@ -57,9 +57,9 @@ auto ConferenceService::cancelMeeting(int64_t meetingId) -> boost::future<Respon
 }
 
 auto ConferenceService::updateMeeting(int64_t meetingId,
-                                      const boost::optional<absl::string_view>& name,
-                                      const boost::optional<absl::string_view>& intro,
-                                      const boost::optional<absl::string_view>& password)
+                                      const std::optional<absl::string_view>& name,
+                                      const std::optional<absl::string_view>& intro,
+                                      const std::optional<absl::string_view>& password) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_meeting_request();
@@ -84,10 +84,10 @@ auto ConferenceService::queryMeetings(const std::unordered_set<int64_t>& meeting
                                       const std::unordered_set<int64_t>& creatorIds,
                                       const std::unordered_set<int64_t>& userIds,
                                       const std::unordered_set<int64_t>& groupIds,
-                                      const boost::optional<time_point>& creationDateStart,
-                                      const boost::optional<time_point>& creationDateEnd,
-                                      const boost::optional<int>& skip,
-                                      const boost::optional<int>& limit)
+                                      const std::optional<time_point>& creationDateStart,
+                                      const std::optional<time_point>& creationDateEnd,
+                                      const std::optional<int>& skip,
+                                      const std::optional<int>& limit) const
     -> boost::future<Response<std::vector<Meeting>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_meetings_request();
@@ -126,8 +126,8 @@ auto ConferenceService::queryMeetings(const std::unordered_set<int64_t>& meeting
         });
 }
 
-auto ConferenceService::acceptMeetingInvitation(int64_t meetingId,
-                                                const boost::optional<absl::string_view>& password)
+auto ConferenceService::acceptMeetingInvitation(
+    int64_t meetingId, const std::optional<absl::string_view>& password) const
     -> boost::future<Response<std::string>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_meeting_invitation_request();
@@ -143,7 +143,4 @@ auto ConferenceService::acceptMeetingInvitation(int64_t meetingId,
                                          }};
         });
 }
-
-}  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::service

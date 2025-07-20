@@ -28,8 +28,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 TurmsNotification.class.getName());
     }
@@ -631,8 +631,8 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
             com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
-                    /* minor= */ 27,
-                    /* patch= */ 2,
+                    /* minor= */ 29,
+                    /* patch= */ 1,
                     /* suffix= */ "",
                     Data.class.getName());
         }
@@ -657,7 +657,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                             im.turms.server.common.access.client.dto.notification.TurmsNotification.Data.Builder.class);
         }
 
-        private int kindCase_;
+        private int kindCase_ = 0;
         @SuppressWarnings("serial")
         private java.lang.Object kind_;
 
@@ -2839,7 +2839,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
                 return this;
             }
 
-            private int kindCase_;
+            private int kindCase_ = 0;
             private java.lang.Object kind_;
 
             public KindCase getKindCase() {
@@ -6871,7 +6871,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
 
     private int bitField0_;
     public static final int TIMESTAMP_FIELD_NUMBER = 1;
-    private long timestamp_;
+    private long timestamp_ = 0L;
 
     /**
      * <pre>
@@ -6934,7 +6934,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 4;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <pre>
@@ -6969,7 +6969,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int CODE_FIELD_NUMBER = 5;
-    private int code_;
+    private int code_ = 0;
 
     /**
      * <code>optional int32 code = 5;</code>
@@ -7079,7 +7079,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int REQUESTER_ID_FIELD_NUMBER = 10;
-    private long requesterId_;
+    private long requesterId_ = 0L;
 
     /**
      * <pre>
@@ -7116,7 +7116,7 @@ public final class TurmsNotification extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int CLOSE_STATUS_FIELD_NUMBER = 11;
-    private int closeStatus_;
+    private int closeStatus_ = 0;
 
     /**
      * <code>optional int32 close_status = 11;</code>

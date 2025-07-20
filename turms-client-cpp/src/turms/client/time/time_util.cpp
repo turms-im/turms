@@ -1,8 +1,6 @@
 #include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-namespace time {
+namespace turms::client::time {
 auto toInt64(const std::chrono::time_point<std::chrono::system_clock>& timePoint) -> int64_t {
     return std::chrono::duration_cast<std::chrono::milliseconds>(timePoint.time_since_epoch())
         .count();
@@ -19,6 +17,4 @@ auto nowMillis() -> int64_t {
                std::chrono::system_clock::now().time_since_epoch())
         .count();
 }
-}  // namespace time
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::time

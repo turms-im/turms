@@ -5,4 +5,5 @@ import '../../../../../../infra/data/t_async_data.dart';
 
 final relationshipGroupsDataViewModel =
     StateProvider<TAsyncData<List<RelationshipGroup>>>(
-        (ref) => const TAsyncData());
+      (ref) => const TAsyncData(),
+    );

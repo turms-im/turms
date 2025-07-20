@@ -17,7 +17,10 @@ import '../../../components/index.dart';
 // Don't call "showAboutDialog" to avoid name conflict with
 // the one in "flutter/lib/src/material/about.dart".
 Future<void> showAppAboutDialog(BuildContext context) => showCustomTDialog(
-    routeName: '/about-dialog', context: context, child: const AboutPage());
+  routeName: '/about-dialog',
+  context: context,
+  child: const AboutPage(),
+);
 
 class AboutPage extends ConsumerStatefulWidget {
   const AboutPage({super.key});
@@ -47,76 +50,75 @@ class _AboutPageState extends ConsumerState<AboutPage> {
 }
 
 extension _AboutPageView on _AboutPageState {
-  Widget _buildView(AppThemeExtension appThemeExtension,
-          AppLocalizations appLocalizations) =>
-      SizedBox(
-        width: Sizes.aboutPageWidth,
-        height: Sizes.aboutPageHeight,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 32, bottom: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildView(
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+  ) => SizedBox(
+    width: Sizes.aboutPageWidth,
+    height: Sizes.aboutPageHeight,
+    child: Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 32, bottom: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SvgPicture.asset(width: 320, Assets.images.logo),
+              Column(
                 children: [
-                  SvgPicture.asset(
-                    width: 320,
-                    Assets.images.logo,
+                  TTextButton(
+                    text: appLocalizations.update,
+                    isLoading: _isDownloading,
+                    onTap: () async {
+                      _updateIsDownloading(true);
+                      // TODO: Support installing automatically
+                      String text;
+                      try {
+                        final file = await GithubUtils.downloadLatestApp();
+                        if (file == null) {
+                          text = appLocalizations.alreadyLatestVersion;
+                        } else {
+                          // TODO: i10n
+                          text = 'Downloaded: ${file.absolute.path}';
+                        }
+                      } catch (e) {
+                        text =
+                            'Failed to download latest application: ${e.toString()}';
+                      }
+                      _updateIsDownloading(false);
+                      unawaited(TToast.showToast(context, text));
+                    },
                   ),
-                  Column(children: [
-                    TTextButton(
-                        text: appLocalizations.update,
-                        isLoading: _isDownloading,
-                        onTap: () async {
-                          _updateIsDownloading(true);
-                          // TODO: Support installing automatically
-                          String text;
-                          try {
-                            final file = await GithubUtils.downloadLatestApp();
-                            if (file == null) {
-                              text = appLocalizations.alreadyLatestVersion;
-                            } else {
-                              // TODO: i10n
-                              text = 'Downloaded: ${file.absolute.path}';
-                            }
-                          } catch (e) {
-                            text =
-                                'Failed to download latest application: ${e.toString()}';
-                          }
-                          _updateIsDownloading(false);
-                          unawaited(TToast.showToast(context, text));
-                        })
-                  ]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          '${appLocalizations.version}:  ${AppConfig.packageInfo.version}'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      const Text('GitHub'),
-                      TTextButton(
-                          text: 'github.com/turms-im/turms',
-                          containerColor: Colors.transparent,
-                          containerColorHovered: Colors.transparent,
-                          textStyle: appThemeExtension.linkTextStyle,
-                          textStyleHovered:
-                              appThemeExtension.linkHoveredTextStyle,
-                          onTap: _openGitHub)
-                    ],
-                  )
                 ],
               ),
-            ),
-            const TTitleBar(
-              displayCloseOnly: true,
-              popOnCloseTapped: true,
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${appLocalizations.version}:  ${AppConfig.packageInfo.version}',
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 8,
+                children: [
+                  const Text('GitHub'),
+                  TTextButton(
+                    text: 'github.com/turms-im/turms',
+                    containerColor: Colors.transparent,
+                    containerColorHovered: Colors.transparent,
+                    textStyle: appThemeExtension.linkTextStyle,
+                    textStyleHovered: appThemeExtension.linkHoveredTextStyle,
+                    onTap: _openGitHub,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      );
+        const TTitleBar(displayCloseOnly: true, popOnCloseTapped: true),
+      ],
+    ),
+  );
 }

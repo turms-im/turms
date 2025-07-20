@@ -14,40 +14,41 @@ class MessageRepository {
 
   final UserMessageDatabase _userMessageDatabase;
 
-  Future<void> upsertMessages({
-    required List<ChatMessage> messages,
-  }) async {
+  Future<void> upsertMessages({required List<ChatMessage> messages}) async {
     final messagesToInsert = messages.map((message) {
       final isGroupMessage = message.isGroupMessage;
       return _getMessageTableCompanion(
-          message.messageId,
-          isGroupMessage,
-          isGroupMessage ? message.groupId! : message.recipientId!,
-          message.senderId,
-          message.timestamp,
-          message.text,
-          message.records,
-          message.type);
+        message.messageId,
+        isGroupMessage,
+        isGroupMessage ? message.groupId! : message.recipientId!,
+        message.senderId,
+        message.timestamp,
+        message.text,
+        message.records,
+        message.type,
+      );
     }).toList();
     await _userMessageDatabase.batch((batch) {
-      batch.insertAll(_userMessageDatabase.messageTable, messagesToInsert,
-          mode: InsertMode.insertOrReplace);
+      batch.insertAll(
+        _userMessageDatabase.messageTable,
+        messagesToInsert,
+        mode: InsertMode.insertOrReplace,
+      );
     });
   }
 
-  Future<void> upsertMessage({
-    required ChatMessage message,
-  }) async {
+  Future<void> upsertMessage({required ChatMessage message}) async {
     final isGroupMessage = message.isGroupMessage;
     return upsert(
-        messageId: message.messageId,
-        isGroupMessage: isGroupMessage,
-        toId: isGroupMessage ? message.groupId! : message.recipientId!,
-        senderId: message.senderId,
-        messageType: message.type,
-        text: message.text,
-        records: message.records,
-        createdDate: message.timestamp);
+      messageId: message.messageId,
+      isGroupMessage: isGroupMessage,
+      toId: isGroupMessage ? message.groupId! : message.recipientId!,
+      senderId: message.senderId,
+      messageType: message.type,
+      text: message.text,
+      records: message.records,
+      createdDate: message.timestamp,
+    );
   }
 
   Future<void> upsert({
@@ -62,7 +63,8 @@ class MessageRepository {
   }) async {
     await _userMessageDatabase
         .into(_userMessageDatabase.messageTable)
-        .insertOnConflictUpdate(_getMessageTableCompanion(
+        .insertOnConflictUpdate(
+          _getMessageTableCompanion(
             messageId,
             isGroupMessage,
             toId,
@@ -70,28 +72,30 @@ class MessageRepository {
             createdDate,
             text,
             records,
-            messageType));
+            messageType,
+          ),
+        );
   }
 
   MessageTableCompanion _getMessageTableCompanion(
-          Int64 messageId,
-          bool isGroupMessage,
-          Int64 contactId,
-          Int64 senderId,
-          DateTime createdDate,
-          String? text,
-          List<Uint8List>? records,
-          MessageType messageType) =>
-      MessageTableCompanion.insert(
-        id: messageId,
-        isGroupMessage: isGroupMessage,
-        contactId: contactId,
-        senderId: senderId,
-        createdDate: createdDate,
-        txt: text == null ? const Value.absent() : Value(text),
-        records: records == null ? const Value.absent() : Value(records),
-        type: messageType,
-      );
+    Int64 messageId,
+    bool isGroupMessage,
+    Int64 contactId,
+    Int64 senderId,
+    DateTime createdDate,
+    String? text,
+    List<Uint8List>? records,
+    MessageType messageType,
+  ) => MessageTableCompanion.insert(
+    id: messageId,
+    isGroupMessage: isGroupMessage,
+    contactId: contactId,
+    senderId: senderId,
+    createdDate: createdDate,
+    txt: text == null ? const Value.absent() : Value(text),
+    records: records == null ? const Value.absent() : Value(records),
+    type: messageType,
+  );
 
   Future<int> delete({
     List<Int64>? ids,
@@ -101,26 +105,28 @@ class MessageRepository {
   }) async {
     final tbl = _userMessageDatabase.messageTable;
     final statement = _userMessageDatabase.delete(tbl)
-      ..where((t) => Expression.and([
-            if (ids != null) t.id.isIn(ids.map((e) => e.toBigInt()).toList()),
-            if (idEnd != null) t.id.isSmallerThanValue(idEnd.toBigInt()),
-            if (groupId != null) ...[
-              tbl.contactId.equalsValue(groupId),
-              tbl.isGroupMessage.equals(true),
-            ] else if (participantIds != null)
-              Expression.or([
-                Expression.and([
-                  tbl.contactId.equalsValue(participantIds[0]),
-                  tbl.senderId.equalsValue(participantIds[1]),
-                  tbl.isGroupMessage.equals(false),
-                ]),
-                Expression.and([
-                  tbl.contactId.equalsValue(participantIds[1]),
-                  tbl.senderId.equalsValue(participantIds[0]),
-                  tbl.isGroupMessage.equals(false),
-                ])
+      ..where(
+        (t) => Expression.and([
+          if (ids != null) t.id.isIn(ids.map((e) => e.toBigInt()).toList()),
+          if (idEnd != null) t.id.isSmallerThanValue(idEnd.toBigInt()),
+          if (groupId != null) ...[
+            tbl.contactId.equalsValue(groupId),
+            tbl.isGroupMessage.equals(true),
+          ] else if (participantIds != null)
+            Expression.or([
+              Expression.and([
+                tbl.contactId.equalsValue(participantIds[0]),
+                tbl.senderId.equalsValue(participantIds[1]),
+                tbl.isGroupMessage.equals(false),
               ]),
-          ]));
+              Expression.and([
+                tbl.contactId.equalsValue(participantIds[1]),
+                tbl.senderId.equalsValue(participantIds[0]),
+                tbl.isGroupMessage.equals(false),
+              ]),
+            ]),
+        ]),
+      );
     return statement.go();
   }
 
@@ -136,42 +142,35 @@ class MessageRepository {
     required int limit,
   }) async {
     final messageTable = _userMessageDatabase.messageTable;
-    final select = messageTable.select().addColumns([
-      _expressionCountAll,
-    ])
-      ..groupBy([
-        messageTable.contactId,
-        messageTable.isGroupMessage,
-      ])
+    final select = messageTable.select().addColumns([_expressionCountAll])
+      ..groupBy([messageTable.contactId, messageTable.isGroupMessage])
       ..where(
         _buildExpressionGroupIdOrParticipantIds(
-            messageTable,
-            idStart,
-            groupId,
-            participantIds,
-            text,
-            messageType,
-            createdDateStart,
-            createdDateEnd),
+          messageTable,
+          idStart,
+          groupId,
+          participantIds,
+          text,
+          messageType,
+          createdDateStart,
+          createdDateEnd,
+        ),
       )
-      ..orderBy(
-        [
-          OrderingTerm(
-              expression: messageTable.createdDate, mode: OrderingMode.desc),
-          // Order by id to ensure that the messages are in a consistent order
-          // even the timestamp of the messages is the same.
-          OrderingTerm(expression: messageTable.id)
-        ],
-      )
+      ..orderBy([
+        OrderingTerm(
+          expression: messageTable.createdDate,
+          mode: OrderingMode.desc,
+        ),
+        // Order by id to ensure that the messages are in a consistent order
+        // even the timestamp of the messages is the same.
+        OrderingTerm(expression: messageTable.id),
+      ])
       ..limit(limit);
     final records = await select.get();
     return records.map((record) {
       final message = record.readTable(messageTable);
       final count = record.read(_expressionCountAll)!;
-      return CountAndSearchLatestMessageResult(
-        message: message,
-        count: count,
-      );
+      return CountAndSearchLatestMessageResult(message: message, count: count);
     }).toList();
   }
 
@@ -186,20 +185,23 @@ class MessageRepository {
     DateTime? createdDateEnd,
     required int limit,
   }) async {
-    assert(groupId == null
-        ? (participantIds != null && participantIds.isNotEmpty)
-        : (participantIds == null || participantIds.isEmpty));
+    assert(
+      groupId == null
+          ? (participantIds != null && participantIds.isNotEmpty)
+          : (participantIds == null || participantIds.isEmpty),
+    );
     final messageTable = _userMessageDatabase.messageTable;
     final count = messageTable.count(
       where: (tbl) => _buildExpressionGroupIdOrParticipantIds(
-          tbl,
-          idStart,
-          groupId,
-          participantIds,
-          text,
-          messageType,
-          createdDateStart,
-          createdDateEnd),
+        tbl,
+        idStart,
+        groupId,
+        participantIds,
+        text,
+        messageType,
+        createdDateStart,
+        createdDateEnd,
+      ),
     );
     return count.getSingle();
   }
@@ -215,33 +217,35 @@ class MessageRepository {
     DateTime? createdDateEnd,
     required int limit,
   }) async {
-    assert(groupId == null
-        ? (participantIds != null && participantIds.isNotEmpty)
-        : (participantIds == null || participantIds.isEmpty));
-    final statement =
-        _userMessageDatabase.select(_userMessageDatabase.messageTable)
-          ..where(
-            (tbl) => _buildExpressionGroupIdOrParticipantIds(
-                tbl,
-                idStart,
-                groupId,
-                participantIds,
-                text,
-                messageType,
-                createdDateStart,
-                createdDateEnd),
-          )
-          ..orderBy(
-            [
-              (record) => OrderingTerm(
-                  expression: record.createdDate, mode: OrderingMode.desc),
-              (record) =>
-                  // Order by id to ensure that the messages are in a consistent order
-                  // even the timestamp of the messages is the same.
-                  OrderingTerm(expression: record.id)
-            ],
-          )
-          ..limit(limit);
+    assert(
+      groupId == null
+          ? (participantIds != null && participantIds.isNotEmpty)
+          : (participantIds == null || participantIds.isEmpty),
+    );
+    final statement = _userMessageDatabase.select(_userMessageDatabase.messageTable)
+      ..where(
+        (tbl) => _buildExpressionGroupIdOrParticipantIds(
+          tbl,
+          idStart,
+          groupId,
+          participantIds,
+          text,
+          messageType,
+          createdDateStart,
+          createdDateEnd,
+        ),
+      )
+      ..orderBy([
+        (record) => OrderingTerm(
+          expression: record.createdDate,
+          mode: OrderingMode.desc,
+        ),
+        (record) =>
+            // Order by id to ensure that the messages are in a consistent order
+            // even the timestamp of the messages is the same.
+            OrderingTerm(expression: record.id),
+      ])
+      ..limit(limit);
     return statement.get();
   }
 
@@ -249,44 +253,46 @@ class MessageRepository {
       _userMessageDatabase.select(_userMessageDatabase.messageTable).get();
 
   Expression<bool> _buildExpressionGroupIdOrParticipantIds(
-          $MessageTableTable tbl,
-          Int64? idStart,
-          Int64? groupId,
-          List<Int64>? participantIds,
-          String? text,
-          MessageType? messageType,
-          DateTime? createdDateStart,
-          DateTime? createdDateEnd) =>
-      Expression.and([
-        if (idStart != null) tbl.id.isBiggerThanValue(idStart.toBigInt()),
-        if (groupId != null) ...[
-          tbl.contactId.equalsValue(groupId),
-          tbl.isGroupMessage.equals(true),
-        ] else if (participantIds != null)
-          Expression.or([
-            Expression.and([
-              tbl.contactId.equalsValue(participantIds[0]),
-              tbl.senderId.equalsValue(participantIds[1]),
-              tbl.isGroupMessage.equals(false),
-            ]),
-            Expression.and([
-              tbl.contactId.equalsValue(participantIds[1]),
-              tbl.senderId.equalsValue(participantIds[0]),
-              tbl.isGroupMessage.equals(false),
-            ])
-          ]),
-        if (text != null) tbl.txt.contains(text),
-        if (messageType != null) tbl.type.equalsValue(messageType),
-        if (createdDateStart != null)
-          tbl.createdDate.isBiggerOrEqualValue(createdDateStart),
-        if (createdDateEnd != null)
-          tbl.createdDate.isSmallerOrEqualValue(createdDateEnd),
-      ]);
+    $MessageTableTable tbl,
+    Int64? idStart,
+    Int64? groupId,
+    List<Int64>? participantIds,
+    String? text,
+    MessageType? messageType,
+    DateTime? createdDateStart,
+    DateTime? createdDateEnd,
+  ) => Expression.and([
+    if (idStart != null) tbl.id.isBiggerThanValue(idStart.toBigInt()),
+    if (groupId != null) ...[
+      tbl.contactId.equalsValue(groupId),
+      tbl.isGroupMessage.equals(true),
+    ] else if (participantIds != null)
+      Expression.or([
+        Expression.and([
+          tbl.contactId.equalsValue(participantIds[0]),
+          tbl.senderId.equalsValue(participantIds[1]),
+          tbl.isGroupMessage.equals(false),
+        ]),
+        Expression.and([
+          tbl.contactId.equalsValue(participantIds[1]),
+          tbl.senderId.equalsValue(participantIds[0]),
+          tbl.isGroupMessage.equals(false),
+        ]),
+      ]),
+    if (text != null) tbl.txt.contains(text),
+    if (messageType != null) tbl.type.equalsValue(messageType),
+    if (createdDateStart != null)
+      tbl.createdDate.isBiggerOrEqualValue(createdDateStart),
+    if (createdDateEnd != null)
+      tbl.createdDate.isSmallerOrEqualValue(createdDateEnd),
+  ]);
 }
 
 class CountAndSearchLatestMessageResult {
-  const CountAndSearchLatestMessageResult(
-      {required this.message, required this.count});
+  const CountAndSearchLatestMessageResult({
+    required this.message,
+    required this.count,
+  });
 
   final MessageTableData message;
   final int count;

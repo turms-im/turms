@@ -29,8 +29,8 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateGroupInvitationRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -71,7 +71,7 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
     }
 
     public static final int INVITEE_ID_FIELD_NUMBER = 2;
-    private long inviteeId_;
+    private long inviteeId_ = 0L;
 
     /**
      * <code>int64 invitee_id = 2;</code>
@@ -239,8 +239,10 @@ public final class CreateGroupInvitationRequest extends com.google.protobuf.Gene
         if (getGroupId() != other.getGroupId()) {
             return false;
         }
-        return getInviteeId() == other.getInviteeId()
-                && getContent().equals(other.getContent())
+        if (getInviteeId() != other.getInviteeId()) {
+            return false;
+        }
+        return getContent().equals(other.getContent())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

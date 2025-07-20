@@ -37,7 +37,9 @@ import java.util.Date
 /**
  * @author James Chen
  */
-class ConversationService(private val turmsClient: TurmsClient) {
+class ConversationService(
+    private val turmsClient: TurmsClient,
+) {
     /**
      * Find private conversations between the logged-in user and another user.
      *
@@ -142,8 +144,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                     this.userId = userId
                     this.readDate = readDate?.time ?: Date().time
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Update the read date of the target group conversation.
@@ -182,8 +183,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                     this.groupId = groupId
                     this.readDate = readDate?.time ?: Date().time
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Upsert private conversation settings, such as "sticky", "new message alert", etc.
@@ -266,8 +266,8 @@ class ConversationService(private val turmsClient: TurmsClient) {
         userIds: Set<Long>? = null,
         groupIds: Set<Long>? = null,
         names: Set<String>? = null,
-    ): Response<Unit> {
-        return turmsClient.driver
+    ): Response<Unit> =
+        turmsClient.driver
             .send(
                 DeleteConversationSettingsRequest.newBuilder().apply {
                     userIds?.let { addAllUserIds(it) }
@@ -275,7 +275,6 @@ class ConversationService(private val turmsClient: TurmsClient) {
                     names?.let { addAllNames(it) }
                 },
             ).toResponse()
-    }
 
     /**
      * Find conversation settings.
@@ -292,8 +291,8 @@ class ConversationService(private val turmsClient: TurmsClient) {
         groupIds: Set<Long>? = null,
         names: Set<String>? = null,
         lastUpdatedDate: Date? = null,
-    ): Response<List<ConversationSettings>> {
-        return turmsClient.driver
+    ): Response<List<ConversationSettings>> =
+        turmsClient.driver
             .send(
                 QueryConversationSettingsRequest.newBuilder().apply {
                     userIds?.let { addAllUserIds(it) }
@@ -304,7 +303,6 @@ class ConversationService(private val turmsClient: TurmsClient) {
             ).toResponse {
                 it.conversationSettingsList.conversationSettingsListList
             }
-    }
 
     /**
      * Update the typing status of the target private conversation.
@@ -329,8 +327,7 @@ class ConversationService(private val turmsClient: TurmsClient) {
                     toId = userId
                     isGroupMessage = false
                 },
-            )
-            .toResponse()
+            ).toResponse()
 
     /**
      * Update the typing status of the target group conversation.
@@ -355,6 +352,5 @@ class ConversationService(private val turmsClient: TurmsClient) {
                     toId = groupId
                     isGroupMessage = true
                 },
-            )
-            .toResponse()
+            ).toResponse()
 }

@@ -26,6 +26,8 @@ class TToast {
     final appThemeExtension = theme.appThemeExtension;
 
     final Widget toastChild = TToastView(
+      duration: toastDuration,
+      onDismissed: dismiss,
       child: DecoratedBox(
         decoration: appThemeExtension.toastDecoration,
         child: Padding(
@@ -36,46 +38,49 @@ class TToast {
             children: [
               switch (type) {
                 TToastType.info => TCircle(
-                    backgroundColor: appThemeExtension.infoColor,
-                    child: const Icon(
-                      Symbols.info_i_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    )),
+                  backgroundColor: appThemeExtension.infoColor,
+                  child: const Icon(
+                    Symbols.info_i_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
                 TToastType.success => TCircle(
-                    backgroundColor: appThemeExtension.successColor,
-                    child: const Icon(
-                      Symbols.done_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    )),
+                  backgroundColor: appThemeExtension.successColor,
+                  child: const Icon(
+                    Symbols.done_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
                 TToastType.error => TCircle(
-                    backgroundColor: theme.colorScheme.error,
-                    child: const Icon(
-                      Symbols.close_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    )),
+                  backgroundColor: theme.colorScheme.error,
+                  child: const Icon(
+                    Symbols.close_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
                 TToastType.warning => TCircle(
-                    backgroundColor: appThemeExtension.warningColor,
-                    child: const Icon(
-                      Symbols.priority_high_rounded,
-                      color: Colors.white,
-                      size: 14,
-                    )),
+                  backgroundColor: appThemeExtension.warningColor,
+                  child: const Icon(
+                    Symbols.priority_high_rounded,
+                    color: Colors.white,
+                    size: 14,
+                  ),
+                ),
               },
               Text(text, softWrap: true, style: const TextStyle(fontSize: 14)),
             ],
           ),
         ),
       ),
-      duration: toastDuration,
-      onDismissed: dismiss,
     );
 
     _overlayEntry = OverlayEntry(
-        builder: (BuildContext context) =>
-            Positioned(bottom: 60, left: 18, right: 18, child: toastChild));
+      builder: (BuildContext context) =>
+          Positioned(bottom: 60, left: 18, right: 18, child: toastChild),
+    );
 
     _isVisible = true;
     _overlayState!.insert(_overlayEntry!);

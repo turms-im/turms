@@ -32,8 +32,8 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 TurmsRequest.class.getName());
     }
@@ -60,7 +60,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     }
 
     private int bitField0_;
-    private int kindCase_;
+    private int kindCase_ = 0;
     @SuppressWarnings("serial")
     private java.lang.Object kind_;
 
@@ -245,7 +245,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <pre>
@@ -5999,7 +5999,7 @@ public final class TurmsRequest extends com.google.protobuf.GeneratedMessage imp
             return this;
         }
 
-        private int kindCase_;
+        private int kindCase_ = 0;
         private java.lang.Object kind_;
 
         public KindCase getKindCase() {

@@ -29,8 +29,8 @@ public final class DeleteFriendRequestRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteFriendRequestRequest.class.getName());
     }
@@ -170,10 +170,8 @@ public final class DeleteFriendRequestRequest extends com.google.protobuf.Genera
             return super.equals(obj);
         }
 
-        if (getRequestId() != other.getRequestId()) {
-            return false;
-        }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getRequestId() == other.getRequestId()
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 

@@ -24,36 +24,37 @@ class _ContactsPageState extends ConsumerState<ContactsPage> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Stack(children: [
-          _buildSubNavigationRail(appThemeExtension, subNavigationRailWidth),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            right: -Sizes.subNavigationRailDividerSize.padding.right,
-            child: TMovableVerticalDivider(
-              color: appThemeExtension.subNavigationRailDividerColor,
-              onMove: () {
-                _widthOnPointDown = subNavigationRailWidth;
-              },
-              onMoved: (delta) {
-                ref
-                    .read(subNavigationRailWidthViewModel.notifier)
-                    .update(_widthOnPointDown + delta);
-              },
+        Stack(
+          children: [
+            _buildSubNavigationRail(appThemeExtension, subNavigationRailWidth),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              right: -Sizes.subNavigationRailDividerSize.padding.right,
+              child: TMovableVerticalDivider(
+                color: appThemeExtension.subNavigationRailDividerColor,
+                onMove: () {
+                  _widthOnPointDown = subNavigationRailWidth;
+                },
+                onMoved: (delta) {
+                  ref
+                      .read(subNavigationRailWidthViewModel.notifier)
+                      .update(_widthOnPointDown + delta);
+                },
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         _buildContactProfilePage(appThemeExtension),
       ],
     );
   }
 
   Widget _buildSubNavigationRail(
-          AppThemeExtension appThemeExtension, double subNavigationRailWidth) =>
-      SizedBox(
-        width: subNavigationRailWidth,
-        child: const SubNavigationRail(),
-      );
+    AppThemeExtension appThemeExtension,
+    double subNavigationRailWidth,
+  ) =>
+      SizedBox(width: subNavigationRailWidth, child: const SubNavigationRail());
 
   Widget _buildContactProfilePage(AppThemeExtension appThemeExtension) =>
       Expanded(

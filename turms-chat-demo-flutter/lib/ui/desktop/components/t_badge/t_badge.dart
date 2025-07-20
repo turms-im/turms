@@ -14,20 +14,14 @@ class TBadge extends StatelessWidget {
       child = Center(
         child: Text(
           count.toString(),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
       );
     }
     return ClipOval(
       child: ColoredBox(
         color: Colors.red,
-        child: SizedBox.square(
-          dimension: badgeDimension,
-          child: child,
-        ),
+        child: SizedBox.square(dimension: badgeDimension, child: child),
       ),
     );
   }

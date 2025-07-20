@@ -9,8 +9,6 @@ project(
     LANGUAGES CXX
 )
 
-message(STATUS "TODO: Not implemented")
-
 # ---- Options ----
 
 #option(TURMS_CLIENT_BUILD_TESTS "Build Turms client tests" OFF)
@@ -18,19 +16,23 @@ message(STATUS "TODO: Not implemented")
 
 # ---- Top-level CMake config ----
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 add_compile_definitions(
-        BOOST_THREAD_PROVIDES_FUTURE
-        BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
-        BOOST_THREAD_PROVIDES_FUTURE_UNWRAP
+    BOOST_THREAD_PROVIDES_FUTURE
+    BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
+    BOOST_THREAD_PROVIDES_FUTURE_UNWRAP
 )
 
 # ---- Dependencies ----
 
-find_package(absl REQUIRED)
-find_package(Protobuf REQUIRED)
-find_package(Boost REQUIRED)
+# Prefer config mode as config files are typically
+# installed as part of the package, and the config mode is more reliable.
+find_package(absl CONFIG REQUIRED)
+find_package(Protobuf CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED COMPONENTS asio chrono core thread)
+
+get_target_property(absl_INCLUDE_DIRS absl::base INTERFACE_INCLUDE_DIRECTORIES)
 
 # ---- Source files ----
 
@@ -50,11 +52,22 @@ add_library(
     ${headers}
     ${sources}
 )
+
+if (NOT absl_INCLUDE_DIRS)
+    message(FATAL_ERROR "The variable absl_INCLUDE_DIRS is not set")
+endif ()
+if (NOT Protobuf_INCLUDE_DIRS)
+    message(FATAL_ERROR "The variable Protobuf_INCLUDE_DIRS is not set")
+endif ()
+if (NOT Boost_INCLUDE_DIRS)
+    message(FATAL_ERROR "The variable Boost_INCLUDE_DIRS is not set")
+endif ()
+
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
     include
-    ${absl_INCLUDE_DIR}
-    ${Protobuf_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIR}
+    ${absl_INCLUDE_DIRS}
+    ${Protobuf_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )

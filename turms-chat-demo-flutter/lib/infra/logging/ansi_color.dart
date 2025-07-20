@@ -1,11 +1,7 @@
 class AnsiColor {
-  AnsiColor.bg(this.bg)
-      : fg = null,
-        str = format(bg: bg);
+  AnsiColor.bg(this.bg) : fg = null, str = format(bg: bg);
 
-  AnsiColor.fg(this.fg)
-      : bg = null,
-        str = format(fg: fg);
+  AnsiColor.fg(this.fg) : bg = null, str = format(fg: fg);
 
   static const ansiEsc = '\x1B[';
   static const ansiDefault = '${ansiEsc}0m';

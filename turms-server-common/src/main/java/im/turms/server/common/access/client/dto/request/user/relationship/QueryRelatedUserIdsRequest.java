@@ -29,8 +29,8 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryRelatedUserIdsRequest.class.getName());
     }
@@ -42,6 +42,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
 
     private QueryRelatedUserIdsRequest() {
         groupIndexes_ = emptyIntList();
+        userIdsForCommonRelationships_ = emptyLongList();
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -139,6 +140,41 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         return lastUpdatedDate_;
     }
 
+    public static final int USER_IDS_FOR_COMMON_RELATIONSHIPS_FIELD_NUMBER = 4;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.LongList userIdsForCommonRelationships_ = emptyLongList();
+
+    /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @return A list containing the userIdsForCommonRelationships.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Long> getUserIdsForCommonRelationshipsList() {
+        return userIdsForCommonRelationships_;
+    }
+
+    /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @return The count of userIdsForCommonRelationships.
+     */
+    public int getUserIdsForCommonRelationshipsCount() {
+        return userIdsForCommonRelationships_.size();
+    }
+
+    /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The userIdsForCommonRelationships at the given index.
+     */
+    public long getUserIdsForCommonRelationships(int index) {
+        return userIdsForCommonRelationships_.getLong(index);
+    }
+
+    private int userIdsForCommonRelationshipsMemoizedSerializedSize = -1;
+
     public static final int CUSTOM_ATTRIBUTES_FIELD_NUMBER = 15;
     @SuppressWarnings("serial")
     private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_;
@@ -207,7 +243,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         if (((bitField0_ & 0x00000001) != 0)) {
             output.writeBool(1, blocked_);
         }
-        if (getGroupIndexesList().size() > 0) {
+        if (!getGroupIndexesList().isEmpty()) {
             output.writeUInt32NoTag(18);
             output.writeUInt32NoTag(groupIndexesMemoizedSerializedSize);
         }
@@ -216,6 +252,13 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             output.writeInt64(3, lastUpdatedDate_);
+        }
+        if (!getUserIdsForCommonRelationshipsList().isEmpty()) {
+            output.writeUInt32NoTag(34);
+            output.writeUInt32NoTag(userIdsForCommonRelationshipsMemoizedSerializedSize);
+        }
+        for (int i = 0; i < userIdsForCommonRelationships_.size(); i++) {
+            output.writeInt64NoTag(userIdsForCommonRelationships_.getLong(i));
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
@@ -249,6 +292,19 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         }
         if (((bitField0_ & 0x00000002) != 0)) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(3, lastUpdatedDate_);
+        }
+        {
+            int dataSize = 0;
+            for (int i = 0; i < userIdsForCommonRelationships_.size(); i++) {
+                dataSize += com.google.protobuf.CodedOutputStream
+                        .computeInt64SizeNoTag(userIdsForCommonRelationships_.getLong(i));
+            }
+            size += dataSize;
+            if (!getUserIdsForCommonRelationshipsList().isEmpty()) {
+                size += 1;
+                size += com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(dataSize);
+            }
+            userIdsForCommonRelationshipsMemoizedSerializedSize = dataSize;
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
@@ -286,7 +342,9 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
                 return false;
             }
         }
-        return getCustomAttributesList().equals(other.getCustomAttributesList())
+        return getUserIdsForCommonRelationshipsList()
+                .equals(other.getUserIdsForCommonRelationshipsList())
+                && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
 
@@ -308,6 +366,10 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         if (hasLastUpdatedDate()) {
             hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
             hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getLastUpdatedDate());
+        }
+        if (getUserIdsForCommonRelationshipsCount() > 0) {
+            hash = (37 * hash) + USER_IDS_FOR_COMMON_RELATIONSHIPS_FIELD_NUMBER;
+            hash = (53 * hash) + getUserIdsForCommonRelationshipsList().hashCode();
         }
         if (getCustomAttributesCount() > 0) {
             hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
@@ -458,13 +520,14 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             blocked_ = false;
             groupIndexes_ = emptyIntList();
             lastUpdatedDate_ = 0L;
+            userIdsForCommonRelationships_ = emptyLongList();
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
                 customAttributes_ = null;
                 customAttributesBuilder_.clear();
             }
-            bitField0_ &= ~0x00000008;
+            bitField0_ &= ~0x00000010;
             return this;
         }
 
@@ -505,9 +568,9 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.request.user.relationship.QueryRelatedUserIdsRequest result) {
             if (customAttributesBuilder_ == null) {
-                if (((bitField0_ & 0x00000008) != 0)) {
+                if (((bitField0_ & 0x00000010) != 0)) {
                     customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
-                    bitField0_ &= ~0x00000008;
+                    bitField0_ &= ~0x00000010;
                 }
                 result.customAttributes_ = customAttributes_;
             } else {
@@ -530,6 +593,10 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             if (((from_bitField0_ & 0x00000004) != 0)) {
                 result.lastUpdatedDate_ = lastUpdatedDate_;
                 to_bitField0_ |= 0x00000002;
+            }
+            if (((from_bitField0_ & 0x00000008) != 0)) {
+                userIdsForCommonRelationships_.makeImmutable();
+                result.userIdsForCommonRelationships_ = userIdsForCommonRelationships_;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -568,11 +635,22 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             if (other.hasLastUpdatedDate()) {
                 setLastUpdatedDate(other.getLastUpdatedDate());
             }
+            if (!other.userIdsForCommonRelationships_.isEmpty()) {
+                if (userIdsForCommonRelationships_.isEmpty()) {
+                    userIdsForCommonRelationships_ = other.userIdsForCommonRelationships_;
+                    userIdsForCommonRelationships_.makeImmutable();
+                    bitField0_ |= 0x00000008;
+                } else {
+                    ensureUserIdsForCommonRelationshipsIsMutable();
+                    userIdsForCommonRelationships_.addAll(other.userIdsForCommonRelationships_);
+                }
+                onChanged();
+            }
             if (customAttributesBuilder_ == null) {
                 if (!other.customAttributes_.isEmpty()) {
                     if (customAttributes_.isEmpty()) {
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000008;
+                        bitField0_ &= ~0x00000010;
                     } else {
                         ensureCustomAttributesIsMutable();
                         customAttributes_.addAll(other.customAttributes_);
@@ -585,7 +663,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
                         customAttributesBuilder_.dispose();
                         customAttributesBuilder_ = null;
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000008;
+                        bitField0_ &= ~0x00000010;
                         customAttributesBuilder_ =
                                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getCustomAttributesFieldBuilder()
@@ -641,6 +719,20 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
                             lastUpdatedDate_ = input.readInt64();
                             bitField0_ |= 0x00000004;
                         } // case 24
+                        case 32 -> {
+                            long v = input.readInt64();
+                            ensureUserIdsForCommonRelationshipsIsMutable();
+                            userIdsForCommonRelationships_.addLong(v);
+                        } // case 32
+                        case 34 -> {
+                            int length = input.readRawVarint32();
+                            int limit = input.pushLimit(length);
+                            ensureUserIdsForCommonRelationshipsIsMutable();
+                            while (input.getBytesUntilLimit() > 0) {
+                                userIdsForCommonRelationships_.addLong(input.readInt64());
+                            }
+                            input.popLimit(limit);
+                        } // case 34
                         case 122 -> {
                             im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
@@ -862,13 +954,111 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             return this;
         }
 
+        private com.google.protobuf.Internal.LongList userIdsForCommonRelationships_ =
+                emptyLongList();
+
+        private void ensureUserIdsForCommonRelationshipsIsMutable() {
+            if (!userIdsForCommonRelationships_.isModifiable()) {
+                userIdsForCommonRelationships_ = makeMutableCopy(userIdsForCommonRelationships_);
+            }
+            bitField0_ |= 0x00000008;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @return A list containing the userIdsForCommonRelationships.
+         */
+        public java.util.List<java.lang.Long> getUserIdsForCommonRelationshipsList() {
+            userIdsForCommonRelationships_.makeImmutable();
+            return userIdsForCommonRelationships_;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @return The count of userIdsForCommonRelationships.
+         */
+        public int getUserIdsForCommonRelationshipsCount() {
+            return userIdsForCommonRelationships_.size();
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @param index The index of the element to return.
+         * @return The userIdsForCommonRelationships at the given index.
+         */
+        public long getUserIdsForCommonRelationships(int index) {
+            return userIdsForCommonRelationships_.getLong(index);
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @param index The index to set the value at.
+         * @param value The userIdsForCommonRelationships to set.
+         * @return This builder for chaining.
+         */
+        public Builder setUserIdsForCommonRelationships(int index, long value) {
+
+            ensureUserIdsForCommonRelationshipsIsMutable();
+            userIdsForCommonRelationships_.setLong(index, value);
+            bitField0_ |= 0x00000008;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @param value The userIdsForCommonRelationships to add.
+         * @return This builder for chaining.
+         */
+        public Builder addUserIdsForCommonRelationships(long value) {
+
+            ensureUserIdsForCommonRelationshipsIsMutable();
+            userIdsForCommonRelationships_.addLong(value);
+            bitField0_ |= 0x00000008;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @param values The userIdsForCommonRelationships to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllUserIdsForCommonRelationships(
+                java.lang.Iterable<? extends java.lang.Long> values) {
+            ensureUserIdsForCommonRelationshipsIsMutable();
+            com.google.protobuf.AbstractMessageLite.Builder.addAll(values,
+                    userIdsForCommonRelationships_);
+            bitField0_ |= 0x00000008;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearUserIdsForCommonRelationships() {
+            userIdsForCommonRelationships_ = emptyLongList();
+            bitField0_ &= ~0x00000008;
+            onChanged();
+            return this;
+        }
+
         private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
                 java.util.Collections.emptyList();
 
         private void ensureCustomAttributesIsMutable() {
-            if ((bitField0_ & 0x00000008) == 0) {
+            if ((bitField0_ & 0x00000010) == 0) {
                 customAttributes_ = new java.util.ArrayList<>(customAttributes_);
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000010;
             }
         }
 
@@ -1032,7 +1222,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
         public Builder clearCustomAttributes() {
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
-                bitField0_ &= ~0x00000008;
+                bitField0_ &= ~0x00000010;
                 onChanged();
             } else {
                 customAttributesBuilder_.clear();
@@ -1115,7 +1305,7 @@ public final class QueryRelatedUserIdsRequest extends com.google.protobuf.Genera
             if (customAttributesBuilder_ == null) {
                 customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         customAttributes_,
-                        ((bitField0_ & 0x00000008) != 0),
+                        ((bitField0_ & 0x00000010) != 0),
                         getParentForChildren(),
                         isClean());
                 customAttributes_ = null;

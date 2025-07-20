@@ -28,8 +28,8 @@ public final class AudioFile extends com.google.protobuf.GeneratedMessage implem
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 AudioFile.class.getName());
     }
@@ -135,8 +135,8 @@ public final class AudioFile extends com.google.protobuf.GeneratedMessage implem
             com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
-                    /* minor= */ 27,
-                    /* patch= */ 2,
+                    /* minor= */ 29,
+                    /* patch= */ 1,
                     /* suffix= */ "",
                     Description.class.getName());
         }

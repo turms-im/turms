@@ -72,6 +72,28 @@ public interface QueryRelatedUserIdsRequestOrBuilder extends
     long getLastUpdatedDate();
 
     /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @return A list containing the userIdsForCommonRelationships.
+     */
+    java.util.List<java.lang.Long> getUserIdsForCommonRelationshipsList();
+
+    /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @return The count of userIdsForCommonRelationships.
+     */
+    int getUserIdsForCommonRelationshipsCount();
+
+    /**
+     * <code>repeated int64 user_ids_for_common_relationships = 4;</code>
+     *
+     * @param index The index of the element to return.
+     * @return The userIdsForCommonRelationships at the given index.
+     */
+    long getUserIdsForCommonRelationships(int index);
+
+    /**
      * <code>repeated .im.turms.proto.Value custom_attributes = 15;</code>
      */
     java.util.List<im.turms.server.common.access.client.dto.model.common.Value> getCustomAttributesList();

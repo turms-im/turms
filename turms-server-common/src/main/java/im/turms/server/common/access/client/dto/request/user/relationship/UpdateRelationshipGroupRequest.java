@@ -29,8 +29,8 @@ public final class UpdateRelationshipGroupRequest extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateRelationshipGroupRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class UpdateRelationshipGroupRequest extends com.google.protobuf.Ge
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 1;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <pre>
@@ -230,8 +230,10 @@ public final class UpdateRelationshipGroupRequest extends com.google.protobuf.Ge
             return super.equals(obj);
         }
 
-        return getGroupIndex() == other.getGroupIndex()
-                && getNewName().equals(other.getNewName())
+        if (getGroupIndex() != other.getGroupIndex()) {
+            return false;
+        }
+        return getNewName().equals(other.getNewName())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

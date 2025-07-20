@@ -11,7 +11,7 @@ import 'conversation_tile.dart';
 
 class ConversationTiles extends ConsumerStatefulWidget {
   const ConversationTiles({
-    Key? key,
+    super.key,
     required this.conversationTileItems,
     this.highlightedConversationTileItemIndex,
     this.selectedConversationId,
@@ -19,7 +19,7 @@ class ConversationTiles extends ConsumerStatefulWidget {
     required this.onConversationTilesBuildContextUpdated,
     required this.onConversationTileItemSelected,
     required this.onConversationDeleted,
-  }) : super(key: key);
+  });
 
   final List<ConversationTileItem> conversationTileItems;
   final int? highlightedConversationTileItemIndex;
@@ -37,15 +37,16 @@ class ConversationTiles extends ConsumerStatefulWidget {
 class _ConversationTilesState extends ConsumerState<ConversationTiles> {
   @override
   Widget build(BuildContext context) {
-    final idToConversationSettings =
-        ref.watch(idToConversationSettingsViewModel);
+    final idToConversationSettings = ref.watch(
+      idToConversationSettingsViewModel,
+    );
     widget.onConversationTilesBuildContextUpdated(null);
     // Don't use "ScrollablePositionedList" because it's buggy.
     // e.g. https://github.com/google/flutter.widgets/issues/276
     final items = widget.conversationTileItems;
     final itemCount = items.length;
     final recordIdToIndex = {
-      for (var i = 0; i < itemCount; i++) items[i].contact.recordId: i
+      for (var i = 0; i < itemCount; i++) items[i].contact.recordId: i,
     };
     return ListView.builder(
       controller: widget.conversationTilesScrollController,
@@ -56,7 +57,10 @@ class _ConversationTilesState extends ConsumerState<ConversationTiles> {
         item: ConversationTileItemForNormalMode(
           conversation: UserConversation(
             contact: UserContact(
-                userId: Int64.ZERO, name: '', relationshipGroupId: Int64.ZERO),
+              userId: Int64.ZERO,
+              name: '',
+              relationshipGroupId: Int64.ZERO,
+            ),
             messages: [],
           ),
           nameTextSpans: [],

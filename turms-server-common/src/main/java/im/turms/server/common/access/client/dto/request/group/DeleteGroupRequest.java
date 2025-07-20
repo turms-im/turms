@@ -28,8 +28,8 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupRequest.class.getName());
     }
@@ -56,7 +56,7 @@ public final class DeleteGroupRequest extends com.google.protobuf.GeneratedMessa
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>

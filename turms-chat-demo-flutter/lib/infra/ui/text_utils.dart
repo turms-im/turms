@@ -39,13 +39,22 @@ class TextUtils {
         break;
       }
       if (index != searchTextIndex) {
-        textSpans.add(TextSpan(
-            text: text.substring(index, searchTextIndex), style: textStyle));
+        textSpans.add(
+          TextSpan(
+            text: text.substring(index, searchTextIndex),
+            style: textStyle,
+          ),
+        );
       }
-      textSpans.add(TextSpan(
+      textSpans.add(
+        TextSpan(
           text: text.substring(
-              searchTextIndex, searchTextIndex + searchText.length),
-          style: searchTextStyle));
+            searchTextIndex,
+            searchTextIndex + searchText.length,
+          ),
+          style: searchTextStyle,
+        ),
+      );
       index = searchTextIndex + searchText.length;
     }
     return textSpans;

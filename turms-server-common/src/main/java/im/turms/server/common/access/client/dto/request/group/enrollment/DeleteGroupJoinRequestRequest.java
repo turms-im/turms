@@ -29,8 +29,8 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupJoinRequestRequest.class.getName());
     }
@@ -57,7 +57,7 @@ public final class DeleteGroupJoinRequestRequest extends com.google.protobuf.Gen
     }
 
     public static final int REQUEST_ID_FIELD_NUMBER = 1;
-    private long requestId_;
+    private long requestId_ = 0L;
 
     /**
      * <code>int64 request_id = 1;</code>

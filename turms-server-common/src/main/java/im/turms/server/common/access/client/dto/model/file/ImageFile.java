@@ -28,8 +28,8 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 ImageFile.class.getName());
     }
@@ -40,6 +40,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
     }
 
     private ImageFile() {
+        data_ = com.google.protobuf.ByteString.EMPTY;
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -127,8 +128,8 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
             com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                     com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                     /* major= */ 4,
-                    /* minor= */ 27,
-                    /* patch= */ 2,
+                    /* minor= */ 29,
+                    /* patch= */ 1,
                     /* suffix= */ "",
                     Description.class.getName());
         }
@@ -196,7 +197,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         }
 
         public static final int ORIGINAL_FIELD_NUMBER = 2;
-        private boolean original_;
+        private boolean original_ = false;
 
         /**
          * <code>optional bool original = 2;</code>
@@ -219,7 +220,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         }
 
         public static final int IMAGE_SIZE_FIELD_NUMBER = 3;
-        private int imageSize_;
+        private int imageSize_ = 0;
 
         /**
          * <code>optional int32 image_size = 3;</code>
@@ -242,7 +243,7 @@ public final class ImageFile extends com.google.protobuf.GeneratedMessage implem
         }
 
         public static final int FILE_SIZE_FIELD_NUMBER = 4;
-        private int fileSize_;
+        private int fileSize_ = 0;
 
         /**
          * <code>optional int32 file_size = 4;</code>

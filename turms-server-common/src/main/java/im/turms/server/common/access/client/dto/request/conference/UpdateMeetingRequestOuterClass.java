@@ -25,8 +25,8 @@ public final class UpdateMeetingRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateMeetingRequestOuterClass.class.getName());
     }
@@ -63,7 +63,7 @@ public final class UpdateMeetingRequestOuterClass {
                                 .getDescriptor(),});
         internal_static_im_turms_proto_UpdateMeetingRequest_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_UpdateMeetingRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_UpdateMeetingRequest_descriptor,

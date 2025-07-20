@@ -1,0 +1,29 @@
+default:
+    just --list
+
+set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
+
+[windows]
+install:
+    choco install -y llvm
+
+[linux]
+install:
+    sudo apt-get update
+    sudo apt-get install -y clang-format
+
+[macos]
+install:
+    brew install llvm
+
+[windows]
+lint:
+    Get-ChildItem -Path .\src, .\include -Recurse -Include *.cpp, *.h, *.c, *.hpp | ForEach-Object { clang-format -i $_.FullName }
+
+[linux]
+lint:
+    find ./src ./include -type f \( -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.hpp' \) | xargs clang-format -i
+
+[macos]
+lint:
+    find ./src ./include -type f \( -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.hpp' \) | xargs clang-format -i

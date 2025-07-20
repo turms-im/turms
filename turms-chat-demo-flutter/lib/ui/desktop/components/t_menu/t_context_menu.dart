@@ -20,38 +20,53 @@ Widget buildContextMenu({
   required BuildContext context,
   required List<ContextMenuButtonItem> items,
   required TextSelectionToolbarAnchors anchors,
-}) =>
-    CustomSingleChildLayout(
-        delegate: DesktopTextSelectionToolbarLayoutDelegate(
-            anchor: anchors.primaryAnchor),
-        child: _buildContextMenu(context, items));
+}) => CustomSingleChildLayout(
+  delegate: DesktopTextSelectionToolbarLayoutDelegate(
+    anchor: anchors.primaryAnchor,
+  ),
+  child: _buildContextMenu(context, items),
+);
 
 Widget buildContextMenuForSelectableRegion(
-        BuildContext context, SelectableRegionState selectableRegionState) =>
-    CustomSingleChildLayout(
-        delegate: DesktopTextSelectionToolbarLayoutDelegate(
-            anchor: selectableRegionState.contextMenuAnchors.primaryAnchor),
-        child: _buildContextMenu(
-            context, selectableRegionState.contextMenuButtonItems));
+  BuildContext context,
+  SelectableRegionState selectableRegionState,
+) => CustomSingleChildLayout(
+  delegate: DesktopTextSelectionToolbarLayoutDelegate(
+    anchor: selectableRegionState.contextMenuAnchors.primaryAnchor,
+  ),
+  child: _buildContextMenu(
+    context,
+    selectableRegionState.contextMenuButtonItems,
+  ),
+);
 
 Widget buildContextMenuForTSelectableRegion(
-        BuildContext context, TSelectableRegionState selectableRegionState) =>
-    CustomSingleChildLayout(
-        delegate: DesktopTextSelectionToolbarLayoutDelegate(
-            anchor: selectableRegionState.contextMenuAnchors.primaryAnchor),
-        child: _buildContextMenu(
-            context, selectableRegionState.contextMenuButtonItems));
+  BuildContext context,
+  TSelectableRegionState selectableRegionState,
+) => CustomSingleChildLayout(
+  delegate: DesktopTextSelectionToolbarLayoutDelegate(
+    anchor: selectableRegionState.contextMenuAnchors.primaryAnchor,
+  ),
+  child: _buildContextMenu(
+    context,
+    selectableRegionState.contextMenuButtonItems,
+  ),
+);
 
 Widget _buildContextMenu(
-    BuildContext context, List<ContextMenuButtonItem> items) {
+  BuildContext context,
+  List<ContextMenuButtonItem> items,
+) {
   final menuEntries = <TMenuEntry<String>>[];
   for (final item in items) {
     final onPressed = item.onPressed;
     if (onPressed != null && _allowedContextButtonTypes.contains(item.type)) {
-      final label = item.label ??
+      final label =
+          item.label ??
           AdaptiveTextSelectionToolbar.getButtonLabel(context, item);
-      menuEntries
-          .add(TMenuEntry(label: label, value: label, onSelected: onPressed));
+      menuEntries.add(
+        TMenuEntry(label: label, value: label, onSelected: onPressed),
+      );
     }
   }
   return TMenu(

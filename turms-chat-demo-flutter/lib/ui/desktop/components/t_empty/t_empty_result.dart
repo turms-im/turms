@@ -12,40 +12,35 @@ class TEmptyResult extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Center(
-          child: ColorFiltered(
-        colorFilter: AppColors.greyscale,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Opacity(
-                  opacity: 0.1,
-                  child: Icon(
-                    icon,
-                    size: 100,
-                  ),
+    child: ColorFiltered(
+      colorFilter: AppColors.greyscale,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Opacity(opacity: 0.1, child: Icon(icon, size: 100)),
+              const Positioned(
+                left: 40,
+                top: 40,
+                child: Opacity(
+                  opacity: 0.5,
+                  child: Icon(Symbols.search_rounded, size: 80),
                 ),
-                const Positioned(
-                  left: 40,
-                  top: 40,
-                  child: Opacity(
-                    opacity: 0.5,
-                    child: Icon(
-                      Symbols.search_rounded,
-                      size: 80,
-                    ),
-                  ),
-                ),
-              ],
+              ),
+            ],
+          ),
+          Sizes.sizedBoxH16,
+          Text(
+            ref.watch(appLocalizationsViewModel).noResultsFound,
+            style: context.appThemeExtension.descriptionTextStyle.copyWith(
+              fontSize: 18,
             ),
-            Sizes.sizedBoxH16,
-            Text(ref.watch(appLocalizationsViewModel).noResultsFound,
-                style: context.appThemeExtension.descriptionTextStyle
-                    .copyWith(fontSize: 18)),
-            Sizes.sizedBoxH32,
-          ],
-        ),
-      ));
+          ),
+          Sizes.sizedBoxH32,
+        ],
+      ),
+    ),
+  );
 }

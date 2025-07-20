@@ -31,7 +31,7 @@ const _taskIdCheckForUpdates = 'checkForUpdates';
 final _diskWarningThreshold = BigInt.from(100).MB;
 
 class HomePageLandscape extends ConsumerStatefulWidget {
-  const HomePageLandscape({Key? key}) : super(key: key);
+  const HomePageLandscape({super.key});
 
   @override
   ConsumerState<HomePageLandscape> createState() => _HomePageLandscapeState();
@@ -66,18 +66,19 @@ class _HomePageLandscapeState extends ConsumerState<HomePageLandscape> {
                   child: MainNavigationRail(),
                 ),
                 Expanded(
-                    child: TLazyIndexedStack(
-                  index: switch (tab) {
-                    HomePageTab.chat => 0,
-                    HomePageTab.contacts => 1,
-                    HomePageTab.files => 2,
-                  },
-                  children: [
-                    const RepaintBoundary(child: ChatPage()),
-                    const RepaintBoundary(child: ContactsPage()),
-                    const RepaintBoundary(child: FilesPage()),
-                  ],
-                ))
+                  child: TLazyIndexedStack(
+                    index: switch (tab) {
+                      HomePageTab.chat => 0,
+                      HomePageTab.contacts => 1,
+                      HomePageTab.files => 2,
+                    },
+                    children: [
+                      const RepaintBoundary(child: ChatPage()),
+                      const RepaintBoundary(child: ContactsPage()),
+                      const RepaintBoundary(child: FilesPage()),
+                    ],
+                  ),
+                ),
               ],
             ),
             const TTitleBar(),
@@ -98,40 +99,44 @@ class _HomePageLandscapeState extends ConsumerState<HomePageLandscape> {
   void initState() {
     super.initState();
     TaskUtils.addPeriodicTask(
-        id: _taskIdCheckForUpdates,
-        duration: const Duration(hours: 1),
-        callback: () async {
-          final checkForUpdates =
-              ref.read(userSettingsViewModel)?.checkForUpdatesAutomatically ??
-                  false;
-          if (!checkForUpdates) {
-            return true;
-          }
-          try {
-            final file = await GithubUtils.downloadLatestApp();
-            // TODO: pop up a dialog to notify user.
-          } catch (e, s) {
-            logger.warn('Failed to download latest application', e, s);
-          }
+      id: _taskIdCheckForUpdates,
+      duration: const Duration(hours: 1),
+      callback: () async {
+        final checkForUpdates =
+            ref.read(userSettingsViewModel)?.checkForUpdatesAutomatically ??
+            false;
+        if (!checkForUpdates) {
           return true;
-        });
+        }
+        try {
+          final file = await GithubUtils.downloadLatestApp();
+          // TODO: pop up a dialog to notify user.
+        } catch (e, s) {
+          logger.warn('Failed to download latest application', e, s);
+        }
+        return true;
+      },
+    );
     TaskUtils.addPeriodicTask(
       id: _taskIdCheckDiskSpace,
       duration: const Duration(minutes: 1),
       callback: () async {
         final diskSpaceInfos = getDiskSpaceInfos();
         final diskSpace = diskSpaceInfos.firstWhereOrNull(
-            (info) => p.isWithin(info.path, AppConfig.appDir));
+          (info) => p.isWithin(info.path, AppConfig.appDir),
+        );
         if (diskSpace != null && diskSpace.available < _diskWarningThreshold) {
           final appLocalizations = ref.read(appLocalizationsViewModel);
-          unawaited(showAlertDialog(
-            context,
-            title: appLocalizations.lowDiskSpace,
-            content: appLocalizations.lowDiskSpacePrompt(100),
-            onTapConfirm: () {
-              Navigator.of(context).pop();
-            },
-          ));
+          unawaited(
+            showAlertDialog(
+              context,
+              title: appLocalizations.lowDiskSpace,
+              content: appLocalizations.lowDiskSpacePrompt(100),
+              onTapConfirm: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          );
         }
         return true;
       },

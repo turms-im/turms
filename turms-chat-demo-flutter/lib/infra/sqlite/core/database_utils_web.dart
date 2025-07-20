@@ -13,9 +13,11 @@ class DatabaseUtils {
     required bool logStatements,
   }) {
     QueryExecutor database = inMemory
-        ? WebDatabase.withStorage(DriftWebStorage.volatile(),
+        ? WebDatabase.withStorage(
+            DriftWebStorage.volatile(),
             // We set this to true because we need to store int64
-            readIntsAsBigInt: true)
+            readIntsAsBigInt: true,
+          )
         : WebDatabase('$dbName.sqlite', readIntsAsBigInt: true);
     if (logStatements) {
       database = database.interceptWith(SqlLoggingQueryInterceptor());

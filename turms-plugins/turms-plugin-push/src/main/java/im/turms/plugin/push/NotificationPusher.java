@@ -56,7 +56,8 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
     private UserService userService;
     private UserStatusService userStatusService;
 
-    private List<String> deviceTokenFieldNames;
+    private Set<String> deviceTokenFieldNames;
+    private Map<String, PushNotificationServiceProvider> deviceTokenFieldNameToServiceProvider;
 
     @Override
     protected Mono<Void> start() {
@@ -65,7 +66,8 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         userService = getContext().getBean(UserService.class);
         userStatusService = getContext().getBean(UserStatusService.class);
 
-        deviceTokenFieldNames = manager.getDeviceTokenFieldNames();
+        deviceTokenFieldNameToServiceProvider = manager.getDeviceTokenFieldNameToServiceProvider();
+        deviceTokenFieldNames = deviceTokenFieldNameToServiceProvider.keySet();
         return Mono.empty();
     }
 
@@ -85,7 +87,9 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
         TurmsRequest request = result.notifications()
                 .getFirst()
                 .notification();
-        if (request == null || offlineRecipientIds.isEmpty() || deviceTokenFieldNames.isEmpty()) {
+        if (request == null
+                || offlineRecipientIds.isEmpty()
+                || deviceTokenFieldNameToServiceProvider.isEmpty()) {
             return handlerResultMono;
         }
         // TODO: support other types
@@ -149,7 +153,7 @@ public class NotificationPusher extends TurmsExtension implements RequestHandler
             for (Map.Entry<String, String> detail : deviceDetails.entrySet()) {
                 String providerStr = detail.getKey();
                 PushNotificationServiceProvider provider =
-                        PushNotificationServiceProvider.get(providerStr);
+                        deviceTokenFieldNameToServiceProvider.get(providerStr);
                 if (provider == null) {
                     continue;
                 }

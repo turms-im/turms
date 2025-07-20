@@ -27,8 +27,10 @@ class UserService {
           (item) => item.name,
         ) +
         [
-          Fixtures.instance
-              .getGroupRelationshipGroup(_loggedInUser, appLocalizations)
+          Fixtures.instance.getGroupRelationshipGroup(
+            _loggedInUser,
+            appLocalizations,
+          ),
         ];
   }
 
@@ -37,13 +39,16 @@ class UserService {
     await Future<void>.delayed(const Duration(seconds: 3));
     final contacts = Fixtures.instance.getContacts(_loggedInUser);
     return ComparableUtils.sortByStrings(
-        locale, contacts, (contact) => contact.name);
+      locale,
+      contacts,
+      (contact) => contact.name,
+    );
   }
 
   List<Contact> getSystemContacts(AppLocalizations appLocalizations) => [
-        SystemContact.forRequestNotification(appLocalizations),
-        SystemContact.forFileTransfer(appLocalizations),
-      ];
+    SystemContact.forRequestNotification(appLocalizations),
+    SystemContact.forFileTransfer(appLocalizations),
+  ];
 
   Future<void> acceptFriendRequest(Int64 id) async {
     await Future<void>.delayed(const Duration(seconds: 3));
@@ -52,14 +57,20 @@ class UserService {
   static Future<User> login(Int64 userId) async {
     await Future<void>.delayed(const Duration(seconds: 1));
     return User(
-        userId: userId, name: 'James Chen', presence: UserPresence.available);
+      userId: userId,
+      name: 'James Chen',
+      presence: UserPresence.available,
+    );
   }
 
-  User queryUsers(Int64 senderId) => Fixtures.instance.userContacts
-      .firstWhere((element) => element.userId == senderId);
+  User queryUsers(Int64 senderId) => Fixtures.instance.userContacts.firstWhere(
+    (element) => element.userId == senderId,
+  );
 
   Future<List<UserContact>> searchUserContacts(
-      Int64 userId, String searchText) async {
+    Int64 userId,
+    String searchText,
+  ) async {
     await Future<void>.delayed(const Duration(seconds: 3));
     return [
       UserContact(
@@ -67,7 +78,7 @@ class UserService {
         name: 'a fake user name: $searchText' * 10,
         intro: 'a fake user intro',
         relationshipGroupId: Int64(-1),
-      )
+      ),
     ];
   }
 
@@ -80,11 +91,9 @@ class UserService {
     if (loggedInUser.presence == presence) {
       return;
     }
-    readGlobalState(loggedInUserViewModel.notifier).state =
-        loggedInUser.copyWith(presence: presence);
+    readGlobalState(loggedInUserViewModel.notifier).state = loggedInUser
+        .copyWith(presence: presence);
   }
 }
 
-final userServiceProvider = StateProvider<UserService?>(
-  (ref) => null,
-);
+final userServiceProvider = StateProvider<UserService?>((ref) => null);

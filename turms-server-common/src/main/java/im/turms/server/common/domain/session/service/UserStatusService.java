@@ -510,7 +510,7 @@ public class UserStatusService extends BaseService {
      */
     public Mono<Map<Long, Map<String, String>>> fetchDeviceDetails(
             @NotEmpty Set<Long> userIds,
-            @NotEmpty List<String> fields) {
+            @NotEmpty Collection<String> fields) {
         try {
             Validator.notEmpty(userIds, "userIds");
             Validator.notEmpty(fields, "fields");

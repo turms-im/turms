@@ -17,4 +17,5 @@ class FriendRequestsViewModelNotifier extends Notifier<List<FriendRequest>> {
 
 final friendRequestsViewModel =
     NotifierProvider<FriendRequestsViewModelNotifier, List<FriendRequest>>(
-        FriendRequestsViewModelNotifier.new);
+      FriendRequestsViewModelNotifier.new,
+    );

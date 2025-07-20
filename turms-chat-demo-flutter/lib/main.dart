@@ -38,11 +38,13 @@ Future<void> main(List<String> args) async {
     // TODO: i10n
     final text = e is Exception ? e.message : e.toString();
     await FlutterPlatformAlert.showAlert(
-        windowTitle: 'Could not launch "${EnvVars.windowTitle}"',
-        text: text,
-        iconStyle: IconStyle.error,
-        options: PlatformAlertOptions(
-            windows: WindowsAlertOptions(preferMessageBox: true)));
+      windowTitle: 'Could not launch "${EnvVars.windowTitle}"',
+      text: text,
+      iconStyle: IconStyle.error,
+      options: PlatformAlertOptions(
+        windows: WindowsAlertOptions(preferMessageBox: true),
+      ),
+    );
     // Ensure all logs are flushed before exit.
     scheduleMicrotask(() {
       exit(1);
@@ -78,15 +80,17 @@ Future<void> _runAsMainApp(List<String> args) async {
   }
 
   logger.warn(
-      'The application is in the alpha stage and under active development. '
-      'There are still many known problems and unfinished features, you do NOT need report them. '
-      'And we will make incompatible changes without migration support, such as database schema changes');
+    'The application is in the alpha stage and under active development. '
+    'There are still many known problems and unfinished features, you do NOT need report them. '
+    'And we will make incompatible changes without migration support, such as database schema changes',
+  );
 
   await AppConfig.load();
   await RustLib.init();
   logger
     ..info(
-        'The directory info: the application directory: ${AppConfig.appDir}, the temporary directory: ${AppConfig.tempDir}')
+      'The directory info: the application directory: ${AppConfig.appDir}, the temporary directory: ${AppConfig.tempDir}',
+    )
     ..info('The application package info: ${AppConfig.packageInfo}');
 
   VideoUtils.ensureInitialized();
@@ -95,8 +99,12 @@ Future<void> _runAsMainApp(List<String> args) async {
   await _initForDesktopPlatforms(args, container);
   await _loadAppSettings(container);
 
-  runApp(UncontrolledProviderScope(
-      container: container, child: App(container: container)));
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: App(container: container),
+    ),
+  );
 }
 
 Future<void> _loadAppSettings(ProviderContainer container) async {
@@ -109,53 +117,66 @@ Future<void> _loadAppSettings(ProviderContainer container) async {
 }
 
 Future<void> _initForDesktopPlatforms(
-    List<String> args, ProviderContainer container) async {
+  List<String> args,
+  ProviderContainer container,
+) async {
   if (args.contains('daemon')) {
     await RpcClient.connect();
   } else {
     final rpcServer = await RpcServer.create();
-    WidgetsBinding.instance
-        .addObserver(AppLifecycleListener(onExitRequested: () async {
-      // TODO: In fact, the callback will never be called
-      // as the reason mentioned in [AppUtils.close].
-      try {
-        await rpcServer.close();
-      } catch (e) {
-        // ignore
-      }
-      return AppExitResponse.exit;
-    }));
+    WidgetsBinding.instance.addObserver(
+      AppLifecycleListener(
+        onExitRequested: () async {
+          // TODO: In fact, the callback will never be called
+          // as the reason mentioned in [AppUtils.close].
+          try {
+            await rpcServer.close();
+          } catch (e) {
+            // ignore
+          }
+          return AppExitResponse.exit;
+        },
+      ),
+    );
   }
 
   initAutostartManager(
-      appName: AppConfig.packageInfo.appName,
-      appPath: Platform.resolvedExecutable,
-      args: []);
+    appName: AppConfig.packageInfo.appName,
+    appPath: Platform.resolvedExecutable,
+    args: [],
+  );
 
   // UI-related
 
-  WindowUtils.addListener(WindowEventListener(onMaximize: () {
-    container.read(isWindowMaximizedViewModel.notifier).state = true;
-  }, onUnmaximize: () {
-    container.read(isWindowMaximizedViewModel.notifier).state = false;
-  }));
+  WindowUtils.addListener(
+    WindowEventListener(
+      onMaximize: () {
+        container.read(isWindowMaximizedViewModel.notifier).state = true;
+      },
+      onUnmaximize: () {
+        container.read(isWindowMaximizedViewModel.notifier).state = false;
+      },
+    ),
+  );
 
   // Note that we need to setup window before painting,
   // otherwise UI will jitter.
   await WindowUtils.setupWindow(
-      minimumSize: AppConfig.defaultWindowSizeForLoginScreen,
-      size: AppConfig.defaultWindowSizeForLoginScreen,
-      backgroundColor: Colors.transparent,
-      title: AppConfig.title);
+    minimumSize: AppConfig.defaultWindowSizeForLoginScreen,
+    size: AppConfig.defaultWindowSizeForLoginScreen,
+    backgroundColor: Colors.transparent,
+    title: AppConfig.title,
+  );
   try {
     await TrayUtils.initTray(
-        AppConfig.title,
-        // TODO: use ico to display
-        Assets.images.iconPng.path,
-        [
-          // TODO: i10n
-          const TrayMenuItem(key: 'exit', label: 'Exit', onTap: AppUtils.close),
-        ]);
+      AppConfig.title,
+      // TODO: use ico to display
+      Assets.images.iconPng.path,
+      [
+        // TODO: i10n
+        const TrayMenuItem(key: 'exit', label: 'Exit', onTap: AppUtils.close),
+      ],
+    );
   } catch (e) {
     logger.warn('Failed to init the tray: $e');
   }

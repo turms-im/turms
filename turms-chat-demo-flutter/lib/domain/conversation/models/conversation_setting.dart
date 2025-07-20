@@ -13,17 +13,21 @@ enum ConversationSetting<D, S> {
   static ConversationSetting<dynamic, dynamic>? fromId(int id) =>
       _idToSetting[id];
 
-  S? convertValueToSql(D value) => switch (this) {
-        ConversationSetting.pinned => (value as bool).toInt(),
-        ConversationSetting.enableNewMessageNotification =>
-          (value as bool).toInt(),
-      } as S?;
+  S? convertValueToSql(D value) =>
+      switch (this) {
+            ConversationSetting.pinned => (value as bool).toInt(),
+            ConversationSetting.enableNewMessageNotification =>
+              (value as bool).toInt(),
+          }
+          as S?;
 
-  D? convertSqlToValue(S value) => switch (this) {
-        ConversationSetting.pinned => (value as int).toBool(),
-        ConversationSetting.enableNewMessageNotification =>
-          (value as int).toBool(),
-      } as D?;
+  D? convertSqlToValue(S value) =>
+      switch (this) {
+            ConversationSetting.pinned => (value as int).toBool(),
+            ConversationSetting.enableNewMessageNotification =>
+              (value as int).toBool(),
+          }
+          as D?;
 }
 
 final _idToSetting = {

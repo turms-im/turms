@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const TResponsiveLayout(
-        portraitLayoutContent: HomePagePortrait(),
-        landscapeLayoutContent: HomePageLandscape(),
-      );
+    portraitLayoutContent: HomePagePortrait(),
+    landscapeLayoutContent: HomePageLandscape(),
+  );
 }

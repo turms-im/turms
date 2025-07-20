@@ -28,8 +28,8 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserRelationship.class.getName());
     }
@@ -41,6 +41,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
 
     private UserRelationship() {
         name_ = "";
+        note_ = "";
         customAttributes_ = java.util.Collections.emptyList();
     }
 
@@ -58,7 +59,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
 
     private int bitField0_;
     public static final int OWNER_ID_FIELD_NUMBER = 1;
-    private long ownerId_;
+    private long ownerId_ = 0L;
 
     /**
      * <code>optional int64 owner_id = 1;</code>
@@ -81,7 +82,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int RELATED_USER_ID_FIELD_NUMBER = 2;
-    private long relatedUserId_;
+    private long relatedUserId_ = 0L;
 
     /**
      * <code>optional int64 related_user_id = 2;</code>
@@ -104,7 +105,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int BLOCK_DATE_FIELD_NUMBER = 3;
-    private long blockDate_;
+    private long blockDate_ = 0L;
 
     /**
      * <code>optional int64 block_date = 3;</code>
@@ -127,7 +128,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 4;
-    private long groupIndex_;
+    private long groupIndex_ = 0L;
 
     /**
      * <code>optional int64 group_index = 4;</code>
@@ -150,7 +151,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
     }
 
     public static final int ESTABLISHMENT_DATE_FIELD_NUMBER = 5;
-    private long establishmentDate_;
+    private long establishmentDate_ = 0L;
 
     /**
      * <code>optional int64 establishment_date = 5;</code>
@@ -216,6 +217,56 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             com.google.protobuf.ByteString b =
                     com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
             name_ = b;
+            return b;
+        } else {
+            return (com.google.protobuf.ByteString) ref;
+        }
+    }
+
+    public static final int NOTE_FIELD_NUMBER = 7;
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object note_ = "";
+
+    /**
+     * <code>optional string note = 7;</code>
+     *
+     * @return Whether the note field is set.
+     */
+    @java.lang.Override
+    public boolean hasNote() {
+        return ((bitField0_ & 0x00000040) != 0);
+    }
+
+    /**
+     * <code>optional string note = 7;</code>
+     *
+     * @return The note.
+     */
+    @java.lang.Override
+    public java.lang.String getNote() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            return (java.lang.String) ref;
+        } else {
+            com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            note_ = s;
+            return s;
+        }
+    }
+
+    /**
+     * <code>optional string note = 7;</code>
+     *
+     * @return The bytes for note.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getNoteBytes() {
+        java.lang.Object ref = note_;
+        if (ref instanceof java.lang.String) {
+            com.google.protobuf.ByteString b =
+                    com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+            note_ = b;
             return b;
         } else {
             return (com.google.protobuf.ByteString) ref;
@@ -304,6 +355,9 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         if (((bitField0_ & 0x00000020) != 0)) {
             com.google.protobuf.GeneratedMessage.writeString(output, 6, name_);
         }
+        if (((bitField0_ & 0x00000040) != 0)) {
+            com.google.protobuf.GeneratedMessage.writeString(output, 7, note_);
+        }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             output.writeMessage(15, value);
         }
@@ -335,6 +389,9 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         }
         if (((bitField0_ & 0x00000020) != 0)) {
             size += com.google.protobuf.GeneratedMessage.computeStringSize(6, name_);
+        }
+        if (((bitField0_ & 0x00000040) != 0)) {
+            size += com.google.protobuf.GeneratedMessage.computeStringSize(7, note_);
         }
         for (im.turms.server.common.access.client.dto.model.common.Value value : customAttributes_) {
             size += com.google.protobuf.CodedOutputStream.computeMessageSize(15, value);
@@ -401,6 +458,14 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                 return false;
             }
         }
+        if (hasNote() != other.hasNote()) {
+            return false;
+        }
+        if (hasNote()) {
+            if (!getNote().equals(other.getNote())) {
+                return false;
+            }
+        }
         return getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -435,6 +500,10 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         if (hasName()) {
             hash = (37 * hash) + NAME_FIELD_NUMBER;
             hash = (53 * hash) + getName().hashCode();
+        }
+        if (hasNote()) {
+            hash = (37 * hash) + NOTE_FIELD_NUMBER;
+            hash = (53 * hash) + getNote().hashCode();
         }
         if (getCustomAttributesCount() > 0) {
             hash = (37 * hash) + CUSTOM_ATTRIBUTES_FIELD_NUMBER;
@@ -588,13 +657,14 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             groupIndex_ = 0L;
             establishmentDate_ = 0L;
             name_ = "";
+            note_ = "";
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
             } else {
                 customAttributes_ = null;
                 customAttributesBuilder_.clear();
             }
-            bitField0_ &= ~0x00000040;
+            bitField0_ &= ~0x00000080;
             return this;
         }
 
@@ -634,9 +704,9 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         private void buildPartialRepeatedFields(
                 im.turms.server.common.access.client.dto.model.user.UserRelationship result) {
             if (customAttributesBuilder_ == null) {
-                if (((bitField0_ & 0x00000040) != 0)) {
+                if (((bitField0_ & 0x00000080) != 0)) {
                     customAttributes_ = java.util.Collections.unmodifiableList(customAttributes_);
-                    bitField0_ &= ~0x00000040;
+                    bitField0_ &= ~0x00000080;
                 }
                 result.customAttributes_ = customAttributes_;
             } else {
@@ -671,6 +741,10 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             if (((from_bitField0_ & 0x00000020) != 0)) {
                 result.name_ = name_;
                 to_bitField0_ |= 0x00000020;
+            }
+            if (((from_bitField0_ & 0x00000040) != 0)) {
+                result.note_ = note_;
+                to_bitField0_ |= 0x00000040;
             }
             result.bitField0_ |= to_bitField0_;
         }
@@ -712,11 +786,16 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                 bitField0_ |= 0x00000020;
                 onChanged();
             }
+            if (other.hasNote()) {
+                note_ = other.note_;
+                bitField0_ |= 0x00000040;
+                onChanged();
+            }
             if (customAttributesBuilder_ == null) {
                 if (!other.customAttributes_.isEmpty()) {
                     if (customAttributes_.isEmpty()) {
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000040;
+                        bitField0_ &= ~0x00000080;
                     } else {
                         ensureCustomAttributesIsMutable();
                         customAttributes_.addAll(other.customAttributes_);
@@ -729,7 +808,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                         customAttributesBuilder_.dispose();
                         customAttributesBuilder_ = null;
                         customAttributes_ = other.customAttributes_;
-                        bitField0_ &= ~0x00000040;
+                        bitField0_ &= ~0x00000080;
                         customAttributesBuilder_ =
                                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders
                                         ? getCustomAttributesFieldBuilder()
@@ -787,6 +866,10 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
                             name_ = input.readStringRequireUtf8();
                             bitField0_ |= 0x00000020;
                         } // case 50
+                        case 58 -> {
+                            note_ = input.readStringRequireUtf8();
+                            bitField0_ |= 0x00000040;
+                        } // case 58
                         case 122 -> {
                             im.turms.server.common.access.client.dto.model.common.Value m =
                                     input.readMessage(
@@ -1147,13 +1230,103 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             return this;
         }
 
+        private java.lang.Object note_ = "";
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @return Whether the note field is set.
+         */
+        public boolean hasNote() {
+            return ((bitField0_ & 0x00000040) != 0);
+        }
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @return The note.
+         */
+        public java.lang.String getNote() {
+            java.lang.Object ref = note_;
+            if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                note_ = s;
+                return s;
+            } else {
+                return (java.lang.String) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @return The bytes for note.
+         */
+        public com.google.protobuf.ByteString getNoteBytes() {
+            java.lang.Object ref = note_;
+            if (ref instanceof String) {
+                com.google.protobuf.ByteString b =
+                        com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
+                note_ = b;
+                return b;
+            } else {
+                return (com.google.protobuf.ByteString) ref;
+            }
+        }
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @param value The note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNote(java.lang.String value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            note_ = value;
+            bitField0_ |= 0x00000040;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @return This builder for chaining.
+         */
+        public Builder clearNote() {
+            note_ = getDefaultInstance().getNote();
+            bitField0_ &= ~0x00000040;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>optional string note = 7;</code>
+         *
+         * @param value The bytes for note to set.
+         * @return This builder for chaining.
+         */
+        public Builder setNoteBytes(com.google.protobuf.ByteString value) {
+            if (value == null) {
+                throw new NullPointerException();
+            }
+            checkByteStringIsUtf8(value);
+            note_ = value;
+            bitField0_ |= 0x00000040;
+            onChanged();
+            return this;
+        }
+
         private java.util.List<im.turms.server.common.access.client.dto.model.common.Value> customAttributes_ =
                 java.util.Collections.emptyList();
 
         private void ensureCustomAttributesIsMutable() {
-            if ((bitField0_ & 0x00000040) == 0) {
+            if ((bitField0_ & 0x00000080) == 0) {
                 customAttributes_ = new java.util.ArrayList<>(customAttributes_);
-                bitField0_ |= 0x00000040;
+                bitField0_ |= 0x00000080;
             }
         }
 
@@ -1317,7 +1490,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
         public Builder clearCustomAttributes() {
             if (customAttributesBuilder_ == null) {
                 customAttributes_ = java.util.Collections.emptyList();
-                bitField0_ &= ~0x00000040;
+                bitField0_ &= ~0x00000080;
                 onChanged();
             } else {
                 customAttributesBuilder_.clear();
@@ -1400,7 +1573,7 @@ public final class UserRelationship extends com.google.protobuf.GeneratedMessage
             if (customAttributesBuilder_ == null) {
                 customAttributesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<>(
                         customAttributes_,
-                        ((bitField0_ & 0x00000040) != 0),
+                        ((bitField0_ & 0x00000080) != 0),
                         getParentForChildren(),
                         isClean());
                 customAttributes_ = null;

@@ -1,8 +1,6 @@
 #include "turms/client/driver/state_store.h"
 
-namespace turms {
-namespace client {
-namespace driver {
+namespace turms::client::driver {
 
 auto StateStore::reset() -> void {
     tcp = nullptr;
@@ -13,6 +11,4 @@ auto StateStore::reset() -> void {
     lastRequestDate = 0;
 }
 
-} // namespace driver
-} // namespace client
-} // namespace turms
+}  // namespace turms::client::driver

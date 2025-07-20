@@ -50,7 +50,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       }
     });
     return _buildView(
-        context.theme, appLocalizations, appSettings, userLoginInfos);
+      context.theme,
+      appLocalizations,
+      appSettings,
+      userLoginInfos,
+    );
   }
 
   void _submit() {
@@ -67,7 +71,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final user = await UserService.login(_userId);
     userSessionManager = UserSessionManager(userId: _userId);
     await userSessionManager.onLoggedIn(
-        ref: ref, rememberMe: _rememberMe!, user: user, password: _password);
+      ref: ref,
+      rememberMe: _rememberMe!,
+      user: user,
+      password: _password,
+    );
     if (!mounted) {
       return;
     }
@@ -89,13 +97,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 }
 
 extension _LoginFormView on _LoginFormState {
-  Widget _buildView(ThemeData theme, AppLocalizations appLocalizations,
-      AppSettings appSettings, List<UserLoginInfoTableData> userLoginInfos) {
+  Widget _buildView(
+    ThemeData theme,
+    AppLocalizations appLocalizations,
+    AppSettings appSettings,
+    List<UserLoginInfoTableData> userLoginInfos,
+  ) {
     final localizations = appLocalizations;
     _rememberMe ??= appSettings.getRememberMe() ?? false;
     final userLoginInfo = userLoginInfos.firstOrNull;
     final borderError = UnderlineInputBorder(
-        borderSide: BorderSide(color: theme.colorScheme.error));
+      borderSide: BorderSide(color: theme.colorScheme.error),
+    );
     return FocusScope(
       onKeyEvent: (node, event) {
         if (event is KeyDownEvent &&
@@ -106,118 +119,127 @@ extension _LoginFormView on _LoginFormState {
         return KeyEventResult.ignored;
       },
       child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                autofocus: true,
-                initialValue: userLoginInfo?.userId.toString(),
-                cursorColor: theme.primaryColor,
-                // Length for the max digit of 8-bytes number
-                maxLength: 20,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                    // fix height regardless of whether or not an error is displayed.
-                    helperText: ' ',
-                    // hide length counter
-                    counterText: '',
-                    prefixIcon: Icon(Symbols.person_outline_rounded,
-                        color: theme.inputDecorationTheme.iconColor),
-                    // color: ThemeConfig.textColorSecondary),
-                    isCollapsed: true,
-                    contentPadding: Sizes.paddingV16,
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: theme.dividerColor)),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                      color: theme.primaryColor,
-                    )),
-                    errorBorder: borderError,
-                    focusedErrorBorder: borderError,
-                    hintText: localizations.userId),
-                onFieldSubmitted: (value) => _submit(),
-                onSaved: _setUserId,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return localizations.pleaseEnterUserId;
-                  }
-                  return null;
-                },
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              autofocus: true,
+              initialValue: userLoginInfo?.userId.toString(),
+              cursorColor: theme.primaryColor,
+              // Length for the max digit of 8-bytes number
+              maxLength: 20,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                // fix height regardless of whether or not an error is displayed.
+                helperText: ' ',
+                // hide length counter
+                counterText: '',
+                prefixIcon: Icon(
+                  Symbols.person_outline_rounded,
+                  color: theme.inputDecorationTheme.iconColor,
+                ),
+                // color: ThemeConfig.textColorSecondary),
+                isCollapsed: true,
+                contentPadding: Sizes.paddingV16,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.dividerColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.primaryColor),
+                ),
+                errorBorder: borderError,
+                focusedErrorBorder: borderError,
+                hintText: localizations.userId,
               ),
-              TextFormField(
-                initialValue: userLoginInfo?.password,
-                cursorColor: theme.primaryColor,
-                obscureText: true,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                    // fix height regardless of whether or not an error is displayed.
-                    helperText: ' ',
-                    // contentPadding: EdgeInsets.only(bottom: 8),
-                    prefixIcon: Icon(Symbols.lock_outline_rounded,
-                        color: theme.inputDecorationTheme.iconColor),
-                    isCollapsed: true,
-                    contentPadding: Sizes.paddingV16,
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: theme.dividerColor)),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                      color: theme.primaryColor,
-                    )),
-                    errorBorder: borderError,
-                    focusedErrorBorder: borderError,
-                    hintText: localizations.userPassword),
-                onFieldSubmitted: (value) => _submit(),
-                onSaved: _setPassword,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return localizations.pleaseEnterPassword;
-                  }
-                  return null;
-                },
+              onFieldSubmitted: (value) => _submit(),
+              onSaved: _setUserId,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return localizations.pleaseEnterUserId;
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              initialValue: userLoginInfo?.password,
+              cursorColor: theme.primaryColor,
+              obscureText: true,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                // fix height regardless of whether or not an error is displayed.
+                helperText: ' ',
+                // contentPadding: EdgeInsets.only(bottom: 8),
+                prefixIcon: Icon(
+                  Symbols.lock_outline_rounded,
+                  color: theme.inputDecorationTheme.iconColor,
+                ),
+                isCollapsed: true,
+                contentPadding: Sizes.paddingV16,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.dividerColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: theme.primaryColor),
+                ),
+                errorBorder: borderError,
+                focusedErrorBorder: borderError,
+                hintText: localizations.userPassword,
               ),
-              Sizes.sizedBoxH12,
-              TCheckbox(
-                _rememberMe!,
-                localizations.rememberMe,
-                onCheckedChanged: (bool checked) {
-                  _rememberMe = checked;
-                },
-              ),
-              Sizes.sizedBoxH32,
-              _buildLoginButton(_isWaitingLoginRequest, localizations, theme)
-            ],
-          )),
+              onFieldSubmitted: (value) => _submit(),
+              onSaved: _setPassword,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return localizations.pleaseEnterPassword;
+                }
+                return null;
+              },
+            ),
+            Sizes.sizedBoxH12,
+            TCheckbox(
+              _rememberMe!,
+              localizations.rememberMe,
+              onCheckedChanged: (bool checked) {
+                _rememberMe = checked;
+              },
+            ),
+            Sizes.sizedBoxH32,
+            _buildLoginButton(_isWaitingLoginRequest, localizations, theme),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildLoginButton(bool isWaitingLoginRequest,
-          AppLocalizations localizations, ThemeData theme) =>
-      FilledButton(
-        onPressed: isWaitingLoginRequest ? null : _submit,
-        style: FilledButton.styleFrom(
-          minimumSize: const Size(0, 56),
-          shape: const RoundedRectangleBorder(
-            borderRadius: Sizes.borderRadiusCircular4,
+  Widget _buildLoginButton(
+    bool isWaitingLoginRequest,
+    AppLocalizations localizations,
+    ThemeData theme,
+  ) => FilledButton(
+    onPressed: isWaitingLoginRequest ? null : _submit,
+    style: FilledButton.styleFrom(
+      minimumSize: const Size(0, 56),
+      shape: const RoundedRectangleBorder(
+        borderRadius: Sizes.borderRadiusCircular4,
+      ),
+      disabledBackgroundColor: theme.disabledColor,
+    ),
+    child: isWaitingLoginRequest
+        ? const SizedBox(
+            height: 24,
+            width: 24,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+          )
+        : Text(
+            localizations.login,
+            style: theme.textTheme.labelMedium!.copyWith(
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
-          disabledBackgroundColor: theme.disabledColor,
-        ),
-        child: isWaitingLoginRequest
-            ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: RepaintBoundary(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            : Text(
-                localizations.login,
-                style: theme.textTheme.labelMedium!
-                    .copyWith(fontSize: 20, color: Colors.white),
-              ),
-      );
+  );
 }

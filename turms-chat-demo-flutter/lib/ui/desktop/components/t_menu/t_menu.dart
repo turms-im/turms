@@ -59,29 +59,42 @@ class _TMenuState<T> extends State<TMenu<T>> {
     final appThemeExtension = context.appThemeExtension;
     final menuDecoration = appThemeExtension.menuDecoration;
     if (widget.dense) {
-      return LayoutBuilder(builder: (context, constraints) {
-        final minWidth =
-            constraints.minWidth - menuDecoration.padding.horizontal;
-        if (minWidth > 0) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final minWidth =
+              constraints.minWidth - menuDecoration.padding.horizontal;
+          if (minWidth > 0) {
+            return _buildContent(
+              context,
+              appThemeExtension,
+              menuDecoration,
+              minWidth,
+            );
+          }
           return _buildContent(
-              context, appThemeExtension, menuDecoration, minWidth);
-        }
-        return _buildContent(context, appThemeExtension, menuDecoration, null);
-      });
+            context,
+            appThemeExtension,
+            menuDecoration,
+            null,
+          );
+        },
+      );
     }
     return _buildContent(context, appThemeExtension, menuDecoration, null);
   }
 
   Widget _buildContent(
-      BuildContext context,
-      AppThemeExtension appThemeExtension,
-      BoxDecoration menuDecoration,
-      double? minWidth) {
+    BuildContext context,
+    AppThemeExtension appThemeExtension,
+    BoxDecoration menuDecoration,
+    double? minWidth,
+  ) {
     final entries = widget.entries;
     assert(entries.isNotEmpty, 'menu entries must not be empty');
     assert(
-        entries.length != 1 || !identical(entries.first, TMenuEntry.separator),
-        'menu entries must not contain only separator');
+      entries.length != 1 || !identical(entries.first, TMenuEntry.separator),
+      'menu entries must not contain only separator',
+    );
     Widget content = DecoratedBox(
       decoration: menuDecoration,
       child: Padding(
@@ -92,7 +105,7 @@ class _TMenuState<T> extends State<TMenu<T>> {
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final (index, entry) in entries.indexed)
-                _buildItem(context, appThemeExtension, index, entry, minWidth)
+                _buildItem(context, appThemeExtension, index, entry, minWidth),
             ],
           ),
         ),
@@ -127,8 +140,13 @@ class _TMenuState<T> extends State<TMenu<T>> {
     return content;
   }
 
-  Widget _buildItem(BuildContext context, AppThemeExtension appThemeExtension,
-      int index, TMenuEntry<T> entry, double? minWidth) {
+  Widget _buildItem(
+    BuildContext context,
+    AppThemeExtension appThemeExtension,
+    int index,
+    TMenuEntry<T> entry,
+    double? minWidth,
+  ) {
     if (identical(entry, TMenuEntry.separator)) {
       return const THorizontalDivider();
     }
@@ -142,40 +160,31 @@ class _TMenuState<T> extends State<TMenu<T>> {
     if (entry.prefix case final prefix?) {
       content = Row(spacing: 8, children: [prefix, content]);
     }
-    content = Padding(
-      padding: widget.padding,
-      child: content,
-    );
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (event) => setState(() {
-        _hoveredEntryIndex = index;
-      }),
-      onExit: (event) => setState(() {
-        if (_hoveredEntryIndex == index) {
-          _hoveredEntryIndex = null;
-        }
-      }),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          _select(entry);
-        },
+    content = Padding(padding: widget.padding, child: content);
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        _select(entry);
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (event) => setState(() {
+          _hoveredEntryIndex = index;
+        }),
+        onExit: (event) => setState(() {
+          if (_hoveredEntryIndex == index) {
+            _hoveredEntryIndex = null;
+          }
+        }),
         child: ColoredBox(
           color: _hoveredEntryIndex == index
               ? appThemeExtension.menuItemHoveredColor
               : appThemeExtension.menuItemColor,
           child: widget.dense
               ? minWidth == null
-                  ? content
-                  : SizedBox(
-                      width: minWidth,
-                      child: content,
-                    )
-              : SizedBox(
-                  width: double.infinity,
-                  child: content,
-                ),
+                    ? content
+                    : SizedBox(width: minWidth, child: content)
+              : SizedBox(width: double.infinity, child: content),
         ),
       ),
     );
@@ -190,14 +199,14 @@ class _TMenuState<T> extends State<TMenu<T>> {
         currentIndex = currentIndex == null
             ? 0
             : currentIndex + 1 < count
-                ? currentIndex + 1
-                : 0;
+            ? currentIndex + 1
+            : 0;
       } else {
         currentIndex = currentIndex == null
             ? count - 1
             : currentIndex - 1 >= 0
-                ? currentIndex - 1
-                : count - 1;
+            ? currentIndex - 1
+            : count - 1;
       }
       if (!identical(entries[currentIndex], TMenuEntry.separator)) {
         break;

@@ -10,20 +10,14 @@
 #include "turms/client/exception/response_exception.h"
 #include "turms/client/model/builtin_system_message_type.h"
 #include "turms/client/model/message_addition.h"
-#include "turms/client/model/notification_util.h"
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/model/response.h"
-#include "turms/client/model/response_status_code.h"
 #include "turms/client/model/user.h"
-#include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 class TurmsClient;
 
 namespace service {
-
 class MessageService : private boost::noncopyable,
                        private std::enable_shared_from_this<MessageService> {
    private:
@@ -128,11 +122,11 @@ class MessageService : private boost::noncopyable,
      */
     auto sendMessage(bool isGroupMessage,
                      int64_t targetId,
-                     const boost::optional<time_point>& deliveryDate = boost::none,
-                     const boost::optional<absl::string_view>& text = boost::none,
+                     const std::optional<time_point>& deliveryDate = std::nullopt,
+                     const std::optional<absl::string_view>& text = std::nullopt,
                      const std::vector<std::string>& records = {},
-                     const boost::optional<int>& burnAfter = boost::none,
-                     const boost::optional<int64_t>& preMessageId = boost::none)
+                     const std::optional<int>& burnAfter = std::nullopt,
+                     const std::optional<int64_t>& preMessageId = std::nullopt) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -162,7 +156,7 @@ class MessageService : private boost::noncopyable,
      * @return the message ID.
      * @throws ResponseException if an error occurs.
      */
-    auto forwardMessage(int64_t messageId, bool isGroupMessage, int64_t targetId)
+    auto forwardMessage(int64_t messageId, bool isGroupMessage, int64_t targetId) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -200,8 +194,8 @@ class MessageService : private boost::noncopyable,
      * @throws ResponseException if an error occurs.
      */
     auto updateSentMessage(int64_t messageId,
-                           const boost::optional<absl::string_view>& text = boost::none,
-                           const std::vector<std::string>& records = {})
+                           const std::optional<absl::string_view>& text = std::nullopt,
+                           const std::vector<std::string>& records = {}) const
         -> boost::future<Response<void>>;
 
     /**
@@ -230,13 +224,13 @@ class MessageService : private boost::noncopyable,
      * @throws ResponseException if an error occurs.
      */
     auto queryMessages(const std::unordered_set<int64_t>& ids = {},
-                       const boost::optional<bool>& areGroupMessages = boost::none,
-                       const boost::optional<bool>& areSystemMessages = boost::none,
+                       const std::optional<bool>& areGroupMessages = std::nullopt,
+                       const std::optional<bool>& areSystemMessages = std::nullopt,
                        const std::unordered_set<int64_t>& fromIds = {},
-                       const boost::optional<time_point>& deliveryDateStart = boost::none,
-                       const boost::optional<time_point>& deliveryDateEnd = boost::none,
+                       const std::optional<time_point>& deliveryDateStart = std::nullopt,
+                       const std::optional<time_point>& deliveryDateEnd = std::nullopt,
                        int maxCount = 50,
-                       const boost::optional<bool>& descending = boost::none)
+                       const std::optional<bool>& descending = std::nullopt) const
         -> boost::future<Response<std::vector<Message>>>;
 
     /**
@@ -265,13 +259,13 @@ class MessageService : private boost::noncopyable,
      * @throws ResponseException if an error occurs.
      */
     auto queryMessagesWithTotal(const std::unordered_set<int64_t>& ids = {},
-                                const boost::optional<bool>& areGroupMessages = boost::none,
-                                const boost::optional<bool>& areSystemMessages = boost::none,
+                                const std::optional<bool>& areGroupMessages = std::nullopt,
+                                const std::optional<bool>& areSystemMessages = std::nullopt,
                                 const std::unordered_set<int64_t>& fromIds = {},
-                                const boost::optional<time_point>& deliveryDateStart = boost::none,
-                                const boost::optional<time_point>& deliveryDateEnd = boost::none,
+                                const std::optional<time_point>& deliveryDateStart = std::nullopt,
+                                const std::optional<time_point>& deliveryDateEnd = std::nullopt,
                                 int maxCount = 1,
-                                const boost::optional<bool>& descending = boost::none)
+                                const std::optional<bool>& descending = std::nullopt) const
         -> boost::future<Response<std::vector<MessagesWithTotal>>>;
 
     /**
@@ -299,7 +293,7 @@ class MessageService : private boost::noncopyable,
      * @throws ResponseException if an error occurs.
      */
     auto recallMessage(int64_t messageId,
-                       const time_point& recallDate = std::chrono::system_clock::now())
+                       const time_point& recallDate = std::chrono::system_clock::now()) const
         -> boost::future<Response<void>>;
 
     auto isMentionEnabled() const noexcept -> bool;
@@ -312,7 +306,7 @@ class MessageService : private boost::noncopyable,
         isMentionUserEnabled = true;
     }
 
-    auto parseMessageAddition(const Message& message) -> MessageAddition;
+    auto parseMessageAddition(const Message& message) const -> MessageAddition;
 
     static auto createMessageRequest2Message(int64_t requesterId,
                                              const CreateMessageRequest& request) -> Message;
@@ -322,12 +316,10 @@ class MessageService : private boost::noncopyable,
    private:
     TurmsClient& turmsClient_;
     std::vector<MessageListener> messageListeners_;
-    boost::optional<MentionedUserIdsParser> mentionedUserIdsParser_;
+    std::optional<MentionedUserIdsParser> mentionedUserIdsParser_;
     bool isMentionUserEnabled{false};
 };
-
 }  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
 
 #endif  // TURMS_CLIENT_SERVICE_MESSAGE_SERVICE_H

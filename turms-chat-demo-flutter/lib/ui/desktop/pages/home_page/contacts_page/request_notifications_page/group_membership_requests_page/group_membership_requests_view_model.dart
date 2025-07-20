@@ -12,12 +12,16 @@ class GroupMembershipRequestsViewModelNotifier
       Fixtures.instance.groupMembershipRequests;
 
   void replace(
-      GroupMembershipRequest oldRequest, GroupMembershipRequest newRequest) {
+    GroupMembershipRequest oldRequest,
+    GroupMembershipRequest newRequest,
+  ) {
     state.replace(oldRequest, newRequest);
     ref.notifyListeners();
   }
 }
 
-final groupMembershipRequestsViewModel = NotifierProvider<
-    GroupMembershipRequestsViewModelNotifier,
-    List<GroupMembershipRequest>>(GroupMembershipRequestsViewModelNotifier.new);
+final groupMembershipRequestsViewModel =
+    NotifierProvider<
+      GroupMembershipRequestsViewModelNotifier,
+      List<GroupMembershipRequest>
+    >(GroupMembershipRequestsViewModelNotifier.new);

@@ -2,7 +2,6 @@ part of 't_date_range_picker.dart';
 
 class _TDateRangePickerPanel extends StatefulWidget {
   const _TDateRangePickerPanel({
-    Key? key,
     required this.availableStartDate,
     required this.availableEndDate,
     required this.hoveredStartDate,
@@ -11,7 +10,7 @@ class _TDateRangePickerPanel extends StatefulWidget {
     required this.onDateChanged,
     required this.onMouseRegionEntered,
     required this.onMouseRegionExited,
-  }) : super(key: key);
+  });
 
   final DateTime availableStartDate;
   final DateTime availableEndDate;
@@ -43,49 +42,51 @@ class _TDateRangePickerPanelState extends State<_TDateRangePickerPanel> {
 
   @override
   Widget build(BuildContext context) => Material(
-        child: SizedBox(
-          width: Sizes.dateRangePickerWidth,
-          height: Sizes.dateRangePickerHeight,
-          child: DecoratedBox(
-            decoration: context.appThemeExtension.popupDecoration,
-            child: Row(
-              children: [
-                Expanded(
-                    child: TDatePicker(
-                  calendarDate: _calenderDate,
-                  availableStartDate: widget.availableStartDate,
-                  availableEndDate: widget.availableEndDate,
-                  selectedStartDate: _selectedStartDate,
-                  selectedEndDate: _selectedEndDate,
-                  hoveredStartDate: widget.hoveredStartDate,
-                  hoveredEndDate: widget.hoveredEndDate,
-                  showNextButtons: false,
-                  onCalendarDateChanged: (value) =>
-                      setState(() => _calenderDate = value),
-                  onDateChanged: widget.onDateChanged,
-                  onMouseRegionEntered: widget.onMouseRegionEntered,
-                  onMouseRegionExited: widget.onMouseRegionExited,
-                )),
-                Expanded(
-                    child: TDatePicker(
-                  calendarDate:
-                      DateUtils.addMonthsToMonthDate(_calenderDate, 1),
-                  availableStartDate: widget.availableStartDate,
-                  availableEndDate: widget.availableEndDate,
-                  selectedStartDate: _selectedStartDate,
-                  selectedEndDate: _selectedEndDate,
-                  hoveredStartDate: widget.hoveredStartDate,
-                  hoveredEndDate: widget.hoveredEndDate,
-                  showPrevButtons: false,
-                  onCalendarDateChanged: (value) => setState(() =>
-                      _calenderDate = DateTime(value.year, value.month - 1)),
-                  onDateChanged: widget.onDateChanged,
-                  onMouseRegionEntered: widget.onMouseRegionEntered,
-                  onMouseRegionExited: widget.onMouseRegionExited,
-                ))
-              ],
+    child: SizedBox(
+      width: Sizes.dateRangePickerWidth,
+      height: Sizes.dateRangePickerHeight,
+      child: DecoratedBox(
+        decoration: context.appThemeExtension.popupDecoration,
+        child: Row(
+          children: [
+            Expanded(
+              child: TDatePicker(
+                calendarDate: _calenderDate,
+                availableStartDate: widget.availableStartDate,
+                availableEndDate: widget.availableEndDate,
+                selectedStartDate: _selectedStartDate,
+                selectedEndDate: _selectedEndDate,
+                hoveredStartDate: widget.hoveredStartDate,
+                hoveredEndDate: widget.hoveredEndDate,
+                showNextButtons: false,
+                onCalendarDateChanged: (value) =>
+                    setState(() => _calenderDate = value),
+                onDateChanged: widget.onDateChanged,
+                onMouseRegionEntered: widget.onMouseRegionEntered,
+                onMouseRegionExited: widget.onMouseRegionExited,
+              ),
             ),
-          ),
+            Expanded(
+              child: TDatePicker(
+                calendarDate: DateUtils.addMonthsToMonthDate(_calenderDate, 1),
+                availableStartDate: widget.availableStartDate,
+                availableEndDate: widget.availableEndDate,
+                selectedStartDate: _selectedStartDate,
+                selectedEndDate: _selectedEndDate,
+                hoveredStartDate: widget.hoveredStartDate,
+                hoveredEndDate: widget.hoveredEndDate,
+                showPrevButtons: false,
+                onCalendarDateChanged: (value) => setState(
+                  () => _calenderDate = DateTime(value.year, value.month - 1),
+                ),
+                onDateChanged: widget.onDateChanged,
+                onMouseRegionEntered: widget.onMouseRegionEntered,
+                onMouseRegionExited: widget.onMouseRegionExited,
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }

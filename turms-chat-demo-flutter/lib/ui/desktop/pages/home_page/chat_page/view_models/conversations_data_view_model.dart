@@ -12,15 +12,17 @@ class ConversationsDataViewModelNotifier
     extends Notifier<TAsyncData<List<Conversation>>> {
   @override
   TAsyncData<List<Conversation>> build() {
-    final idToConversationSettings =
-        ref.watch(idToConversationSettingsViewModel);
+    final idToConversationSettings = ref.watch(
+      idToConversationSettingsViewModel,
+    );
     final data = stateOrNull;
     if (data == null) {
       return const TAsyncData();
     }
     if (data.isInitialized) {
       return TAsyncData(
-          value: _sortConversations(data.value!, idToConversationSettings));
+        value: _sortConversations(data.value!, idToConversationSettings),
+      );
     }
     return data;
   }
@@ -32,8 +34,11 @@ class ConversationsDataViewModelNotifier
   void setData(TAsyncData<List<Conversation>> data) {
     if (data.isInitialized) {
       data = TAsyncData(
-          value: _sortConversations(
-              data.value!, ref.read(idToConversationSettingsViewModel)));
+        value: _sortConversations(
+          data.value!,
+          ref.read(idToConversationSettingsViewModel),
+        ),
+      );
     }
     state = data;
   }
@@ -41,47 +46,59 @@ class ConversationsDataViewModelNotifier
   void addMessage(Conversation conversation, ChatMessage message) {
     conversation.messages.add(message);
     state = TAsyncData(
-        value: _sortConversations(
-            state.value!, ref.read(idToConversationSettingsViewModel)));
+      value: _sortConversations(
+        state.value!,
+        ref.read(idToConversationSettingsViewModel),
+      ),
+    );
   }
 
   void deleteConversation(IntListHolder conversationId) {
-    state.value!
-        .removeWhere((conversation) => conversation.id == conversationId);
+    state.value!.removeWhere(
+      (conversation) => conversation.id == conversationId,
+    );
     ref.notifyListeners();
   }
 
   void addConversation(Conversation newConversation) {
     final conversations = state.value!..add(newConversation);
     state = TAsyncData(
-        value: _sortConversations(
-            conversations, ref.read(idToConversationSettingsViewModel)));
+      value: _sortConversations(
+        conversations,
+        ref.read(idToConversationSettingsViewModel),
+      ),
+    );
   }
 
   /// Sort by:
   /// 1. pinned;
   /// 2. file transfer;
   /// 3. last message timestamp.
-  List<Conversation> _sortConversations(List<Conversation> conversations,
-          Map<IntListHolder, ConversationSettings> idToConversationSettings) =>
-      conversations
-        ..sort((conversation2, conversation1) {
-          final result = ComparableUtils.compareBool(
-              idToConversationSettings[conversation1.id]?.pinned ?? false,
-              idToConversationSettings[conversation2.id]?.pinned ?? false);
-          if (result != 0) {
-            return result;
-          } else if (conversation1.contact.isFileTransfer) {
-            return 1;
-          } else if (conversation2.contact.isFileTransfer) {
-            return -1;
-          }
-          return ComparableUtils.compare(
-              conversation1.messages.lastOrNull?.timestamp,
-              conversation2.messages.lastOrNull?.timestamp);
-        });
+  List<Conversation> _sortConversations(
+    List<Conversation> conversations,
+    Map<IntListHolder, ConversationSettings> idToConversationSettings,
+  ) => conversations
+    ..sort((conversation2, conversation1) {
+      final result = ComparableUtils.compareBool(
+        idToConversationSettings[conversation1.id]?.pinned ?? false,
+        idToConversationSettings[conversation2.id]?.pinned ?? false,
+      );
+      if (result != 0) {
+        return result;
+      } else if (conversation1.contact.isFileTransfer) {
+        return 1;
+      } else if (conversation2.contact.isFileTransfer) {
+        return -1;
+      }
+      return ComparableUtils.compare(
+        conversation1.messages.lastOrNull?.timestamp,
+        conversation2.messages.lastOrNull?.timestamp,
+      );
+    });
 }
 
-final conversationsDataViewModel = NotifierProvider<
-    ConversationsDataViewModelNotifier,
-    TAsyncData<List<Conversation>>>(ConversationsDataViewModelNotifier.new);
+final conversationsDataViewModel =
+    NotifierProvider<
+      ConversationsDataViewModelNotifier,
+      TAsyncData<List<Conversation>>
+    >(ConversationsDataViewModelNotifier.new);

@@ -29,8 +29,8 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateMessageAttachmentInfoRequest.class.getName());
     }
@@ -60,7 +60,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
 
     private int bitField0_;
     public static final int ATTACHMENT_ID_NUM_FIELD_NUMBER = 1;
-    private long attachmentIdNum_;
+    private long attachmentIdNum_ = 0L;
 
     /**
      * <pre>
@@ -141,7 +141,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
     }
 
     public static final int USER_ID_TO_SHARE_WITH_FIELD_NUMBER = 3;
-    private long userIdToShareWith_;
+    private long userIdToShareWith_ = 0L;
 
     /**
      * <pre>
@@ -172,7 +172,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
     }
 
     public static final int USER_ID_TO_UNSHARE_WITH_FIELD_NUMBER = 4;
-    private long userIdToUnshareWith_;
+    private long userIdToUnshareWith_ = 0L;
 
     /**
      * <code>optional int64 user_id_to_unshare_with = 4;</code>
@@ -195,7 +195,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
     }
 
     public static final int GROUP_ID_TO_SHARE_WITH_FIELD_NUMBER = 5;
-    private long groupIdToShareWith_;
+    private long groupIdToShareWith_ = 0L;
 
     /**
      * <code>optional int64 group_id_to_share_with = 5;</code>
@@ -218,7 +218,7 @@ public final class UpdateMessageAttachmentInfoRequest extends com.google.protobu
     }
 
     public static final int GROUP_ID_TO_UNSHARE_WITH_FIELD_NUMBER = 6;
-    private long groupIdToUnshareWith_;
+    private long groupIdToUnshareWith_ = 0L;
 
     /**
      * <code>optional int64 group_id_to_unshare_with = 6;</code>

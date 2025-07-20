@@ -154,7 +154,10 @@ class ProtocolMessageService(
     private fun rejectRequests(e: ResponseException) {
         val iterator = requestMap.iterator()
         while (iterator.hasNext()) {
-            iterator.next().value.cont.tryResumeWithException(e)
+            iterator
+                .next()
+                .value.cont
+                .tryResumeWithException(e)
             iterator.remove()
         }
     }

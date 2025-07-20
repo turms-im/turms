@@ -42,6 +42,7 @@ class TSelectionArea extends StatefulWidget {
   /// If [selectionControls] is null, a platform specific one is used.
   const TSelectionArea({
     super.key,
+    this.controller,
     this.focusNode,
     this.selectionControls,
     this.contextMenuBuilder = _defaultContextMenuBuilder,
@@ -49,6 +50,8 @@ class TSelectionArea extends StatefulWidget {
     this.onSelectionChanged,
     required this.child,
   });
+
+  final TSelectableRegionController? controller;
 
   /// The configuration for the magnifier in the selection region.
   ///
@@ -93,10 +96,12 @@ class TSelectionArea extends StatefulWidget {
   final Widget child;
 
   static Widget _defaultContextMenuBuilder(
-          BuildContext context, TSelectableRegionState selectableRegionState) =>
-      AdaptiveTextSelectionToolbar.buttonItems(
-          buttonItems: selectableRegionState.contextMenuButtonItems,
-          anchors: selectableRegionState.contextMenuAnchors);
+    BuildContext context,
+    TSelectableRegionState selectableRegionState,
+  ) => AdaptiveTextSelectionToolbar.buttonItems(
+    buttonItems: selectableRegionState.contextMenuButtonItems,
+    anchors: selectableRegionState.contextMenuAnchors,
+  );
 
   @override
   State<StatefulWidget> createState() => TSelectionAreaState();
@@ -123,23 +128,24 @@ class TSelectionAreaState extends State<TSelectionArea> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
-    final controls = widget.selectionControls ??
+    final controls =
+        widget.selectionControls ??
         switch (Theme.of(context).platform) {
           TargetPlatform.android ||
-          TargetPlatform.fuchsia =>
-            materialTextSelectionHandleControls,
+          TargetPlatform.fuchsia => materialTextSelectionHandleControls,
           TargetPlatform.linux ||
-          TargetPlatform.windows =>
-            desktopTextSelectionHandleControls,
+          TargetPlatform.windows => desktopTextSelectionHandleControls,
           TargetPlatform.iOS => cupertinoTextSelectionHandleControls,
           TargetPlatform.macOS => cupertinoDesktopTextSelectionHandleControls,
         };
     return TSelectableRegion(
       key: _selectableRegionKey,
+      controller: widget.controller,
       selectionControls: controls,
       focusNode: _effectiveFocusNode,
       contextMenuBuilder: widget.contextMenuBuilder,
-      magnifierConfiguration: widget.magnifierConfiguration ??
+      magnifierConfiguration:
+          widget.magnifierConfiguration ??
           TextMagnifier.adaptiveMagnifierConfiguration,
       onSelectionChanged: widget.onSelectionChanged,
       child: widget.child,

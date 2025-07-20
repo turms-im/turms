@@ -28,8 +28,8 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 Message.class.getName());
     }
@@ -60,7 +60,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -83,7 +83,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int DELIVERY_DATE_FIELD_NUMBER = 2;
-    private long deliveryDate_;
+    private long deliveryDate_ = 0L;
 
     /**
      * <code>optional int64 delivery_date = 2;</code>
@@ -106,7 +106,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int MODIFICATION_DATE_FIELD_NUMBER = 3;
-    private long modificationDate_;
+    private long modificationDate_ = 0L;
 
     /**
      * <code>optional int64 modification_date = 3;</code>
@@ -179,7 +179,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int SENDER_ID_FIELD_NUMBER = 5;
-    private long senderId_;
+    private long senderId_ = 0L;
 
     /**
      * <code>optional int64 sender_id = 5;</code>
@@ -202,7 +202,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 6;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 6;</code>
@@ -225,7 +225,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int IS_SYSTEM_MESSAGE_FIELD_NUMBER = 7;
-    private boolean isSystemMessage_;
+    private boolean isSystemMessage_ = false;
 
     /**
      * <code>optional bool is_system_message = 7;</code>
@@ -248,7 +248,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int RECIPIENT_ID_FIELD_NUMBER = 8;
-    private long recipientId_;
+    private long recipientId_ = 0L;
 
     /**
      * <code>optional int64 recipient_id = 8;</code>
@@ -305,7 +305,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int SEQUENCE_ID_FIELD_NUMBER = 10;
-    private int sequenceId_;
+    private int sequenceId_ = 0;
 
     /**
      * <code>optional int32 sequence_id = 10;</code>
@@ -328,7 +328,7 @@ public final class Message extends com.google.protobuf.GeneratedMessage implemen
     }
 
     public static final int PRE_MESSAGE_ID_FIELD_NUMBER = 11;
-    private long preMessageId_;
+    private long preMessageId_ = 0L;
 
     /**
      * <code>optional int64 pre_message_id = 11;</code>

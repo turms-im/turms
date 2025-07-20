@@ -14,9 +14,10 @@ class AppConfig {
   static const defaultWindowSizeForLoginScreen = Size(480, 456);
 
   static const defaultWindowSizeForHomeScreen = Size(
-      980,
-      // Get from: 64 (tile height) * 12
-      768);
+    980,
+    // Get from: 64 (tile height) * 12
+    768,
+  );
   static const minWindowSizeForHomeScreen = Size(700, 640);
 
   static late PackageInfo packageInfo;

@@ -1,17 +1,18 @@
 #include "turms/client/driver/service/protocol_message_service.h"
 
-namespace turms {
-namespace client {
-namespace driver {
-namespace service {
+#include "turms/client/model/notification_util.h"
+#include "turms/client/model/response_status_code.h"
+#include "turms/client/random/random_util.h"
+
+namespace turms::client::driver::service {
 ProtocolMessageService::ProtocolMessageService(boost::asio::io_context& ioContext,
                                                StateStore& stateStore,
-                                               const boost::optional<int>& requestTimeout,
-                                               const boost::optional<int>& minRequestInterval)
+                                               const std::optional<int>& requestTimeout,
+                                               const std::optional<int>& minRequestInterval)
     : BaseService(ioContext, stateStore),
-      requestTimeout_(std::chrono::milliseconds{requestTimeout.get_value_or(60 * 1000)}),
+      requestTimeout_(std::chrono::milliseconds{requestTimeout.value_or(60 * 1000)}),
       enableRequestTimeout_(requestTimeout_.count() > 0),
-      minRequestInterval_(minRequestInterval.get_value_or(0)) {
+      minRequestInterval_(minRequestInterval.value_or(0)) {
 }
 
 auto ProtocolMessageService::sendRequest(model::proto::TurmsRequest& request)
@@ -26,28 +27,24 @@ auto ProtocolMessageService::sendRequest(model::proto::TurmsRequest& request)
             ResponseException{model::ResponseStatusCode::kClientSessionHasBeenClosed});
     }
 
-    auto now = std::chrono::system_clock::now().time_since_epoch().count();
-    auto difference = now - stateStore_.lastRequestDate;
-    auto isFrequent = minRequestInterval_ > 0 && difference <= minRequestInterval_;
-    if (isFrequent) {
+    const auto now = std::chrono::system_clock::now().time_since_epoch().count();
+    if (minRequestInterval_ > 0 && now - stateStore_.lastRequestDate <= minRequestInterval_) {
         return boost::make_exceptional_future<TurmsNotification>(
             ResponseException{model::ResponseStatusCode::kClientRequestsTooFrequent});
     }
 
     while (true) {
         auto requestId = generateRandomId();
-        // Use "try_emplace" when upgrading to C++17
-        auto result = idToRequest_.emplace(
-            requestId, TurmsRequestContext{boost::promise<TurmsNotification>(), boost::none});
-        if (!result.second) {
+        const auto& [pair, inserted] = idToRequest_.try_emplace(
+            requestId, TurmsRequestContext{boost::promise<TurmsNotification>(), std::nullopt});
+        if (!inserted) {
             continue;
         }
-        TurmsRequestContext& context = result.first->second;
-        boost::promise<TurmsNotification>& promise = context.promise;
+        auto& [promise, timeoutTimer] = pair->second;
         stateStore_.lastRequestDate = now;
         try {
             request.set_request_id(requestId);
-            auto payload = std::make_shared<std::vector<uint8_t>>(request.ByteSizeLong());
+            const auto payload = std::make_shared<std::vector<uint8_t>>(request.ByteSizeLong());
             request.SerializeToArray(payload->data(), payload->size());
             stateStore_.tcp->writeVarIntLengthAndBytes(payload);
         } catch (const std::exception& e) {
@@ -58,17 +55,17 @@ auto ProtocolMessageService::sendRequest(model::proto::TurmsRequest& request)
 
         if (enableRequestTimeout_) {
             boost::asio::steady_timer timer{ioContext_, requestTimeout_};
-            timer.async_wait([weakThis = std::weak_ptr<ProtocolMessageService>(shared_from_this()),
+            timer.async_wait([weakThis = std::weak_ptr(shared_from_this()),
                               requestId](const boost::system::error_code& e) {
                 if (e == boost::asio::error::operation_aborted) {
                     return;
                 }
-                auto sharedThis = weakThis.lock();
+                const auto sharedThis = weakThis.lock();
                 if (sharedThis == nullptr) {
                     return;
                 }
                 auto& idToRequest = sharedThis->idToRequest_;
-                auto it = idToRequest.find(requestId);
+                const auto& it = idToRequest.find(requestId);
                 if (it == idToRequest.end()) {
                     return;
                 }
@@ -76,22 +73,18 @@ auto ProtocolMessageService::sendRequest(model::proto::TurmsRequest& request)
                     ResponseException{model::ResponseStatusCode::kRequestTimeout});
                 idToRequest.erase(it);
             });
-            context.timeoutTimer = std::move(timer);
+            timeoutTimer = std::move(timer);
         }
         return promise.get_future();
     }
 }
 
-auto ProtocolMessageService::didReceiveNotification(const ProtocolMessageService::TurmsNotification& notification)
-    -> void {
-    const bool isResponse = !notification.has_relayed_request() && notification.has_request_id();
-    if (isResponse) {
-        auto it = idToRequest_.find(notification.request_id());
-        if (it != idToRequest_.end()) {
-            auto& context = it->second;
-            auto& promise = context.promise;
+auto ProtocolMessageService::didReceiveNotification(const TurmsNotification& notification) -> void {
+    if (!notification.has_relayed_request() && notification.has_request_id()) {
+        if (const auto& it = idToRequest_.find(notification.request_id());
+            it != idToRequest_.end()) {
+            auto& [promise, timer] = it->second;
             if (notification.has_code()) {
-                auto& timer = context.timeoutTimer;
                 if (timer) {
                     timer->cancel();
                 }
@@ -111,11 +104,12 @@ auto ProtocolMessageService::didReceiveNotification(const ProtocolMessageService
 }
 
 auto ProtocolMessageService::close() -> boost::future<void> {
-    onDisconnected(boost::none);
+    onDisconnected(std::nullopt);
     return boost::make_ready_future();
 }
 
-auto ProtocolMessageService::onDisconnected(const boost::optional<std::exception>& exception) -> void {
+auto ProtocolMessageService::onDisconnected(const std::optional<std::exception>& exception)
+    -> void {
     rejectRequestPromises(exception::ResponseException{
         model::ResponseStatusCode::kClientSessionHasBeenClosed, "", exception});
 }
@@ -138,14 +132,11 @@ auto ProtocolMessageService::notifyNotificationListeners(
 auto ProtocolMessageService::rejectRequestPromises(const std::exception& exception) -> void {
     for (auto it = idToRequest_.begin(); it != idToRequest_.end();) {
         it = idToRequest_.erase(it);
-        TurmsRequestContext& context = it->second;
-        context.promise.set_exception(exception);
-        if (context.timeoutTimer) {
-            context.timeoutTimer->cancel();
+        auto& [promise, timer] = it->second;
+        promise.set_exception(exception);
+        if (timer) {
+            timer->cancel();
         }
     }
 }
-}  // namespace service
-}  // namespace driver
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::driver::service

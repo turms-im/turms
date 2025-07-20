@@ -13,15 +13,11 @@
 #include "turms/client/model/proto/notification/turms_notification.pb.h"
 #include "turms/client/model/response.h"
 #include "turms/client/model/user.h"
-#include "turms/client/time/time_util.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 class TurmsClient;
 
 namespace service {
-
 class GroupService : private boost::noncopyable {
    private:
     using time_point = std::chrono::time_point<std::chrono::system_clock>;
@@ -97,13 +93,13 @@ class GroupService : private boost::noncopyable {
      * @return the group ID.
      * @throws ResponseException if an error occurs.
      */
-    auto createGroup(const absl::string_view& name,
-                     const boost::optional<absl::string_view>& intro = boost::none,
-                     const boost::optional<absl::string_view>& announcement = boost::none,
-                     const boost::optional<int>& minScore = boost::none,
-                     const boost::optional<time_point>& muteEndDate = boost::none,
-                     const boost::optional<int64_t>& typeId = boost::none,
-                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {})
+    auto createGroup(absl::string_view name,
+                     const std::optional<absl::string_view>& intro = std::nullopt,
+                     const std::optional<absl::string_view>& announcement = std::nullopt,
+                     const std::optional<int>& minScore = std::nullopt,
+                     const std::optional<time_point>& muteEndDate = std::nullopt,
+                     const std::optional<int64_t>& typeId = std::nullopt,
+                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {}) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -124,7 +120,7 @@ class GroupService : private boost::noncopyable {
      *
      * @throws ResponseException if an error occurs.
      */
-    auto deleteGroup(int64_t groupId) -> boost::future<Response<void>>;
+    auto deleteGroup(int64_t groupId) const -> boost::future<Response<void>>;
 
     /**
      * Update the target group.
@@ -238,15 +234,15 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto updateGroup(int64_t groupId,
-                     const boost::optional<absl::string_view>& name = boost::none,
-                     const boost::optional<absl::string_view>& intro = boost::none,
-                     const boost::optional<absl::string_view>& announcement = boost::none,
-                     const boost::optional<int>& minScore = boost::none,
-                     const boost::optional<int64_t>& typeId = boost::none,
-                     const boost::optional<time_point>& muteEndDate = boost::none,
-                     const boost::optional<int64_t>& successorId = boost::none,
-                     const boost::optional<bool>& quitAfterTransfer = boost::none,
-                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {})
+                     const std::optional<absl::string_view>& name = std::nullopt,
+                     const std::optional<absl::string_view>& intro = std::nullopt,
+                     const std::optional<absl::string_view>& announcement = std::nullopt,
+                     const std::optional<int>& minScore = std::nullopt,
+                     const std::optional<int64_t>& typeId = std::nullopt,
+                     const std::optional<time_point>& muteEndDate = std::nullopt,
+                     const std::optional<int64_t>& successorId = std::nullopt,
+                     const std::optional<bool>& quitAfterTransfer = std::nullopt,
+                     const std::unordered_map<std::string, Value>& userDefinedAttributes = {}) const
         -> boost::future<Response<void>>;
 
     /**
@@ -276,8 +272,9 @@ class GroupService : private boost::noncopyable {
      * throws ResponseException with the code ResponseStatusCode::kNotGroupOwnerToTransferGroup.
      * @throws ResponseException if an error occurs.
      */
-    auto transferOwnership(int64_t groupId, int64_t successorId, bool quitAfterTransfer = false)
-        -> boost::future<Response<void>>;
+    auto transferOwnership(int64_t groupId,
+                           int64_t successorId,
+                           bool quitAfterTransfer = false) const -> boost::future<Response<void>>;
 
     /**
      * Mute the target group.
@@ -304,7 +301,8 @@ class GroupService : private boost::noncopyable {
      * ResponseStatusCode::kNotGroupOwnerOrManagerToMuteGroupMember.
      * @throws ResponseException if an error occurs.
      */
-    auto muteGroup(int64_t groupId, const time_point& muteEndDate) -> boost::future<Response<void>>;
+    auto muteGroup(int64_t groupId, const time_point& muteEndDate) const
+        -> boost::future<Response<void>>;
 
     /**
      * Unmute the target group.
@@ -328,7 +326,7 @@ class GroupService : private boost::noncopyable {
      * @param groupId the target group ID to find the group for updating.
      * @throws ResponseException if an error occurs.
      */
-    auto unmuteGroup(int64_t groupId) -> boost::future<Response<void>>;
+    auto unmuteGroup(int64_t groupId) const -> boost::future<Response<void>>;
 
     /**
      * Find groups.
@@ -341,7 +339,7 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto queryGroups(const std::unordered_set<int64_t>& groupIds,
-                     const boost::optional<time_point>& lastUpdatedDate = boost::none)
+                     const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
         -> boost::future<Response<std::vector<Group>>>;
 
     /**
@@ -357,8 +355,8 @@ class GroupService : private boost::noncopyable {
      */
     auto searchGroups(const std::string& name,
                       bool highlight = false,
-                      const boost::optional<int>& skip = boost::none,
-                      const boost::optional<int>& limit = boost::none)
+                      const std::optional<int>& skip = std::nullopt,
+                      const std::optional<int>& limit = std::nullopt) const
         -> boost::future<Response<std::vector<Group>>>;
 
     /**
@@ -371,8 +369,8 @@ class GroupService : private boost::noncopyable {
      * Note: The version can be used to update the last updated date on local.
      * @throws ResponseException if an error occurs.
      */
-    auto queryJoinedGroupIds(const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<LongsWithVersion>>>;
+    auto queryJoinedGroupIds(const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<LongsWithVersion>>>;
 
     /**
      * Find groups that the logged-in user has joined.
@@ -382,8 +380,8 @@ class GroupService : private boost::noncopyable {
      * null, all groups will be returned.
      * @throws ResponseException if an error occurs.
      */
-    auto queryJoinedGroupInfos(const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupsWithVersion>>>;
+    auto queryJoinedGroupInfos(const std::optional<time_point>& lastUpdatedDate = std::nullopt)
+        const -> boost::future<Response<std::optional<GroupsWithVersion>>>;
 
     /**
      * Add group join/membership questions.
@@ -407,7 +405,7 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto addGroupJoinQuestions(int64_t groupId,
-                               const std::vector<model::NewGroupJoinQuestion>& questions)
+                               const std::vector<model::NewGroupJoinQuestion>& questions) const
         -> boost::future<Response<std::vector<int64_t>>>;
 
     /**
@@ -422,7 +420,7 @@ class GroupService : private boost::noncopyable {
      * @param questionIds the group membership question IDs.
      * @throws ResponseException if an error occurs.
      */
-    auto deleteGroupJoinQuestions(const std::unordered_set<int64_t>& questionIds)
+    auto deleteGroupJoinQuestions(const std::unordered_set<int64_t>& questionIds) const
         -> boost::future<Response<void>>;
 
     /**
@@ -443,9 +441,9 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto updateGroupJoinQuestion(int64_t questionId,
-                                 const boost::optional<absl::string_view>& question,
+                                 const std::optional<absl::string_view>& question,
                                  const std::vector<std::string>& answers = {},
-                                 const boost::optional<int> score = boost::none)
+                                 const std::optional<int>& score = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -477,7 +475,7 @@ class GroupService : private boost::noncopyable {
      * @param userId the target user ID.
      * @throws ResponseException if an error occurs.
      */
-    auto blockUser(int64_t groupId, int64_t userId) -> boost::future<Response<void>>;
+    auto blockUser(int64_t groupId, int64_t userId) const -> boost::future<Response<void>>;
 
     /**
      * Unblock a user in the group.
@@ -504,7 +502,7 @@ class GroupService : private boost::noncopyable {
      * @param userId the target user ID.
      * @throws ResponseException if an error occurs.
      */
-    auto unblockUser(int64_t groupId, int64_t userId) -> boost::future<Response<void>>;
+    auto unblockUser(int64_t groupId, int64_t userId) const -> boost::future<Response<void>>;
 
     /**
      * Find blocked user IDs.
@@ -516,8 +514,8 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto queryBlockedUserIds(int64_t groupId,
-                             const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<LongsWithVersion>>>;
+                             const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<LongsWithVersion>>>;
 
     /**
      * Find blocked user infos.
@@ -528,9 +526,9 @@ class GroupService : private boost::noncopyable {
      * If null, all blocked user infos will be returned.
      * @throws ResponseException if an error occurs.
      */
-    auto queryBlockedUserInfos(int64_t groupId,
-                               const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<UserInfosWithVersion>>>;
+    auto queryBlockedUserInfos(
+        int64_t groupId, const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<UserInfosWithVersion>>>;
 
     // Group Enrollment
 
@@ -575,7 +573,7 @@ class GroupService : private boost::noncopyable {
      * @return the invitation ID.
      * @throws ResponseException if an error occurs.
      */
-    auto createInvitation(int64_t groupId, int64_t inviteeId, const absl::string_view& content)
+    auto createInvitation(int64_t groupId, int64_t inviteeId, absl::string_view content) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -617,7 +615,7 @@ class GroupService : private boost::noncopyable {
      *
      * @throws ResponseException if an error occurs.
      */
-    auto deleteInvitation(int64_t invitationId) -> boost::future<Response<void>>;
+    auto deleteInvitation(int64_t invitationId) const -> boost::future<Response<void>>;
 
     /**
      * Reply to a group invitation.
@@ -658,7 +656,7 @@ class GroupService : private boost::noncopyable {
      */
     auto replyInvitation(int64_t invitationId,
                          ResponseAction responseAction,
-                         const absl::string_view& reason) -> boost::future<Response<void>>;
+                         absl::string_view reason) const -> boost::future<Response<void>>;
 
     /**
      * Find invitations.
@@ -671,8 +669,8 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto queryInvitations(int64_t groupId,
-                          const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupInvitationsWithVersion>>>;
+                          const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<GroupInvitationsWithVersion>>>;
 
     /**
      * Find invitations.
@@ -686,8 +684,8 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto queryInvitations(bool areSentByMe,
-                          const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupInvitationsWithVersion>>>;
+                          const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<GroupInvitationsWithVersion>>>;
 
     /**
      * Create a group join/membership request.
@@ -725,7 +723,7 @@ class GroupService : private boost::noncopyable {
      * @return the request ID.
      * @throws ResponseException if an error occurs.
      */
-    auto createJoinRequest(int64_t groupId, const absl::string_view& content)
+    auto createJoinRequest(int64_t groupId, absl::string_view content) const
         -> boost::future<Response<int64_t>>;
 
     /**
@@ -760,7 +758,7 @@ class GroupService : private boost::noncopyable {
      *
      * @throws ResponseException if an error occurs.
      */
-    auto deleteJoinRequest(int64_t requestId) -> boost::future<Response<void>>;
+    auto deleteJoinRequest(int64_t requestId) const -> boost::future<Response<void>>;
 
     /**
      * Reply a group join/membership request.
@@ -800,7 +798,7 @@ class GroupService : private boost::noncopyable {
      */
     auto replyJoinRequest(int64_t requestId,
                           ResponseAction responseAction,
-                          const absl::string_view& reason) -> boost::future<Response<void>>;
+                          absl::string_view reason) const -> boost::future<Response<void>>;
 
     /**
      * Find group join/membership requests.
@@ -814,8 +812,8 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto queryJoinRequests(int64_t groupId,
-                           const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupJoinRequestsWithVersion>>>;
+                           const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<GroupJoinRequestsWithVersion>>>;
 
     /**
      * Find group join/membership requests sent by the logged-in user.
@@ -827,8 +825,8 @@ class GroupService : private boost::noncopyable {
      * Note: The version can be used to update the last updated date stored locally.
      * @throws ResponseException if an error occurs.
      */
-    auto querySentJoinRequests(const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupJoinRequestsWithVersion>>>;
+    auto querySentJoinRequests(const std::optional<time_point>& lastUpdatedDate = std::nullopt)
+        const -> boost::future<Response<std::optional<GroupJoinRequestsWithVersion>>>;
 
     /**
      * Find group join/membership questions.
@@ -847,8 +845,8 @@ class GroupService : private boost::noncopyable {
      */
     auto queryGroupJoinQuestions(int64_t groupId,
                                  bool withAnswers,
-                                 const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupJoinQuestionsWithVersion>>>;
+                                 const std::optional<time_point>& lastUpdatedDate = std::nullopt)
+        const -> boost::future<Response<std::optional<GroupJoinQuestionsWithVersion>>>;
 
     /**
      * Answer group join/membership questions, and join the group automatically
@@ -860,7 +858,7 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto answerGroupQuestions(const std::unordered_map<int64_t, std::string>& questionIdToAnswer)
-        -> boost::future<Response<GroupJoinQuestionsAnswerResult>>;
+        const -> boost::future<Response<GroupJoinQuestionsAnswerResult>>;
 
     /**
      * Add group members.
@@ -912,9 +910,9 @@ class GroupService : private boost::noncopyable {
      */
     auto addGroupMembers(int64_t groupId,
                          const std::unordered_set<int64_t>& userIds,
-                         const boost::optional<absl::string_view>& name = boost::none,
-                         const boost::optional<GroupMemberRole>& role = boost::none,
-                         const boost::optional<time_point>& muteEndDate = boost::none)
+                         const std::optional<absl::string_view>& name = std::nullopt,
+                         const std::optional<GroupMemberRole>& role = std::nullopt,
+                         const std::optional<time_point>& muteEndDate = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -946,7 +944,8 @@ class GroupService : private boost::noncopyable {
      * @param name the name as the group member.
      * @throws ResponseException if an error occurs.
      */
-    auto joinGroup(int64_t groupId, const boost::optional<absl::string_view>& name = boost::none)
+    auto joinGroup(int64_t groupId,
+                   const std::optional<absl::string_view>& name = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -980,8 +979,8 @@ class GroupService : private boost::noncopyable {
      * @throws ResponseException if an error occurs.
      */
     auto quitGroup(int64_t groupId,
-                   const boost::optional<int64_t>& successorId = boost::none,
-                   const boost::optional<bool>& quitAfterTransfer = boost::none)
+                   const std::optional<int64_t>& successorId = std::nullopt,
+                   const std::optional<bool>& quitAfterTransfer = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -1010,7 +1009,7 @@ class GroupService : private boost::noncopyable {
      * @param memberIds the target member IDs.
      * @throws ResponseException if an error occurs.
      */
-    auto removeGroupMembers(int64_t groupId, const std::unordered_set<int64_t>& memberIds)
+    auto removeGroupMembers(int64_t groupId, const std::unordered_set<int64_t>& memberIds) const
         -> boost::future<Response<void>>;
 
     /**
@@ -1055,9 +1054,9 @@ class GroupService : private boost::noncopyable {
      */
     auto updateGroupMemberInfo(int64_t groupId,
                                int64_t memberId,
-                               const boost::optional<absl::string_view>& name = boost::none,
-                               const boost::optional<GroupMemberRole>& role = boost::none,
-                               const boost::optional<time_point>& muteEndDate = boost::none)
+                               const std::optional<absl::string_view>& name = std::nullopt,
+                               const std::optional<GroupMemberRole>& role = std::nullopt,
+                               const std::optional<time_point>& muteEndDate = std::nullopt) const
         -> boost::future<Response<void>>;
 
     /**
@@ -1090,7 +1089,7 @@ class GroupService : private boost::noncopyable {
      * @param muteEndDate the new mute end date of the group member.
      * @throws ResponseException if an error occurs.
      */
-    auto muteGroupMember(int64_t groupId, int64_t memberId, const time_point& muteEndDate)
+    auto muteGroupMember(int64_t groupId, int64_t memberId, const time_point& muteEndDate) const
         -> boost::future<Response<void>>;
 
     /**
@@ -1122,7 +1121,8 @@ class GroupService : private boost::noncopyable {
      * @param memberId the target member ID.
      * @throws ResponseException if an error occurs.
      */
-    auto unmuteGroupMember(int64_t groupId, int64_t memberId) -> boost::future<Response<void>>;
+    auto unmuteGroupMember(int64_t groupId, int64_t memberId) const
+        -> boost::future<Response<void>>;
 
     /**
      * Find group members.
@@ -1138,8 +1138,8 @@ class GroupService : private boost::noncopyable {
      */
     auto queryGroupMembers(int64_t groupId,
                            bool withStatus,
-                           const boost::optional<time_point>& lastUpdatedDate = boost::none)
-        -> boost::future<Response<boost::optional<GroupMembersWithVersion>>>;
+                           const std::optional<time_point>& lastUpdatedDate = std::nullopt) const
+        -> boost::future<Response<std::optional<GroupMembersWithVersion>>>;
 
     /**
      * Find group members.
@@ -1153,15 +1153,13 @@ class GroupService : private boost::noncopyable {
      */
     auto queryGroupMembersByMemberIds(int64_t groupId,
                                       const std::unordered_set<int64_t>& memberIds,
-                                      bool withStatus = false)
-        -> boost::future<Response<boost::optional<GroupMembersWithVersion>>>;
+                                      bool withStatus = false) const
+        -> boost::future<Response<std::optional<GroupMembersWithVersion>>>;
 
    private:
     TurmsClient& turmsClient_;
 };
-
 }  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
 
 #endif  // TURMS_CLIENT_SERVICE_GROUP_SERVICE_H

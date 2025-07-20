@@ -29,8 +29,8 @@ public final class UpdateMeetingInvitationRequest extends com.google.protobuf.Ge
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateMeetingInvitationRequest.class.getName());
     }
@@ -61,7 +61,7 @@ public final class UpdateMeetingInvitationRequest extends com.google.protobuf.Ge
 
     private int bitField0_;
     public static final int MEETING_ID_FIELD_NUMBER = 1;
-    private long meetingId_;
+    private long meetingId_ = 0L;
 
     /**
      * <pre>
@@ -128,7 +128,7 @@ public final class UpdateMeetingInvitationRequest extends com.google.protobuf.Ge
     }
 
     public static final int RESPONSE_ACTION_FIELD_NUMBER = 5;
-    private int responseAction_;
+    private int responseAction_ = 0;
 
     /**
      * <pre>
@@ -793,7 +793,7 @@ public final class UpdateMeetingInvitationRequest extends com.google.protobuf.Ge
             return this;
         }
 
-        private int responseAction_;
+        private int responseAction_ = 0;
 
         /**
          * <pre>

@@ -4,14 +4,15 @@ import 'package:markdown/markdown.dart';
 import 'message_type.dart';
 
 class MessageInfo {
-  const MessageInfo(
-      {required this.type,
-      required this.nodes,
-      this.originalUrl,
-      this.originalWidth,
-      this.originalHeight,
-      this.mentionAll,
-      this.mentionedUserIds});
+  const MessageInfo({
+    required this.type,
+    required this.nodes,
+    this.originalUrl,
+    this.originalWidth,
+    this.originalHeight,
+    this.mentionAll,
+    this.mentionedUserIds,
+  });
 
   final MessageType type;
 

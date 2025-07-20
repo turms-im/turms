@@ -19,7 +19,9 @@ package im.turms.client.model
 /**
  * @author James Chen
  */
-enum class BuiltinSystemMessageType(private val num: Int) {
+enum class BuiltinSystemMessageType(
+    private val num: Int,
+) {
     NORMAL(0),
     RECALL_MESSAGE(1),
     ;

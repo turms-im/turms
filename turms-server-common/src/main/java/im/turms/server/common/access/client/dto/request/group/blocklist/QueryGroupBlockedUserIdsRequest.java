@@ -29,8 +29,8 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryGroupBlockedUserIdsRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -72,7 +72,7 @@ public final class QueryGroupBlockedUserIdsRequest extends com.google.protobuf.G
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 2;</code>

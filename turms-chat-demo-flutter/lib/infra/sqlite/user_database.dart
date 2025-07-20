@@ -14,7 +14,8 @@ import 'core/database_utils.dart';
 part 'user_database.g.dart';
 
 @DriftDatabase(
-    tables: [ConversationSettingTable, LogEntryTable, UserSettingTable])
+  tables: [ConversationSettingTable, LogEntryTable, UserSettingTable],
+)
 class UserDatabase extends _$UserDatabase {
   UserDatabase(super.e);
 
@@ -22,20 +23,25 @@ class UserDatabase extends _$UserDatabase {
   int get schemaVersion => 1;
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(beforeOpen: (details) async {
-        if (kDebugMode) {
-          await validateDatabaseSchema();
-        }
-      });
+  MigrationStrategy get migration => MigrationStrategy(
+    beforeOpen: (details) async {
+      if (kDebugMode) {
+        await validateDatabaseSchema();
+      }
+    },
+  );
 }
 
 final _userIdToDatabase = <Int64, UserDatabase>{};
 
 UserDatabase createUserDatabaseIfNotExists(Int64 userId) =>
     _userIdToDatabase.putIfAbsent(
-        userId,
-        () => UserDatabase(DatabaseUtils.createDatabase(
-            dbName: 'user_${userId.toString()}',
-            isAppDatabase: false,
-            logStatements: EnvVars.databaseLogStatements)));
+      userId,
+      () => UserDatabase(
+        DatabaseUtils.createDatabase(
+          dbName: 'user_${userId.toString()}',
+          isAppDatabase: false,
+          logStatements: EnvVars.databaseLogStatements,
+        ),
+      ),
+    );

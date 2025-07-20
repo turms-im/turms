@@ -26,8 +26,10 @@ class Sizes {
   static const paddingV16 = EdgeInsets.symmetric(vertical: 16);
   static const paddingH16 = EdgeInsets.symmetric(horizontal: 16);
   static const paddingV16H8 = EdgeInsets.symmetric(vertical: 16, horizontal: 8);
-  static const paddingV16H16 =
-      EdgeInsets.symmetric(vertical: 16, horizontal: 16);
+  static const paddingV16H16 = EdgeInsets.symmetric(
+    vertical: 16,
+    horizontal: 16,
+  );
 
   static const paddingH8 = EdgeInsets.symmetric(horizontal: 8);
 
@@ -60,6 +62,7 @@ class Sizes {
   static const dateRangePickerHeight = 312.0;
 
   // Application
+
   static const mainNavigationRailWidth = 56.0;
   static const subNavigationRailWidth = 248.0;
   static const subNavigationRailMinWidth = 240.0;
@@ -90,7 +93,7 @@ class Sizes {
   static const chatHistoryDialogHeight = 640.0;
 
   static const userProfileImageDialogWidth = 520.0;
-  static const userProfileImageDialogHeight = 440.0;
+  static const userProfileImageDialogHeight = 388.0;
 
   static const friendRequestDialogWidth = 400.0;
   static const friendRequestDialogHeight = 300.0;

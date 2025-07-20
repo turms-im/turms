@@ -4,7 +4,7 @@ import '../../../themes/index.dart';
 
 class TRadio<T> extends StatefulWidget {
   const TRadio({
-    Key? key,
+    super.key,
     required this.value,
     required this.groupValue,
     required this.onChanged,
@@ -16,7 +16,7 @@ class TRadio<T> extends StatefulWidget {
     this.inactiveBorderColor,
     this.toggleable = false,
     this.label,
-  }) : super(key: key);
+  });
 
   final double size;
 
@@ -63,38 +63,50 @@ class _TRadioState<T> extends State<TRadio<T>> with TickerProviderStateMixin {
     _selected = widget.value == widget.groupValue;
     final label = widget.label;
     final size = widget.size;
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onStatusChange,
-        child: Row(spacing: 8, mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(
-            height: size,
-            width: size,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                  color:
-                      _selected ? widget.activeBgColor : widget.inactiveBgColor,
+    return GestureDetector(
+      onTap: onStatusChange,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Row(
+          spacing: 8,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: size,
+              width: size,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: _selected
+                      ? widget.activeBgColor
+                      : widget.inactiveBgColor,
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: _selected
-                          ? (widget.activeBorderColor ??
+                    color: _selected
+                        ? (widget.activeBorderColor ??
                               context.theme.dividerColor)
-                          : (widget.inactiveBorderColor ??
-                              context.theme.dividerColor))),
-              child: _selected
-                  ? Center(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: widget.radioColor),
-                        child: SizedBox(width: size * 0.5, height: size * 0.5),
-                      ),
-                    )
-                  : null,
+                        : (widget.inactiveBorderColor ??
+                              context.theme.dividerColor),
+                  ),
+                ),
+                child: _selected
+                    ? Center(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: widget.radioColor,
+                          ),
+                          child: SizedBox(
+                            width: size * 0.5,
+                            height: size * 0.5,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
             ),
-          ),
-          if (label != null) Text(label)
-        ]),
+            if (label != null) Text(label),
+          ],
+        ),
       ),
     );
   }

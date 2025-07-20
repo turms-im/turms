@@ -28,15 +28,14 @@ class _FilesPageState extends ConsumerState {
   @override
   void initState() {
     super.initState();
-    TAsyncData.fromFuture(() => ref.read(fileServiceProvider)!.queryFiles())
-        .forEach(
-      (data) {
-        if (mounted) {
-          _fileInfosData = data;
-          setState(() {});
-        }
-      },
-    );
+    TAsyncData.fromFuture(
+      () => ref.read(fileServiceProvider)!.queryFiles(),
+    ).forEach((data) {
+      if (mounted) {
+        _fileInfosData = data;
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -54,7 +53,9 @@ class _FilesPageState extends ConsumerState {
 
 extension _FilesPageView on _FilesPageState {
   Widget _buildView(
-      AppThemeExtension appThemeExtension, AppLocalizations appLocalizations) {
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+  ) {
     // use "add_Hm()" instead of "add_jm()"
     // to make the string short and concise
     final dateFormat = ref.watch(dateFormatViewModel_yMdHm);
@@ -63,57 +64,68 @@ extension _FilesPageView on _FilesPageState {
       children: [
         _buildQueryFilters(appThemeExtension, appLocalizations),
         _buildTable(
-            appThemeExtension, appLocalizations, dateFormat, _fileInfosData),
+          appThemeExtension,
+          appLocalizations,
+          dateFormat,
+          _fileInfosData,
+        ),
       ],
     );
   }
 
   Widget _buildQueryFilters(
-      AppThemeExtension appThemeExtension, AppLocalizations appLocalizations) {
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+  ) {
     final now = DateTime.now();
     return ColoredBox(
       color: appThemeExtension.homePageBackgroundColor,
       child: ConstrainedBox(
-        constraints:
-            const BoxConstraints.tightFor(height: Sizes.homePageHeaderHeight),
-        child: Stack(children: [
-          const TWindowControlZone(toggleMaximizeOnDoubleTap: true),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
+        constraints: const BoxConstraints.tightFor(
+          height: Sizes.homePageHeaderHeight,
+        ),
+        child: Stack(
+          children: [
+            const TWindowControlZone(toggleMaximizeOnDoubleTap: true),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
                   // Use the same padding as the navigation rail
                   // so they are aligned.
                   horizontal: Sizes.subNavigationRailPadding.left,
-                  vertical: 16),
-              child: Row(
-                spacing: Sizes.subNavigationRailPadding.left,
-                children: [
-                  SizedBox(
-                    width: 200,
-                    child: TSearchBar(hintText: appLocalizations.fileName),
-                  ),
-                  TDateRangePicker(
-                    firstDate: DateTime(now.year - 3),
-                    lastDate: now,
-                    initialDateRange: DateTimeRange(
-                      start: now.subtract(const Duration(days: 7)),
-                      end: now,
+                  vertical: 16,
+                ),
+                child: Row(
+                  spacing: Sizes.subNavigationRailPadding.left,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: TSearchBar(hintText: appLocalizations.fileName),
                     ),
-                  ),
-                ],
+                    TDateRangePicker(
+                      firstDate: DateTime(now.year - 3),
+                      lastDate: now,
+                      initialDateRange: DateTimeRange(
+                        start: now.subtract(const Duration(days: 7)),
+                        end: now,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTable(
-      AppThemeExtension appThemeExtension,
-      AppLocalizations appLocalizations,
-      DateFormat dateFormat,
-      TAsyncData<List<FileInfo>> fileInfosData) {
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+    DateFormat dateFormat,
+    TAsyncData<List<FileInfo>> fileInfosData,
+  ) {
     if (!fileInfosData.isInitialized || fileInfosData.isLoading) {
       // TODO: polish UI
       return const Expanded(child: Center(child: CircularProgressIndicator()));
@@ -121,32 +133,48 @@ extension _FilesPageView on _FilesPageState {
     final fileInfos = fileInfosData.value!;
     return Expanded(
       child: TTable(
-        header: TTableRow(cells: [
-          const TTableDataCell(widget: Icon(Symbols.insert_drive_file_rounded)),
-          _buildHeaderCell(appThemeExtension, appLocalizations.fileName),
-          _buildHeaderCell(appThemeExtension, appLocalizations.fileUploadDate),
-          _buildHeaderCell(appThemeExtension, appLocalizations.fileUploader),
-          _buildHeaderCell(appThemeExtension, appLocalizations.fileSize),
-          _buildHeaderCell(appThemeExtension, appLocalizations.progress),
-        ]),
+        header: TTableRow(
+          cells: [
+            const TTableDataCell(
+              widget: Icon(Symbols.insert_drive_file_rounded),
+            ),
+            _buildHeaderCell(appThemeExtension, appLocalizations.fileName),
+            _buildHeaderCell(
+              appThemeExtension,
+              appLocalizations.fileUploadDate,
+            ),
+            _buildHeaderCell(appThemeExtension, appLocalizations.fileUploader),
+            _buildHeaderCell(appThemeExtension, appLocalizations.fileSize),
+            _buildHeaderCell(appThemeExtension, appLocalizations.progress),
+          ],
+        ),
         rows: fileInfos
-            .map((e) => TTableRow(
-                  onTap: _downloadOrOpen,
-                  cells: [
-                    TTableDataCell(widget: FileIcon(fileFormat: e.type)),
-                    _buildTextDataCell(appThemeExtension, e.name, false),
-                    _buildTextDataCell(appThemeExtension,
-                        dateFormat.format(e.uploadDate), true),
-                    _buildTextDataCell(appThemeExtension, e.uploader, true),
-                    _buildTextDataCell(appThemeExtension,
-                        e.size.toHumanReadableFileSize(), true),
-                    const TTableDataCell(
-                        widget: Padding(
+            .map(
+              (e) => TTableRow(
+                onTap: _downloadOrOpen,
+                cells: [
+                  TTableDataCell(widget: FileIcon(fileFormat: e.type)),
+                  _buildTextDataCell(appThemeExtension, e.name, false),
+                  _buildTextDataCell(
+                    appThemeExtension,
+                    dateFormat.format(e.uploadDate),
+                    true,
+                  ),
+                  _buildTextDataCell(appThemeExtension, e.uploader, true),
+                  _buildTextDataCell(
+                    appThemeExtension,
+                    e.size.toHumanReadableFileSize(),
+                    true,
+                  ),
+                  const TTableDataCell(
+                    widget: Padding(
                       padding: EdgeInsets.only(right: 16),
                       child: RepaintBoundary(child: LinearProgressIndicator()),
-                    )),
-                  ],
-                ))
+                    ),
+                  ),
+                ],
+              ),
+            )
             .toList(),
         columnOptions: [
           const TTableColumnOption(width: 0.05),
@@ -161,19 +189,26 @@ extension _FilesPageView on _FilesPageState {
   }
 
   TTableDataCell _buildHeaderCell(
-          AppThemeExtension appThemeExtension, String title) =>
-      TTableDataCell(
-          widget: Text(title,
-              style: appThemeExtension.fileTableTitleTextStyle,
-              overflow: TextOverflow.ellipsis));
+    AppThemeExtension appThemeExtension,
+    String title,
+  ) => TTableDataCell(
+    widget: Text(
+      title,
+      style: appThemeExtension.fileTableTitleTextStyle,
+      overflow: TextOverflow.ellipsis,
+    ),
+  );
 
   TTableDataCell _buildTextDataCell(
-          AppThemeExtension appThemeExtension, String text, bool isSecondary) =>
-      TTableDataCell(
-          widget: Text(
-        text,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        style: isSecondary ? appThemeExtension.fileTableCellTextStyle : null,
-      ));
+    AppThemeExtension appThemeExtension,
+    String text,
+    bool isSecondary,
+  ) => TTableDataCell(
+    widget: Text(
+      text,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+      style: isSecondary ? appThemeExtension.fileTableCellTextStyle : null,
+    ),
+  );
 }

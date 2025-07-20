@@ -28,8 +28,8 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 Group.class.getName());
     }
@@ -50,16 +50,16 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
         return im.turms.server.common.access.client.dto.model.group.GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 12 -> internalGetUserDefinedAttributes();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 12) {
+            return internalGetUserDefinedAttributes();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -72,7 +72,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
 
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private long id_ = 0L;
 
     /**
      * <code>optional int64 id = 1;</code>
@@ -95,7 +95,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int TYPE_ID_FIELD_NUMBER = 2;
-    private long typeId_;
+    private long typeId_ = 0L;
 
     /**
      * <code>optional int64 type_id = 2;</code>
@@ -118,7 +118,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int CREATOR_ID_FIELD_NUMBER = 3;
-    private long creatorId_;
+    private long creatorId_ = 0L;
 
     /**
      * <code>optional int64 creator_id = 3;</code>
@@ -141,7 +141,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int OWNER_ID_FIELD_NUMBER = 4;
-    private long ownerId_;
+    private long ownerId_ = 0L;
 
     /**
      * <code>optional int64 owner_id = 4;</code>
@@ -314,7 +314,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int CREATION_DATE_FIELD_NUMBER = 8;
-    private long creationDate_;
+    private long creationDate_ = 0L;
 
     /**
      * <code>optional int64 creation_date = 8;</code>
@@ -337,7 +337,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 9;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 9;</code>
@@ -360,7 +360,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int MUTE_END_DATE_FIELD_NUMBER = 10;
-    private long muteEndDate_;
+    private long muteEndDate_ = 0L;
 
     /**
      * <code>optional int64 mute_end_date = 10;</code>
@@ -383,7 +383,7 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
     }
 
     public static final int ACTIVE_FIELD_NUMBER = 11;
-    private boolean active_;
+    private boolean active_ = false;
 
     /**
      * <code>optional bool active = 11;</code>
@@ -945,26 +945,26 @@ public final class Group extends com.google.protobuf.GeneratedMessage implements
             return im.turms.server.common.access.client.dto.model.group.GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 12 -> internalGetUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 12) {
+                return internalGetUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 12 -> internalGetMutableUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 12) {
+                return internalGetMutableUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

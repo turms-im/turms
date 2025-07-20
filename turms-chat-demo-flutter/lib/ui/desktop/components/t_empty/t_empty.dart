@@ -9,14 +9,12 @@ class TEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-          child: Opacity(
-        opacity: 0.2,
-        child: ColorFiltered(
-          colorFilter: AppColors.greyscale,
-          child: SvgPicture.asset(
-            width: 100,
-            Assets.images.iconSvg,
-          ),
-        ),
-      ));
+    child: Opacity(
+      opacity: 0.2,
+      child: ColorFiltered(
+        colorFilter: AppColors.greyscale,
+        child: SvgPicture.asset(width: 100, Assets.images.iconSvg),
+      ),
+    ),
+  );
 }

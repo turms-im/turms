@@ -28,8 +28,8 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupConversation.class.getName());
     }
@@ -47,16 +47,16 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
         return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 2 -> internalGetMemberIdToReadDate();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 2) {
+            return internalGetMemberIdToReadDate();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -68,7 +68,7 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -276,8 +276,10 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
             return super.equals(obj);
         }
 
-        return getGroupId() == other.getGroupId()
-                && internalGetMemberIdToReadDate().equals(other.internalGetMemberIdToReadDate())
+        if (getGroupId() != other.getGroupId()) {
+            return false;
+        }
+        return internalGetMemberIdToReadDate().equals(other.internalGetMemberIdToReadDate())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -419,26 +421,26 @@ public final class GroupConversation extends com.google.protobuf.GeneratedMessag
             return im.turms.server.common.access.client.dto.model.conversation.GroupConversationOuterClass.internal_static_im_turms_proto_GroupConversation_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 2 -> internalGetMemberIdToReadDate();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 2) {
+                return internalGetMemberIdToReadDate();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 2 -> internalGetMutableMemberIdToReadDate();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 2) {
+                return internalGetMutableMemberIdToReadDate();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override

@@ -81,7 +81,8 @@ internal class GroupServiceET {
     fun createGroup_shouldReturnGroupId() =
         runBlocking {
             groupId =
-                client.groupService.createGroup("name", "intro", "announcement", 10)
+                client.groupService
+                    .createGroup("name", "intro", "announcement", 10)
                     .data
             assertNotNull(groupId)
         }
@@ -93,7 +94,8 @@ internal class GroupServiceET {
         runBlocking {
             val questions = listOf(NewGroupJoinQuestion("question", setOf("answer1", "answer2"), 10))
             groupJoinQuestionId =
-                client.groupService.addGroupJoinQuestions(groupId, questions)
+                client.groupService
+                    .addGroupJoinQuestions(groupId, questions)
                     .data[0]
             assertNotNull(groupJoinQuestionId)
         }
@@ -104,7 +106,8 @@ internal class GroupServiceET {
     fun createJoinRequest_shouldReturnJoinRequestId() =
         runBlocking {
             groupJoinRequestId =
-                client.groupService.createJoinRequest(groupId, "content")
+                client.groupService
+                    .createJoinRequest(groupId, "content")
                     .data
             assertNotNull(groupJoinRequestId)
         }
@@ -115,7 +118,8 @@ internal class GroupServiceET {
     fun addGroupMembers_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.addGroupMembers(groupId, setOf(GROUP_MEMBER_ID), "name", GroupMemberRole.MEMBER)
+                client.groupService
+                    .addGroupMembers(groupId, setOf(GROUP_MEMBER_ID), "name", GroupMemberRole.MEMBER)
                     .data
             assertNotNull(result)
         }
@@ -135,7 +139,8 @@ internal class GroupServiceET {
     fun createInvitation_shouldReturnInvitationId() =
         runBlocking {
             groupInvitationId =
-                client.groupService.createInvitation(groupId, GROUP_INVITATION_INVITEE, "content")
+                client.groupService
+                    .createInvitation(groupId, GROUP_INVITATION_INVITEE, "content")
                     .data
             assertNotNull(groupInvitationId)
         }
@@ -148,7 +153,8 @@ internal class GroupServiceET {
     fun updateGroup_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.updateGroup(groupId, "name", "intro", "announcement", 10)
+                client.groupService
+                    .updateGroup(groupId, "name", "intro", "announcement", 10)
                     .data
             assertNotNull(result)
         }
@@ -159,7 +165,8 @@ internal class GroupServiceET {
     fun transferOwnership_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.transferOwnership(groupId, GROUP_SUCCESSOR, true)
+                client.groupService
+                    .transferOwnership(groupId, GROUP_SUCCESSOR, true)
                     .data
             assertNotNull(result)
         }
@@ -170,7 +177,8 @@ internal class GroupServiceET {
     fun muteGroup_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.muteGroup(groupId, Date())
+                client.groupService
+                    .muteGroup(groupId, Date())
                     .data
             assertNotNull(result)
         }
@@ -181,7 +189,8 @@ internal class GroupServiceET {
     fun unmuteGroup_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.unmuteGroup(groupId)
+                client.groupService
+                    .unmuteGroup(groupId)
                     .data
             assertNotNull(result)
         }
@@ -192,7 +201,8 @@ internal class GroupServiceET {
     fun updateGroupJoinQuestion_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.updateGroupJoinQuestion(groupJoinQuestionId, "new-question", listOf("answer"))
+                client.groupService
+                    .updateGroupJoinQuestion(groupJoinQuestionId, "new-question", listOf("answer"))
                     .data
             assertNotNull(result)
         }
@@ -203,7 +213,8 @@ internal class GroupServiceET {
     fun updateGroupMemberInfo_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.updateGroupMemberInfo(groupId, GROUP_MEMBER_ID, "myname")
+                client.groupService
+                    .updateGroupMemberInfo(groupId, GROUP_MEMBER_ID, "myname")
                     .data
             assertNotNull(result)
         }
@@ -214,11 +225,12 @@ internal class GroupServiceET {
     fun muteGroupMember_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.muteGroupMember(
-                    groupId,
-                    GROUP_MEMBER_ID,
-                    Date(System.currentTimeMillis() + 100000),
-                ).data
+                client.groupService
+                    .muteGroupMember(
+                        groupId,
+                        GROUP_MEMBER_ID,
+                        Date(System.currentTimeMillis() + 100000),
+                    ).data
             assertNotNull(result)
         }
 
@@ -228,7 +240,8 @@ internal class GroupServiceET {
     fun unmuteGroupMember_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.unmuteGroupMember(groupId, GROUP_MEMBER_ID)
+                client.groupService
+                    .unmuteGroupMember(groupId, GROUP_MEMBER_ID)
                     .data
             assertNotNull(result)
         }
@@ -240,7 +253,8 @@ internal class GroupServiceET {
     fun queryGroups_shouldReturnGroups() =
         runBlocking {
             val groups =
-                client.groupService.queryGroups(setOf(groupId))
+                client.groupService
+                    .queryGroups(setOf(groupId))
                     .data
             assertEquals(groupId, groups[0].id)
         }
@@ -251,7 +265,8 @@ internal class GroupServiceET {
     fun queryJoinedGroupIds_shouldEqualNewGroupId() =
         runBlocking {
             val joinedGroupIdsWithVersion =
-                client.groupService.queryJoinedGroupIds()
+                client.groupService
+                    .queryJoinedGroupIds()
                     .data
             assertTrue(joinedGroupIdsWithVersion!!.longsList.contains(groupId))
         }
@@ -262,7 +277,8 @@ internal class GroupServiceET {
     fun queryJoinedGroupInfos_shouldEqualNewGroupId() =
         runBlocking {
             val groupWithVersion =
-                client.groupService.queryJoinedGroupInfos()
+                client.groupService
+                    .queryJoinedGroupInfos()
                     .data
             val groupIds = groupWithVersion!!.groupsList.map { it.id }.toSet()
             assertTrue(groupIds.contains(groupId))
@@ -274,7 +290,8 @@ internal class GroupServiceET {
     fun queryBlockedUserIds_shouldEqualBlockedUserId() =
         runBlocking {
             val blockedUserIdsWithVersion =
-                client.groupService.queryBlockedUserIds(groupId)
+                client.groupService
+                    .queryBlockedUserIds(groupId)
                     .data
             assertEquals(GROUP_BLOCKED_USER_ID, blockedUserIdsWithVersion!!.longsList.first())
         }
@@ -285,7 +302,8 @@ internal class GroupServiceET {
     fun queryBlockedUserInfos_shouldEqualBlockedUserId() =
         runBlocking {
             val usersInfosWithVersion =
-                client.groupService.queryBlockedUserInfos(groupId)
+                client.groupService
+                    .queryBlockedUserInfos(groupId)
                     .data
             assertEquals(GROUP_BLOCKED_USER_ID, usersInfosWithVersion!!.getUserInfos(0).id)
         }
@@ -296,7 +314,8 @@ internal class GroupServiceET {
     fun queryInvitations_shouldEqualNewInvitationId() =
         runBlocking {
             val groupInvitationsWithVersion =
-                client.groupService.queryInvitations(groupId)
+                client.groupService
+                    .queryInvitations(groupId)
                     .data
             assertEquals(
                 groupInvitationId,
@@ -310,7 +329,8 @@ internal class GroupServiceET {
     fun queryJoinRequests_shouldEqualNewJoinRequestId() =
         runBlocking {
             val groupJoinRequestsWithVersion =
-                client.groupService.queryJoinRequests(groupId)
+                client.groupService
+                    .queryJoinRequests(groupId)
                     .data
             assertEquals(
                 groupJoinRequestId,
@@ -324,7 +344,8 @@ internal class GroupServiceET {
     fun queryGroupJoinQuestions_shouldEqualNewGroupQuestionId() =
         runBlocking {
             val groupJoinQuestionsWithVersion =
-                client.groupService.queryGroupJoinQuestions(groupId, true)
+                client.groupService
+                    .queryGroupJoinQuestions(groupId, true)
                     .data
             assertEquals(
                 groupJoinQuestionId,
@@ -338,7 +359,8 @@ internal class GroupServiceET {
     fun queryGroupMembers_shouldEqualNewMemberId() =
         runBlocking {
             val groupMembersWithVersion =
-                client.groupService.queryGroupMembers(groupId, true)
+                client.groupService
+                    .queryGroupMembers(groupId, true)
                     .data
             assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(1).userId)
         }
@@ -349,7 +371,8 @@ internal class GroupServiceET {
     fun queryGroupMembersByMemberIds_shouldEqualNewMemberId() =
         runBlocking {
             val groupMembersWithVersion =
-                client.groupService.queryGroupMembersByMemberIds(groupId, setOf(GROUP_MEMBER_ID), true)
+                client.groupService
+                    .queryGroupMembersByMemberIds(groupId, setOf(GROUP_MEMBER_ID), true)
                     .data
             assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(0).userId)
         }
@@ -362,7 +385,8 @@ internal class GroupServiceET {
             val map = mapOf(Pair(groupJoinQuestionId, "answer"))
             try {
                 val answerResult =
-                    client.groupService.answerGroupQuestions(map)
+                    client.groupService
+                        .answerGroupQuestions(map)
                         .data
                 val isCorrect = answerResult.questionIdsList.contains(groupJoinQuestionId)
                 assertTrue(isCorrect)
@@ -384,7 +408,8 @@ internal class GroupServiceET {
     fun removeGroupMembers_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.removeGroupMembers(groupId, setOf(GROUP_MEMBER_ID))
+                client.groupService
+                    .removeGroupMembers(groupId, setOf(GROUP_MEMBER_ID))
                     .data
             assertNotNull(result)
         }
@@ -395,7 +420,8 @@ internal class GroupServiceET {
     fun deleteGroupJoinQuestions_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.deleteGroupJoinQuestions(groupId, setOf(groupJoinQuestionId))
+                client.groupService
+                    .deleteGroupJoinQuestions(groupId, setOf(groupJoinQuestionId))
                     .data
             assertNotNull(result)
         }
@@ -405,7 +431,8 @@ internal class GroupServiceET {
     fun unblockUser_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.unblockUser(groupId, GROUP_BLOCKED_USER_ID)
+                client.groupService
+                    .unblockUser(groupId, GROUP_BLOCKED_USER_ID)
                     .data
             assertNotNull(result)
         }
@@ -446,7 +473,8 @@ internal class GroupServiceET {
     fun quitGroup_shouldSucceed() =
         runBlocking {
             val result =
-                client.groupService.quitGroup(groupId, quitAfterTransfer = false)
+                client.groupService
+                    .quitGroup(groupId, quitAfterTransfer = false)
                     .data
             assertNotNull(result)
         }
@@ -457,10 +485,12 @@ internal class GroupServiceET {
     fun deleteGroup_shouldSucceed() =
         runBlocking {
             val readyToDeleteGroupId =
-                client.groupService.createGroup("readyToDelete")
+                client.groupService
+                    .createGroup("readyToDelete")
                     .data
             val result =
-                client.groupService.deleteGroup(readyToDeleteGroupId)
+                client.groupService
+                    .deleteGroup(readyToDeleteGroupId)
                     .data
             assertNotNull(result)
         }

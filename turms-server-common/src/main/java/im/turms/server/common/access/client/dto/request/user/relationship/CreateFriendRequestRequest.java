@@ -29,8 +29,8 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateFriendRequestRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
     }
 
     public static final int RECIPIENT_ID_FIELD_NUMBER = 1;
-    private long recipientId_;
+    private long recipientId_ = 0L;
 
     /**
      * <code>int64 recipient_id = 1;</code>
@@ -217,8 +217,10 @@ public final class CreateFriendRequestRequest extends com.google.protobuf.Genera
             return super.equals(obj);
         }
 
-        return getRecipientId() == other.getRecipientId()
-                && getContent().equals(other.getContent())
+        if (getRecipientId() != other.getRecipientId()) {
+            return false;
+        }
+        return getContent().equals(other.getContent())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

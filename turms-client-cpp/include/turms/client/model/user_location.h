@@ -1,17 +1,11 @@
 #ifndef TURMS_CLIENT_MODEL_USER_LOCATION_H
 #define TURMS_CLIENT_MODEL_USER_LOCATION_H
 
-namespace turms {
-namespace client {
-namespace model {
-
+namespace turms::client::model {
 struct UserLocation {
     float longitude;
     float latitude;
 };
-
-}  // namespace model
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::model
 
 #endif  // TURMS_CLIENT_MODEL_USER_LOCATION_H

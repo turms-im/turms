@@ -29,8 +29,8 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteGroupJoinQuestionsRequest.class.getName());
     }
@@ -59,7 +59,7 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
     }
 
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>int64 group_id = 1;</code>
@@ -228,8 +228,10 @@ public final class DeleteGroupJoinQuestionsRequest extends com.google.protobuf.G
             return super.equals(obj);
         }
 
-        return getGroupId() == other.getGroupId()
-                && getQuestionIdsList().equals(other.getQuestionIdsList())
+        if (getGroupId() != other.getGroupId()) {
+            return false;
+        }
+        return getQuestionIdsList().equals(other.getQuestionIdsList())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

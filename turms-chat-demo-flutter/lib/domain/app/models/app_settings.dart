@@ -9,7 +9,7 @@ class AppSettings {
     final entries = records.map((r) => (AppSetting.fromId(r.id), r));
     final idToSetting = {
       for (final entry in entries)
-        entry.$1: _parseValue(entry.$1, entry.$2.value.rawSqlValue)
+        entry.$1: _parseValue(entry.$1, entry.$2.value.rawSqlValue),
     };
     return AppSettings(idToSetting);
   }

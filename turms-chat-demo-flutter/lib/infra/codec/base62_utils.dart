@@ -31,17 +31,19 @@ class Base62Utils {
       zeroes++;
     }
 
-    final size =
-        ((end - begin) * (log(256) / log(_alphabet.length)) + 1).toInt();
+    final size = ((end - begin) * (log(256) / log(_alphabet.length)) + 1)
+        .toInt();
     final b58 = Uint8List(size);
 
     while (begin != end) {
       var carry = input[begin];
 
       var i = 0;
-      for (var it1 = size - 1;
-          (carry != 0 || i < length) && (it1 != -1);
-          it1--, i++) {
+      for (
+        var it1 = size - 1;
+        (carry != 0 || i < length) && (it1 != -1);
+        it1--, i++
+      ) {
         carry += 256 * b58[it1];
         b58[it1] = carry % _alphabet.length;
         carry = carry ~/ _alphabet.length;
@@ -77,7 +79,10 @@ class Base62Utils {
 
     if (input[psz] == ' ') {
       throw ArgumentError.value(
-          input, 'input', 'input cannot begin with a space.');
+        input,
+        'input',
+        'input cannot begin with a space.',
+      );
     }
 
     var zeroes = 0;
@@ -96,13 +101,18 @@ class Base62Utils {
       var carry = _baseMap[input[psz].codeUnitAt(0)];
 
       if (carry == 255) {
-        throw ArgumentError.value(input, 'input',
-            'The character "${input[psz]}" at index $psz is invalid.');
+        throw ArgumentError.value(
+          input,
+          'input',
+          'The character "${input[psz]}" at index $psz is invalid.',
+        );
       }
       var i = 0;
-      for (var it3 = size - 1;
-          (carry != 0 || i < length) && (it3 != -1);
-          it3--, i++) {
+      for (
+        var it3 = size - 1;
+        (carry != 0 || i < length) && (it3 != -1);
+        it3--, i++
+      ) {
         carry += _alphabet.length * b256[it3];
         b256[it3] = carry % 256;
         carry = carry ~/ 256;
@@ -116,7 +126,10 @@ class Base62Utils {
 
     if (psz < input.length && input[psz] == ' ') {
       throw ArgumentError.value(
-          input, 'input', 'input cannot end with a space.');
+        input,
+        'input',
+        'input cannot end with a space.',
+      );
     }
 
     var it4 = size - length;

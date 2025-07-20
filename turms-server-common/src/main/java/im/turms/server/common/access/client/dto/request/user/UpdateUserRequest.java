@@ -28,8 +28,8 @@ public final class UpdateUserRequest extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateUserRequest.class.getName());
     }
@@ -52,16 +52,16 @@ public final class UpdateUserRequest extends com.google.protobuf.GeneratedMessag
         return im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes"})
     @java.lang.Override
     protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
             int number) {
-        return switch (number) {
-            case 6 -> internalGetUserDefinedAttributes();
-            default -> throw new RuntimeException(
-                    "Invalid map field number: "
-                            + number);
-        };
+        if (number == 6) {
+            return internalGetUserDefinedAttributes();
+        }
+        throw new RuntimeException(
+                "Invalid map field number: "
+                        + number);
     }
 
     @java.lang.Override
@@ -286,7 +286,7 @@ public final class UpdateUserRequest extends com.google.protobuf.GeneratedMessag
     }
 
     public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
-    private int profileAccessStrategy_;
+    private int profileAccessStrategy_ = 0;
 
     /**
      * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
@@ -756,26 +756,26 @@ public final class UpdateUserRequest extends com.google.protobuf.GeneratedMessag
             return im.turms.server.common.access.client.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 6 -> internalGetUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 6) {
+                return internalGetUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({"rawtypes"})
         protected com.google.protobuf.MapFieldReflectionAccessor internalGetMutableMapFieldReflection(
                 int number) {
-            return switch (number) {
-                case 6 -> internalGetMutableUserDefinedAttributes();
-                default -> throw new RuntimeException(
-                        "Invalid map field number: "
-                                + number);
-            };
+            if (number == 6) {
+                return internalGetMutableUserDefinedAttributes();
+            }
+            throw new RuntimeException(
+                    "Invalid map field number: "
+                            + number);
         }
 
         @java.lang.Override
@@ -1434,7 +1434,7 @@ public final class UpdateUserRequest extends com.google.protobuf.GeneratedMessag
             return this;
         }
 
-        private int profileAccessStrategy_;
+        private int profileAccessStrategy_ = 0;
 
         /**
          * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>

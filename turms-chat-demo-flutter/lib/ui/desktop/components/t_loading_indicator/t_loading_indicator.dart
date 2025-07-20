@@ -9,16 +9,11 @@ class TLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 8,
-        children: [
-          const RepaintBoundary(
-            child: CupertinoActivityIndicator(),
-          ),
-          Text(
-            text,
-            style: context.appThemeExtension.descriptionTextStyle,
-          ),
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.center,
+    spacing: 8,
+    children: [
+      const RepaintBoundary(child: CupertinoActivityIndicator()),
+      Text(text, style: context.appThemeExtension.descriptionTextStyle),
+    ],
+  );
 }

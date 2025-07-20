@@ -65,110 +65,128 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
   });
 
   static final light = AppThemeExtension(
-      themeMode: ThemeMode.light,
-      successColor: AppColors.green6,
-      warningColor: AppColors.gold6,
-      errorColor: Colors.red,
-      infoColor: AppColors.blue6,
-      dangerColor: Colors.red,
-      dangerTextStyle: const TextStyle(color: Colors.red),
-      highlightTextStyle: const TextStyle(color: Colors.red),
-      maskColor: Colors.black54,
-      avatarIconColor: Colors.white,
-      avatarBackgroundColor: const Color.fromARGB(255, 117, 117, 117),
-      checkboxColor: AppColors.gray6,
-      checkboxTextStyle:
-          const TextStyle(color: Color(0xA6000000), fontSize: 16),
-      // hsl(0, 0%, 91%)
-      iconButtonContainerHoveredColor: const Color.fromARGB(255, 231, 231, 231),
-      // hsl(0, 0%, 85%)
-      iconButtonContainerPressedColor: const Color.fromARGB(255, 218, 218, 218),
-      menuDecoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: Sizes.borderRadiusCircular2,
-        border: Border.all(color: Colors.grey.shade400),
-        // border: Border.all(color: AppColors.gray5),
-        boxShadow: Styles.boxShadow,
-      ),
-      menuItemTextStyle: const TextStyle(
-        fontSize: 12,
-      ),
-      menuItemColor: Colors.white,
-      menuItemHoveredColor: Colors.grey.shade300,
-      popupDecoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: Sizes.borderRadiusCircular4,
-          boxShadow: Styles.boxShadow),
-      tabTextStyle: const TextStyle(color: Color.fromARGB(255, 89, 89, 89)),
-      textFieldHintTextStyle: TextStyle(color: Colors.grey.shade600),
-      toastDecoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: Sizes.borderRadiusCircular8,
-        boxShadow: Styles.boxShadow,
-      ),
-      // hsl(0, 0%, 95%)
-      homePageBackgroundColor: const Color.fromARGB(255, 243, 243, 243),
-      // hsl(0, 0%, 93%)
-      mainNavigationRailBackgroundColor:
-          const Color.fromARGB(255, 237, 237, 237),
-      // hsl(0, 0%, 42%)
-      mainNavigationRailIconColor: const Color.fromARGB(255, 107, 107, 107),
-      // hsl(0, 0%, 95%)
-      subNavigationRailSearchBarBackgroundColor:
-          const Color.fromARGB(255, 247, 247, 247),
-      subNavigationRailLoadingIndicatorBackgroundColor:
-          const Color.fromARGB(255, 237, 237, 237),
-      subNavigationRailDividerColor: const Color.fromARGB(255, 213, 213, 213),
-      chatSessionPaneDividerColor: const Color.fromARGB(255, 231, 231, 231),
-      chatSessionDetailsDrawerBackgroundColor: Colors.white,
-      chatSessionMessageTextStyle: const TextStyle(
-        fontSize: 14,
-      ),
-      chatSessionMessageEmojiTextStyle: TextStyle(
-          fontSize: 20,
-          fontFamily: Fonts.emojiFontFamily,
-          fontFamilyFallback: Fonts.emojiFontFamilyFallback),
-      // hsl(0, 0%, 97%)
-      tileBackgroundColor: const Color.fromARGB(255, 247, 247, 247),
-      tileBackgroundHighlightedColor: const Color.fromARGB(255, 210, 210, 210),
-      // hsl(0, 0%, 92%)
-      tileBackgroundHoveredColor: const Color.fromARGB(255, 234, 234, 234),
-      // hsl(0, 0%, 87%)
-      tileBackgroundFocusedColor: const Color.fromARGB(255, 222, 222, 222),
-      conversationTileMessageTextStyle: const TextStyle(
-        color: AppColors.gray7,
-        fontSize: 12,
-      ),
-      conversationTileDraftTextStyle: const TextStyle(color: Colors.red),
-      conversationTileHighlightedTextStyle:
-          TextStyle(backgroundColor: AppColors.primary.withValues(alpha: 0.3)),
-      conversationTileTimestampTextStyle:
-          const TextStyle(color: AppColors.gray7, fontSize: 12),
-      messageAttachmentColor: const Color.fromARGB(255, 250, 250, 250),
-      messageAttachmentHoveredColor: Colors.white,
-      messageBubbleErrorIconBackgroundColor:
-          const Color.fromARGB(255, 250, 81, 81),
-      messageBubbleErrorIconColor: Colors.white,
-      fileTableTitleTextStyle:
-          const TextStyle(color: Color.fromARGB(255, 51, 51, 51)),
-      fileTableCellTextStyle:
-          const TextStyle(color: Color.fromARGB(255, 102, 102, 102)),
-      settingPageSubNavigationRailDividerColor:
-          const Color.fromARGB(255, 240, 240, 240),
-      dialogTitleTextStyleMedium:
-          TextStyle(fontSize: 14, color: Colors.grey.shade600),
-      dialogTitleTextStyleLarge:
-          TextStyle(fontSize: 16, color: Colors.grey.shade600),
-      descriptionTextStyle: const TextStyle(
-        // TODO: Or Color(0xA6000000)?
-        color: Colors.grey,
-      ),
-      linkTextStyle: const TextStyle(
-        color: AppColors.blue5,
-      ),
-      linkHoveredTextStyle: const TextStyle(
-        color: AppColors.blue6,
-      ));
+    themeMode: ThemeMode.light,
+    successColor: AppColors.green6,
+    warningColor: AppColors.gold6,
+    errorColor: Colors.red,
+    infoColor: AppColors.blue6,
+    dangerColor: Colors.red,
+    dangerTextStyle: const TextStyle(color: Colors.red),
+    highlightTextStyle: const TextStyle(color: Colors.red),
+    maskColor: Colors.black54,
+    avatarIconColor: Colors.white,
+    avatarBackgroundColor: const Color.fromARGB(255, 117, 117, 117),
+    checkboxColor: AppColors.gray6,
+    checkboxTextStyle: const TextStyle(color: Color(0xA6000000), fontSize: 16),
+    // hsl(0, 0%, 91%)
+    iconButtonContainerHoveredColor: const Color.fromARGB(255, 231, 231, 231),
+    // hsl(0, 0%, 85%)
+    iconButtonContainerPressedColor: const Color.fromARGB(255, 218, 218, 218),
+    menuDecoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: Sizes.borderRadiusCircular2,
+      border: Border.all(color: Colors.grey.shade400),
+      // border: Border.all(color: AppColors.gray5),
+      boxShadow: Styles.boxShadow,
+    ),
+    menuItemTextStyle: const TextStyle(fontSize: 12),
+    menuItemColor: Colors.white,
+    menuItemHoveredColor: Colors.grey.shade300,
+    popupDecoration: const BoxDecoration(
+      color: Colors.white,
+      borderRadius: Sizes.borderRadiusCircular4,
+      boxShadow: Styles.boxShadow,
+    ),
+    tabTextStyle: const TextStyle(color: Color.fromARGB(255, 89, 89, 89)),
+    textFieldHintTextStyle: TextStyle(color: Colors.grey.shade600),
+    toastDecoration: const BoxDecoration(
+      color: Colors.white,
+      borderRadius: Sizes.borderRadiusCircular8,
+      boxShadow: Styles.boxShadow,
+    ),
+    // hsl(0, 0%, 95%)
+    homePageBackgroundColor: const Color.fromARGB(255, 243, 243, 243),
+    // hsl(0, 0%, 93%)
+    mainNavigationRailBackgroundColor: const Color.fromARGB(255, 237, 237, 237),
+    // hsl(0, 0%, 42%)
+    mainNavigationRailIconColor: const Color.fromARGB(255, 107, 107, 107),
+    // hsl(0, 0%, 95%)
+    subNavigationRailSearchBarBackgroundColor: const Color.fromARGB(
+      255,
+      247,
+      247,
+      247,
+    ),
+    subNavigationRailLoadingIndicatorBackgroundColor: const Color.fromARGB(
+      255,
+      237,
+      237,
+      237,
+    ),
+    subNavigationRailDividerColor: const Color.fromARGB(255, 213, 213, 213),
+    chatSessionPaneDividerColor: const Color.fromARGB(255, 231, 231, 231),
+    chatSessionDetailsDrawerBackgroundColor: Colors.white,
+    chatSessionMessageTextStyle: const TextStyle(fontSize: 14),
+    chatSessionMessageEmojiTextStyle: TextStyle(
+      fontSize: 20,
+      fontFamily: Fonts.emojiFontFamily,
+      fontFamilyFallback: Fonts.emojiFontFamilyFallback,
+    ),
+    // hsl(0, 0%, 97%)
+    tileBackgroundColor: const Color.fromARGB(255, 247, 247, 247),
+    tileBackgroundHighlightedColor: const Color.fromARGB(255, 210, 210, 210),
+    // hsl(0, 0%, 92%)
+    tileBackgroundHoveredColor: const Color.fromARGB(255, 234, 234, 234),
+    // hsl(0, 0%, 87%)
+    tileBackgroundFocusedColor: const Color.fromARGB(255, 222, 222, 222),
+    conversationTileMessageTextStyle: const TextStyle(
+      color: AppColors.gray7,
+      fontSize: 12,
+    ),
+    conversationTileDraftTextStyle: const TextStyle(color: Colors.red),
+    conversationTileHighlightedTextStyle: TextStyle(
+      backgroundColor: AppColors.primary.withValues(alpha: 0.3),
+    ),
+    conversationTileTimestampTextStyle: const TextStyle(
+      color: AppColors.gray7,
+      fontSize: 12,
+    ),
+    messageAttachmentColor: const Color.fromARGB(255, 250, 250, 250),
+    messageAttachmentHoveredColor: Colors.white,
+    messageBubbleErrorIconBackgroundColor: const Color.fromARGB(
+      255,
+      250,
+      81,
+      81,
+    ),
+    messageBubbleErrorIconColor: Colors.white,
+    fileTableTitleTextStyle: const TextStyle(
+      color: Color.fromARGB(255, 51, 51, 51),
+    ),
+    fileTableCellTextStyle: const TextStyle(
+      color: Color.fromARGB(255, 102, 102, 102),
+    ),
+    settingPageSubNavigationRailDividerColor: const Color.fromARGB(
+      255,
+      240,
+      240,
+      240,
+    ),
+    dialogTitleTextStyleMedium: TextStyle(
+      fontSize: 14,
+      color: Colors.grey.shade600,
+    ),
+    dialogTitleTextStyleLarge: TextStyle(
+      fontSize: 16,
+      color: Colors.grey.shade600,
+    ),
+    descriptionTextStyle: const TextStyle(
+      // TODO: Or Color(0xA6000000)?
+      color: Colors.grey,
+    ),
+    linkTextStyle: const TextStyle(color: AppColors.blue5),
+    linkHoveredTextStyle: const TextStyle(color: AppColors.blue6),
+  );
 
   // TODO
   static final dark = light;
@@ -306,100 +324,100 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
     TextStyle? descriptionTextStyle,
     TextStyle? linkTextStyle,
     TextStyle? linkHoveredTextStyle,
-  }) =>
-      AppThemeExtension(
-        themeMode: themeMode ?? this.themeMode,
-        successColor: successColor ?? this.successColor,
-        warningColor: warningColor ?? this.warningColor,
-        errorColor: errorColor ?? this.errorColor,
-        infoColor: infoColor ?? this.infoColor,
-        dangerColor: dangerColor ?? this.dangerColor,
-        dangerTextStyle: dangerTextStyle ?? this.dangerTextStyle,
-        highlightTextStyle: highlightTextStyle ?? this.highlightTextStyle,
-        maskColor: maskColor ?? this.maskColor,
-        avatarIconColor: avatarIconColor ?? this.avatarIconColor,
-        avatarBackgroundColor:
-            avatarBackgroundColor ?? this.avatarBackgroundColor,
-        checkboxColor: checkboxColor ?? this.checkboxColor,
-        checkboxTextStyle: checkboxTextStyle ?? this.checkboxTextStyle,
-        iconButtonContainerHoveredColor: iconButtonContainerHoveredColor ??
-            this.iconButtonContainerHoveredColor,
-        iconButtonContainerPressedColor: iconButtonContainerPressedColor ??
-            this.iconButtonContainerPressedColor,
-        menuDecoration: menuDecoration ?? this.menuDecoration,
-        menuItemColor: menuItemColor ?? this.menuItemColor,
-        menuItemHoveredColor: menuItemHoveredColor ?? this.menuItemHoveredColor,
-        menuItemTextStyle: menuItemTextStyle ?? this.menuItemTextStyle,
-        popupDecoration: popupDecoration ?? this.popupDecoration,
-        tabTextStyle: tabTextStyle ?? this.tabTextStyle,
-        textFieldHintTextStyle:
-            textFieldHintTextStyle ?? this.textFieldHintTextStyle,
-        toastDecoration: toastDecoration ?? this.toastDecoration,
-        homePageBackgroundColor:
-            homePageBackgroundColor ?? this.homePageBackgroundColor,
-        mainNavigationRailBackgroundColor: mainNavigationRailBackgroundColor ??
-            this.mainNavigationRailBackgroundColor,
-        mainNavigationRailIconColor:
-            mainNavigationRailIconColor ?? this.mainNavigationRailIconColor,
-        subNavigationRailSearchBarBackgroundColor:
-            subNavigationRailSearchBarBackgroundColor ??
-                this.subNavigationRailSearchBarBackgroundColor,
-        subNavigationRailLoadingIndicatorBackgroundColor:
-            subNavigationRailLoadingIndicatorBackgroundColor ??
-                this.subNavigationRailLoadingIndicatorBackgroundColor,
-        subNavigationRailDividerColor:
-            subNavigationRailDividerColor ?? this.subNavigationRailDividerColor,
-        chatSessionPaneDividerColor:
-            chatSessionPaneDividerColor ?? this.chatSessionPaneDividerColor,
-        chatSessionDetailsDrawerBackgroundColor:
-            chatSessionDetailsDrawerBackgroundColor ??
-                this.chatSessionDetailsDrawerBackgroundColor,
-        chatSessionMessageTextStyle:
-            chatSessionMessageEditorTextStyle ?? chatSessionMessageTextStyle,
-        chatSessionMessageEmojiTextStyle:
-            chatSessionMessageEditorEmojiTextStyle ??
-                chatSessionMessageEmojiTextStyle,
-        tileBackgroundColor: tileBackgroundColor ?? this.tileBackgroundColor,
-        tileBackgroundHighlightedColor: tileBackgroundHighlightedColor ??
-            this.tileBackgroundHighlightedColor,
-        tileBackgroundHoveredColor:
-            tileBackgroundHoveredColor ?? this.tileBackgroundHoveredColor,
-        tileBackgroundFocusedColor:
-            tileBackgroundFocusedColor ?? this.tileBackgroundFocusedColor,
-        conversationTileMessageTextStyle: conversationTileMessageTextStyle ??
-            this.conversationTileMessageTextStyle,
-        conversationTileDraftTextStyle: conversationTileDraftTextStyle ??
-            this.conversationTileDraftTextStyle,
-        conversationTileHighlightedTextStyle:
-            conversationTileHighlightedTextStyle ??
-                this.conversationTileHighlightedTextStyle,
-        conversationTileTimestampTextStyle:
-            conversationTileTimestampTextStyle ??
-                this.conversationTileTimestampTextStyle,
-        messageAttachmentColor:
-            messageAttachmentColor ?? this.messageAttachmentColor,
-        messageAttachmentHoveredColor:
-            messageAttachmentHoveredColor ?? this.messageAttachmentHoveredColor,
-        messageBubbleErrorIconBackgroundColor:
-            messageBubbleErrorIconBackgroundColor ??
-                this.messageBubbleErrorIconBackgroundColor,
-        messageBubbleErrorIconColor:
-            messageBubbleErrorIconColor ?? this.messageBubbleErrorIconColor,
-        fileTableTitleTextStyle:
-            fileTableTitleTextStyle ?? this.fileTableTitleTextStyle,
-        fileTableCellTextStyle:
-            fileTableCellTextStyle ?? this.fileTableCellTextStyle,
-        settingPageSubNavigationRailDividerColor:
-            settingPageSubNavigationRailDividerColor ??
-                this.settingPageSubNavigationRailDividerColor,
-        dialogTitleTextStyleMedium:
-            dialogTitleTextStyleMedium ?? this.dialogTitleTextStyleMedium,
-        dialogTitleTextStyleLarge:
-            dialogTitleTextStyleLarge ?? this.dialogTitleTextStyleLarge,
-        descriptionTextStyle: descriptionTextStyle ?? this.descriptionTextStyle,
-        linkTextStyle: linkTextStyle ?? this.linkTextStyle,
-        linkHoveredTextStyle: linkHoveredTextStyle ?? this.linkHoveredTextStyle,
-      );
+  }) => AppThemeExtension(
+    themeMode: themeMode ?? this.themeMode,
+    successColor: successColor ?? this.successColor,
+    warningColor: warningColor ?? this.warningColor,
+    errorColor: errorColor ?? this.errorColor,
+    infoColor: infoColor ?? this.infoColor,
+    dangerColor: dangerColor ?? this.dangerColor,
+    dangerTextStyle: dangerTextStyle ?? this.dangerTextStyle,
+    highlightTextStyle: highlightTextStyle ?? this.highlightTextStyle,
+    maskColor: maskColor ?? this.maskColor,
+    avatarIconColor: avatarIconColor ?? this.avatarIconColor,
+    avatarBackgroundColor: avatarBackgroundColor ?? this.avatarBackgroundColor,
+    checkboxColor: checkboxColor ?? this.checkboxColor,
+    checkboxTextStyle: checkboxTextStyle ?? this.checkboxTextStyle,
+    iconButtonContainerHoveredColor:
+        iconButtonContainerHoveredColor ?? this.iconButtonContainerHoveredColor,
+    iconButtonContainerPressedColor:
+        iconButtonContainerPressedColor ?? this.iconButtonContainerPressedColor,
+    menuDecoration: menuDecoration ?? this.menuDecoration,
+    menuItemColor: menuItemColor ?? this.menuItemColor,
+    menuItemHoveredColor: menuItemHoveredColor ?? this.menuItemHoveredColor,
+    menuItemTextStyle: menuItemTextStyle ?? this.menuItemTextStyle,
+    popupDecoration: popupDecoration ?? this.popupDecoration,
+    tabTextStyle: tabTextStyle ?? this.tabTextStyle,
+    textFieldHintTextStyle:
+        textFieldHintTextStyle ?? this.textFieldHintTextStyle,
+    toastDecoration: toastDecoration ?? this.toastDecoration,
+    homePageBackgroundColor:
+        homePageBackgroundColor ?? this.homePageBackgroundColor,
+    mainNavigationRailBackgroundColor:
+        mainNavigationRailBackgroundColor ??
+        this.mainNavigationRailBackgroundColor,
+    mainNavigationRailIconColor:
+        mainNavigationRailIconColor ?? this.mainNavigationRailIconColor,
+    subNavigationRailSearchBarBackgroundColor:
+        subNavigationRailSearchBarBackgroundColor ??
+        this.subNavigationRailSearchBarBackgroundColor,
+    subNavigationRailLoadingIndicatorBackgroundColor:
+        subNavigationRailLoadingIndicatorBackgroundColor ??
+        this.subNavigationRailLoadingIndicatorBackgroundColor,
+    subNavigationRailDividerColor:
+        subNavigationRailDividerColor ?? this.subNavigationRailDividerColor,
+    chatSessionPaneDividerColor:
+        chatSessionPaneDividerColor ?? this.chatSessionPaneDividerColor,
+    chatSessionDetailsDrawerBackgroundColor:
+        chatSessionDetailsDrawerBackgroundColor ??
+        this.chatSessionDetailsDrawerBackgroundColor,
+    chatSessionMessageTextStyle:
+        chatSessionMessageEditorTextStyle ?? chatSessionMessageTextStyle,
+    chatSessionMessageEmojiTextStyle:
+        chatSessionMessageEditorEmojiTextStyle ??
+        chatSessionMessageEmojiTextStyle,
+    tileBackgroundColor: tileBackgroundColor ?? this.tileBackgroundColor,
+    tileBackgroundHighlightedColor:
+        tileBackgroundHighlightedColor ?? this.tileBackgroundHighlightedColor,
+    tileBackgroundHoveredColor:
+        tileBackgroundHoveredColor ?? this.tileBackgroundHoveredColor,
+    tileBackgroundFocusedColor:
+        tileBackgroundFocusedColor ?? this.tileBackgroundFocusedColor,
+    conversationTileMessageTextStyle:
+        conversationTileMessageTextStyle ??
+        this.conversationTileMessageTextStyle,
+    conversationTileDraftTextStyle:
+        conversationTileDraftTextStyle ?? this.conversationTileDraftTextStyle,
+    conversationTileHighlightedTextStyle:
+        conversationTileHighlightedTextStyle ??
+        this.conversationTileHighlightedTextStyle,
+    conversationTileTimestampTextStyle:
+        conversationTileTimestampTextStyle ??
+        this.conversationTileTimestampTextStyle,
+    messageAttachmentColor:
+        messageAttachmentColor ?? this.messageAttachmentColor,
+    messageAttachmentHoveredColor:
+        messageAttachmentHoveredColor ?? this.messageAttachmentHoveredColor,
+    messageBubbleErrorIconBackgroundColor:
+        messageBubbleErrorIconBackgroundColor ??
+        this.messageBubbleErrorIconBackgroundColor,
+    messageBubbleErrorIconColor:
+        messageBubbleErrorIconColor ?? this.messageBubbleErrorIconColor,
+    fileTableTitleTextStyle:
+        fileTableTitleTextStyle ?? this.fileTableTitleTextStyle,
+    fileTableCellTextStyle:
+        fileTableCellTextStyle ?? this.fileTableCellTextStyle,
+    settingPageSubNavigationRailDividerColor:
+        settingPageSubNavigationRailDividerColor ??
+        this.settingPageSubNavigationRailDividerColor,
+    dialogTitleTextStyleMedium:
+        dialogTitleTextStyleMedium ?? this.dialogTitleTextStyleMedium,
+    dialogTitleTextStyleLarge:
+        dialogTitleTextStyleLarge ?? this.dialogTitleTextStyleLarge,
+    descriptionTextStyle: descriptionTextStyle ?? this.descriptionTextStyle,
+    linkTextStyle: linkTextStyle ?? this.linkTextStyle,
+    linkHoveredTextStyle: linkHoveredTextStyle ?? this.linkHoveredTextStyle,
+  );
 
   @override
   AppThemeExtension lerp(covariant AppThemeExtension? other, double t) {
@@ -413,120 +431,217 @@ class AppThemeExtension extends ThemeExtension<AppThemeExtension> {
       errorColor: Color.lerp(errorColor, other.errorColor, t)!,
       infoColor: Color.lerp(infoColor, other.infoColor, t)!,
       dangerColor: Color.lerp(dangerColor, other.dangerColor, t)!,
-      dangerTextStyle:
-          TextStyle.lerp(dangerTextStyle, other.dangerTextStyle, t)!,
-      highlightTextStyle:
-          TextStyle.lerp(highlightTextStyle, other.highlightTextStyle, t)!,
+      dangerTextStyle: TextStyle.lerp(
+        dangerTextStyle,
+        other.dangerTextStyle,
+        t,
+      )!,
+      highlightTextStyle: TextStyle.lerp(
+        highlightTextStyle,
+        other.highlightTextStyle,
+        t,
+      )!,
       maskColor: Color.lerp(maskColor, other.maskColor, t)!,
       avatarIconColor: Color.lerp(avatarIconColor, other.avatarIconColor, t)!,
-      avatarBackgroundColor:
-          Color.lerp(avatarBackgroundColor, other.avatarBackgroundColor, t)!,
+      avatarBackgroundColor: Color.lerp(
+        avatarBackgroundColor,
+        other.avatarBackgroundColor,
+        t,
+      )!,
       checkboxColor: Color.lerp(checkboxColor, other.checkboxColor, t)!,
-      checkboxTextStyle:
-          TextStyle.lerp(checkboxTextStyle, other.checkboxTextStyle, t)!,
+      checkboxTextStyle: TextStyle.lerp(
+        checkboxTextStyle,
+        other.checkboxTextStyle,
+        t,
+      )!,
       iconButtonContainerHoveredColor: Color.lerp(
-          iconButtonContainerHoveredColor,
-          other.iconButtonContainerHoveredColor,
-          t)!,
+        iconButtonContainerHoveredColor,
+        other.iconButtonContainerHoveredColor,
+        t,
+      )!,
       iconButtonContainerPressedColor: Color.lerp(
-          iconButtonContainerPressedColor,
-          other.iconButtonContainerPressedColor,
-          t)!,
-      menuDecoration:
-          BoxDecoration.lerp(menuDecoration, other.menuDecoration, t)!,
+        iconButtonContainerPressedColor,
+        other.iconButtonContainerPressedColor,
+        t,
+      )!,
+      menuDecoration: BoxDecoration.lerp(
+        menuDecoration,
+        other.menuDecoration,
+        t,
+      )!,
       menuItemColor: Color.lerp(menuItemColor, other.menuItemColor, t)!,
-      menuItemHoveredColor:
-          Color.lerp(menuItemHoveredColor, other.menuItemHoveredColor, t)!,
-      menuItemTextStyle:
-          TextStyle.lerp(menuItemTextStyle, other.menuItemTextStyle, t)!,
-      popupDecoration:
-          BoxDecoration.lerp(popupDecoration, other.popupDecoration, t)!,
+      menuItemHoveredColor: Color.lerp(
+        menuItemHoveredColor,
+        other.menuItemHoveredColor,
+        t,
+      )!,
+      menuItemTextStyle: TextStyle.lerp(
+        menuItemTextStyle,
+        other.menuItemTextStyle,
+        t,
+      )!,
+      popupDecoration: BoxDecoration.lerp(
+        popupDecoration,
+        other.popupDecoration,
+        t,
+      )!,
       tabTextStyle: TextStyle.lerp(tabTextStyle, other.tabTextStyle, t)!,
       textFieldHintTextStyle: TextStyle.lerp(
-          textFieldHintTextStyle, other.textFieldHintTextStyle, t)!,
-      toastDecoration:
-          BoxDecoration.lerp(toastDecoration, other.toastDecoration, t)!,
+        textFieldHintTextStyle,
+        other.textFieldHintTextStyle,
+        t,
+      )!,
+      toastDecoration: BoxDecoration.lerp(
+        toastDecoration,
+        other.toastDecoration,
+        t,
+      )!,
       homePageBackgroundColor: Color.lerp(
-          homePageBackgroundColor, other.homePageBackgroundColor, t)!,
+        homePageBackgroundColor,
+        other.homePageBackgroundColor,
+        t,
+      )!,
       mainNavigationRailBackgroundColor: Color.lerp(
-          mainNavigationRailBackgroundColor,
-          other.mainNavigationRailBackgroundColor,
-          t)!,
+        mainNavigationRailBackgroundColor,
+        other.mainNavigationRailBackgroundColor,
+        t,
+      )!,
       mainNavigationRailIconColor: Color.lerp(
-          mainNavigationRailIconColor, other.mainNavigationRailIconColor, t)!,
+        mainNavigationRailIconColor,
+        other.mainNavigationRailIconColor,
+        t,
+      )!,
       subNavigationRailSearchBarBackgroundColor: Color.lerp(
-          subNavigationRailSearchBarBackgroundColor,
-          other.subNavigationRailSearchBarBackgroundColor,
-          t)!,
+        subNavigationRailSearchBarBackgroundColor,
+        other.subNavigationRailSearchBarBackgroundColor,
+        t,
+      )!,
       subNavigationRailLoadingIndicatorBackgroundColor: Color.lerp(
-          subNavigationRailLoadingIndicatorBackgroundColor,
-          other.subNavigationRailLoadingIndicatorBackgroundColor,
-          t)!,
-      subNavigationRailDividerColor: Color.lerp(subNavigationRailDividerColor,
-          other.subNavigationRailDividerColor, t)!,
+        subNavigationRailLoadingIndicatorBackgroundColor,
+        other.subNavigationRailLoadingIndicatorBackgroundColor,
+        t,
+      )!,
+      subNavigationRailDividerColor: Color.lerp(
+        subNavigationRailDividerColor,
+        other.subNavigationRailDividerColor,
+        t,
+      )!,
       chatSessionPaneDividerColor: Color.lerp(
-          chatSessionPaneDividerColor, other.chatSessionPaneDividerColor, t)!,
+        chatSessionPaneDividerColor,
+        other.chatSessionPaneDividerColor,
+        t,
+      )!,
       chatSessionDetailsDrawerBackgroundColor: Color.lerp(
-          chatSessionDetailsDrawerBackgroundColor,
-          other.chatSessionDetailsDrawerBackgroundColor,
-          t)!,
+        chatSessionDetailsDrawerBackgroundColor,
+        other.chatSessionDetailsDrawerBackgroundColor,
+        t,
+      )!,
       chatSessionMessageTextStyle: TextStyle.lerp(
-          chatSessionMessageTextStyle, other.chatSessionMessageTextStyle, t)!,
+        chatSessionMessageTextStyle,
+        other.chatSessionMessageTextStyle,
+        t,
+      )!,
       chatSessionMessageEmojiTextStyle: TextStyle.lerp(
-          chatSessionMessageEmojiTextStyle,
-          other.chatSessionMessageEmojiTextStyle,
-          t)!,
-      tileBackgroundColor:
-          Color.lerp(tileBackgroundColor, other.tileBackgroundColor, t)!,
-      tileBackgroundHighlightedColor: Color.lerp(tileBackgroundHighlightedColor,
-          other.tileBackgroundHighlightedColor, t)!,
+        chatSessionMessageEmojiTextStyle,
+        other.chatSessionMessageEmojiTextStyle,
+        t,
+      )!,
+      tileBackgroundColor: Color.lerp(
+        tileBackgroundColor,
+        other.tileBackgroundColor,
+        t,
+      )!,
+      tileBackgroundHighlightedColor: Color.lerp(
+        tileBackgroundHighlightedColor,
+        other.tileBackgroundHighlightedColor,
+        t,
+      )!,
       tileBackgroundHoveredColor: Color.lerp(
-          tileBackgroundHoveredColor, other.tileBackgroundHoveredColor, t)!,
+        tileBackgroundHoveredColor,
+        other.tileBackgroundHoveredColor,
+        t,
+      )!,
       tileBackgroundFocusedColor: Color.lerp(
-          tileBackgroundFocusedColor, other.tileBackgroundFocusedColor, t)!,
+        tileBackgroundFocusedColor,
+        other.tileBackgroundFocusedColor,
+        t,
+      )!,
       conversationTileMessageTextStyle: TextStyle.lerp(
-          conversationTileMessageTextStyle,
-          other.conversationTileMessageTextStyle,
-          t)!,
+        conversationTileMessageTextStyle,
+        other.conversationTileMessageTextStyle,
+        t,
+      )!,
       conversationTileDraftTextStyle: TextStyle.lerp(
-          conversationTileDraftTextStyle,
-          other.conversationTileDraftTextStyle,
-          t)!,
+        conversationTileDraftTextStyle,
+        other.conversationTileDraftTextStyle,
+        t,
+      )!,
       conversationTileHighlightedTextStyle: TextStyle.lerp(
-          conversationTileHighlightedTextStyle,
-          other.conversationTileHighlightedTextStyle,
-          t)!,
+        conversationTileHighlightedTextStyle,
+        other.conversationTileHighlightedTextStyle,
+        t,
+      )!,
       conversationTileTimestampTextStyle: TextStyle.lerp(
-          conversationTileTimestampTextStyle,
-          other.conversationTileTimestampTextStyle,
-          t)!,
-      messageAttachmentColor:
-          Color.lerp(messageAttachmentColor, other.messageAttachmentColor, t)!,
-      messageAttachmentHoveredColor: Color.lerp(messageAttachmentHoveredColor,
-          other.messageAttachmentHoveredColor, t)!,
+        conversationTileTimestampTextStyle,
+        other.conversationTileTimestampTextStyle,
+        t,
+      )!,
+      messageAttachmentColor: Color.lerp(
+        messageAttachmentColor,
+        other.messageAttachmentColor,
+        t,
+      )!,
+      messageAttachmentHoveredColor: Color.lerp(
+        messageAttachmentHoveredColor,
+        other.messageAttachmentHoveredColor,
+        t,
+      )!,
       messageBubbleErrorIconBackgroundColor: Color.lerp(
-          messageBubbleErrorIconBackgroundColor,
-          other.messageBubbleErrorIconBackgroundColor,
-          t)!,
+        messageBubbleErrorIconBackgroundColor,
+        other.messageBubbleErrorIconBackgroundColor,
+        t,
+      )!,
       messageBubbleErrorIconColor: Color.lerp(
-          messageBubbleErrorIconColor, other.messageBubbleErrorIconColor, t)!,
+        messageBubbleErrorIconColor,
+        other.messageBubbleErrorIconColor,
+        t,
+      )!,
       fileTableTitleTextStyle: TextStyle.lerp(
-          fileTableTitleTextStyle, other.fileTableTitleTextStyle, t)!,
+        fileTableTitleTextStyle,
+        other.fileTableTitleTextStyle,
+        t,
+      )!,
       fileTableCellTextStyle: TextStyle.lerp(
-          fileTableCellTextStyle, other.fileTableCellTextStyle, t)!,
+        fileTableCellTextStyle,
+        other.fileTableCellTextStyle,
+        t,
+      )!,
       settingPageSubNavigationRailDividerColor: Color.lerp(
-          settingPageSubNavigationRailDividerColor,
-          other.settingPageSubNavigationRailDividerColor,
-          t)!,
+        settingPageSubNavigationRailDividerColor,
+        other.settingPageSubNavigationRailDividerColor,
+        t,
+      )!,
       dialogTitleTextStyleMedium: TextStyle.lerp(
-          dialogTitleTextStyleMedium, other.dialogTitleTextStyleMedium, t)!,
+        dialogTitleTextStyleMedium,
+        other.dialogTitleTextStyleMedium,
+        t,
+      )!,
       dialogTitleTextStyleLarge: TextStyle.lerp(
-          dialogTitleTextStyleLarge, other.dialogTitleTextStyleLarge, t)!,
-      descriptionTextStyle:
-          TextStyle.lerp(descriptionTextStyle, other.descriptionTextStyle, t)!,
+        dialogTitleTextStyleLarge,
+        other.dialogTitleTextStyleLarge,
+        t,
+      )!,
+      descriptionTextStyle: TextStyle.lerp(
+        descriptionTextStyle,
+        other.descriptionTextStyle,
+        t,
+      )!,
       linkTextStyle: TextStyle.lerp(linkTextStyle, other.linkTextStyle, t)!,
-      linkHoveredTextStyle:
-          TextStyle.lerp(linkHoveredTextStyle, other.linkHoveredTextStyle, t)!,
+      linkHoveredTextStyle: TextStyle.lerp(
+        linkHoveredTextStyle,
+        other.linkHoveredTextStyle,
+        t,
+      )!,
     );
   }
 }

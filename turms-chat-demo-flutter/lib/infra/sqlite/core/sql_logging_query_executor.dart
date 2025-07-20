@@ -25,66 +25,60 @@ class SqlLoggingQueryInterceptor extends QueryInterceptor {
   Future<void> runBatched(
     QueryExecutor executor,
     BatchedStatements statements,
-  ) =>
-      _run(
-        'Run ${statements.statements}. Args: ${statements.arguments}}',
-        () => executor.runBatched(statements),
-      );
+  ) => _run(
+    'Run ${statements.statements}. Args: ${statements.arguments}}',
+    () => executor.runBatched(statements),
+  );
 
   @override
   Future<int> runInsert(
     QueryExecutor executor,
     String statement,
     List<Object?> args,
-  ) =>
-      _run(
-        'Run `$statement`. Args $args',
-        () => executor.runInsert(statement, args),
-      );
+  ) => _run(
+    'Run `$statement`. Args $args',
+    () => executor.runInsert(statement, args),
+  );
 
   @override
   Future<int> runUpdate(
     QueryExecutor executor,
     String statement,
     List<Object?> args,
-  ) =>
-      _run(
-        'Run `$statement`. Args $args',
-        () => executor.runUpdate(statement, args),
-      );
+  ) => _run(
+    'Run `$statement`. Args $args',
+    () => executor.runUpdate(statement, args),
+  );
 
   @override
   Future<int> runDelete(
     QueryExecutor executor,
     String statement,
     List<Object?> args,
-  ) =>
-      _run(
-        'Run `$statement`. Args $args',
-        () => executor.runDelete(statement, args),
-      );
+  ) => _run(
+    'Run `$statement`. Args $args',
+    () => executor.runDelete(statement, args),
+  );
 
   @override
   Future<void> runCustom(
     QueryExecutor executor,
     String statement,
     List<Object?> args,
-  ) =>
-      _run(
-        'Run `$statement`. Args $args',
-        () => executor.runCustom(statement, args),
-      );
+  ) => _run(
+    'Run `$statement`. Args $args',
+    () => executor.runCustom(statement, args),
+  );
 
   @override
   Future<List<Map<String, Object?>>> runSelect(
     QueryExecutor executor,
     String statement,
     List<Object?> args,
-  ) =>
-      _run(
-        'Run `$statement`. Args $args',
-        () => executor.runSelect(statement, args),
-      );
+  ) => _run(
+    'Run `$statement`. Args $args',
+    () => executor.runSelect(statement, args),
+  );
 
   Future<T> _run<T>(
     String description,
@@ -94,11 +88,13 @@ class SqlLoggingQueryInterceptor extends QueryInterceptor {
     try {
       final result = await operation();
       logger.debug(
-          '[Drift] $description. Took: ${stopwatch.elapsedMilliseconds}');
+        '[Drift] $description. Took: ${stopwatch.elapsedMilliseconds}',
+      );
       return result;
     } catch (e) {
       logger.error(
-          '[Drift] $description. Took: ${stopwatch.elapsedMilliseconds}. Cause: ($e)');
+        '[Drift] $description. Took: ${stopwatch.elapsedMilliseconds}. Cause: ($e)',
+      );
       rethrow;
     }
   }

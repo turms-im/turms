@@ -31,8 +31,9 @@ class RpcClient {
   final Client _client;
 
   Future<bool> sendHealthcheckRequest() async {
-    final response = await _client.sendRequest(RpcServer.methodHealthcheck)
-        as Map<String, dynamic>;
+    final response =
+        await _client.sendRequest(RpcServer.methodHealthcheck)
+            as Map<String, dynamic>;
     return response['status'] == 'ok';
   }
 

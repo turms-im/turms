@@ -1,0 +1,1 @@
+enum ImageShape { rectangle, circle }

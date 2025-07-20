@@ -322,12 +322,8 @@ object ResponseStatusCode {
     const val ACCEPT_NONEXISTENT_MEETING_INVITATION = 8205
 
     @JvmStatic
-    fun isSuccessCode(businessCode: Int): Boolean {
-        return businessCode in 1000..1099
-    }
+    fun isSuccessCode(businessCode: Int): Boolean = businessCode in 1000..1099
 
     @JvmStatic
-    fun isErrorCode(businessCode: Int): Boolean {
-        return !isSuccessCode(businessCode)
-    }
+    fun isErrorCode(businessCode: Int): Boolean = !isSuccessCode(businessCode)
 }

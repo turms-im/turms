@@ -45,8 +45,11 @@ class _FriendRequestPageState extends ConsumerState<FriendRequestPage> {
     return _buildPage(theme, appThemeExtension, appLocalizations);
   }
 
-  Widget _buildPage(ThemeData theme, AppThemeExtension appThemeExtension,
-      AppLocalizations appLocalizations) {
+  Widget _buildPage(
+    ThemeData theme,
+    AppThemeExtension appThemeExtension,
+    AppLocalizations appLocalizations,
+  ) {
     final contact = widget.contact;
     return SizedBox(
       width: Sizes.friendRequestDialogWidth,
@@ -56,83 +59,85 @@ class _FriendRequestPageState extends ConsumerState<FriendRequestPage> {
           Positioned.fill(
             child: Padding(
               padding: Sizes.paddingV16H16,
-              child: Column(children: [
-                Text(appLocalizations.addContact),
-                Sizes.sizedBoxH16,
-                Row(
-                  spacing: 8,
-                  children: [
-                    TAvatar(
+              child: Column(
+                children: [
+                  Text(appLocalizations.addContact),
+                  Sizes.sizedBoxH16,
+                  Row(
+                    spacing: 8,
+                    children: [
+                      TAvatar(
                         id: contact.id,
                         name: contact.name,
-                        image: contact.image),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            contact.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (contact.intro.isNotBlank)
+                        image: contact.image,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Text(
-                              contact.intro,
-                              style: appThemeExtension.descriptionTextStyle,
+                              contact.name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                            )
-                        ],
+                            ),
+                            if (contact.intro.isNotBlank)
+                              Text(
+                                contact.intro,
+                                style: appThemeExtension.descriptionTextStyle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
-                Sizes.sizedBoxH8,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(appLocalizations.message),
-                ),
-                Sizes.sizedBoxH8,
-                Expanded(
+                    ],
+                  ),
+                  Sizes.sizedBoxH8,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(appLocalizations.message),
+                  ),
+                  Sizes.sizedBoxH8,
+                  Expanded(
                     child: TTextField(
-                  autofocus: true,
-                  expands: true,
-                  textEditingController: _messageEditingController,
-                )),
-                Sizes.sizedBoxH12,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 16,
-                  children: [
-                    TTextButton.outlined(
-                      theme: theme,
-                      text: appLocalizations.cancel,
-                      containerPadding: Sizes.paddingV4H8,
-                      containerWidth: 64,
-                      onTap: _close,
+                      autofocus: true,
+                      expands: true,
+                      textEditingController: _messageEditingController,
                     ),
-                    TTextButton(
-                      isLoading: _isSending,
-                      text: appLocalizations.send,
-                      containerPadding: Sizes.paddingV4H8,
-                      containerWidth: 64,
-                      onTap: () {
-                        _sendFriendRequest(
+                  ),
+                  Sizes.sizedBoxH12,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    spacing: 16,
+                    children: [
+                      TTextButton.outlined(
+                        theme: theme,
+                        text: appLocalizations.cancel,
+                        containerPadding: Sizes.paddingV4H8,
+                        containerWidth: 64,
+                        onTap: _close,
+                      ),
+                      TTextButton(
+                        isLoading: _isSending,
+                        text: appLocalizations.send,
+                        containerPadding: Sizes.paddingV4H8,
+                        containerWidth: 64,
+                        onTap: () {
+                          _sendFriendRequest(
                             (contact is UserContact)
                                 ? contact.userId
                                 : (contact as GroupContact).groupId,
-                            _messageEditingController.text);
-                      },
-                    )
-                  ],
-                )
-              ]),
+                            _messageEditingController.text,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const TTitleBar(
-            displayCloseOnly: true,
-            popOnCloseTapped: true,
-          )
+          const TTitleBar(displayCloseOnly: true, popOnCloseTapped: true),
         ],
       ),
     );
@@ -155,6 +160,7 @@ const friendRequestDialogRouteName = '/friend-request-dialog';
 
 Future<void> showFriendRequestDialog(BuildContext context, Contact contact) =>
     showCustomTDialog(
-        routeName: friendRequestDialogRouteName,
-        context: context,
-        child: FriendRequestPage(contact));
+      routeName: friendRequestDialogRouteName,
+      context: context,
+      child: FriendRequestPage(contact),
+    );

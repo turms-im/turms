@@ -28,8 +28,8 @@ public final class DeleteRelationshipRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 DeleteRelationshipRequest.class.getName());
     }
@@ -57,7 +57,7 @@ public final class DeleteRelationshipRequest extends com.google.protobuf.Generat
 
     private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
-    private long userId_;
+    private long userId_ = 0L;
 
     /**
      * <code>int64 user_id = 1;</code>
@@ -70,7 +70,7 @@ public final class DeleteRelationshipRequest extends com.google.protobuf.Generat
     }
 
     public static final int GROUP_INDEX_FIELD_NUMBER = 2;
-    private int groupIndex_;
+    private int groupIndex_ = 0;
 
     /**
      * <code>optional int32 group_index = 2;</code>
@@ -93,7 +93,7 @@ public final class DeleteRelationshipRequest extends com.google.protobuf.Generat
     }
 
     public static final int TARGET_GROUP_INDEX_FIELD_NUMBER = 3;
-    private int targetGroupIndex_;
+    private int targetGroupIndex_ = 0;
 
     /**
      * <code>optional int32 target_group_index = 3;</code>

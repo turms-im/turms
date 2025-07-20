@@ -79,11 +79,13 @@ internal class TurmsDriverST {
     fun sendTurmsRequest_shouldSucceed() =
         runBlocking {
             val profileRequest =
-                QueryUserProfilesRequest.newBuilder()
+                QueryUserProfilesRequest
+                    .newBuilder()
                     .addUserIds(1)
                     .build()
             val builder =
-                TurmsRequest.newBuilder()
+                TurmsRequest
+                    .newBuilder()
                     .setQueryUserProfilesRequest(profileRequest)
             val result = driver.send(builder)
             assertTrue(result.isSuccess)

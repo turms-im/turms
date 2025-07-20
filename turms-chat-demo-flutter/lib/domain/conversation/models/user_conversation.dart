@@ -1,12 +1,12 @@
 part of './conversation.dart';
 
 class UserConversation extends PrivateConversation {
-  UserConversation(
-      {required super.messages,
-      super.unreadMessageCount,
-      super.draft,
-      required this.contact})
-      : super(id: Conversation.generateId(userId: contact.userId));
+  UserConversation({
+    required super.messages,
+    super.unreadMessageCount,
+    super.draft,
+    required this.contact,
+  }) : super(id: Conversation.generateId(userId: contact.userId));
 
   @override
   final UserContact contact;

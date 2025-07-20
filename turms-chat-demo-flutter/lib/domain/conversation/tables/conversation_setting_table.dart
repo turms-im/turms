@@ -62,9 +62,6 @@ extension ConversationSettingTableDataExtension
     } else {
       userId = id;
     }
-    return Conversation.generateId(
-      userId: userId,
-      groupId: groupId,
-    );
+    return Conversation.generateId(userId: userId, groupId: groupId);
   }
 }

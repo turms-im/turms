@@ -25,8 +25,8 @@ public final class GroupJoinQuestionsAnswerResultOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 GroupJoinQuestionsAnswerResultOuterClass.class.getName());
     }
@@ -58,7 +58,7 @@ public final class GroupJoinQuestionsAnswerResultOuterClass {
                 new com.google.protobuf.Descriptors.FileDescriptor[]{});
         internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor =
                 getDescriptor().getMessageTypes()
-                        .get(0);
+                        .getFirst();
         internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor,

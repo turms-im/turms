@@ -3,25 +3,28 @@ import 'package:flutter/material.dart';
 import '../../../themes/index.dart';
 
 class THorizontalDivider extends StatelessWidget {
-  const THorizontalDivider({Key? key, this.color, this.thickness = 1.0})
-      : super(key: key);
+  const THorizontalDivider({super.key, this.color, this.thickness = 1.0});
 
   final Color? color;
   final double thickness;
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: double.infinity,
-      height: thickness,
-      child: DecoratedBox(
-          decoration: BoxDecoration(
-        color: color ?? context.theme.dividerColor,
-      )));
+    width: double.infinity,
+    height: thickness,
+    child: DecoratedBox(
+      decoration: BoxDecoration(color: color ?? context.theme.dividerColor),
+    ),
+  );
 }
 
 class TMovableHorizontalDivider extends StatefulWidget {
-  const TMovableHorizontalDivider(
-      {super.key, this.color, this.onMove, required this.onMoved});
+  const TMovableHorizontalDivider({
+    super.key,
+    this.color,
+    this.onMove,
+    required this.onMoved,
+  });
 
   final Color? color;
   final VoidCallback? onMove;
@@ -55,7 +58,8 @@ class _TMovableHorizontalDividerState extends State<TMovableHorizontalDivider> {
         setState(() {});
       },
       onPointerMove: (event) {
-        final delta = ((event.position.dy - _dyOnPointerDown) / Sizes.unit)
+        final delta =
+            ((event.position.dy - _dyOnPointerDown) / Sizes.unit)
                 .floorToDouble() *
             Sizes.unit;
         widget.onMoved(delta);
@@ -72,9 +76,7 @@ class _TMovableHorizontalDividerState extends State<TMovableHorizontalDivider> {
               )
             : Padding(
                 padding: Sizes.paddingV4,
-                child: THorizontalDivider(
-                  color: widget.color,
-                ),
+                child: THorizontalDivider(color: widget.color),
               ),
       ),
     );

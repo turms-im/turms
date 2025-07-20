@@ -28,8 +28,8 @@ public final class UserSession extends com.google.protobuf.GeneratedMessage impl
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UserSession.class.getName());
     }
@@ -244,8 +244,10 @@ public final class UserSession extends com.google.protobuf.GeneratedMessage impl
             return super.equals(obj);
         }
 
-        return getSessionId().equals(other.getSessionId())
-                && getServerId().equals(other.getServerId())
+        if (!getSessionId().equals(other.getSessionId())) {
+            return false;
+        }
+        return getServerId().equals(other.getServerId())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

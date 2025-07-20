@@ -34,7 +34,9 @@ import java.util.Date
 /**
  * @author James Chen
  */
-class ConferenceService(private val turmsClient: TurmsClient) {
+class ConferenceService(
+    private val turmsClient: TurmsClient,
+) {
     /**
      * Create a meeting, and send a meeting invitation as a message to the participants, which means:
      * * If the meeting is a private meeting, the meeting invitation message will be sent to the target user.
@@ -88,20 +90,20 @@ class ConferenceService(private val turmsClient: TurmsClient) {
         intro: String? = null,
         password: String? = null,
         startDate: Date? = null,
-    ): Response<Long> {
-        return turmsClient.driver.send(
-            CreateMeetingRequest.newBuilder().apply {
-                userId?.let { this.userId = it }
-                groupId?.let { this.groupId = it }
-                name?.let { this.name = it }
-                intro?.let { this.intro = it }
-                password?.let { this.password = it }
-                startDate?.let { this.startDate = it.time }
-            },
-        ).toResponse {
-            it.getLongOrThrow()
-        }
-    }
+    ): Response<Long> =
+        turmsClient.driver
+            .send(
+                CreateMeetingRequest.newBuilder().apply {
+                    userId?.let { this.userId = it }
+                    groupId?.let { this.groupId = it }
+                    name?.let { this.name = it }
+                    intro?.let { this.intro = it }
+                    password?.let { this.password = it }
+                    startDate?.let { this.startDate = it.time }
+                },
+            ).toResponse {
+                it.getLongOrThrow()
+            }
 
     /**
      * Cancel a meeting.
@@ -123,13 +125,13 @@ class ConferenceService(private val turmsClient: TurmsClient) {
      * @throws ResponseException if an error occurs.
      * * If the server hasn't implemented the feature, throws [ResponseException] with the code [ResponseStatusCode.CONFERENCE_NOT_IMPLEMENTED].
      */
-    suspend fun cancelMeeting(meetingId: Long): Response<Unit> {
-        return turmsClient.driver.send(
-            DeleteMeetingRequest.newBuilder().apply {
-                this.id = meetingId
-            },
-        ).toResponse()
-    }
+    suspend fun cancelMeeting(meetingId: Long): Response<Unit> =
+        turmsClient.driver
+            .send(
+                DeleteMeetingRequest.newBuilder().apply {
+                    this.id = meetingId
+                },
+            ).toResponse()
 
     /**
      * Update a meeting.
@@ -162,16 +164,16 @@ class ConferenceService(private val turmsClient: TurmsClient) {
         name: String? = null,
         intro: String? = null,
         password: String? = null,
-    ): Response<Unit> {
-        return turmsClient.driver.send(
-            UpdateMeetingRequest.newBuilder().apply {
-                this.id = meetingId
-                name?.let { this.name = it }
-                intro?.let { this.intro = it }
-                password?.let { this.password = it }
-            },
-        ).toResponse()
-    }
+    ): Response<Unit> =
+        turmsClient.driver
+            .send(
+                UpdateMeetingRequest.newBuilder().apply {
+                    this.id = meetingId
+                    name?.let { this.name = it }
+                    intro?.let { this.intro = it }
+                    password?.let { this.password = it }
+                },
+            ).toResponse()
 
     /**
      * Find meetings.
@@ -195,22 +197,22 @@ class ConferenceService(private val turmsClient: TurmsClient) {
         creationDateEnd: Date? = null,
         skip: Int? = null,
         limit: Int? = null,
-    ): Response<List<Meeting>> {
-        return turmsClient.driver.send(
-            QueryMeetingsRequest.newBuilder().apply {
-                meetingIds?.let { addAllIds(it) }
-                creatorIds?.let { addAllCreatorIds(it) }
-                userIds?.let { addAllUserIds(it) }
-                groupIds?.let { addAllGroupIds(it) }
-                creationDateStart?.let { this.creationDateStart = it.time }
-                creationDateEnd?.let { this.creationDateEnd = it.time }
-                skip?.let { this.skip = it }
-                limit?.let { this.limit = it }
-            },
-        ).toResponse {
-            it.meetings.meetingsList
-        }
-    }
+    ): Response<List<Meeting>> =
+        turmsClient.driver
+            .send(
+                QueryMeetingsRequest.newBuilder().apply {
+                    meetingIds?.let { addAllIds(it) }
+                    creatorIds?.let { addAllCreatorIds(it) }
+                    userIds?.let { addAllUserIds(it) }
+                    groupIds?.let { addAllGroupIds(it) }
+                    creationDateStart?.let { this.creationDateStart = it.time }
+                    creationDateEnd?.let { this.creationDateEnd = it.time }
+                    skip?.let { this.skip = it }
+                    limit?.let { this.limit = it }
+                },
+            ).toResponse {
+                it.meetings.meetingsList
+            }
 
     /**
      * Accept a meeting invitation.
@@ -236,15 +238,15 @@ class ConferenceService(private val turmsClient: TurmsClient) {
     suspend fun acceptMeetingInvitation(
         meetingId: Long,
         password: String? = null,
-    ): Response<String> {
-        return turmsClient.driver.send(
-            UpdateMeetingInvitationRequest.newBuilder().apply {
-                this.meetingId = meetingId
-                this.responseAction = ResponseAction.ACCEPT
-                password?.let { this.password = it }
-            },
-        ).toResponse {
-            it.string
-        }
-    }
+    ): Response<String> =
+        turmsClient.driver
+            .send(
+                UpdateMeetingInvitationRequest.newBuilder().apply {
+                    this.meetingId = meetingId
+                    this.responseAction = ResponseAction.ACCEPT
+                    password?.let { this.password = it }
+                },
+            ).toResponse {
+                it.string
+            }
 }

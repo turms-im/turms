@@ -25,8 +25,8 @@ public final class QueryJoinedGroupIdsRequestOuterClass {
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryJoinedGroupIdsRequestOuterClass.class.getName());
     }
@@ -49,12 +49,13 @@ public final class QueryJoinedGroupIdsRequestOuterClass {
     static {
         java.lang.String[] descriptorData = {"\n2request/group/query_joined_group_ids_r"
                 + "equest.proto\022\016im.turms.proto\032\030model/comm"
-                + "on/value.proto\"\204\001\n\032QueryJoinedGroupIdsRe"
-                + "quest\022\036\n\021last_updated_date\030\001 \001(\003H\000\210\001\001\0220\n"
-                + "\021custom_attributes\030\017 \003(\0132\025.im.turms.prot"
-                + "o.ValueB\024\n\022_last_updated_dateB=\n6im.turm"
-                + "s.server.common.access.client.dto.reques"
-                + "t.groupP\001\272\002\000b\006proto3"};
+                + "on/value.proto\"\250\001\n\032QueryJoinedGroupIdsRe"
+                + "quest\022\036\n\021last_updated_date\030\001 \001(\003H\000\210\001\001\022\"\n"
+                + "\032user_ids_for_common_groups\030\002 \003(\003\0220\n\021cus"
+                + "tom_attributes\030\017 \003(\0132\025.im.turms.proto.Va"
+                + "lueB\024\n\022_last_updated_dateB=\n6im.turms.se"
+                + "rver.common.access.client.dto.request.gr"
+                + "oupP\001\272\002\000b\006proto3"};
         descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
                 descriptorData,
                 new com.google.protobuf.Descriptors.FileDescriptor[]{
@@ -66,7 +67,9 @@ public final class QueryJoinedGroupIdsRequestOuterClass {
         internal_static_im_turms_proto_QueryJoinedGroupIdsRequest_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessage.FieldAccessorTable(
                         internal_static_im_turms_proto_QueryJoinedGroupIdsRequest_descriptor,
-                        new java.lang.String[]{"LastUpdatedDate", "CustomAttributes",});
+                        new java.lang.String[]{"LastUpdatedDate",
+                                "UserIdsForCommonGroups",
+                                "CustomAttributes",});
         descriptor.resolveAllFeaturesImmutable();
         im.turms.server.common.access.client.dto.model.common.ValueOuterClass.getDescriptor();
     }

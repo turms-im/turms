@@ -29,8 +29,8 @@ public final class QueryGroupInvitationsRequest extends com.google.protobuf.Gene
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 QueryGroupInvitationsRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class QueryGroupInvitationsRequest extends com.google.protobuf.Gene
 
     private int bitField0_;
     public static final int GROUP_ID_FIELD_NUMBER = 1;
-    private long groupId_;
+    private long groupId_ = 0L;
 
     /**
      * <code>optional int64 group_id = 1;</code>
@@ -81,7 +81,7 @@ public final class QueryGroupInvitationsRequest extends com.google.protobuf.Gene
     }
 
     public static final int ARE_SENT_BY_ME_FIELD_NUMBER = 2;
-    private boolean areSentByMe_;
+    private boolean areSentByMe_ = false;
 
     /**
      * <code>optional bool are_sent_by_me = 2;</code>
@@ -104,7 +104,7 @@ public final class QueryGroupInvitationsRequest extends com.google.protobuf.Gene
     }
 
     public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
-    private long lastUpdatedDate_;
+    private long lastUpdatedDate_ = 0L;
 
     /**
      * <code>optional int64 last_updated_date = 3;</code>

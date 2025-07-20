@@ -4,20 +4,22 @@ import 'autostart_manager.dart';
 
 class AutostartManagerMacOS extends AutostartManager {
   AutostartManagerMacOS({
-    required String appName,
-    required String appPath,
-    List<String> args = const [],
-  }) : super(appName: appName, appPath: appPath, args: args);
+    required super.appName,
+    required super.appPath,
+    super.args,
+  });
 
   File get _plistFile => File(
-      '${Platform.environment['HOME']}/Library/LaunchAgents/$appName.plist');
+    '${Platform.environment['HOME']}/Library/LaunchAgents/$appName.plist',
+  );
 
   @override
   Future<bool> isEnabled() async => _plistFile.exists();
 
   @override
   Future<void> enable() async {
-    final contents = '''
+    final contents =
+        '''
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

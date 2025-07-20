@@ -6,23 +6,23 @@ import '../../../themes/index.dart';
 const _defaultAnimationDuration = Duration(milliseconds: 200);
 
 class TAccordion extends StatefulWidget {
-  const TAccordion(
-      {Key? key,
-      this.controller,
-      this.showAccordion = false,
-      required this.titleChild,
-      required this.contentChild,
-      this.collapsedTitleBackgroundColor = Colors.transparent,
-      this.expandedTitleBackgroundColor = Colors.transparent,
-      this.titlePadding = Sizes.paddingV4H4,
-      this.contentBackgroundColor,
-      this.contentPadding = EdgeInsets.zero,
-      this.titleBorder,
-      this.contentBorder,
-      this.onToggleCollapsed,
-      this.titleBorderRadius = BorderRadius.zero,
-      this.contentBorderRadius = BorderRadius.zero})
-      : super(key: key);
+  const TAccordion({
+    super.key,
+    this.controller,
+    this.showAccordion = false,
+    required this.titleChild,
+    required this.contentChild,
+    this.collapsedTitleBackgroundColor = Colors.transparent,
+    this.expandedTitleBackgroundColor = Colors.transparent,
+    this.titlePadding = Sizes.paddingV4H4,
+    this.contentBackgroundColor,
+    this.contentPadding = EdgeInsets.zero,
+    this.titleBorder,
+    this.contentBorder,
+    this.onToggleCollapsed,
+    this.titleBorderRadius = BorderRadius.zero,
+    this.contentBorderRadius = BorderRadius.zero,
+  });
 
   final TAccordionController? controller;
 
@@ -85,10 +85,9 @@ class _TAccordionState extends State<TAccordion>
               _onOpenCompletedCallbacks.clear();
             }
           });
-    _turnsAnimation = _animationController.drive(Tween(
-      begin: 0,
-      end: 90 / 360,
-    ));
+    _turnsAnimation = _animationController.drive(
+      Tween(begin: 0, end: 90 / 360),
+    );
     _sizeAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.fastOutSlowIn,
@@ -114,55 +113,53 @@ class _TAccordionState extends State<TAccordion>
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: _toggleCollapsed,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: widget.titleBorderRadius,
-                  border: widget.titleBorder,
-                  color: _showAccordion
-                      ? widget.expandedTitleBackgroundColor
-                      : widget.collapsedTitleBackgroundColor,
-                ),
-                child: Padding(
-                  padding: widget.titlePadding,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RotationTransition(
-                          turns: _turnsAnimation,
-                          child:
-                              const Icon(Symbols.keyboard_arrow_right_rounded)),
-                      Expanded(
-                        child: widget.titleChild,
-                      )
-                    ],
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      GestureDetector(
+        onTap: _toggleCollapsed,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: widget.titleBorderRadius,
+              border: widget.titleBorder,
+              color: _showAccordion
+                  ? widget.expandedTitleBackgroundColor
+                  : widget.collapsedTitleBackgroundColor,
+            ),
+            child: Padding(
+              padding: widget.titlePadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  RotationTransition(
+                    turns: _turnsAnimation,
+                    child: const Icon(Symbols.keyboard_arrow_right_rounded),
                   ),
-                ),
+                  Expanded(child: widget.titleChild),
+                ],
               ),
             ),
           ),
-          if (_buildChild)
-            SizeTransition(
-              sizeFactor: _sizeAnimation,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: widget.contentBorderRadius,
-                  border: widget.contentBorder,
-                  color: widget.contentBackgroundColor ?? Colors.white70,
-                ),
-                child: Padding(
-                  padding: widget.contentPadding,
-                  child: widget.contentChild,
-                ),
-              ),
-            )
-        ],
-      );
+        ),
+      ),
+      if (_buildChild)
+        SizeTransition(
+          sizeFactor: _sizeAnimation,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: widget.contentBorderRadius,
+              border: widget.contentBorder,
+              color: widget.contentBackgroundColor ?? Colors.white70,
+            ),
+            child: Padding(
+              padding: widget.contentPadding,
+              child: widget.contentChild,
+            ),
+          ),
+        ),
+    ],
+  );
 
   void _toggleCollapsed() {
     switch (_animationController.status) {

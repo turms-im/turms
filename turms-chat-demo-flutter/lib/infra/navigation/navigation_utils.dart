@@ -5,7 +5,10 @@ class NavigationUtils {
   NavigationUtils._();
 
   static (KeyEventResult, int?) navigateByKeyEvent(
-      KeyEvent event, int total, int? currentItemIndex) {
+    KeyEvent event,
+    int total,
+    int? currentItemIndex,
+  ) {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
       return (KeyEventResult.ignored, currentItemIndex);
     }

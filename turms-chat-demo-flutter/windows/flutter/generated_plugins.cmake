@@ -12,18 +12,18 @@ list(APPEND FLUTTER_PLUGIN_LIST
   media_kit_libs_windows_audio
   media_kit_libs_windows_video
   media_kit_video
-  screen_brightness_windows
   screen_retriever_windows
   sqlite3_flutter_libs
   super_native_extensions
   tray_manager
   url_launcher_windows
+  volume_controller
   window_manager
   windows_notification
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
-  media_kit_native_event_loop
+  flutter_local_notifications_windows
   rust_lib_turms_chat_demo
 )
 

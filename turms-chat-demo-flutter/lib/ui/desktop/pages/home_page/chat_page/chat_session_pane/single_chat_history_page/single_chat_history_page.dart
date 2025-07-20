@@ -8,7 +8,6 @@ import '../../../../../../../domain/conversation/models/conversation.dart';
 import '../../../../../../../domain/message/models/message_type.dart';
 import '../../../../../../../domain/message/services/message_service.dart';
 import '../../../../../../../domain/user/models/contact.dart';
-import '../../../../../../../domain/user/models/group_member.dart';
 import '../../../../../../../domain/user/view_models/logged_in_user_info_view_model.dart';
 import '../../../../../../../infra/data/t_async_data.dart';
 import '../../../../../../l10n/app_localizations.dart';
@@ -128,17 +127,17 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
             ),
           ),
           Sizes.sizedBoxH12,
-          Flexible(
-            child: _buildSearchResultTabView(),
-          ),
+          Flexible(child: _buildSearchResultTabView()),
         ],
       ),
     );
   }
 
   Widget _buildSearchResultTabView() {
-    assert(!_loadedMessagesData.isLoading,
-        '_foundMessagesData must not be loading');
+    assert(
+      !_loadedMessagesData.isLoading,
+      '_foundMessagesData must not be loading',
+    );
     final loadedMessages = _loadedMessagesData.value;
     if (loadedMessages == null) {
       return const TEmpty();
@@ -154,78 +153,79 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
     final dateFormat_jm = ref.watch(dateFormatViewModel_jm);
     final messageIdToIndex = {
       for (final (index, message) in loadedMessages.indexed)
-        message.messageId: index
+        message.messageId: index,
     };
     final contact = widget.conversation.contact;
     final groupMemberIdToMember = contact is GroupContact
-        ? Map<Int64, GroupMember>.fromIterable(
-            contact.members,
-            key: (member) => (member as GroupMember).userId,
-            value: (member) => member as GroupMember,
-          )
+        ? {for (final member in contact.members) member.userId: member}
         : null;
     final now = DateTime.now();
     final count = loadedMessages.length;
     return ListView.builder(
-        shrinkWrap: true,
-        controller: _scrollController,
-        itemCount: count,
-        reverse: true,
-        findChildIndexCallback: (key) {
-          final messageId = (key as ValueKey).value as Int64;
-          return messageIdToIndex[messageId];
-        },
-        itemBuilder: (context, index) {
-          final message = loadedMessages[index];
-          switch (contact) {
-            case SystemContact():
+      shrinkWrap: true,
+      controller: _scrollController,
+      itemCount: count,
+      reverse: true,
+      findChildIndexCallback: (key) {
+        final messageId = (key as ValueKey).value as Int64;
+        return messageIdToIndex[messageId];
+      },
+      itemBuilder: (context, index) {
+        final message = loadedMessages[index];
+        switch (contact) {
+          case SystemContact():
+            return _buildMessageTile(
+              appLocalizations: appLocalizations,
+              dateFormat_yMdjm: dateFormat_yMdjm,
+              dateFormat_Mdjm: dateFormat_Mdjm,
+              dateFormat_jm: dateFormat_jm,
+              now: now,
+              id: contact.id,
+              senderName: contact.name,
+              senderImage: contact.image,
+              message: message,
+            );
+          case UserContact():
+            return _buildMessageTile(
+              appLocalizations: appLocalizations,
+              dateFormat_yMdjm: dateFormat_yMdjm,
+              dateFormat_Mdjm: dateFormat_Mdjm,
+              dateFormat_jm: dateFormat_jm,
+              now: now,
+              id: contact.id,
+              senderName: contact.name,
+              senderImage: contact.image,
+              message: message,
+            );
+          case GroupContact():
+            final groupMember = groupMemberIdToMember![message.senderId];
+            if (groupMember == null) {
               return _buildMessageTile(
-                  appLocalizations: appLocalizations,
-                  dateFormat_yMdjm: dateFormat_yMdjm,
-                  dateFormat_Mdjm: dateFormat_Mdjm,
-                  dateFormat_jm: dateFormat_jm,
-                  now: now,
-                  id: contact.id,
-                  senderName: contact.name,
-                  senderImage: contact.image,
-                  message: message);
-            case UserContact():
-              return _buildMessageTile(
-                  appLocalizations: appLocalizations,
-                  dateFormat_yMdjm: dateFormat_yMdjm,
-                  dateFormat_Mdjm: dateFormat_Mdjm,
-                  dateFormat_jm: dateFormat_jm,
-                  now: now,
-                  id: contact.id,
-                  senderName: contact.name,
-                  senderImage: contact.image,
-                  message: message);
-            case GroupContact():
-              final groupMember = groupMemberIdToMember![message.senderId];
-              if (groupMember == null) {
-                return _buildMessageTile(
-                    appLocalizations: appLocalizations,
-                    dateFormat_yMdjm: dateFormat_yMdjm,
-                    dateFormat_Mdjm: dateFormat_Mdjm,
-                    dateFormat_jm: dateFormat_jm,
-                    now: now,
-                    id: contact.id,
-                    senderName: message.senderId.toString(),
-                    // TODO: use default avatar
-                    message: message);
-              }
-              return _buildMessageTile(
-                  appLocalizations: appLocalizations,
-                  dateFormat_yMdjm: dateFormat_yMdjm,
-                  dateFormat_Mdjm: dateFormat_Mdjm,
-                  dateFormat_jm: dateFormat_jm,
-                  now: now,
-                  id: contact.id,
-                  senderName: groupMember.name,
-                  senderImage: groupMember.image,
-                  message: message);
-          }
-        });
+                appLocalizations: appLocalizations,
+                dateFormat_yMdjm: dateFormat_yMdjm,
+                dateFormat_Mdjm: dateFormat_Mdjm,
+                dateFormat_jm: dateFormat_jm,
+                now: now,
+                id: contact.id,
+                senderName: message.senderId.toString(),
+                // TODO: use default avatar
+                message: message,
+              );
+            }
+            return _buildMessageTile(
+              appLocalizations: appLocalizations,
+              dateFormat_yMdjm: dateFormat_yMdjm,
+              dateFormat_Mdjm: dateFormat_Mdjm,
+              dateFormat_jm: dateFormat_jm,
+              now: now,
+              id: contact.id,
+              senderName: groupMember.name,
+              senderImage: groupMember.image,
+              message: message,
+            );
+        }
+      },
+    );
   }
 
   Widget _buildMessageTile({
@@ -244,41 +244,42 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
   }) {
     final timestamp = message.timestamp;
     return TListTile(
-        key: ValueKey(message.messageId),
-        height: null,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        backgroundColor: Colors.white,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TAvatar(id: id, name: senderName, image: senderImage),
-            Sizes.sizedBoxW8,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    spacing: 8,
-                    children: [
-                      Text(senderName),
-                      Text(
-                        now.year == timestamp.year
-                            ? (now.month == timestamp.month &&
+      key: ValueKey(message.messageId),
+      height: null,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      backgroundColor: Colors.white,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TAvatar(id: id, name: senderName, image: senderImage),
+          Sizes.sizedBoxW8,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  spacing: 8,
+                  children: [
+                    Text(senderName),
+                    Text(
+                      now.year == timestamp.year
+                          ? (now.month == timestamp.month &&
                                     now.day == timestamp.day)
                                 ? dateFormat_jm.format(timestamp)
                                 : dateFormat_Mdjm.format(timestamp)
-                            : dateFormat_yMdjm.format(timestamp),
-                      )
-                    ],
-                  ),
-                  // Sizes.sizedBoxH8,
-                  // TODO
-                  Text(message.text!),
-                ],
-              ),
+                          : dateFormat_yMdjm.format(timestamp),
+                    ),
+                  ],
+                ),
+                // Sizes.sizedBoxH8,
+                // TODO
+                Text(message.text!),
+              ],
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _search(String text) async {
@@ -290,15 +291,16 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
       final UserConversation c => (null, [loggedInUserId, c.contact.userId]),
       final SystemConversation c => (null, [loggedInUserId, loggedInUserId]),
     };
-    var newFoundMessages =
-        await ref.read(messageServiceProvider)!.searchMessages(
-              loggedInUserId: loggedInUserId,
-              groupId: groupId,
-              participantIds: participantIds,
-              text: text,
-              limit: searchResultLimit + 1,
-              messageType: _searchConditionMessageType,
-            );
+    var newFoundMessages = await ref
+        .read(messageServiceProvider)!
+        .searchMessages(
+          loggedInUserId: loggedInUserId,
+          groupId: groupId,
+          participantIds: participantIds,
+          text: text,
+          limit: searchResultLimit + 1,
+          messageType: _searchConditionMessageType,
+        );
     final count = newFoundMessages.length;
     _hasMoreMessages = count > searchResultLimit;
     if (count > searchResultLimit) {
@@ -338,17 +340,18 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
       final UserConversation c => (null, [loggedInUserId, c.contact.userId]),
       final SystemConversation c => (null, [loggedInUserId, loggedInUserId]),
     };
-    var newFoundMessages =
-        await ref.read(messageServiceProvider)!.searchMessages(
-              loggedInUserId: loggedInUserId,
-              idStart: _lastFoundMessage?.messageId,
-              groupId: groupId,
-              participantIds: participantIds,
-              text: _searchConditionText,
-              messageType: _searchConditionMessageType,
-              limit: searchResultLimit + 1,
-              createdDateEnd: _lastFoundMessage?.timestamp,
-            );
+    var newFoundMessages = await ref
+        .read(messageServiceProvider)!
+        .searchMessages(
+          loggedInUserId: loggedInUserId,
+          idStart: _lastFoundMessage?.messageId,
+          groupId: groupId,
+          participantIds: participantIds,
+          text: _searchConditionText,
+          messageType: _searchConditionMessageType,
+          limit: searchResultLimit + 1,
+          createdDateEnd: _lastFoundMessage?.timestamp,
+        );
     final count = newFoundMessages.length;
     _hasMoreMessages = count > searchResultLimit;
     if (count > searchResultLimit) {
@@ -359,9 +362,11 @@ class _SingleChatHistoryPageState extends ConsumerState<SingleChatHistoryPage>
   }
 }
 
-Future<void> showSingleChatHistoryDialog(
-        {required BuildContext context, required Conversation conversation}) =>
-    showCustomTDialog(
-        routeName: '/single-chat-history-dialog',
-        context: context,
-        child: SingleChatHistoryPage(conversation: conversation));
+Future<void> showSingleChatHistoryDialog({
+  required BuildContext context,
+  required Conversation conversation,
+}) => showCustomTDialog(
+  routeName: '/single-chat-history-dialog',
+  context: context,
+  child: SingleChatHistoryPage(conversation: conversation),
+);

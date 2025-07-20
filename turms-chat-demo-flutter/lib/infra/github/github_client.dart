@@ -19,8 +19,9 @@ class GithubUtils {
     // TODO: make configurable
     const url = 'https://api.github.com/repos/turms-im/turms/releases';
 
-    final response =
-        await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+    final response = await http
+        .get(Uri.parse(url))
+        .timeout(const Duration(seconds: 10));
 
     if (response.statusCode == 200) {
       final releases = json.decode(response.body) as List<dynamic>;
@@ -28,8 +29,9 @@ class GithubUtils {
         return null;
       }
       var latestRelease = releases[0] as Map<String, dynamic>;
-      var latestReleasePublishedAt =
-          DateTime.parse(latestRelease['published_at'] as String);
+      var latestReleasePublishedAt = DateTime.parse(
+        latestRelease['published_at'] as String,
+      );
       final releaseCount = releases.length;
       for (var i = 1; i < releaseCount; i++) {
         final release = releases[i] as Map<String, dynamic>;
@@ -47,8 +49,9 @@ class GithubUtils {
         final name = asset['name'] as String;
         if (name.contains('turms-chat-demo')) {
           return VersionedAsset(
-              version: Version.parse(normalizeVersion(latestVersion)),
-              asset: GithubAsset.fromJson(asset));
+            version: Version.parse(normalizeVersion(latestVersion)),
+            asset: GithubAsset.fromJson(asset),
+          );
         }
       }
       return null;
@@ -71,7 +74,8 @@ class GithubUtils {
       return null;
     }
     final currentVersion = Version.parse(
-        GithubUtils.normalizeVersion(AppConfig.packageInfo.version));
+      GithubUtils.normalizeVersion(AppConfig.packageInfo.version),
+    );
     if (versionedAsset.version < currentVersion) {
       return null;
     }
@@ -82,9 +86,10 @@ class GithubUtils {
       return File(filePath);
     }
     final downloadFile = await HttpUtils.downloadFile(
-        taskId: filePath,
-        uri: Uri.parse(asset.browserDownloadUrl!),
-        filePath: filePath);
+      taskId: filePath,
+      uri: Uri.parse(asset.browserDownloadUrl!),
+      filePath: filePath,
+    );
     return downloadFile?.file;
   }
 

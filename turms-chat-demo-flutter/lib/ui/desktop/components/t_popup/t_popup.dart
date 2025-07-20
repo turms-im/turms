@@ -4,19 +4,20 @@ import '../../../../infra/random/random_utils.dart';
 import 't_popup_follower.dart';
 
 class TPopup extends StatefulWidget {
-  const TPopup(
-      {super.key,
-      required this.target,
-      required this.follower,
-      this.targetAnchor = Alignment.topLeft,
-      this.followerAnchor = Alignment.topLeft,
-      this.followerBorderRadius,
-      this.offset = Offset.zero,
-      this.followTargetMove = false,
-      this.controller,
-      this.constrainFollowerWithTargetWidth = false,
-      this.onShow,
-      this.onDismissed});
+  const TPopup({
+    super.key,
+    required this.target,
+    required this.follower,
+    this.targetAnchor = Alignment.topLeft,
+    this.followerAnchor = Alignment.topLeft,
+    this.followerBorderRadius,
+    this.offset = Offset.zero,
+    this.followTargetMove = false,
+    this.controller,
+    this.constrainFollowerWithTargetWidth = false,
+    this.onShow,
+    this.onDismissed,
+  });
 
   final Widget target;
   final Widget follower;
@@ -70,17 +71,15 @@ class _TPopupState extends State<TPopup> {
   }
 
   @override
-  Widget build(BuildContext context) => MouseRegion(
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    key: _targetKey,
+    onTap: _togglePopup,
+    child: MouseRegion(
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        key: _targetKey,
-        onTap: _togglePopup,
-        child: CompositedTransformTarget(
-          link: _layerLink,
-          child: widget.target,
-        ),
-      ));
+      child: CompositedTransformTarget(link: _layerLink, child: widget.target),
+    ),
+  );
 
   @override
   void didUpdateWidget(TPopup oldWidget) {
@@ -134,44 +133,48 @@ class _TPopupState extends State<TPopup> {
   }
 
   OverlayEntry _createOverlayEntry() => OverlayEntry(
-      builder: (BuildContext context) => widget.followTargetMove
-          ? _buildTrackingFollower()
-          : _buildFixedFollower());
+    builder: (BuildContext context) => widget.followTargetMove
+        ? _buildTrackingFollower()
+        : _buildFixedFollower(),
+  );
 
   Widget _buildTrackingFollower() => CompositedTransformFollower(
-      link: _layerLink,
-      followerAnchor: widget.followerAnchor,
-      targetAnchor: widget.targetAnchor,
-      offset: widget.offset,
-      child: _buildFollower(
-          controller: _followerController,
-          width: widget.constrainFollowerWithTargetWidth
-              ? _layerLink.leaderSize?.width
-              : null,
-          animate: true,
-          onTapOutside: (event) => _hidePopup(),
-          onDismissed: () {
-            _removeOverlayEntry();
-            widget.onDismissed?.call();
-          },
-          child: widget.follower));
-
-  Widget _buildFixedFollower() => TPopupFixedFollower(
-      targetGlobalRect: _getTargetGlobalRect(),
+    link: _layerLink,
+    followerAnchor: widget.followerAnchor,
+    targetAnchor: widget.targetAnchor,
+    offset: widget.offset,
+    child: _buildFollower(
       controller: _followerController,
-      child: widget.follower,
-      targetAnchor: widget.targetAnchor,
-      followerAnchor: widget.followerAnchor,
-      followerWidth: widget.constrainFollowerWithTargetWidth
+      width: widget.constrainFollowerWithTargetWidth
           ? _layerLink.leaderSize?.width
           : null,
-      followerBorderRadius: widget.followerBorderRadius,
-      offset: widget.offset,
+      animate: true,
       onTapOutside: (event) => _hidePopup(),
       onDismissed: () {
         _removeOverlayEntry();
         widget.onDismissed?.call();
-      });
+      },
+      child: widget.follower,
+    ),
+  );
+
+  Widget _buildFixedFollower() => TPopupFixedFollower(
+    targetGlobalRect: _getTargetGlobalRect(),
+    controller: _followerController,
+    targetAnchor: widget.targetAnchor,
+    followerAnchor: widget.followerAnchor,
+    followerWidth: widget.constrainFollowerWithTargetWidth
+        ? _layerLink.leaderSize?.width
+        : null,
+    followerBorderRadius: widget.followerBorderRadius,
+    offset: widget.offset,
+    onTapOutside: (event) => _hidePopup(),
+    onDismissed: () {
+      _removeOverlayEntry();
+      widget.onDismissed?.call();
+    },
+    child: widget.follower,
+  );
 
   Rect _getTargetGlobalRect() {
     final renderBox =
@@ -179,7 +182,11 @@ class _TPopupState extends State<TPopup> {
     final topLeftOffset = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
     return Rect.fromLTWH(
-        topLeftOffset.dx, topLeftOffset.dy, size.width, size.height);
+      topLeftOffset.dx,
+      topLeftOffset.dy,
+      size.width,
+      size.height,
+    );
   }
 }
 
@@ -213,26 +220,27 @@ class TPopupFixedFollower extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned.fill(
-          child: CustomSingleChildLayout(
-        delegate: TPopupLayout(
-          targetRect: targetGlobalRect,
-          targetAnchor: targetAnchor,
-          followerAnchor: followerAnchor,
-          offset: offset,
+    child: CustomSingleChildLayout(
+      delegate: TPopupLayout(
+        targetRect: targetGlobalRect,
+        targetAnchor: targetAnchor,
+        followerAnchor: followerAnchor,
+        offset: offset,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: followerBorderRadius,
+        child: _buildFollower(
+          controller: controller,
+          width: followerWidth,
+          animate: animate,
+          onTapOutside: onTapOutside,
+          onDismissed: onDismissed,
+          child: child,
         ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: followerBorderRadius,
-          child: _buildFollower(
-            controller: controller,
-            width: followerWidth,
-            animate: animate,
-            onTapOutside: onTapOutside,
-            onDismissed: onDismissed,
-            child: child,
-          ),
-        ),
-      ));
+      ),
+    ),
+  );
 }
 
 TapRegion _buildFollower({
@@ -242,21 +250,15 @@ TapRegion _buildFollower({
   required TapRegionCallback onTapOutside,
   required VoidCallback onDismissed,
   required Widget child,
-}) =>
-    TapRegion(
-      onTapOutside: onTapOutside,
-      child: TPopupFollower(
-        controller: controller,
-        animate: animate,
-        onDismissed: onDismissed,
-        child: width != null
-            ? SizedBox(
-                width: width,
-                child: child,
-              )
-            : child,
-      ),
-    );
+}) => TapRegion(
+  onTapOutside: onTapOutside,
+  child: TPopupFollower(
+    controller: controller,
+    animate: animate,
+    onDismissed: onDismissed,
+    child: width != null ? SizedBox(width: width, child: child) : child,
+  ),
+);
 
 class TPopupController {
   void Function()? showPopover;
@@ -319,8 +321,10 @@ void showPopup({
   if (hideOtherPopups) {
     hideAllPopups();
   }
-  _idToPopupInfo[id] =
-      _TPopupInfo(overlayEntry: overlayEntry, hideOrRemove: hideOrRemove);
+  _idToPopupInfo[id] = _TPopupInfo(
+    overlayEntry: overlayEntry,
+    hideOrRemove: hideOrRemove,
+  );
   overlay.insert(overlayEntry);
 }
 
@@ -335,11 +339,12 @@ void hideAllPopups() {
 }
 
 class TPopupLayout extends SingleChildLayoutDelegate {
-  const TPopupLayout(
-      {required this.targetRect,
-      required this.targetAnchor,
-      required this.followerAnchor,
-      required this.offset});
+  const TPopupLayout({
+    required this.targetRect,
+    required this.targetAnchor,
+    required this.followerAnchor,
+    required this.offset,
+  });
 
   final Rect targetRect;
   final Alignment targetAnchor;
@@ -362,7 +367,8 @@ class TPopupLayout extends SingleChildLayoutDelegate {
       getPosition(size, childSize);
 
   Offset getPosition(Size containerSize, Size childSize) {
-    final preferredTargetTopLeft = targetRect.topLeft +
+    final preferredTargetTopLeft =
+        targetRect.topLeft +
         targetAnchor.alongSize(targetRect.size) -
         followerAnchor.alongSize(childSize) +
         offset;

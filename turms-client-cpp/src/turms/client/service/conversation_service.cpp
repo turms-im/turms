@@ -1,16 +1,15 @@
 #include "turms/client/service/conversation_service.h"
 
+#include "turms/client/time/time_util.h"
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-namespace service {
+namespace turms::client::service {
 ConversationService::ConversationService(TurmsClient& turmsClient)
     : turmsClient_(turmsClient) {
 }
 
 auto ConversationService::queryPrivateConversations(const std::unordered_set<int64_t>& userIds)
-    -> boost::future<Response<std::vector<PrivateConversation>>> {
+    const -> boost::future<Response<std::vector<PrivateConversation>>> {
     if (userIds.empty()) {
         return boost::make_ready_future<>(Response<PrivateConversation>::emptyList());
     }
@@ -29,7 +28,7 @@ auto ConversationService::queryPrivateConversations(const std::unordered_set<int
         });
 }
 
-auto ConversationService::queryGroupConversations(const std::unordered_set<int64_t>& groupIds)
+auto ConversationService::queryGroupConversations(const std::unordered_set<int64_t>& groupIds) const
     -> boost::future<Response<std::vector<GroupConversation>>> {
     if (groupIds.empty()) {
         return boost::make_ready_future<>(Response<GroupConversation>::emptyList());
@@ -50,7 +49,7 @@ auto ConversationService::queryGroupConversations(const std::unordered_set<int64
 }
 
 auto ConversationService::updatePrivateConversationReadDate(int64_t userId,
-                                                            const time_point& readDate)
+                                                            const time_point& readDate) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
@@ -64,7 +63,7 @@ auto ConversationService::updatePrivateConversationReadDate(int64_t userId,
 }
 
 auto ConversationService::updateGroupConversationReadDate(int64_t groupId,
-                                                          const time_point& readDate)
+                                                          const time_point& readDate) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_conversation_request();
@@ -78,7 +77,7 @@ auto ConversationService::updateGroupConversationReadDate(int64_t groupId,
 }
 
 auto ConversationService::upsertPrivateConversationSettings(
-    int64_t userId, const std::unordered_map<std::string, Value>& settings)
+    int64_t userId, const std::unordered_map<std::string, Value>& settings) const
     -> boost::future<Response<void>> {
     if (settings.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -95,7 +94,7 @@ auto ConversationService::upsertPrivateConversationSettings(
 }
 
 auto ConversationService::upsertGroupConversationSettings(
-    int64_t groupId, const std::unordered_map<std::string, Value>& settings)
+    int64_t groupId, const std::unordered_map<std::string, Value>& settings) const
     -> boost::future<Response<void>> {
     if (settings.empty()) {
         return boost::make_ready_future<>(Response<void>{});
@@ -111,10 +110,10 @@ auto ConversationService::upsertGroupConversationSettings(
         });
 }
 
-auto ConversationService::deleteConversationSettings(const std::unordered_set<int64_t>& userIds,
-                                                     const std::unordered_set<int64_t>& groupIds,
-                                                     const std::unordered_set<std::string>& names)
-    -> boost::future<Response<void>> {
+auto ConversationService::deleteConversationSettings(
+    const std::unordered_set<int64_t>& userIds,
+    const std::unordered_set<int64_t>& groupIds,
+    const std::unordered_set<std::string>& names) const -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_delete_conversation_settings_request();
     request->mutable_user_ids()->Add(userIds.cbegin(), userIds.cend());
@@ -131,7 +130,7 @@ auto ConversationService::queryConversationSettings(
     const std::unordered_set<int64_t>& userIds,
     const std::unordered_set<int64_t>& groupIds,
     const std::unordered_set<std::string>& names,
-    const boost::optional<time_point>& lastUpdatedDate)
+    const std::optional<time_point>& lastUpdatedDate) const
     -> boost::future<Response<std::vector<ConversationSettings>>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_query_conversation_settings_request();
@@ -154,7 +153,7 @@ auto ConversationService::queryConversationSettings(
         });
 }
 
-auto ConversationService::updatePrivateConversationTypingStatus(int64_t userId)
+auto ConversationService::updatePrivateConversationTypingStatus(int64_t userId) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_typing_status_request();
@@ -167,7 +166,7 @@ auto ConversationService::updatePrivateConversationTypingStatus(int64_t userId)
         });
 }
 
-auto ConversationService::updateGroupConversationTypingStatus(int64_t groupId)
+auto ConversationService::updateGroupConversationTypingStatus(int64_t groupId) const
     -> boost::future<Response<void>> {
     TurmsRequest turmsRequest;
     auto* request = turmsRequest.mutable_update_typing_status_request();
@@ -179,6 +178,4 @@ auto ConversationService::updateGroupConversationTypingStatus(int64_t groupId)
             return Response<void>{response.get()};
         });
 }
-}  // namespace service
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client::service

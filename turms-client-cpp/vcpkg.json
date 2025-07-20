@@ -1,0 +1,23 @@
+{
+  "builtin-baseline": "b322364f06308bdd24823f9d8f03fe0cc86fd46f",
+  "dependencies": [
+    {
+      "name": "boost-asio"
+    },
+    {
+      "name": "boost-chrono"
+    },
+    {
+      "name": "boost-core"
+    },
+    {
+      "name": "boost-thread"
+    },
+    {
+      "name": "protobuf"
+    },
+    {
+      "name": "abseil"
+    }
+  ]
+}

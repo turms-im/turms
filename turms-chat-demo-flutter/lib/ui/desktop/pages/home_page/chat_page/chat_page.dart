@@ -52,11 +52,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   Widget _buildSubNavigationRail(
-          AppThemeExtension appThemeExtension, double subNavigationRailWidth) =>
-      SizedBox(
-        width: subNavigationRailWidth,
-        child: const SubNavigationRail(),
-      );
+    AppThemeExtension appThemeExtension,
+    double subNavigationRailWidth,
+  ) =>
+      SizedBox(width: subNavigationRailWidth, child: const SubNavigationRail());
 
   Widget _buildChatSessionPane() => ChatSessionPane();
 }

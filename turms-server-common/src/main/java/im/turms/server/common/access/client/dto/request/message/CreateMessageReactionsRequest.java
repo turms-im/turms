@@ -29,8 +29,8 @@ public final class CreateMessageReactionsRequest extends com.google.protobuf.Gen
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 CreateMessageReactionsRequest.class.getName());
     }
@@ -58,7 +58,7 @@ public final class CreateMessageReactionsRequest extends com.google.protobuf.Gen
     }
 
     public static final int MESSAGE_ID_FIELD_NUMBER = 1;
-    private long messageId_;
+    private long messageId_ = 0L;
 
     /**
      * <code>int64 message_id = 1;</code>
@@ -227,8 +227,10 @@ public final class CreateMessageReactionsRequest extends com.google.protobuf.Gen
             return super.equals(obj);
         }
 
-        return getMessageId() == other.getMessageId()
-                && getReactionTypesList().equals(other.getReactionTypesList())
+        if (getMessageId() != other.getMessageId()) {
+            return false;
+        }
+        return getReactionTypesList().equals(other.getReactionTypesList())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

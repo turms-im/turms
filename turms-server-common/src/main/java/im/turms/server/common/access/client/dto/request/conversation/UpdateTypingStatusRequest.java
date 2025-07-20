@@ -28,8 +28,8 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 UpdateTypingStatusRequest.class.getName());
     }
@@ -56,7 +56,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
     }
 
     public static final int IS_GROUP_MESSAGE_FIELD_NUMBER = 1;
-    private boolean isGroupMessage_;
+    private boolean isGroupMessage_ = false;
 
     /**
      * <pre>
@@ -73,7 +73,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
     }
 
     public static final int TO_ID_FIELD_NUMBER = 2;
-    private long toId_;
+    private long toId_ = 0L;
 
     /**
      * <code>int64 to_id = 2;</code>
@@ -150,7 +150,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
         if (isGroupMessage_) {
-            output.writeBool(1, isGroupMessage_);
+            output.writeBool(1, true);
         }
         if (toId_ != 0L) {
             output.writeInt64(2, toId_);
@@ -170,7 +170,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
 
         size = 0;
         if (isGroupMessage_) {
-            size += com.google.protobuf.CodedOutputStream.computeBoolSize(1, isGroupMessage_);
+            size += com.google.protobuf.CodedOutputStream.computeBoolSize(1, true);
         }
         if (toId_ != 0L) {
             size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, toId_);
@@ -192,8 +192,10 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
             return super.equals(obj);
         }
 
-        return getIsGroupMessage() == other.getIsGroupMessage()
-                && getToId() == other.getToId()
+        if (getIsGroupMessage() != other.getIsGroupMessage()) {
+            return false;
+        }
+        return getToId() == other.getToId()
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }
@@ -443,7 +445,7 @@ public final class UpdateTypingStatusRequest extends com.google.protobuf.Generat
                 return this;
             }
             if (other.getIsGroupMessage()) {
-                setIsGroupMessage(other.getIsGroupMessage());
+                setIsGroupMessage(true);
             }
             if (other.getToId() != 0L) {
                 setToId(other.getToId());

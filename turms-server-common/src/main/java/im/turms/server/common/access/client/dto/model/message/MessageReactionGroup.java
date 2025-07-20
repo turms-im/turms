@@ -28,8 +28,8 @@ public final class MessageReactionGroup extends com.google.protobuf.GeneratedMes
         com.google.protobuf.RuntimeVersion.validateProtobufGencodeVersion(
                 com.google.protobuf.RuntimeVersion.RuntimeDomain.PUBLIC,
                 /* major= */ 4,
-                /* minor= */ 27,
-                /* patch= */ 2,
+                /* minor= */ 29,
+                /* patch= */ 1,
                 /* suffix= */ "",
                 MessageReactionGroup.class.getName());
     }
@@ -57,7 +57,7 @@ public final class MessageReactionGroup extends com.google.protobuf.GeneratedMes
     }
 
     public static final int REACTION_TYPE_FIELD_NUMBER = 1;
-    private int reactionType_;
+    private int reactionType_ = 0;
 
     /**
      * <code>int32 reaction_type = 1;</code>
@@ -70,7 +70,7 @@ public final class MessageReactionGroup extends com.google.protobuf.GeneratedMes
     }
 
     public static final int REACTION_COUNT_FIELD_NUMBER = 2;
-    private int reactionCount_;
+    private int reactionCount_ = 0;
 
     /**
      * <code>int32 reaction_count = 2;</code>
@@ -243,8 +243,10 @@ public final class MessageReactionGroup extends com.google.protobuf.GeneratedMes
         if (getReactionType() != other.getReactionType()) {
             return false;
         }
-        return getReactionCount() == other.getReactionCount()
-                && getUserInfosList().equals(other.getUserInfosList())
+        if (getReactionCount() != other.getReactionCount()) {
+            return false;
+        }
+        return getUserInfosList().equals(other.getUserInfosList())
                 && getCustomAttributesList().equals(other.getCustomAttributesList())
                 && getUnknownFields().equals(other.getUnknownFields());
     }

@@ -7,36 +7,48 @@ import '../window/window_utils.dart';
 final class TrayUtils {
   TrayUtils._();
 
-  static bool get supportsTray => PlatformUtils.isAnyTargetPlatform(
-      [TargetPlatform.linux, TargetPlatform.macOS, TargetPlatform.windows]);
+  static bool get supportsTray => PlatformUtils.isAnyTargetPlatform([
+    TargetPlatform.linux,
+    TargetPlatform.macOS,
+    TargetPlatform.windows,
+  ]);
 
   static Future<void> initTray(
-      String tooltip, String icon, List<TrayMenuItem> menuItems) async {
+    String tooltip,
+    String icon,
+    List<TrayMenuItem> menuItems,
+  ) async {
     if (!supportsTray) {
       return;
     }
     await trayManager.setIcon(icon);
-    await trayManager.setContextMenu(Menu(
+    await trayManager.setContextMenu(
+      Menu(
         items: menuItems
-            .map((item) => MenuItem(
-                  key: item.key,
-                  label: item.label,
-                ))
-            .toList()));
+            .map((item) => MenuItem(key: item.key, label: item.label))
+            .toList(),
+      ),
+    );
     await trayManager.setToolTip(tooltip);
-    final keyToOnTap = <String, void Function()>{};
-    for (final item in menuItems) {
-      keyToOnTap[item.key] = item.onTap;
-    }
-    trayManager.addListener(_TrayListener(onTrayMenuItemTap: (item) {
-      keyToOnTap[item.key]!.call();
-    }));
+    final keyToOnTap = <String, void Function()>{
+      for (final item in menuItems) item.key: item.onTap,
+    };
+    trayManager.addListener(
+      _TrayListener(
+        onTrayMenuItemTap: (item) {
+          keyToOnTap[item.key]!.call();
+        },
+      ),
+    );
   }
 }
 
 class TrayMenuItem {
-  const TrayMenuItem(
-      {required this.key, required this.label, required this.onTap});
+  const TrayMenuItem({
+    required this.key,
+    required this.label,
+    required this.onTap,
+  });
 
   final String key;
   final String label;

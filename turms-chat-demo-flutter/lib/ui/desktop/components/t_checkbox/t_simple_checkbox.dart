@@ -5,7 +5,7 @@ import '../../../themes/index.dart';
 
 class TSimpleCheckbox extends StatefulWidget {
   const TSimpleCheckbox({
-    Key? key,
+    super.key,
     this.size = 16,
     this.activeBackgroundColor = Colors.white,
     this.inactiveBackgroundColor = Colors.white,
@@ -22,7 +22,7 @@ class TSimpleCheckbox extends StatefulWidget {
     this.customBgColor = const Color(0xff10DC60),
     this.label,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final double size;
 
@@ -58,15 +58,16 @@ class _TSimpleCheckboxState extends State<TSimpleCheckbox> {
       width: widget.size,
       child: DecoratedBox(
         decoration: BoxDecoration(
+          color: widget.value
+              ? widget.activeBackgroundColor
+              : widget.inactiveBackgroundColor,
+          borderRadius: Sizes.borderRadiusCircular4,
+          border: Border.all(
             color: widget.value
-                ? widget.activeBackgroundColor
-                : widget.inactiveBackgroundColor,
-            borderRadius: Sizes.borderRadiusCircular4,
-            border: Border.all(
-                color: widget.value
-                    ? (widget.activeBorderColor ?? context.theme.dividerColor)
-                    : (widget.inactiveBorderColor ??
-                        context.theme.dividerColor))),
+                ? (widget.activeBorderColor ?? context.theme.dividerColor)
+                : (widget.inactiveBorderColor ?? context.theme.dividerColor),
+          ),
+        ),
         child: widget.value ? widget.activeIcon : widget.inactiveIcon,
       ),
     );
@@ -77,14 +78,11 @@ class _TSimpleCheckboxState extends State<TSimpleCheckbox> {
         children: [child, Text(label)],
       );
     }
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          widget.onChanged(!widget.value);
-        },
-        child: child,
-      ),
+    return GestureDetector(
+      onTap: () {
+        widget.onChanged(!widget.value);
+      },
+      child: MouseRegion(cursor: SystemMouseCursors.click, child: child),
     );
   }
 }

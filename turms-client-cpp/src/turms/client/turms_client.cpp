@@ -1,15 +1,13 @@
 #include "turms/client/turms_client.h"
 
-namespace turms {
-namespace client {
-
+namespace turms::client {
 TurmsClient::TurmsClient(const std::shared_ptr<boost::asio::io_context>& ioContext,
-                         const boost::optional<std::string>& host,
-                         const boost::optional<int>& port,
-                         const boost::optional<int>& connectTimeoutMillis,
-                         const boost::optional<int>& requestTimeoutMillis,
-                         const boost::optional<int>& minRequestIntervalMillis,
-                         const boost::optional<int>& heartbeatIntervalMillis)
+                         const std::optional<std::string>& host,
+                         const std::optional<int>& port,
+                         const std::optional<int>& connectTimeoutMillis,
+                         const std::optional<int>& requestTimeoutMillis,
+                         const std::optional<int>& minRequestIntervalMillis,
+                         const std::optional<int>& heartbeatIntervalMillis)
     : driver_(ioContext,
               host,
               port,
@@ -21,6 +19,7 @@ TurmsClient::TurmsClient(const std::shared_ptr<boost::asio::io_context>& ioConte
       groupService_(*this),
       conversationService_(*this),
       messageService_(*this),
+      conferenceService_(*this),
       notificationService_(*this) {
 }
 
@@ -52,8 +51,11 @@ auto TurmsClient::messageService() noexcept -> MessageService& {
     return messageService_;
 }
 
+auto TurmsClient::conferenceService() noexcept -> ConferenceService& {
+    return conferenceService_;
+}
+
 auto TurmsClient::notificationService() noexcept -> NotificationService& {
     return notificationService_;
 }
-}  // namespace client
-}  // namespace turms
+}  // namespace turms::client
