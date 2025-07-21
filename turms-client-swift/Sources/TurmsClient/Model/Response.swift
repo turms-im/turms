@@ -53,7 +53,7 @@ public struct Response<T> {
             )
         }
         return Response(
-            timestamp: Date(timeIntervalSince1970: TimeInterval(notification.timestamp)),
+            timestamp: Date(timeIntervalSince1970: TimeInterval(notification.timestamp) / 1000),
             requestId: notification.hasRequestID ? notification.requestID : nil,
             code: Int(notification.code),
             data: data
